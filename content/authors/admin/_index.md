@@ -1,48 +1,41 @@
 ---
 authors:
 - admin
-bio: My research interests include distributed robotics, mobile computing and programmable
-  matter.
+bio: 
 education:
   courses:
-  - course: PhD in Artificial Intelligence
-    institution: Stanford University
-    year: 2012
-  - course: MEng in Artificial Intelligence
-    institution: Massachusetts Institute of Technology
-    year: 2009
-  - course: BSc in Artificial Intelligence
-    institution: Massachusetts Institute of Technology
-    year: 2008
+  - course: MSc in Statistics
+    institution: Copenhagen University
+    year: 2017
 email: ""
 interests:
-- Artificial Intelligence
-- Computational Linguistics
-- Information Retrieval
+- Data science / statistics
+- Natural Language Processing
+- Predictive Modeling & Machine Learning
+- Education
+- Color palettes
 organizations:
-- name: Stanford University
-  url: ""
-role: Professor of Artificial Intelligence
+- name: University of Southern California
+  url: "https://www.usc.edu/"
+role: Research Programmer
 social:
 - icon: envelope
   icon_pack: fas
   link: '#contact'
 - icon: twitter
   icon_pack: fab
-  link: https://twitter.com/GeorgeCushen
-- icon: google-scholar
-  icon_pack: ai
-  link: https://scholar.google.co.uk/citations?user=sIwtMXoAAAAJ
+  link: https://twitter.com/Emil_Hvitfeldt
 - icon: github
   icon_pack: fab
-  link: https://github.com/gcushen
+  link: https://github.com/EmilHvitfeldt
+- icon: orcid
+  icon_pack: ai
+  link: http://orcid.org/0000-0002-0679-1945
 superuser: true
-title: Nelson Bighetti
+title: Emil Hvitfeldt
 user_groups:
 - Researchers
 - Visitors
 ---
 
-Nelson Bighetti is a professor of artificial intelligence at the Stanford AI Lab. His research interests include distributed robotics, mobile computing and programmable matter. He leads the Robotic Neurobiology group, which develops self-reconfiguring robots, systems of self-organizing robots, and mobile sensor networks.
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed neque elit, tristique placerat feugiat ac, facilisis vitae arcu. Proin eget egestas augue. Praesent ut sem nec arcu pellentesque aliquet. Duis dapibus diam vel metus tempus vulputate.
+Hello, my name is Emil Hvitfeldt. I’m a Research Programmer at University of Southern California. I love to develop and make things in R. Working on natural language processing, visualization styles, modeling techniques and general workflow problems. M.S. in Statistics from University of Copenhagen.
