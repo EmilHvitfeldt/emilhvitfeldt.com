@@ -1,0 +1,74 @@
+---
+title: Creating RStudio addin to modify selection
+date: '2019-07-30'
+categories: [rstudio addin]
+---
+
+
+
+<div id="the-problem" class="section level1">
+<h1>The problem</h1>
+<p>Lately there have been some well deservered buzz around addins in RStudio, <a href="https://github.com/milesmcbain/datapasta">datapasta</a> being one and <a href="https://gitlab.com/hrbrmstr/hrbraddins">hrbraddins</a> being another highly liked ones.</p>
+<blockquote class="twitter-tweet">
+<p lang="en" dir="ltr">
+I find datapasta helpful for creating little tibbles for teaching. I'll find some interesting data online and just copy and paste the table directly into the correct format. You can also set up keyboard shortcuts, because who doesn't love a keyboard shortcut. Thanks <a href="https://twitter.com/MilesMcBain?ref_src=twsrc%5Etfw"><span class="citation">@MilesMcBain</span></a> <a href="https://t.co/deaZVVYYDu">pic.twitter.com/deaZVVYYDu</a>
+</p>
+— We are R-Ladies (<span class="citation">@WeAreRLadies</span>) <a href="https://twitter.com/WeAreRLadies/status/1153284810191847425?ref_src=twsrc%5Etfw">July 22, 2019</a>
+</blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<blockquote class="twitter-tweet">
+<p lang="en" dir="ltr">
+My keyboard shortcut for this lil' function gets quite the workout…<br>📺 “hrbraddins::bare_combine()” by <a href="https://twitter.com/hrbrmstr?ref_src=twsrc%5Etfw"><span class="citation">@hrbrmstr</span></a> <a href="https://t.co/8dwqNEso0B">https://t.co/8dwqNEso0B</a> <a href="https://twitter.com/hashtag/rstats?src=hash&amp;ref_src=twsrc%5Etfw">#rstats</a> <a href="https://t.co/gyqz2mUE0Y">pic.twitter.com/gyqz2mUE0Y</a>
+</p>
+— Mara Averick (<span class="citation">@dataandme</span>) <a href="https://twitter.com/dataandme/status/1155842512743030785?ref_src=twsrc%5Etfw">July 29, 2019</a>
+</blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p>All of this is done with <a href="https://www.rstudio.com/resources/webinars/understanding-add-ins/">RStudio Addins</a> using the <a href="https://github.com/rstudio/rstudioapi">rstudioapi</a> r package.</p>
+<p>A lot of the popular addins follows the same simple formula</p>
+<ul>
+<li>extract highlighted text</li>
+<li>modify extracted text</li>
+<li>replace highlighted text with modified text.</li>
+</ul>
+<p>if your problem can be solved with the above steps, then this post is for you.</p>
+</div>
+<div id="the-solution" class="section level1">
+<h1>The solution</h1>
+<p>Once you have found the name of your addin, go to your package directory, or <a href="https://www.hvitfeldt.me/blog/usethis-workflow-for-package-development/">create a new package</a>. Then we use <a href="https://usethis.r-lib.org/">usethis</a> to create a .R file for the function and to create the necessary infrastructure to let RStudio know it is a Addin.</p>
+<pre class="r"><code>use_r(&quot;name_of_your_addin&quot;)
+use_addin(&quot;name_of_your_addin&quot;)</code></pre>
+<p>The <code>inst/rstudio/addins.dcf</code> file will be populated to make a binding between your function to the addins menu. From here you will in <code>Name</code> to change the text of the button in the drop-down menu and change the <code>description</code> to change the hover text.</p>
+<pre class="r"><code>Name: New Addin Name
+Description: New Addin Description
+Binding: name_of_your_addin
+Interactive: false</code></pre>
+<p>now you can go back to the .R to write your function. Below is the minimal code needed. Just replace <code>any_function</code> with a function that takes a string and returns a modified string. build the package and you are done!</p>
+<pre class="r"><code>example &lt;- function() {
+  
+  # Gets The active Documeent
+  ctx &lt;- rstudioapi::getActiveDocumentContext()
+
+  # Checks that a document is active
+  if (!is.null(ctx)) {
+    
+    # Extracts selection as a string
+    selected_text &lt;- ctx$selection[[1]]$text
+
+    # modify string
+    selected_text &lt;- any_function(selected_text)
+    
+    # replaces selection with string
+    rstudioapi::modifyRange(ctx$selection[[1]]$range, selected_text)
+  }
+}</code></pre>
+</div>
+<div id="examples---slugify" class="section level1">
+<h1>Examples - slugify</h1>
+<p>While I was writing this post I created an addin to turn the title of the blog post into a slug i could use. I replaced</p>
+<pre class="r"><code>selected_text &lt;- any_function(selected_text)</code></pre>
+<p>with</p>
+<pre class="r"><code>selected_text &lt;- stringr::str_to_lower(selected_text)
+selected_text &lt;- stringr::str_replace_all(selected_text, &quot; &quot;, &quot;-&quot;)</code></pre>
+<p>Which gave me this little gem of a addin!</p>
+<p><img src="https://i.imgur.com/hbrPc6d.gif" /></p>
+</div>

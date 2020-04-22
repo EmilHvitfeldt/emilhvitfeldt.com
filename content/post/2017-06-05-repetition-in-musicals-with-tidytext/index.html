@@ -1,0 +1,193 @@
+---
+title: Repetition in musicals with tidytext
+date: '2017-06-05'
+categories: [tidytext, web scraping]
+---
+
+
+
+<p><em>This code have been lightly revised to make sure it works as of 2018-12-16.</em></p>
+<p>Lately I have been wondering how to quantify how repetitive a text is, specifically how repetitive are the lyrics to songs. I’m by no means the first one, Colin Morris did a great piece on language compression with his <a href="https://pudding.cool/2017/05/song-repetition/">Are Pop Lyrics Getting More Repetitive?</a> which i highly recommend you go read. Instead of looking at pop lyrics will we instead be focusing some popular musicals to see if general patterns emerge within each show.</p>
+<p>My plan is to use the magic of the <code>tidyverse</code> with the inclusion of <code>tidytext</code> to find the percentage of repeated consecutive sequences of words() also called n-grams) of varying length and then compare the results. We will use <code>rvest</code> to extract the lyrics from the web. However for larger data needs official APIs are recommended.</p>
+<div id="extracting-song-lyrics" class="section level2">
+<h2>Extracting song lyrics</h2>
+<pre class="r"><code>library(tidyverse)
+## Warning: package &#39;tibble&#39; was built under R version 3.6.2
+library(tidytext)
+library(rvest)
+## Warning: package &#39;xml2&#39; was built under R version 3.6.2</code></pre>
+<p>We will first take a peek at a specific song,</p>
+<pre class="r"><code>the_stars_look_down &lt;- &quot;https://genius.com/Elton-john-the-stars-look-down-lyrics&quot;
+
+the_stars_look_down %&gt;%
+  read_lines() %&gt;%
+  head(20)
+##  [1] &quot;&quot;                                                                                                                                                                                                                                                         
+##  [2] &quot;&quot;                                                                                                                                                                                                                                                         
+##  [3] &quot;&lt;!DOCTYPE html&gt;&quot;                                                                                                                                                                                                                                          
+##  [4] &quot;&lt;html class=\&quot;snarly apple_music_player--enabled bagon_song_page--enabled song_stories_public_launch--enabled react_forums--disabled\&quot; xmlns=\&quot;http://www.w3.org/1999/xhtml\&quot; xmlns:fb=\&quot;http://www.facebook.com/2008/fbml\&quot; lang=\&quot;en\&quot; xml:lang=\&quot;en\&quot;&gt;&quot;
+##  [5] &quot;  &lt;head&gt;&quot;                                                                                                                                                                                                                                                 
+##  [6] &quot;    &lt;base target=&#39;_top&#39; href=\&quot;//genius.com/\&quot;&gt;&quot;                                                                                                                                                                                                          
+##  [7] &quot;&quot;                                                                                                                                                                                                                                                         
+##  [8] &quot;    &lt;script type=\&quot;text/javascript\&quot;&gt;&quot;                                                                                                                                                                                                                    
+##  [9] &quot;//&lt;![CDATA[&quot;                                                                                                                                                                                                                                              
+## [10] &quot;&quot;                                                                                                                                                                                                                                                         
+## [11] &quot;  var _sf_startpt=(new Date()).getTime();&quot;                                                                                                                                                                                                                
+## [12] &quot;  if (window.performance &amp;&amp; performance.mark) {&quot;                                                                                                                                                                                                          
+## [13] &quot;    window.performance.mark(&#39;parse_start&#39;);&quot;                                                                                                                                                                                                              
+## [14] &quot;  }&quot;                                                                                                                                                                                                                                                      
+## [15] &quot;&quot;                                                                                                                                                                                                                                                         
+## [16] &quot;//]]&gt;&quot;                                                                                                                                                                                                                                                    
+## [17] &quot;&lt;/script&gt;&quot;                                                                                                                                                                                                                                                
+## [18] &quot;&quot;                                                                                                                                                                                                                                                         
+## [19] &quot;&lt;title&gt;Elton John – The Stars Look Down Lyrics | Genius Lyrics&lt;/title&gt;&quot;                                                                                                                                                                                   
+## [20] &quot;&quot;</code></pre>
+<p>And we find a whole of lines of no interest of us, which is to be expected. After some digging I manage to find that the lyrics are packed between <em>p</em> tags we can do this with <code>rvest</code>’s <code>html_nodes()</code>.</p>
+<pre class="r"><code>the_stars_look_down_lyrics &lt;- the_stars_look_down %&gt;%
+  read_html() %&gt;%
+  html_nodes(&quot;p&quot;) %&gt;%
+  html_text() %&gt;%
+  str_split(&quot;\n&quot;) %&gt;%
+  unlist() %&gt;%
+  tibble(text = .)
+
+the_stars_look_down_lyrics
+## # A tibble: 142 x 1
+##    text                                                                         
+##    &lt;chr&gt;                                                                        
+##  1 [Spoken OVERHEAD VOICE]                                                      
+##  2 For over seventy years miners of Durham County have come together once a yea…
+##  3 [Spoken HERBERT MORRISON]                                                    
+##  4 I want you men of the pits to come through. I want these streets clean of na…
+##  5 [ENSEMBLE, MINERS]                                                           
+##  6 Through the dark, and                                                        
+##  7 Through the hunger                                                           
+##  8 Through the night and                                                        
+##  9 Through the fear                                                             
+## 10 Through the fight and                                                        
+## # … with 132 more rows</code></pre>
+<p>We notice some of the rows are indications of who is talking, these are quickly dealt with by a <code>filter</code>. Now we employ our <code>tidytext</code> arsenal with <code>unnest_tokens</code> and we find all the bi-grams (pairs of consecutive words). (notice how they overlap)</p>
+<pre class="r"><code>the_stars_look_down_lyrics %&gt;%
+  filter(!str_detect(text, &quot;\\[&quot;)) %&gt;%
+  unnest_tokens(bigram, text, token = &quot;ngrams&quot;, n = 2)
+## # A tibble: 719 x 1
+##    bigram       
+##    &lt;chr&gt;        
+##  1 for over     
+##  2 over seventy 
+##  3 seventy years
+##  4 years miners 
+##  5 miners of    
+##  6 of durham    
+##  7 durham county
+##  8 county have  
+##  9 have come    
+## 10 come together
+## # … with 709 more rows</code></pre>
+<p>now from this we can summarize to find the number of unique bigrams and by extension the percentage of repeated bigrams.</p>
+<pre class="r"><code>the_stars_look_down_lyrics %&gt;%
+  filter(!str_detect(text, &quot;\\[&quot;)) %&gt;%
+  unnest_tokens(bigram, text, token = &quot;ngrams&quot;, n = 2) %&gt;%
+  summarise(length = length(bigram),
+            unique = length(unique(bigram))) %&gt;%
+  mutate(repetition = 1 - unique / length)
+## # A tibble: 1 x 3
+##   length unique repetition
+##    &lt;int&gt;  &lt;int&gt;      &lt;dbl&gt;
+## 1    719    447      0.378</code></pre>
+<p>So we see that in this particular song around 38% bigrams are present at least twice. We will expect this percentage to be strictly decreasing for <span class="math inline">\(n\)</span> increasing, but what we are interested in the both the rate it is decreasing but also the general level.<br />
+Now we generalizing this procedure using some <code>purrr</code> to give us a nice data.frame out in the end. The range <code>1:5</code> was picked after some trial and error, and it seemed to me that most trends died out around the 5-6 mark rendering data points over rather uninteresting.</p>
+<pre class="r"><code>songfun &lt;- function(hyperlink, repnum = 1:5) {
+  
+  lyrics &lt;- hyperlink %&gt;%
+  read_html() %&gt;%
+  html_nodes(&quot;p&quot;) %&gt;%
+  html_text() %&gt;%
+  str_split(&quot;\n&quot;) %&gt;%
+  unlist() %&gt;%
+  tibble(text = .)
+  
+  map_dfr(repnum, 
+          ~ lyrics %&gt;% 
+            unnest_tokens(ngram, text, token = &quot;ngrams&quot;, n = .x) %&gt;%
+            summarise(n = .x,
+                      length = length(ngram),
+                      unique = length(unique(ngram))) %&gt;%
+            mutate(repetition = 1 - unique / length,
+                   name = hyperlink))
+}</code></pre>
+<p>Now to try this out, we plug in the link again, and pipe the result into ggplot to give us a nice visualization</p>
+<pre class="r"><code>songfun(&quot;https://genius.com/Elton-john-the-stars-look-down-lyrics&quot;) %&gt;%
+  ggplot(aes(n, repetition)) +
+  geom_line() +
+  coord_cartesian(ylim = 0:1)</code></pre>
+<p><img src="/post/2017-06-05-repetition-in-musicals-with-tidytext/index_files/figure-html/unnamed-chunk-7-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>from this plot alone we can see that roughly 3/4 of the words used in the song are used more then twice, while on the other end of the scale just shy of 25% of the 5-grams are used more then once. This plot by itself doesn’t provide too much meaningful information by itself. So next step is to gather information for more songs to compare.</p>
+<p>This function takes a link to an album page, and uses similar techniques used earlier to detect the song in the album, find the lyrics with <code>songfun</code>, process it and spits out a data.frame.</p>
+<pre class="r"><code>albumfun &lt;- function(hlink, ...) { 
+  song_links &lt;- tibble(text = readLines(hlink)) %&gt;%
+    filter(str_detect(text, &quot;          &lt;a href=\&quot;https://genius.com/&quot;)) %&gt;%
+    mutate(text = str_replace(text, &quot;&lt;a href=\&quot;&quot;, &quot;&quot;)) %&gt;%
+    mutate(text = str_replace(text, &quot;\&quot; class=\&quot;u-display_block\&quot;&gt;&quot;, &quot;&quot;)) %&gt;%
+    mutate(text = str_replace(text, &quot; *&quot;, &quot;&quot;)) %&gt;%
+    mutate(song = str_replace(text, &quot;https://genius.com/&quot;, &quot;&quot;))
+
+  nsongs &lt;- nrow(song_links)
+  out &lt;- tibble()
+  for (i in 1:nsongs) {
+    ting &lt;- songfun(song_links$text[i], ...)
+    out &lt;- rbind(out, ting)
+  }
+  out %&gt;%
+    mutate(album = hlink)
+}</code></pre>
+</div>
+<div id="analysis" class="section level2">
+<h2>Analysis</h2>
+<p>We use our function to get the data for a number of different musicals.</p>
+<pre class="r"><code>billyelliot &lt;- albumfun(hlink = &quot;https://genius.com/albums/Elton-john/Billy-elliot-the-musical-original-london-cast-recording&quot;)
+thebookofmormon &lt;- albumfun(hlink = &quot;https://genius.com/albums/Book-of-mormon/The-book-of-mormon-original-broadway-recording&quot;)
+lionking &lt;- albumfun(hlink = &quot;https://genius.com/albums/The-lion-king/The-lion-king-original-broadway-cast-recording&quot;)
+avenueq &lt;- albumfun(hlink = &quot;https://genius.com/albums/Robert-lopez-and-jeff-marx/Avenue-q-original-broadway-cast-recording&quot;)
+oklahoma &lt;- albumfun(hlink = &quot;https://genius.com/albums/Richard-rodgers/Oklahoma-original-motion-picture-soundtrack&quot;)
+soundofmusic &lt;- albumfun(hlink = &quot;https://genius.com/albums/Richard-rodgers/The-sound-of-music-original-soundtrack-recording&quot;)
+intheheights &lt;- albumfun(hlink = &quot;https://genius.com/albums/Lin-manuel-miranda/In-the-heights-original-broadway-cast-recording&quot;)
+lemiserables &lt;- albumfun(hlink = &quot;https://genius.com/albums/Les-miserables-original-broadway-cast/Les-miserables-1987-original-broadway-cast&quot;)
+phantomoftheopera &lt;- albumfun(hlink = &quot;https://genius.com/albums/Andrew-lloyd-webber/The-phantom-of-the-opera-original-london-cast-recording&quot;)</code></pre>
+<p>and a quick explorative plot tells us that it is working as intended, we see some variation both slopes and offset, telling us that Billy Elliot have some range in its songs.</p>
+<pre class="r"><code>billyelliot %&gt;%
+  ggplot(aes(n, repetition)) +
+  geom_line(aes(group = name)) +
+  labs(title = &quot;Billy Elliot&quot;) +
+  coord_cartesian(ylim = 0:1)</code></pre>
+<p><img src="/post/2017-06-05-repetition-in-musicals-with-tidytext/index_files/figure-html/unnamed-chunk-10-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>to further compare we bind all the data.frames together for ease of handling</p>
+<pre class="r"><code>musical_names &lt;- c(&quot;The Phantom of the Opera&quot;, &quot;The Book of Mormon&quot;, 
+                   &quot;Billy Elliot&quot;, &quot;Les Miserables&quot;, &quot;In the Heights&quot;, 
+                   &quot;Oklahoma&quot;, &quot;The Sound of music&quot;, &quot;Avenue Q&quot;, &quot;Lion King&quot;)
+
+rbind(billyelliot, thebookofmormon, lionking, avenueq, oklahoma,
+      soundofmusic, intheheights, lemiserables, phantomoftheopera) %&gt;%
+  mutate(album = factor(album, label = musical_names)) %&gt;%
+  ggplot(aes(n, repetition)) +
+  geom_line(aes(group = name), alpha = 0.5) +
+  facet_wrap(~ album)</code></pre>
+<p><img src="/post/2017-06-05-repetition-in-musicals-with-tidytext/index_files/figure-html/unnamed-chunk-11-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>Wow, here we clearly see some differences in lyrical styles for the different musical, from the evenness of the soundtrack to “In the Heights” to the range of “Lion King”. To try having them all in the same graph would be overwhelming. However we could still plot the trend of each album in the same plot, fading out individual songs.</p>
+<pre class="r"><code>rbind(billyelliot, thebookofmormon, lionking, avenueq, oklahoma,
+      soundofmusic, intheheights, lemiserables, phantomoftheopera) %&gt;%
+  ggplot(aes(n, repetition)) +
+  coord_cartesian(ylim = 0:1) +
+  geom_line(aes(group = name), alpha = 0.05) +
+  geom_smooth(aes(group = album, color = album), se = FALSE) +
+  theme_bw() +
+  labs(title = &quot;Repetition in musicals&quot;) +
+  scale_colour_brewer(palette = &quot;Set1&quot;,
+                      name = &quot;Musical&quot;,
+                      labels = c(&quot;The Phantom of the Opera&quot;, &quot;The Book of Mormon&quot;, 
+                                 &quot;Billy Elliot&quot;, &quot;Les Miserables&quot;,
+                                 &quot;In the Heights&quot;, &quot;Oklahoma&quot;, 
+                                 &quot;The Sound of music&quot;, &quot;Avenue Q&quot;, &quot;Lion King&quot;))
+## `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;</code></pre>
+<p><img src="/post/2017-06-05-repetition-in-musicals-with-tidytext/index_files/figure-html/unnamed-chunk-12-1.png" width="700px" style="display: block; margin: auto;" /></p>
+</div>

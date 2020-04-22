@@ -1,0 +1,130 @@
+---
+title: Manipulating colors with {prismatic}
+date: '2019-10-01'
+categories: [color, prismatic]
+---
+
+
+
+<p>I’m happy to announce my newest package <a href="https://github.com/EmilHvitfeldt/prismatic">prismatic</a> which facilitates simple manipulations of colors. I had been working on this package online and offline for some time, but the <a href="https://github.com/tidyverse/ggplot2/pull/3534">promise of easy manipulation of mapped data in ggplot2</a> forced me to get some work done to get this package out before ggplot2 version 3.3.0. (as of time of writing.)</p>
+<p>This post will go over some of the finer details with lots of pretty pictures!</p>
+<div id="loading-packages" class="section level2">
+<h2>Loading Packages</h2>
+<p>The prismatic package is fairly low dependency with only 1 import being <a href="https://github.com/thomasp85/farver">farver</a> for lightning fast conversion between color spaces. I have also loaded the <a href="http://colorspace.r-forge.r-project.org/">colorspace</a> package, from which some of the following functions have been inspired. I will use colorspace to enable plotting of multiple color palettes side by side, but I will not showcase the code each time. Go to the end of the post for example code for comparison plots.</p>
+<pre class="r"><code>library(prismatic)
+library(colorspace) # for plotting functions
+library(magrittr) # for the glorious pipe</code></pre>
+</div>
+<div id="let-me-see-the-colors" class="section level2">
+<h2>Let me see the colors!!</h2>
+<p>If you have seen my work, you will properly know that I <a href="https://github.com/EmilHvitfeldt/r-color-palettes">like</a> <a href="https://github.com/EmilHvitfeldt/paletteer">colors</a> <a href="https://github.com/EmilHvitfeldt/quickpalette">alot</a>! But being also to quickly inspect some colors have always been a little too much work. Now all you have to do it pass your colors to <code>color()</code> (or <code>colour()</code> for our friends across the pond) to get a <color> object which has a nice <code>plot()</code> method</p>
+<pre class="r"><code>rainbow(10) %&gt;% color() %&gt;% plot()</code></pre>
+<p><img src="/post/2019-10-01-manipulating-colors-with-prismatic/index_files/figure-html/unnamed-chunk-2-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>hcl.colors(25) %&gt;% color() %&gt;% plot()</code></pre>
+<p><img src="/post/2019-10-01-manipulating-colors-with-prismatic/index_files/figure-html/unnamed-chunk-3-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>scico::scico(256, palette = &quot;buda&quot;) %&gt;% color() %&gt;% plot()</code></pre>
+<p><img src="/post/2019-10-01-manipulating-colors-with-prismatic/index_files/figure-html/unnamed-chunk-4-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>Which I would like to think is one of the main features of the package. If you happens to have <a href="https://github.com/r-lib/crayon">crayon</a> available you will see a approximation of the colors with a filled in background (this limited to 256 colors so you milage might very, when in doubt use <code>plot()</code>)</p>
+<p><img src="print.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>This is the extent of what the color object can do.</p>
+</div>
+<div id="manipulations" class="section level2">
+<h2>Manipulations</h2>
+<p>The second star of the package is the <a href="https://emilhvitfeldt.github.io/prismatic/reference/index.html">collection of functions</a> to manipulate the colors. All these functions have a couple of things in common.</p>
+<ul>
+<li>They all start with <code>clr_</code> for easy auto completion in your favorite IDE.</li>
+<li>They all take a vector of colors as the first argument and results a colors object of the same length.</li>
+</ul>
+<p>these two facts make the function super pipe friendly.</p>
+<div id="saturation" class="section level3">
+<h3>Saturation</h3>
+<p>The two functions <code>clr_saturate()</code> and <code>clr_desaturate()</code> both modifies the <a href="https://en.wikipedia.org/wiki/HSL_and_HSV#Saturation">saturation</a> of a color. It takes a single additional argument to specifying the degree of which the (de)saturation should occur. These values should be between 0(nothing happens) and 1(full on power!).</p>
+<p>notice how you don’t have to call <code>color()</code> on the output of <code>clr_desaturate()</code> as it already returns a colors object.</p>
+<pre class="r"><code>hcl.colors(10, &quot;plasma&quot;) %&gt;%
+  clr_desaturate(0.8) %&gt;%
+  plot()</code></pre>
+<p><img src="/post/2019-10-01-manipulating-colors-with-prismatic/index_files/figure-html/unnamed-chunk-6-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p><img src="/post/2019-10-01-manipulating-colors-with-prismatic/index_files/figure-html/unnamed-chunk-7-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>Example done with Mango palette from <a href="https://github.com/johannesbjork/LaCroixColoR">LaCroixColoR</a> package.</p>
+<p><img src="/post/2019-10-01-manipulating-colors-with-prismatic/index_files/figure-html/unnamed-chunk-8-1.png" width="700px" style="display: block; margin: auto;" /></p>
+</div>
+<div id="seeing-life-in-black-and-white" class="section level3">
+<h3>Seeing life in black and white</h3>
+<p>Turns out there is a <a href="https://www.tannerhelland.com/3643/grayscale-image-algorithm-vb6/">lot of different ways</a> to turn colors into grayscale. Prismatic has implemented a handful of these. Notice how the viridis palette is still working once you have it transformed to black and white.</p>
+<pre class="r"><code>hcl.colors(10) %&gt;%
+  clr_greyscale() %&gt;%
+  plot()</code></pre>
+<p><img src="/post/2019-10-01-manipulating-colors-with-prismatic/index_files/figure-html/unnamed-chunk-9-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>Be advised that not all of these methods are meant to be perceptually uniform.</p>
+<p><img src="/post/2019-10-01-manipulating-colors-with-prismatic/index_files/figure-html/unnamed-chunk-10-1.png" width="700px" style="display: block; margin: auto;" /></p>
+</div>
+<div id="negate" class="section level3">
+<h3>Negate</h3>
+<p>Negation of a color is pretty simple. it will just pick the opposite color in <a href="https://en.wikipedia.org/wiki/RGB_color_space">RGB space</a>.</p>
+<pre class="r"><code>terrain.colors(10) %&gt;%
+  clr_negate() %&gt;%
+  plot()</code></pre>
+<p><img src="/post/2019-10-01-manipulating-colors-with-prismatic/index_files/figure-html/unnamed-chunk-11-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p><img src="/post/2019-10-01-manipulating-colors-with-prismatic/index_files/figure-html/unnamed-chunk-12-1.png" width="700px" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mixing" class="section level3">
+<h3>Mixing</h3>
+<p>Mixing is just adding colors together. Thus my mixing a color with red would make a color more red.</p>
+<pre class="r"><code>rainbow(10) %&gt;%
+  clr_mix(&quot;red&quot;) %&gt;%
+  plot()</code></pre>
+<p><img src="/post/2019-10-01-manipulating-colors-with-prismatic/index_files/figure-html/unnamed-chunk-13-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p><img src="/post/2019-10-01-manipulating-colors-with-prismatic/index_files/figure-html/unnamed-chunk-14-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p><img src="/post/2019-10-01-manipulating-colors-with-prismatic/index_files/figure-html/unnamed-chunk-15-1.png" width="700px" style="display: block; margin: auto;" /></p>
+</div>
+<div id="rotation" class="section level3">
+<h3>Rotation</h3>
+<p>the <code>clr_rotate()</code> function will take a color and rotate its hue, which is a way walk around the rainbow.</p>
+<pre class="r"><code>terrain.colors(10) %&gt;%
+  clr_rotate(90) %&gt;%
+  plot()</code></pre>
+<p><img src="/post/2019-10-01-manipulating-colors-with-prismatic/index_files/figure-html/unnamed-chunk-16-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p><img src="/post/2019-10-01-manipulating-colors-with-prismatic/index_files/figure-html/unnamed-chunk-17-1.png" width="700px" style="display: block; margin: auto;" /></p>
+</div>
+<div id="color-blindness" class="section level3">
+<h3>Color blindness</h3>
+<p>also includes 3 functions (<code>clr_protan()</code>, <code>clr_deutan()</code> and <code>clr_tritan()</code>) to simulate colorblindness. These functions has a <code>severity</code> argument to control the strength of the deficiency.</p>
+<pre class="r"><code>hcl.colors(10) %&gt;%
+  clr_deutan() %&gt;%
+  plot()</code></pre>
+<p><img src="/post/2019-10-01-manipulating-colors-with-prismatic/index_files/figure-html/unnamed-chunk-18-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p><img src="/post/2019-10-01-manipulating-colors-with-prismatic/index_files/figure-html/unnamed-chunk-19-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p><img src="/post/2019-10-01-manipulating-colors-with-prismatic/index_files/figure-html/unnamed-chunk-20-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p><img src="/post/2019-10-01-manipulating-colors-with-prismatic/index_files/figure-html/unnamed-chunk-21-1.png" width="700px" style="display: block; margin: auto;" /></p>
+</div>
+<div id="light-and-darkness" class="section level3">
+<h3>Light and darkness</h3>
+<p>Lastly we have functions to simulate lightness and darkness. This is surprisingly hard to do and no one way works great all the time. Please refer to the excellent <a href="https://arxiv.org/abs/1903.06490">colorspace paper</a> for more information. These functions (<code>clr_lighten()</code> and <code>clr_darken()</code>) also include a <code>space</code> argument to determine the space in which to perform the transformation. Please try each of these to find the optimal method for your use case.</p>
+<pre class="r"><code>rainbow(10) %&gt;%
+  clr_darken() %&gt;%
+  plot()</code></pre>
+<p><img src="/post/2019-10-01-manipulating-colors-with-prismatic/index_files/figure-html/unnamed-chunk-22-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p><img src="/post/2019-10-01-manipulating-colors-with-prismatic/index_files/figure-html/unnamed-chunk-23-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p><img src="/post/2019-10-01-manipulating-colors-with-prismatic/index_files/figure-html/unnamed-chunk-24-1.png" width="700px" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="comparison-code" class="section level2">
+<h2>Comparison Code</h2>
+<pre class="r"><code>swatchplot(
+  list(
+    saturate = rbind(&quot;0&quot; = clr_rotate(terrain.colors(10),  0),
+                     &quot;60&quot; = clr_rotate(terrain.colors(10),  60),
+                     &quot;120&quot; = clr_rotate(terrain.colors(10),  120),
+                     &quot;180&quot; = clr_rotate(terrain.colors(10),  180),
+                     &quot;240&quot; = clr_rotate(terrain.colors(10),  240),
+                     &quot;300&quot; = clr_rotate(terrain.colors(10),  300)),
+    desaturate = rbind(&quot;0&quot; = clr_rotate(hcl.colors(10),  0),
+                       &quot;60&quot; = clr_rotate(hcl.colors(10),  60),
+                       &quot;120&quot; = clr_rotate(hcl.colors(10),  120),
+                       &quot;180&quot; = clr_rotate(hcl.colors(10),  180),
+                       &quot;240&quot; = clr_rotate(hcl.colors(10),  240),
+                       &quot;300&quot; = clr_rotate(hcl.colors(10),  300))
+  ),
+  nrow = 7, line = 2.5
+)</code></pre>
+</div>

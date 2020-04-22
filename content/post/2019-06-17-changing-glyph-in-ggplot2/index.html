@@ -1,0 +1,103 @@
+---
+title: Changing Glyph in legend in ggplot2
+date: '2019-06-17'
+categories: [ggplot2]
+---
+
+
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>The newest version of <a href="https://www.tidyverse.org/articles/2019/06/ggplot2-3-2-0/">ggplot2 3.2.0</a> gave us the ability to change the glyph in the legend like so</p>
+<pre class="r"><code>library(ggplot2)
+
+ggplot(economics_long, aes(date, value01, colour = variable)) +
+  geom_line(key_glyph = &quot;timeseries&quot;)</code></pre>
+<p><img src="/post/2019-06-17-changing-glyph-in-ggplot2/index_files/figure-html/unnamed-chunk-1-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>And they can likewise be specified with the <code>draw_key_*</code> functions as well</p>
+<pre class="r"><code>ggplot(economics_long, aes(date, value01, colour = variable)) +
+  geom_line(key_glyph = draw_key_timeseries)</code></pre>
+<p><img src="/post/2019-06-17-changing-glyph-in-ggplot2/index_files/figure-html/unnamed-chunk-2-1.png" width="700px" style="display: block; margin: auto;" /></p>
+</div>
+<div id="showcase" class="section level1">
+<h1>Showcase</h1>
+<p>The following is all the available <code>draw_key_*</code> functions in ggplot2. Notice that the dark gray color in dotplot and polygon is a result of a unspecified <code>fill</code> aesthetic. Code to generate these figures can be found at the end of this post.</p>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;
+## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag
+## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<p><img src="/post/2019-06-17-changing-glyph-in-ggplot2/index_files/figure-html/unnamed-chunk-3-1.png" width="700px" style="display: block; margin: auto;" /><img src="/post/2019-06-17-changing-glyph-in-ggplot2/index_files/figure-html/unnamed-chunk-3-2.png" width="700px" style="display: block; margin: auto;" /><img src="/post/2019-06-17-changing-glyph-in-ggplot2/index_files/figure-html/unnamed-chunk-3-3.png" width="700px" style="display: block; margin: auto;" /><img src="/post/2019-06-17-changing-glyph-in-ggplot2/index_files/figure-html/unnamed-chunk-3-4.png" width="700px" style="display: block; margin: auto;" /><img src="/post/2019-06-17-changing-glyph-in-ggplot2/index_files/figure-html/unnamed-chunk-3-5.png" width="700px" style="display: block; margin: auto;" /><img src="/post/2019-06-17-changing-glyph-in-ggplot2/index_files/figure-html/unnamed-chunk-3-6.png" width="700px" style="display: block; margin: auto;" /><img src="/post/2019-06-17-changing-glyph-in-ggplot2/index_files/figure-html/unnamed-chunk-3-7.png" width="700px" style="display: block; margin: auto;" /><img src="/post/2019-06-17-changing-glyph-in-ggplot2/index_files/figure-html/unnamed-chunk-3-8.png" width="700px" style="display: block; margin: auto;" /><img src="/post/2019-06-17-changing-glyph-in-ggplot2/index_files/figure-html/unnamed-chunk-3-9.png" width="700px" style="display: block; margin: auto;" /><img src="/post/2019-06-17-changing-glyph-in-ggplot2/index_files/figure-html/unnamed-chunk-3-10.png" width="700px" style="display: block; margin: auto;" /><img src="/post/2019-06-17-changing-glyph-in-ggplot2/index_files/figure-html/unnamed-chunk-3-11.png" width="700px" style="display: block; margin: auto;" /><img src="/post/2019-06-17-changing-glyph-in-ggplot2/index_files/figure-html/unnamed-chunk-3-12.png" width="700px" style="display: block; margin: auto;" /><img src="/post/2019-06-17-changing-glyph-in-ggplot2/index_files/figure-html/unnamed-chunk-3-13.png" width="700px" style="display: block; margin: auto;" /><img src="/post/2019-06-17-changing-glyph-in-ggplot2/index_files/figure-html/unnamed-chunk-3-14.png" width="700px" style="display: block; margin: auto;" /><img src="/post/2019-06-17-changing-glyph-in-ggplot2/index_files/figure-html/unnamed-chunk-3-15.png" width="700px" style="display: block; margin: auto;" /><img src="/post/2019-06-17-changing-glyph-in-ggplot2/index_files/figure-html/unnamed-chunk-3-16.png" width="700px" style="display: block; margin: auto;" /></p>
+</div>
+<div id="custom-glyph-key" class="section level1">
+<h1>Custom glyph key</h1>
+<p>Since the <code>draw_key_*</code> function just return a grob, you can use spend some time and create your own custom glyphs! Taking inspiration from <code>draw_key_boxplot</code></p>
+<pre class="r"><code>draw_key_boxplot
+## function (data, params, size) 
+## {
+##     grobTree(linesGrob(0.5, c(0.1, 0.25)), linesGrob(0.5, c(0.75, 
+##         0.9)), rectGrob(height = 0.5, width = 0.75), linesGrob(c(0.125, 
+##         0.875), 0.5), gp = gpar(col = data$colour %||% &quot;grey20&quot;, 
+##         fill = alpha(data$fill %||% &quot;white&quot;, data$alpha), lwd = (data$size %||% 
+##             0.5) * .pt, lty = data$linetype %||% 1))
+## }
+## &lt;bytecode: 0x7ff0874a8c08&gt;
+## &lt;environment: namespace:ggplot2&gt;</code></pre>
+<p>will I try to make a glyph by myself using both points and lines.</p>
+<pre class="r"><code>library(grid)
+library(rlang)
+draw_key_smile &lt;- function(data, params, size) {
+  grobTree(
+    pointsGrob(0.25, 0.75, size = unit(.25, &quot;npc&quot;), pch = 16),
+    pointsGrob(0.75, 0.75, size = unit(.25, &quot;npc&quot;), pch = 16),
+    linesGrob(c(0.9, 0.87, 0.78, 0.65, 0.5, 0.35, 0.22, 0.13, 0.1), 
+              c(0.5, 0.35, 0.22, 0.13, 0.1, 0.13, 0.22, 0.35, 0.5)),
+    gp = gpar(
+      col = data$colour %||% &quot;grey20&quot;,
+      fill = alpha(data$fill %||% &quot;white&quot;, data$alpha),
+      lwd = (data$size %||% 0.5) * .pt,
+      lty = data$linetype %||% 1
+    )
+  )
+}
+
+ggplot(economics_long, aes(date, value01, colour = variable)) +
+  geom_line(key_glyph = draw_key_smile)</code></pre>
+<p><img src="/post/2019-06-17-changing-glyph-in-ggplot2/index_files/figure-html/unnamed-chunk-5-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>And it looks so happy!</p>
+</div>
+<div id="appendix" class="section level1">
+<h1>Appendix</h1>
+<pre class="r"><code>library(dplyr)
+library(magrittr)
+library(ggplot2)
+library(grid)
+
+draws &lt;- ls(getNamespace(&quot;ggplot2&quot;), pattern = &quot;^draw_key_&quot;)
+
+legend_fun &lt;- function(x) {
+  ggg &lt;- economics_long %&gt;%
+    mutate(variable = factor(variable, labels = paste(&quot;Option&quot;, LETTERS[1:5]))) %&gt;%
+    ggplot(aes(date, value01, colour = variable)) +
+  geom_line(key_glyph = get(x)) +
+    labs(color = x) 
+  
+  legend &lt;- cowplot::get_legend(ggg)
+  
+  grid.newpage()
+  grid.draw(legend)
+}
+
+purrr::walk(draws[1:12], legend_fun)
+p &lt;- ggplot(mtcars, aes(wt, mpg, label = rownames(mtcars))) + 
+  geom_text(aes(colour = factor(ceiling(seq_len(nrow(mtcars)) %% 5), labels = paste(&quot;Option&quot;, LETTERS[1:5])))) +
+  labs(color = &quot;draw_key_text&quot;)
+legend &lt;- cowplot::get_legend(p)
+
+grid.newpage()
+grid.draw(legend)
+purrr::walk(draws[14:16], legend_fun)</code></pre>
+</div>

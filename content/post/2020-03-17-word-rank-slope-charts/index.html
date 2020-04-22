@@ -1,0 +1,206 @@
+---
+title: Word Rank Slope Charts
+date: '2020-03-17'
+categories: [tidytext, ggplot2]
+---
+
+
+
+<p>I have been working on visualizing how different kinds of words are used in texts and I finally found a good visualization style with the <a href="https://datavizproject.com/data-type/slope-chart/">slope chart</a>.
+More specifically I’m thinking of two groups of paired words.</p>
+<div id="packages" class="section level2">
+<h2>Packages 📦</h2>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## Warning: package &#39;tibble&#39; was built under R version 3.6.2</code></pre>
+<pre class="r"><code>library(hcandersenr)
+library(tidytext)
+library(paletteer)
+library(ggrepel)</code></pre>
+</div>
+<div id="minimal-example-1️⃣" class="section level2">
+<h2>Minimal Example 1️⃣</h2>
+<p>First I’ll walk you through a minimal example of how the chart is created.
+Afterward, I have created a function to automate the whole procedure so we can quickly iterate.
+We start by an example of gendered words in fairly tales by H.C. Andersen using the <a href="https://github.com/EmilHvitfeldt/hcandersenr">hcandersenr</a> package.
+We start by generating a data.frame of paired words.
+This is easily done using the <code>tribble()</code> function.</p>
+<pre class="r"><code>gender_words &lt;- tribble(
+  ~men, ~women,
+  &quot;he&quot;, &quot;she&quot;,
+  &quot;his&quot;, &quot;her&quot;,
+  &quot;man&quot;, &quot;woman&quot;,
+  &quot;men&quot;, &quot;women&quot;,
+  &quot;boy&quot;, &quot;girl&quot;,
+  &quot;he&#39;s&quot;, &quot;she&#39;s&quot;,
+  &quot;he&#39;d&quot;, &quot;she&#39;d&quot;,
+  &quot;he&#39;ll&quot;, &quot;she&#39;ll&quot;,
+  &quot;himself&quot;, &quot;herself&quot;
+)</code></pre>
+<p>Next, we are going to tokenize and count the tokens in the corpus,</p>
+<pre class="r"><code>ordered_words &lt;- hcandersen_en %&gt;% 
+  unnest_tokens(word, text) %&gt;% 
+  count(word, sort = TRUE) %&gt;% 
+  pull(word)</code></pre>
+<p>Next, we are going to get the index for each word, which we will put on a log scale since it will be <a href="https://en.wikipedia.org/wiki/Zipf%27s_law">easier to visualize</a>.
+Next, we will calculate a slope between the points and add the correct labels.</p>
+<pre class="r"><code>gender_words_plot &lt;- gender_words %&gt;%
+  mutate(male_index = match(men, ordered_words),
+         female_index = match(women, ordered_words)) %&gt;%
+  mutate(slope = log10(male_index) - log10(female_index)) %&gt;%
+  pivot_longer(male_index:female_index) %&gt;%
+  mutate(value = log10(value),
+         label = ifelse(name == &quot;male_index&quot;, men, women)) %&gt;%
+  mutate(name = factor(name, c(&quot;male_index&quot;, &quot;female_index&quot;), c(&quot;men&quot;, &quot;women&quot;)))</code></pre>
+<p>Next, we are going to manually calculate the limits to make sure a diverging color scale will have the colors <a href="https://www.hvitfeldt.me/blog/center-continuous-palettes-in-ggplot2/">done directly</a>.</p>
+<pre class="r"><code>limit &lt;- max(abs(gender_words_plot$slope)) * c(-1, 1)</code></pre>
+<p>Lastly, we just put everything into ggplot2 and voila!!</p>
+<pre class="r"><code>gender_words_plot %&gt;%
+  ggplot(aes(name, value, group = women, label = label)) +
+  geom_line(aes(color = slope)) +
+  scale_y_reverse(labels = function(x) 10 ^ x) +
+  geom_text() +
+  guides(color = &quot;none&quot;) +
+  scale_color_distiller(type = &quot;div&quot;, limit = limit) +
+  theme_minimal() +
+  theme(panel.border = element_blank(), panel.grid.major.x = element_blank()) +
+  labs(x = NULL, y = &quot;Word Rank&quot;) +
+  labs(title = &quot;Masculine gendered words appeared more often in H.C. Andersen&#39;s fairy tales&quot;)</code></pre>
+<p><img src="/post/2020-03-17-word-rank-slope-charts/index_files/figure-html/unnamed-chunk-6-1.png" width="700px" style="display: block; margin: auto;" /></p>
+</div>
+<div id="make-it-into-a-function" class="section level2">
+<h2>Make it into a function ✨</h2>
+<p>This function is mostly the same as the code you saw earlier.
+Main difference is using <code>.data</code> from <a href="https://rlang.r-lib.org/reference/tidyeval-data.html">rlang</a> to generalize.
+The function also includes other beautifications such as improved themes and theme support with <a href="https://github.com/EmilHvitfeldt/paletteer">paletteer</a>.</p>
+<pre class="r"><code>plot_fun &lt;- function(words, ref, palette = &quot;scico::roma&quot;, ...) {
+  
+  names &lt;- colnames(ref)
+  
+  ordered_words &lt;- names(sort(table(words), decreasing = TRUE))
+
+  plot_data &lt;- ref %&gt;%
+    mutate(index1 = match(.data[[names[1]]], ordered_words),
+           index2 = match(.data[[names[2]]], ordered_words)) %&gt;%
+    mutate(slope = log10(index1) - log10(index2)) %&gt;%
+    pivot_longer(index1:index2) %&gt;%
+    mutate(value = log10(value),
+           label = ifelse(name == &quot;index1&quot;, 
+                          .data[[names[1]]], 
+                          .data[[names[2]]]),
+           name = factor(name, c(&quot;index1&quot;, &quot;index2&quot;), names))
+  
+  limit &lt;- max(abs(plot_data$slope)) * c(-1, 1)
+
+  plot_data %&gt;%
+    ggplot(aes(name, value, group = .data[[names[2]]], label = label)) +
+    geom_line(aes(color = slope), size = 1) +
+    scale_y_reverse(labels = function(x) round(10 ^ x)) +
+    geom_text_repel(data = subset(plot_data, name == names[1]),
+                    aes(segment.color = slope),
+                    nudge_x       = -0.1,
+                    segment.size  = 1,
+                    direction     = &quot;y&quot;,
+                    hjust         = 1) + 
+    geom_text_repel(data = subset(plot_data, name == names[2]),
+                    aes(segment.color = slope),
+                    nudge_x       = 0.1,
+                    segment.size  = 1,
+                    direction     = &quot;y&quot;,
+                    hjust         = 0) + 
+    scale_color_paletteer_c(palette, 
+                            limit = limit,
+                            aesthetics = c(&quot;color&quot;, &quot;segment.color&quot;), 
+                            ...) +
+    guides(color = &quot;none&quot;, segment.color = &quot;none&quot;) +
+    theme_minimal() +
+    theme(panel.border = element_blank(), 
+          panel.grid.major.x = element_blank(), axis.text.x = element_text(size = 15)) +
+    labs(x = NULL, y = &quot;Word Rank&quot;)
+}</code></pre>
+<p>Now we can recreate the previous chart with ease</p>
+<pre class="r"><code>ref &lt;- tribble(
+  ~Men, ~Women,
+  &quot;he&quot;, &quot;she&quot;,
+  &quot;his&quot;, &quot;her&quot;,
+  &quot;man&quot;, &quot;woman&quot;,
+  &quot;men&quot;, &quot;women&quot;,
+  &quot;boy&quot;, &quot;girl&quot;,
+  &quot;he&#39;s&quot;, &quot;she&#39;s&quot;,
+  &quot;he&#39;d&quot;, &quot;she&#39;d&quot;,
+  &quot;he&#39;ll&quot;, &quot;she&#39;ll&quot;,
+  &quot;himself&quot;, &quot;herself&quot;
+)
+
+words &lt;- hcandersen_en %&gt;% 
+  unnest_tokens(word, text) %&gt;%
+  pull(word)
+
+plot_fun(words, ref, direction = -1) +
+  labs(title = &quot;Masculine gendered words appeared more often in H.C. Andersen&#39;s fairy tales&quot;)</code></pre>
+<pre><code>## Warning: Ignoring unknown aesthetics: segment.colour
+
+## Warning: Ignoring unknown aesthetics: segment.colour</code></pre>
+<p><img src="/post/2020-03-17-word-rank-slope-charts/index_files/figure-html/unnamed-chunk-8-1.png" width="700px" style="display: block; margin: auto;" /></p>
+</div>
+<div id="gallery" class="section level2">
+<h2>Gallery 🖼</h2>
+<pre class="r"><code>ref &lt;- tribble(
+  ~Men, ~Women,
+  &quot;he&quot;, &quot;she&quot;,
+  &quot;his&quot;, &quot;her&quot;,
+  &quot;man&quot;, &quot;woman&quot;,
+  &quot;men&quot;, &quot;women&quot;,
+  &quot;boy&quot;, &quot;girl&quot;,
+  &quot;himself&quot;, &quot;herself&quot;
+)
+
+words &lt;- janeaustenr::austen_books() %&gt;% 
+  unnest_tokens(word, text) %&gt;%
+  pull(word)
+
+plot_fun(words, ref, direction = -1) +
+  labs(title = &quot;Masculine gendered words appeared less often in Jane Austen Novels&quot;)</code></pre>
+<pre><code>## Warning: Ignoring unknown aesthetics: segment.colour
+
+## Warning: Ignoring unknown aesthetics: segment.colour</code></pre>
+<p><img src="/post/2020-03-17-word-rank-slope-charts/index_files/figure-html/unnamed-chunk-9-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>More examples using the <a href="https://github.com/EmilHvitfeldt/tidygutenbergr">tidygutenbergr</a> package.</p>
+<pre class="r"><code>ref &lt;- tribble(
+  ~Men, ~Women,
+  &quot;he&quot;, &quot;she&quot;,
+  &quot;his&quot;, &quot;her&quot;,
+  &quot;man&quot;, &quot;woman&quot;,
+  &quot;men&quot;, &quot;women&quot;,
+  &quot;boy&quot;, &quot;girl&quot;,
+  &quot;he&#39;s&quot;, &quot;she&#39;s&quot;,
+  &quot;himself&quot;, &quot;herself&quot;
+)
+
+words &lt;- tidygutenbergr::phantom_of_the_opera() %&gt;% 
+  unnest_tokens(word, text) %&gt;%
+  pull(word)
+
+plot_fun(words, ref, &quot;scico::berlin&quot;) +
+  labs(title = &quot;Masculine gendered words appeared more often in Phantom of the Opera&quot;)</code></pre>
+<pre><code>## Warning: Ignoring unknown aesthetics: segment.colour
+
+## Warning: Ignoring unknown aesthetics: segment.colour</code></pre>
+<p><img src="/post/2020-03-17-word-rank-slope-charts/index_files/figure-html/unnamed-chunk-10-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ref &lt;- tribble(
+  ~Positive, ~Negative,
+  &quot;good&quot;, &quot;bad&quot;,
+  &quot;pretty&quot;, &quot;ugly&quot;,
+  &quot;friendly&quot;, &quot;hostile&quot;
+)
+
+words &lt;- tidygutenbergr::dracula() %&gt;% 
+  unnest_tokens(word, text) %&gt;%
+  pull(word)
+
+plot_fun(words, ref, palette = &quot;scico::tokyo&quot;) +
+  labs(title = &quot;Positive adjectives appeared more often in Dracula&quot;)</code></pre>
+<pre><code>## Warning: Ignoring unknown aesthetics: segment.colour
+
+## Warning: Ignoring unknown aesthetics: segment.colour</code></pre>
+<p><img src="/post/2020-03-17-word-rank-slope-charts/index_files/figure-html/unnamed-chunk-11-1.png" width="700px" style="display: block; margin: auto;" /></p>
+</div>

@@ -1,0 +1,206 @@
+---
+title: Real Emojis in ggplot2
+date: '2020-01-02'
+categories: [ggplot2]
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+opts_chunk$set(
+  echo = TRUE,
+  cache = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
+
+I have been trying to use [Emojis](https://en.wikipedia.org/wiki/Emoji) for a long time. 
+It was actually part of my very first [post](https://www.hvitfeldt.me/blog/2017-world-press-freedom-index-with-emojis/) on this blog.
+Others have made progress such as with [emojifont](https://cran.r-project.org/web/packages/emojifont/vignettes/emojifont.html), but it is not using the classical [Apple Color Emoji](https://en.wikipedia.org/wiki/Apple_Color_Emoji) font which is the most commonly recognized.
+I made a breakthrough when I was writing the [packagecalander](https://www.hvitfeldt.me/packagecalendar/2019/) entry on [ggtext](https://github.com/clauswilke/ggtext).
+While the method is the best I have found it does have some cons.
+
+Pros:
+
+- Actually works
+- Doesn't require the use of SVG
+- Previews nicely
+
+Cons:
+
+- Relies on experimental package **ggtext**
+- Needs web scraping
+- Required access to the internet to render
+- Size can't be adjusted using the size aesthetic 
+
+All in all, it is a fair trade for my needs.
+
+## Packages `r emo::ji("package")`
+
+We load the essential packages to wrangle, collect data (we will use tweets), scrape websites and handle emojis.
+
+```{r packages, message=FALSE}
+library(tidyverse)
+library(rtweet)
+library(rvest)
+# devtools::install_github("clauswilke/ggtext")
+library(ggtext)
+library(emo)
+```
+
+## Getting the tweets `r emo::ji("bird")`
+
+For a simple dataset where we find emojis I'm going to get some tweets with the word "happy".
+
+```{r, eval=FALSE}
+happy <- search_tweets("happy", include_rts = FALSE, n = 1000)
+```
+
+```{r tweets, echo=FALSE, message=FALSE}
+happy <- search_tweets("happy", include_rts = FALSE, n = 1000, retryonratelimit = TRUE)
+```
+
+we can use the `ji_extract_all()` function from the [emo](https://github.com/hadley/emo) package.
+This will give us a list of emojis so we can use the `unnest()` function to get back to a tidy format.
+I'm going to do a simple `count()` of the emojis for the following visualizations. 
+
+```{r top_happy}
+happy_emojis <- happy %>%
+  mutate(emoji = emo::ji_extract_all(text)) %>%
+  unnest(cols = c(emoji)) %>%
+  count(emoji, sort = TRUE)
+```
+
+Next is where the magic happens.
+We don't have a way to displays emojis in **ggplot2**, but we can use **ggtext** to embed images into the text using HTML.
+Now we just need to get an image of each emoji.
+The following function will accept an emoji as a string and return the URL to a .png of that emoji.
+
+```{r emoji_to_link}
+emoji_to_link <- function(x) {
+  paste0("https://emojipedia.org/emoji/",x) %>%
+    read_html() %>%
+    html_nodes("tr td a") %>%
+    .[1] %>%
+    html_attr("href") %>%
+    paste0("https://emojipedia.org/", .) %>%
+    read_html() %>%
+    html_node('div[class="vendor-image"] img') %>%
+    html_attr("src")
+}
+```
+
+Then this function will take that URL and construct the necessary HTML code to show the emoji PNGs.
+
+```{r link_to_img}
+link_to_img <- function(x, size = 25) {
+  paste0("<img src='", x, "' width='", size, "'/>")
+}
+```
+
+To be courteous we are only going to scrape the emojis we are actually going to use.
+So we will `slice()` the 10 most frequent emojis.
+We will also be adding a 5 second delay using `slowly()` and `rate_delay()` from **purrr**.
+
+```{r top_happy2, dependson="link_to_img"}
+top_happy <- happy_emojis %>%
+  slice(1:10) %>%
+  mutate(url = map_chr(emoji, slowly(~emoji_to_link(.x), rate_delay(1))),
+         label = link_to_img(url))
+```
+
+## emoji-scatter plot `r emo::ji("chart_with_upwards_trend")`
+
+Now we can use the `geom_richtext()` function from **ggtext** to create a emoji scatter chart.
+
+```{r plot1, dependson="top_happy2"}
+top_happy %>%
+  ggplot(aes(emoji, n, label = label)) +
+  geom_richtext(aes(y = n), fill = NA, label.color = NA, # remove background and outline
+                label.padding = grid::unit(rep(0, 4), "pt") # remove padding
+  ) +
+  theme_minimal()
+```
+
+This is a little off, so lets other these by counts and put them over a bar chart.
+I'm also going to the x-axis ticks and text.
+
+```{r plot2, warning=FALSE, dependson="top_happy2"}
+offset <- max(top_happy$n) / 20
+
+top_happy %>%
+  ggplot(aes(fct_reorder(emoji, n, .desc = TRUE), n, label = label)) +
+  geom_col() +
+  geom_richtext(aes(y = n + offset), fill = NA, label.color = NA,
+                label.padding = grid::unit(rep(0, 4), "pt")
+  ) +
+  theme(axis.ticks.x = element_blank(),
+        axis.text.x = element_blank()) +
+  labs(x = NULL) +
+  theme_minimal()
+```
+
+## Emojis in labels and text `r emo::ji("bar_chart")`
+
+We are not only limited to using emojis in the geoms.
+We can set the text element using emojis to `element_markdown()`.
+Below we have the same bar chart as above but with the emoji as labels below instead of on top.
+
+```{r plot3, warning=FALSE, dependson="top_happy2"}
+top_happy %>%
+  ggplot(aes(fct_reorder(label, n, .desc = TRUE), n)) +
+  geom_col() +
+  theme_minimal() +
+  theme(axis.text.x = element_markdown()) +
+  labs(x = NULL)
+```
+
+## Adding a splash of color `r emo::ji("rainbow")`
+
+We can employ a little more scraping and color calculations to had colors to the bars according to the colors of the emoji.
+The following function takes a URL to a .png file and returns the most common color that isn't pure black or pure white.
+
+```{r mean_emoji_color}
+mean_emoji_color <- function(x) {
+  data <- png::readPNG(RCurl::getURLContent(x))
+  color_freq <- names(sort(table(rgb(data[,,1], data[,,2], data[,,3])), 
+                           decreasing = TRUE))
+  setdiff(color_freq, c("#FFFFFF", "#000000"))[1]
+}
+```
+
+We apply this to all the emoji URLs and color the bars accordingly. 
+
+```{r plotdata, warning=FALSE, dependson=c("top_happy2", "packages")}
+plot_data <- top_happy %>%
+  mutate(color = map_chr(url, slowly(~mean_emoji_color(.x), rate_delay(1))))
+
+plot_data %>%
+  ggplot(aes(fct_reorder(label, n, .desc = TRUE), 
+             color = color, 
+             fill = unclass(prismatic::clr_lighten(color, 0.4)), n)) +
+  geom_col() +
+  scale_fill_identity() +
+  scale_color_identity() +
+  theme_minimal() +
+  theme(axis.text.x = element_markdown()) +
+  labs(x = NULL, y = "Count",
+       title = "Emojis used in (small sample) of 'happy' tweets",
+       subtitle = "Displayed in ggplot2!!!",
+       caption = "@Emil_Hvitfeldt")
+```
+
+## Final note `r emo::ji("spiral_notepad")`
+
+If you want to use emojis in the text you need to call `theme_*()` before `theme()` such that `element_markdown()` isn't being overwritten.
+
+```{r details, echo=FALSE}
+library(details)
+
+sessioninfo::session_info()  %>%
+  details::details(summary = 'current session info')
+```
+

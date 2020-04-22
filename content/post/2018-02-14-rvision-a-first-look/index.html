@@ -1,0 +1,208 @@
+---
+title: 'Rvision: A first look'
+date: '2018-02-15'
+categories: []
+---
+
+
+
+<p><em>This code have been lightly revised to make sure it works as of 2018-12-19.</em></p>
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<p>Recently I stumbled across the <code>Rvision</code> package, which frankly looks amazing so far (still in development as this time of writing). So I decided to take it for a spin and show you girls/guys what I found.</p>
+</div>
+<div id="setup" class="section level2">
+<h2>Setup</h2>
+<p>So for this you will need a computer with a webcam and the <code>Rvision</code> package with its dependencies. It will use <code>ROpenCVLite</code> to access <code>OpenCV</code>’s functionalities. If not already installed, ROpenCVLite will be installed first by the command line below. Furthermore while not necessary for <code>Rvision</code> I have imported <code>dplyr</code> for general data manipulation.</p>
+<pre class="r"><code>#devtools::install_github(&quot;swarm-lab/Rvision&quot;)
+library(Rvision)
+library(dplyr)</code></pre>
+</div>
+<div id="minimal-setup---working-with-a-photo" class="section level2">
+<h2>Minimal Setup - working with a photo</h2>
+<p>We will start by simply loading a picture of a parrot. This is done using the function <code>image</code>, which creates an object of class <code>Image</code>. <code>Image</code> objects are pointers toward C++ objects stored in memory and will therefore not work with some functions in base R such <code>sum</code>, <code>%%</code>, etc.</p>
+<pre class="r"><code>img &lt;- image(&quot;parrot.jpg&quot;)</code></pre>
+<p>If we want to see the image we loaded we simply plot it:</p>
+<pre class="r"><code>plot(img)</code></pre>
+<p><img src="/post/2018-02-14-rvision-a-first-look/index_files/figure-html/unnamed-chunk-4-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>For more information about the <code>Image</code> object we can turn to the property functions:</p>
+<pre class="r"><code>dim(img)
+## [1] 1595 1919    3
+nrow(img)
+## [1] 1595
+ncol(img)
+## [1] 1919
+nchan(img)
+## [1] 3
+bitdepth(img)
+## [1] &quot;8U&quot;
+colorspace(img)
+## [1] &quot;BGR&quot;</code></pre>
+</div>
+<div id="blurs" class="section level2">
+<h2>Blurs</h2>
+<p>Now that we have an <code>Image</code> object we can use some of tools at our disposal, which includes standard things like blurs:</p>
+<pre class="r"><code>boxFilter(img, k_height = 25, k_width = 25) %&gt;% plot()</code></pre>
+<p><img src="/post/2018-02-14-rvision-a-first-look/index_files/figure-html/unnamed-chunk-6-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>gaussianBlur(img, k_height = 25, k_width = 25, sigma_x = 5, sigma_y = 5) %&gt;% plot()</code></pre>
+<p><img src="/post/2018-02-14-rvision-a-first-look/index_files/figure-html/unnamed-chunk-6-2.png" width="700px" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>medianBlur(img, k_size = 25) %&gt;% plot()</code></pre>
+<p><img src="/post/2018-02-14-rvision-a-first-look/index_files/figure-html/unnamed-chunk-6-3.png" width="700px" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>sqrBoxFilter(img, k_height = 25, k_width = 25) %&gt;% plot()</code></pre>
+<p><img src="/post/2018-02-14-rvision-a-first-look/index_files/figure-html/unnamed-chunk-6-4.png" width="700px" style="display: block; margin: auto;" /></p>
+</div>
+<div id="operators" class="section level2">
+<h2>Operators</h2>
+<p>Other kinds of operations can be done, such as changing the color space:</p>
+<pre class="r"><code>changeColorSpace(img, &quot;GRAY&quot;) %&gt;% plot()</code></pre>
+<p><img src="/post/2018-02-14-rvision-a-first-look/index_files/figure-html/unnamed-chunk-7-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>And apply edge detection algorithms such as <code>sobel</code> and <code>laplacian</code>.</p>
+<pre class="r"><code>sobel(img) %&gt;% plot()</code></pre>
+<p><img src="/post/2018-02-14-rvision-a-first-look/index_files/figure-html/unnamed-chunk-8-1.png" width="700px" style="display: block; margin: auto;" /></p>
+</div>
+<div id="draws" class="section level2">
+<h2>Draws</h2>
+<p>The package also includes a number of drawing functions starting with the prefix <code>draw</code>, ending with <code>Arrow</code>, <code>Circle</code>, <code>Ellipse</code>, <code>Line</code>, <code>Rectangle</code> and <code>text</code>. These functions, unlike the others, modifies the <code>Image</code> object that is taken in, instead of returning another <code>Image</code> object.</p>
+<pre class="r"><code>img1 &lt;- cloneImage(img)
+drawCircle(img1, x = 750, y = 750, radius = 200, color = &quot;blue&quot;, 
+           thickness = 10)
+plot(img1)</code></pre>
+<p><img src="/post/2018-02-14-rvision-a-first-look/index_files/figure-html/unnamed-chunk-9-1.png" width="700px" style="display: block; margin: auto;" /></p>
+</div>
+<div id="blob-detection" class="section level2">
+<h2>Blob detection</h2>
+<p>By now we looked at a bunch of different functions but all of them have been used separately. Now lets combine them to detect something inside the picture.</p>
+<pre class="r"><code>img &lt;- image(&quot;balls.jpg&quot;)
+plot(img)</code></pre>
+<p><img src="/post/2018-02-14-rvision-a-first-look/index_files/figure-html/unnamed-chunk-12-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>For our further calculations we need to know what color space this image is in</p>
+<pre class="r"><code>colorspace(img)</code></pre>
+<pre><code>## [1] &quot;BGR&quot;</code></pre>
+<p>Which is different then the correctly commonly used RGB. In the following code I tried to find all the blue balls. For that I used the <code>split</code> function to split the <code>Image</code> object into 3, one for each color channel. Then I used a <code>do.call</code> to return a object where the blue channel is more the 200, and the red and green are less then 200, in the hope that it would be enough to identify the blue color without also finding bright areas. This being a logical expression gives us a image file that is white when true and black when it isn’t. Lastly we used the <code>medianBlur</code> to remove any rough edges and flicker. (you can try comment out the <code>medianBlur</code> and see what changes)</p>
+<pre class="r"><code>img %&gt;%
+  split() %&gt;%
+  do.call(function(B, G, R) B &gt; 200 &amp; G &lt; 200 &amp; R &lt; 200, .) %&gt;%
+  medianBlur() %&gt;%
+  plot()</code></pre>
+<p>If we would like to highlight these balls on the original image we have to detect where these white blobs are and use the draw functions to draw on our original image. We use <code>simpleBlobDetector</code> and play around with the settings till be get something reasonable.</p>
+<pre class="r"><code>blue_balls &lt;- img %&gt;%
+  split() %&gt;%
+  do.call(function(B, G, R) B &gt; 200 &amp; G &lt; 200 &amp; R &lt; 200, .) %&gt;%
+  medianBlur() %&gt;%
+  simpleBlobDetector(max_area = Inf, min_area = 10, blob_color = 255,
+                     filter_by_convexity = FALSE, 
+                     filter_by_inertia = FALSE, min_threshold = 0)
+blue_balls</code></pre>
+<p>We use the <code>cloneImage</code> as it creates a new <code>Image</code> object such that the drawing doesn’t change the original <code>Image</code> object.</p>
+<pre class="r"><code>img1 &lt;- cloneImage(img)
+
+for (i in seq_len(nrow(blue_balls))) {
+  drawRectangle(image = img1,
+                pt1_x = blue_balls$x[i] - 1 + blue_balls$size[i] / 2, 
+                pt1_y = blue_balls$y[i] - 1 + blue_balls$size[i] / 2, 
+                pt2_x = blue_balls$x[i] - 1 - blue_balls$size[i] / 2, 
+                pt2_y = blue_balls$y[i] - 1 - blue_balls$size[i] / 2, 
+                thickness = 3, color = &quot;blue&quot;)
+}
+
+plot(img)</code></pre>
+<p>We see that it worked fairly well, it didn’t go all the way till the edges of the balls and it appeared to catch the blue artifact on the lower left side, but more careful ranges could take care of that problem.</p>
+</div>
+<div id="streams" class="section level2">
+<h2>Streams</h2>
+<p><code>Rvision</code> also have a <code>Stream</code> object that we can utilize. the <code>stream</code> function creates a <code>Stream</code> object from the the camera connected to your computer. In my case number 0 is the webcam in my Macbook. Its corresponding function is <code>release</code> which closes the stream object. To capture something we use the handy <code>readNext</code> function that reads the next frame and returns a <code>Image</code> object.</p>
+<pre class="r"><code>my_stream &lt;- stream(0)   # 0 will start your default webcam in general. 
+my_img &lt;- readNext(my_stream)
+release(my_stream)</code></pre>
+<p>Lets take a look at the image that was captured on my webcam.</p>
+<pre class="r"><code>plot(my_img)</code></pre>
+<p><img src="/post/2018-02-14-rvision-a-first-look/index_files/figure-html/unnamed-chunk-19-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>and what a coincidence!! Its a handful of distinctly colored m&amp;m’s against a dark background. Lets try against to locate the different colors, but before we do that let us reuse what we did earlier and make it into some custom functions:</p>
+<pre class="r"><code>blob_fun &lt;- function(img, fun, color = character()) {
+  img %&gt;%
+    split() %&gt;%
+    do.call(fun, .) %&gt;%
+    medianBlur(15) %&gt;%
+    simpleBlobDetector(max_area = Inf, min_area = 10, blob_color = 255,
+                       filter_by_convexity = FALSE, 
+                       filter_by_inertia = FALSE, min_threshold = 0) %&gt;%
+    mutate(color = color)
+} 
+
+multi_draw &lt;- function(img, blobs) {
+  if (nrow(blobs) &gt; 0) {
+    for (i in 1:nrow(blobs)) {
+      drawRectangle(img, 
+                    blobs$x[i] - 1 + blobs$size[i], 
+                    blobs$y[i] - 1 + blobs$size[i],
+                    blobs$x[i] - 1 - blobs$size[i], 
+                    blobs$y[i] - 1 - blobs$size[i], 
+                    thickness = 5, color = blobs$color[1])
+    }
+  }
+}</code></pre>
+<p>Like before we found the blue balls by identifying the region in the BGR color space where its blue, we expand the same idea to the other colors. (I have not attempted brown as it is fairly similar in color to the table)</p>
+<pre class="r"><code>blue &lt;-   function(B, G, R) B &gt; 150 &amp; R &lt; 200 &amp; G &lt; 200
+red &lt;-    function(B, G, R) R &gt; 150 &amp; B &lt; 200 &amp; G &lt; 150
+green &lt;-  function(B, G, R) G &gt; 150 &amp; B &lt; 200 &amp; R &lt; 200
+yellow &lt;- function(B, G, R) G &gt; 150 &amp; B &lt; 200 &amp; B &gt; 150 &amp; R &gt; 150
+orange &lt;- function(B, G, R) G &gt; 150 &amp; B &lt; 150 &amp; R &gt; 150</code></pre>
+<p>Now we just have to run our custom blob detection function and custom drawing function for each color and see the final result</p>
+<pre class="r"><code>blue_mms &lt;-   blob_fun(my_img, blue, &quot;blue&quot;)
+red_mms &lt;-    blob_fun(my_img, red, &quot;red&quot;)
+green_mms &lt;-  blob_fun(my_img, green, &quot;green&quot;)
+yellow_mms &lt;- blob_fun(my_img, yellow, &quot;yellow&quot;)
+orange_mms &lt;- blob_fun(my_img, orange, &quot;orange&quot;)
+
+multi_draw(my_img, blue_mms)
+multi_draw(my_img, red_mms)
+multi_draw(my_img, green_mms)
+multi_draw(my_img, yellow_mms)
+multi_draw(my_img, orange_mms)
+
+plot(my_img)</code></pre>
+<p><img src="/post/2018-02-14-rvision-a-first-look/index_files/figure-html/unnamed-chunk-22-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>And it is wonderful!</p>
+</div>
+<div id="displays" class="section level2">
+<h2>Displays</h2>
+<p>Last trip of the tour is a look at the Displays that <code>Rvision</code> facilitate. And in its simplest form, it creates a window where <code>Image</code> objects can be displayed. Which mean that we are able to do live m&amp;m’s detection!!</p>
+<p>In a minimal setup you would have this following chuck of code, which sets up a stream, a display and then populates that display with new images taken from the camera till you stop it. And then termination functions for the stream and display. However this is no different then a video feed.</p>
+<pre class="r"><code>my_stream &lt;- stream(0)
+newDisplay(&quot;Live test&quot;, 360, 640)
+while(TRUE) {
+  img &lt;- readNext(my_stream)
+  display(img, &quot;Live test&quot;, 25, 360, 640)
+}
+destroyDisplay(&quot;Live test&quot;)
+release(my_stream)</code></pre>
+<p>So instead we will use the functions from earlier to detect and highlight the colored m&amp;m’s!</p>
+<pre class="r"><code>my_stream &lt;- stream(0)
+newDisplay(&quot;Live test&quot;, 360, 640)
+
+while(TRUE) {
+  img &lt;- readNext(my_stream)
+  
+  blue_mms &lt;- blob_fun(img, blue, &quot;blue&quot;)
+  red_mms &lt;- blob_fun(img, red, &quot;red&quot;)
+  green_mms &lt;- blob_fun(img, green, &quot;green&quot;)
+  yellow_mms &lt;- blob_fun(img, yellow, &quot;yellow&quot;)
+  orange_mms &lt;- blob_fun(img, orange, &quot;orange&quot;)
+  
+  multi_draw(img, blue_mms)
+  multi_draw(img, red_mms)
+  multi_draw(img, green_mms)
+  multi_draw(img, yellow_mms)
+  multi_draw(img, orange_mms)
+  
+  display(img, &quot;Live test&quot;, 25, 360, 640)
+}
+destroyDisplay(&quot;Live test&quot;)
+release(my_stream)</code></pre>
+<p><img src="Feb-15-2018%2011-12-04.gif" width="700px" style="display: block; margin: auto;" /></p>
+<p>Its a little choppy but that might be because of my now quite old Macbook.</p>
+</div>
+<div id="conclusion" class="section level2">
+<h2>Conclusion</h2>
+<p>I had a blast working with <code>Rvision</code> and I look forward to use it is future projects! I would also recommend against using eatable data points as they tend to disappear over time.</p>
+</div>

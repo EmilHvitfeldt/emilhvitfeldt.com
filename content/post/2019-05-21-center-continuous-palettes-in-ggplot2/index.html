@@ -1,0 +1,58 @@
+---
+title: Center continuous palettes in ggplot2
+date: '2019-05-21'
+categories: [ggplot2]
+---
+
+
+
+<p>Using a divergent color palette can be beneficial when you want to draw attention to some values compared to a fixed point. Like temperature around freezing, monetary values around zero and so on. However it can be hard to align 0 to the middle of a continuous color scale. This post will explain how to do this correctly for <code>scale_colour_distiller</code> and <code>scale_fill_distiller</code>, and this will also work for extension packages such as <a href="https://github.com/thomasp85/scico">scico</a>.</p>
+<div id="packages-and-data" class="section level1">
+<h1>Packages and data</h1>
+<pre class="r"><code>library(ggplot2)
+library(scico)
+
+theme_set(theme_minimal())
+
+example_data &lt;- data.frame(name = letters[1:10],
+                           value = -2:7 + 0.5)</code></pre>
+</div>
+<div id="the-problem" class="section level1">
+<h1>The problem</h1>
+<p>First lets construct a simple chart, we have a bar chart where some of the bars go up, and some of the bars go down.</p>
+<pre class="r"><code>ggplot(example_data, aes(name, value)) +
+  geom_col()</code></pre>
+<p><img src="/post/2019-05-21-center-continuous-palettes-in-ggplot2/index_files/figure-html/unnamed-chunk-2-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>Next lets add some color by assigning the value to the fill aesthetic.</p>
+<pre class="r"><code>ggplot(example_data, aes(name, value, fill = value)) +
+  geom_col()</code></pre>
+<p><img src="/post/2019-05-21-center-continuous-palettes-in-ggplot2/index_files/figure-html/unnamed-chunk-3-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>Using a sequential palette for a chart like this doesn’t give us much insight. Lets add a divergent scale with <code>scale_fill_gradient2()</code>. While it is doing its job, you still have to define the colors yourself.</p>
+<pre class="r"><code>ggplot(example_data, aes(name, value, fill = value)) +
+  geom_col() +
+  scale_fill_gradient2()</code></pre>
+<p><img src="/post/2019-05-21-center-continuous-palettes-in-ggplot2/index_files/figure-html/unnamed-chunk-4-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>Lets instead use the <code>scale_fill_distiller()</code> function to access the continuous versions of the <a href="http://colorbrewer2.org">brewer scales</a>.</p>
+<pre class="r"><code>ggplot(example_data, aes(name, value, fill = value)) +
+  geom_col() +
+  scale_fill_distiller(type = &quot;div&quot;)</code></pre>
+<p><img src="/post/2019-05-21-center-continuous-palettes-in-ggplot2/index_files/figure-html/unnamed-chunk-5-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>But look! some of the upwards facing bars are colored green instead of orange.</p>
+</div>
+<div id="the-solution" class="section level1">
+<h1>The solution</h1>
+<p>The solution is to manually specify the the limits of the color palette such that the center of the palette appears in the middle of the range. This is simply done by finding the absolute maximum of the range of the variable to are mapping to the color. We then set the limits to go from negative max to positive max, thus making zero appear in the middle.</p>
+<pre class="r"><code>limit &lt;- max(abs(example_data$value)) * c(-1, 1)
+
+ggplot(example_data, aes(name, value, fill = value)) +
+  geom_col() +
+  scale_fill_distiller(type = &quot;div&quot;, limit = limit)</code></pre>
+<p><img src="/post/2019-05-21-center-continuous-palettes-in-ggplot2/index_files/figure-html/unnamed-chunk-6-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>This approach also works with the <code>scico</code> package.</p>
+<pre class="r"><code>limit &lt;- max(abs(example_data$value)) * c(-1, 1)
+
+ggplot(example_data, aes(name, value, fill = value)) +
+  geom_col() +
+  scale_fill_scico(palette = &quot;cork&quot;, limit = limit) </code></pre>
+<p><img src="/post/2019-05-21-center-continuous-palettes-in-ggplot2/index_files/figure-html/unnamed-chunk-7-1.png" width="700px" style="display: block; margin: auto;" /></p>
+</div>

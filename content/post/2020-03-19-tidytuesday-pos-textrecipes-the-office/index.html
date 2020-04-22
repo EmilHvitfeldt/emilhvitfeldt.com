@@ -1,0 +1,225 @@
+---
+title: 'tidytuesday: Part-of-Speech and textrecipes with The Office'
+date: '2020-03-19'
+categories: [tidymodels, textrecipes, tidytuesday]
+---
+
+
+
+<p>I’m ready for my second <a href="https://github.com/rfordatascience/tidytuesday">#tidytuesday</a> and as a massive <a href="https://www.imdb.com/title/tt0386676/">The Office</a> fan this dataset is right up my alley. In this post, you will read how to</p>
+<ul>
+<li>Use the R wrapper <a href="http://spacyr.quanteda.io/">spacyr</a> of <a href="https://spacy.io/">spacy</a> to extract part of speech tags</li>
+<li>Use a custom tokenizer in conjunction with <a href="https://tidymodels.github.io/textrecipes/dev/">textrecipes</a> package</li>
+<li>Do hyperparameter tuning with the <a href="https://github.com/tidymodels/tune">tune</a> package</li>
+<li>Try to predict the author of each line in the show</li>
+</ul>
+<p>I’ll put a little more effort into the explorative charts then I usually do.
+I’ll not be explaining each line of code for those, but you are encouraged to play around with them yourself.</p>
+<div id="packages" class="section level2">
+<h2>Packages 📦</h2>
+<pre class="r"><code>library(schrute)
+library(tidytext)
+library(tidymodels)
+library(tokenizers)
+library(textrecipes)
+library(spacyr)
+library(paletteer)</code></pre>
+<p>We will be using the <a href="https://bradlindblad.github.io/schrute/index.html">schrute</a> package which includes the dataset for the week.
+<a href="https://github.com/juliasilge/tidytext">tidytext</a> and <a href="https://github.com/ropensci/tokenizers">tokenizers</a> to do data exploration for the text.
+<a href="http://spacyr.quanteda.io/">spacyr</a> to access the spacy to perform part of speech tagging.
+<a href="https://github.com/tidymodels">tidymodels</a> and
+<a href="https://tidymodels.github.io/textrecipes/dev/">textrecipes</a> to do to the preprocessing and modeling.
+And lastly, we use <a href="https://github.com/EmilHvitfeldt/paletteer">paletteer</a> to get pretty color palettes.</p>
+</div>
+<div id="exploring-the-data" class="section level2">
+<h2>Exploring the data ⛏</h2>
+<p>The data comes with a lot of different variables. We will be focusing on <code>character</code> and <code>text</code>.
+First, let us take a look at how many lines each character has</p>
+<pre class="r"><code>theoffice %&gt;%
+  count(character, sort = TRUE)</code></pre>
+<p>Micheal, Dwight, Jim, and Pam are dominating the charts.
+This is unsurprising since they are some of the main characters having a central role in the episodes they appear in.
+This will be too many classes for the scope of this post so I’ll limit it to the top 5 characters with the most lines since the number drops off more after the first 5.</p>
+<pre class="r"><code>small_office &lt;- theoffice %&gt;%
+  select(character, text) %&gt;%
+  filter(character %in% c(&quot;Michael&quot;, &quot;Dwight&quot;, &quot;Jim&quot;, &quot;Pam&quot;, &quot;Andy&quot;))</code></pre>
+<p>Let us take a lot at how many words each line in the script is.
+This is going to be a problem for us later on as predicting with shorter text is harder than longer text as there is less information in it.</p>
+<pre class="r"><code>small_office %&gt;%
+  mutate(n_words = count_words(text)) %&gt;%
+  ggplot(aes(n_words, color = character)) +
+  geom_density(binwidth = 1, key_glyph = draw_key_timeseries) +
+  xlim(c(0, 50)) +
+  scale_color_paletteer_d(&quot;nord::aurora&quot;) +
+  labs(x = &quot;Number of words&quot;, y = &quot;Density&quot;, color = NULL,
+       title = &quot;Distribution of line length in The Office&quot;) +
+  theme_minimal() +
+  theme(legend.position = &quot;top&quot;, 
+        plot.title.position = &quot;plot&quot;) </code></pre>
+<p>These lines are thankfully pretty similar, which will make it easier for us to make a good predictive model.
+However, we can still see some differences.
+Pam and Jim both have shorter lines than the rest,
+and Michael and Andy both have fewer shorter lines in exchange for more long lines.</p>
+<p>We will be also be exploring <a href="https://en.wikipedia.org/wiki/Part-of-speech_tagging">part of speech tagging</a> and for that, we will be using the spacyr package.
+It isn’t always needed but I’m going to explicitly initialize the spacy model</p>
+<pre class="r"><code>spacy_initialize(model = &quot;en_core_web_sm&quot;)</code></pre>
+<p>the spacyr package outputs in this nice format with <code>doc_id</code>, <code>sentence_id</code>, <code>token_id</code>, <code>token</code> and <code>pos</code>.</p>
+<pre class="r"><code>spacy_parse(small_office$text[1], entity = FALSE, lemma = FALSE)</code></pre>
+<p>Normally I would just analyze the data in this format.
+But since I have to create a custom wrapper for textrecipes anyway I’ll do the remaining of the text mining in tidytext.
+textrecipes requires that the tokenizer returns the tokens in a list format similar to the tokenizers in <strong>tokenizers</strong>.
+The following function takes a character vector and returns the part of speech tags in a list format.</p>
+<pre class="r"><code>spacy_pos &lt;- function(x) {
+  tokens &lt;- spacy_parse(x, entity = FALSE, lemma = FALSE)
+  token_list &lt;- split(tokens$pos, tokens$doc_id)
+  names(token_list) &lt;- gsub(&quot;text&quot;, &quot;&quot;, names(token_list))
+  res &lt;- unname(token_list[as.character(seq_along(x))])
+  empty &lt;- lengths(res) == 0
+  res[empty] &lt;- lapply(seq_len(sum(empty)), function(x) character(0))
+  res
+}</code></pre>
+<p>Little example to showcase the function</p>
+<pre class="r"><code>example_string &lt;- c(&quot;Hello there pig&quot;, &quot;&quot;, &quot;One more pig here&quot;)
+
+spacy_pos(x = example_string)</code></pre>
+<p>We can use a custom tokenizer by simply passing it to the <code>token</code> argument.
+This is going to take a little longer than normal since POS tagging takes longer than simply tokenizing.</p>
+<pre class="r"><code>small_office_tokens &lt;- small_office %&gt;%
+  unnest_tokens(text, text, token = spacy_pos, to_lower = FALSE)</code></pre>
+<p>Below is a chart of the number of each part of speech tags.
+The meaning of the acronyms can be found <a href="https://spacy.io/api/annotation">here</a> if you click on the Universal Part-of-speech Tags button.</p>
+<pre class="r"><code>colors &lt;- rep(paletteer_d(&quot;rcartocolor::Pastel&quot;), length.out = 16)
+
+small_office_tokens %&gt;%
+  count(text) %&gt;%
+  ggplot(aes(n, reorder(text, n), fill = reorder(text, n))) +
+  geom_col() +
+  labs(x = NULL, y = NULL, title = &quot;Part of Speech tags in The Office&quot;) +
+  scale_fill_manual(values = colors) +
+  guides(fill = &quot;none&quot;) +
+  theme_minimal() +
+  theme(plot.title.position = &quot;plot&quot;) </code></pre>
+<p>I found it initially surprising that punctuation (<code>PUNCT</code>) was leading the chart.
+But after thinking about it a little bit it, I can imagine it has something to do with all the lines being very short and having to end in some kind of punctuation.</p>
+<p>We can facet this by the character to see who uses what part of speech.</p>
+<pre class="r"><code>small_office_tokens %&gt;%
+  count(character, text) %&gt;%
+  group_by(character) %&gt;%
+  mutate(prop = n / sum(n)) %&gt;%
+  ungroup() %&gt;%
+  ggplot(aes(forcats::fct_rev(reorder(text, n)), prop, fill = character)) +
+  geom_col(position = &quot;dodge&quot;) +
+  scale_fill_paletteer_d(&quot;nord::aurora&quot;) +
+  labs(x = NULL, y = NULL, fill = NULL,
+       title = &quot;Part of speech tags by main character in The Office&quot;) +
+  theme_minimal() +
+  theme(legend.position = &quot;top&quot;, 
+        plot.title.position = &quot;plot&quot;) </code></pre>
+<p>I don’t immediately see anything popping out at me, but it is a very pretty chart otherwise.
+I feel like I have seen enough, lets get to modeling!</p>
+</div>
+<div id="modeling-️" class="section level2">
+<h2>Modeling ⚙️</h2>
+<p>Not that we have gotten a look at the data lets get to modeling.
+First we need to do a test/train split which we can do with <a href="https://github.com/tidymodels/yardstick">yardstick</a>.</p>
+<pre class="r"><code>set.seed(1234)
+office_split &lt;- initial_split(small_office, strata = character)
+office_test &lt;- testing(office_split)
+office_train &lt;- training(office_split)</code></pre>
+<p>Next we are going to prepare the preprocessing steps.
+We will be using the custom part of speech tokenizer we defined earlier to include part of speech tag counts as features in our model.
+Since this data is going to a little sparse will we also include <a href="https://en.wikipedia.org/wiki/N-gram">bi-grams</a> of the data.
+To this, we first create a copy of the text variable and apply the tokenizers to each copy.
+Lastly will be also be doing some downsampling of the data to handle the imbalance in the data.
+This calculation will once again take a little while since the part of speech calculations takes a minute or two.</p>
+<pre class="r"><code>rec &lt;- recipe(character ~ text, data = small_office) %&gt;%
+  # Deal with imbalance
+  step_downsample(character) %&gt;%
+  # Create copy of text variable
+  step_mutate(text_copy = text) %&gt;%
+  # Tokenize the two text columns
+  step_tokenize(text, token = &quot;ngrams&quot;, options = list(n = 2)) %&gt;%
+  step_tokenize(text_copy, custom_token = spacy_pos) %&gt;%
+  # Filter to only keep the most 100 frequent n-grams
+  step_tokenfilter(text, max_tokens = 100) %&gt;%
+  # Calculate tf-idf for both sets of tokens
+  step_tfidf(text, text_copy) %&gt;%
+  prep()</code></pre>
+<p>We can now extract the processed data</p>
+<pre class="r"><code>office_test_prepped &lt;- bake(rec, office_test)
+office_train_prepped &lt;- juice(rec)</code></pre>
+<p>To do the actual modeling we will be using <code>multinom_reg()</code> with <code>"glmnet"</code> as the engine.
+This model has two hyperparameters, which we will be doing a grid search over to find optimal values.
+We specify that we want to tune these parameters by passing <code>tune()</code> to them.</p>
+<pre class="r"><code>tune_spec &lt;- multinom_reg(penalty = tune(), mixture = tune()) %&gt;%
+  set_engine(&quot;glmnet&quot;)
+tune_spec</code></pre>
+<p>Next we set up a bootstrap sampler and grid to optimize over.</p>
+<pre class="r"><code>set.seed(12345)
+office_boot &lt;- bootstraps(office_train_prepped, strata = character, times = 10)
+
+hyper_grid &lt;- grid_regular(penalty(), mixture(), levels = 10)</code></pre>
+<p>Now we pass all the objects to <code>tune_grid()</code>.
+It is also possible to combine our recipe and model object into a workflow object to pass to tune_grid instead.
+However, since the preprocessing step took so long and we didn’t vary anything it makes more sense time-wise to use <code>tune_grid()</code> with a formula instead.
+I also set <code>control = control_grid(verbose = TRUE)</code> so I get a live update of how far the calculations are going.</p>
+<pre class="r"><code>set.seed(123456)
+fitted_grid &lt;- tune_grid(
+  formula = character ~ .,
+  model = tune_spec,
+  resamples = office_boot,
+  grid = hyper_grid,
+  control = control_grid(verbose = TRUE)
+)</code></pre>
+<p>We can now look at the best performing models with <code>show_best()</code></p>
+<pre class="r"><code>fitted_grid %&gt;%
+  show_best(&quot;roc_auc&quot;)</code></pre>
+<p>And we can use the values from the best performing model to fit our final model.</p>
+<pre class="r"><code>final_model &lt;- tune_spec %&gt;%
+  update(penalty = 0.005994843, mixture = 1 / 3) %&gt;%
+  fit(character ~ ., data = office_train_prepped)</code></pre>
+</div>
+<div id="evaluation" class="section level2">
+<h2>Evaluation 📐</h2>
+<p>Now that we have our final model we can predict on our test set and look at the <a href="https://en.wikipedia.org/wiki/Confusion_matrix">confusion matrix</a> to see how well we did.</p>
+<pre class="r"><code>bind_cols(
+  predict(final_model, office_test_prepped),
+  office_test_prepped
+) %&gt;%
+  conf_mat(truth = character, estimate = .pred_class) %&gt;%
+  autoplot(type = &quot;heatmap&quot;)</code></pre>
+<p>These are not going too well.
+It is doing best at predicting Michael correctly, and it seems to confuse Dwight and Michael a little bit.</p>
+<p>Let us investigate the cases that didn’t go too well.
+We can get the individual class probabilities by setting <code>type = "prob"</code> in <code>predict()</code></p>
+<pre class="r"><code>class_predictions &lt;- predict(final_model, office_test_prepped, type = &quot;prob&quot;)
+class_predictions</code></pre>
+<p>We can do some wrangling to get the 5 worst predicted texts for each character:</p>
+<pre class="r"><code>bind_cols(
+  class_predictions,
+  office_test
+) %&gt;%
+  pivot_longer(starts_with(&quot;.pred_&quot;)) %&gt;%
+  filter(gsub(&quot;.pred_&quot;, &quot;&quot;, name) == character) %&gt;%
+  group_by(character) %&gt;%
+  arrange(value) %&gt;%
+  slice(1:5) %&gt;%
+  ungroup() %&gt;%
+  select(-name, -value) %&gt;%
+  reactable::reactable()</code></pre>
+<p>So the first striking thing here is that many of the lines are quite short, with most of Pam’s being 5 words or less. On the other hand, all the wrongly predicted lines for Michael are quite a bit longer than the rest.</p>
+<p>We can also get the best predicted lines for each character by flipping the sign with <code>desc()</code></p>
+<pre class="r"><code>bind_cols(
+  class_predictions,
+  office_test
+) %&gt;%
+  pivot_longer(starts_with(&quot;.pred_&quot;)) %&gt;%
+  filter(gsub(&quot;.pred_&quot;, &quot;&quot;, name) == character) %&gt;%
+  group_by(character) %&gt;%
+  arrange(desc(value)) %&gt;%
+  slice(1:5) %&gt;%
+  ungroup() %&gt;%
+  select(-name, -value) %&gt;%
+  reactable::reactable()</code></pre>
+<p>One thing I noticed is that many of Pam’s lines start with “Oh my” and that might have been a unique character trait that got picked up in the bi-grams.</p>
+</div>

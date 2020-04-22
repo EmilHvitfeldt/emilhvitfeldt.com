@@ -1,0 +1,125 @@
+---
+title: Deploy your bookdown project to Netlify with Github Actions
+date: '2020-01-20'
+categories: []
+---
+
+
+
+<p>With the new <a href="https://github.com/features/actions">Github Actions</a> comes many possibilities.
+Some new and some old.
+One of the benefits is that you don’t have to use third-party applications to do continuous integration.</p>
+<p>This post will show you how you can set up a <a href="https://bookdown.org/yihui/bookdown/">bookdown</a> site with <a href="https://netlify.com/">Netlify</a> using Github Actions.
+This was previously and still is possible to do with Travis-CI.</p>
+<p>This post wouldn’t have been possible without <a href="https://twitter.com/jimhester_">Jim Hester’s</a> work on <a href="https://github.com/r-lib/actions">Github Actions</a>.</p>
+<p>If you are transferring a book from Travis-CI build look at the notes at the end of this post.</p>
+<div id="create-repository" class="section level2">
+<h2>Create Repository</h2>
+<p>First, you need to create a bookdown repository.
+For this, I suggest you follow the <a href="https://bookdown.org/yihui/bookdown/get-started.html">Getting Started</a> chapter from the <a href="https://bookdown.org/yihui/bookdown/">Bookdown Book</a> and download the GitHub repository <a href="https://github.com/rstudio/bookdown-demo" class="uri">https://github.com/rstudio/bookdown-demo</a> as a <a href="https://github.com/rstudio/bookdown-demo/archive/master.zip">Zip file</a>, then unzip it locally.
+I recommend that you change the name of the <code>.Rproj</code> file so isn’t the default value.</p>
+<p>The next step isn’t necessary but is still highly recommended.
+Go fill in the information in the <code>DESCRIPTION</code> file.
+Most importantly the <code>Package</code> and <code>Title</code> fields.
+The <code>Package</code> field will be used as the name of the repository and the <code>Title</code> field will be the description of the repository once it hits Github.</p>
+</div>
+<div id="connect-to-github" class="section level2">
+<h2>Connect to Github</h2>
+<p>Now we want to connect our repository to Github.
+For this, I will use the <a href="https://usethis.r-lib.org/">usethis</a> package which is wonderful for things like this.
+If you haven’t used <strong>usethis</strong> before please go do the <a href="https://usethis.r-lib.org/articles/articles/usethis-setup.html">usethis setup</a> before moving forward.</p>
+<p>Simply add Git to the repository by running <code>usethis::use_git()</code> and connect it to Github with <code>usethis::use_github()</code>.
+This should open up a webpage with the newly linked repository.</p>
+</div>
+<div id="create-netlify-account" class="section level2">
+<h2>Create Netlify account</h2>
+<p>If you haven’t already got a Netlify account, go to <a href="https://www.netlify.com/">netlify.com/</a> to create one for free.
+I have it set up with Github for easier interaction.</p>
+</div>
+<div id="create-netlify-site" class="section level2">
+<h2>Create Netlify site</h2>
+<p>Once you have logged into Netlify go to your team page and to create a “New site from Git”</p>
+<p><img src="netlify-teams.png" /></p>
+<p>Select Github for Continuous Deployment</p>
+<p><img src="create-new-site.png" /></p>
+<p>Now we need to select the GitHub repository.
+Depending on how many repositories you have you can find it in the list or search for it with the search bar.
+Once you have found it click the little arrow to the right of it.</p>
+<p><img src="pick-a-repository.png" /></p>
+<p>Don’t touch any of the settings.</p>
+<p><img src="deploy-settings.png" /></p>
+<p>And voila!
+Here is your new site, it is currently empty.
+Now click on the “Site settings” button</p>
+<p><img src="new-site.png" /></p>
+<p>copy the API ID and save it, you will need it in a little bit.
+If you lose it you can always come back here and copy it again.</p>
+<p><img src="site-id.png" /></p>
+<p>You might have noticed that the website is completely random.
+If you click on the “Change site name” button you can set a new prefix name.</p>
+<p><img src="set-name.png" /></p>
+<p>Scroll down to get the Status Badge, you can copy this too and put it in the top of your README.md file if you want.</p>
+<p><img src="status-badge.png" /></p>
+</div>
+<div id="get-a-netlify-personal-access-token" class="section level2">
+<h2>Get a Netlify personal access token</h2>
+<p>Scroll all the way up and click on your icon in the top right corner.
+Then go to “User settings”</p>
+<p><img src="icon.png" /></p>
+<p>go to “Applications”</p>
+<p><img src="user-settings.png" /></p>
+<p>And click on “New access token” to create a personal access token</p>
+<p><img src="personal-access-token.png" /></p>
+<p>The description of your token isn’t important but try to make it related to your book so you remember.
+Click “Generate token” when you are done.</p>
+<p><img src="generate-token.png" /></p>
+<p>Here is your authentication token.
+Copy it and don’t lose it!
+Once you leave this site you can get it back.</p>
+<p><img src="created-token.png" /></p>
+</div>
+<div id="store-your-secrets" class="section level2">
+<h2>Store Your Secrets</h2>
+<p>Now that you have the API ID and personal access token go back to your Github repository and go to “Settings”</p>
+<p><img src="github-settings.png" /></p>
+<p>go to “Secrets”</p>
+<p><img src="github-secrets.png" /></p>
+<p>Click on “Add a new secret”</p>
+<p><img src="add-new-secret.png" /></p>
+<p>You need to do this twice.</p>
+<ul>
+<li>one named “NETLIFY_AUTH_TOKEN” where you put the personal access token as the value and,</li>
+<li>one named “NETLIFY_SITE_ID” where you put the API ID as the value.</li>
+</ul>
+<p><img src="fill-in-secret.png" /></p>
+</div>
+<div id="create-github-workflow" class="section level2">
+<h2>Create Github workflow</h2>
+<p>Now add the GitHub workflow file.</p>
+<p>For this you will need version <code>1.5.1.9000</code> or higher of <strong>usethis</strong> for it to work.
+You can get the newest version of usethis from github with</p>
+<pre class="r"><code># install.packages(&quot;devtools&quot;)
+devtools::install_github(&quot;r-lib/usethis&quot;)</code></pre>
+<p>then you run <code>use_github_action("bookdown.yaml")</code> which will create the .yaml file in the right directory for you.</p>
+</div>
+<div id="run-renvsnapshot" class="section level2">
+<h2>Run renv::snapshot</h2>
+<p>Install the <a href="https://github.com/rstudio/renv">renv</a> package and run <code>renv::snapshot()</code>.
+This will ensure the package versions remain consistent across builds.</p>
+<p>Once you need more packages, add them to the description like you normally would with an R package.</p>
+</div>
+<div id="push-changes" class="section level2">
+<h2>Push changes</h2>
+<p>And that is everything you need to do, just commit the workflow file and the <strong>renv</strong> files you created and the website should build for you.</p>
+<p>My example can be found <a href="https://bookdown-github-actions-netlify.netlify.com/">here</a> with the <a href="https://github.com/EmilHvitfeldt/bookdown-github-actions-netlify">repository</a>.</p>
+</div>
+<div id="notes" class="section level2">
+<h2>Notes</h2>
+<p>the line</p>
+<pre><code>netlify deploy --prod --dir _book</code></pre>
+<p>in the workflow file it the one that deploys the built book to Netlify.
+It defaults to the <code>_book</code> folder.
+In the <code>_bookdown.yml</code> file you can change the output folder.
+So if you have set it to <code>output_dir: "docs"</code> then you need to change the deploy option to</p>
+<pre><code>netlify deploy --prod --dir docs</code></pre>
+</div>

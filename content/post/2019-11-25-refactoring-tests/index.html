@@ -1,0 +1,114 @@
+---
+title: Refactoring Tests
+date: '2019-11-25'
+categories: []
+---
+
+
+
+<p>We all know the saying</p>
+<blockquote>
+<p>When you’ve written the same code 3 times, write a function</p>
+</blockquote>
+<p>However, I would like to expend that to</p>
+<blockquote>
+<p>When you’re written the same test 3 times, write a test function</p>
+</blockquote>
+<p>During my lasting packages such as <a href="https://github.com/EmilHvitfeldt/prismatic">prismatic</a>,
+I found myself copy-pasting tests around whenever I needed to test a new function.
+I realized that the refactoring practices I try to apply in my general code writing,
+wasn’t carried over to the way I was writing my tests.
+I would frequency copy-paste hundreds of lines of tests only to replace the function name.
+In this post will I go over a refactoring scenario I am working on at the moment.</p>
+<div id="the-copy-pasted-test" class="section level1">
+<h1>The copy-pasted test</h1>
+<p>The <strong>prismatic</strong> package includes almost a dozen different functions that work mostly the same way.
+They all take the same type of arguments, return the returns in the same fashion and so on.
+This leads me to have a great overlap between what tests I’m performing for each function.</p>
+<p>Taking a look at the following code chuck we see a test that makes sure that the function <code>clr_alpha()</code> complain when given the wrong type of the first argument.</p>
+<pre class="r"><code>test_that(&quot;complain when `col` type is wrong.&quot;, {
+  expect_error(clr_alpha(&quot;not a color&quot;))
+
+  expect_error(clr_alpha(list(pal = &quot;#000000&quot;)))
+
+  expect_error(clr_alpha(character()))
+})</code></pre>
+<p>When looking at the same test for <code>clr_mix()</code> we see that it is a carbon copy except for the function name.</p>
+<pre class="r"><code>test_that(&quot;it complains when col type is wrong.&quot;, {
+  expect_error(clr_mix(&quot;not a color&quot;))
+
+  expect_error(clr_mix(list(pal = &quot;#000000&quot;)))
+
+  expect_error(clr_mix(character()))
+})</code></pre>
+<p>I’m going to propose 2 different styles of refactoring,
+with the main difference being how RStudio returns the error when tests are not met.</p>
+<div id="fix-1---plays-well-with-error-messages" class="section level2">
+<h2>Fix #1 - Plays well with error messages</h2>
+<p>The first solution is to wrap the inside of your test into a function.
+The above test would create the refactored testing-function</p>
+<pre class="r"><code>test_wrong_input &lt;- function(clr_) {
+  expect_error(clr_(&quot;not a color&quot;))
+
+  expect_error(clr_(list(pal = &quot;#000000&quot;)))
+
+  expect_error(clr_(character()))
+}</code></pre>
+<p>and the test would be changed to</p>
+<pre class="r"><code>test_that(&quot;it complains when col type is wrong.&quot;, {
+  test_wrong_input(clr_alpha)
+})</code></pre>
+<p>this change will perform the tests,
+and adding tests for the new function would only need 1 change in the test instead of 3.</p>
+<pre class="r"><code>test_that(&quot;it complains when col type is wrong.&quot;, {
+  test_wrong_input(clr_mix)
+})</code></pre>
+<p>More importantly, let’s imagine that we want to extend the types of wrong inputs we what to screen.
+Now we simply just need to add it once and it propagates to all the functions.</p>
+<p>The main benefit of this refactoring style is that when an error appears,
+It will denote the line where the test broke.</p>
+<p><img src="style1-error.png" width="700px" style="display: block; margin: auto;" /></p>
+</div>
+<div id="fix-2---less-typing-worse-error-message" class="section level2">
+<h2>Fix #2 - Less typing, worse error message</h2>
+<p>The second solution is to wrap the entire testing statement inside a function.
+For this example, the function would look like this</p>
+<pre class="r"><code>test_wrong_input &lt;- function(clr_) {
+  test_that(&quot;it complains when col type is wrong.&quot;, {
+  expect_error(clr_(&quot;not a color&quot;))
+
+  expect_error(clr_(list(pal = &quot;#000000&quot;)))
+
+  expect_error(clr_(character()))
+  })
+}</code></pre>
+<p>and the testing would look like</p>
+<pre class="r"><code>test_wrong_input(clr_mix)</code></pre>
+<p>This reduces the number of lines needed for each test from 3 down to 1.
+However, it comes with a downside.
+When an error appears <strong>testthat</strong> will give the location of the definition of the test-function,
+not the location from where it was called.</p>
+<p><img src="style2-error.png" width="700px" style="display: block; margin: auto;" />
+We can still see that the error happens inside the “alpha” Context,
+but it is slightly harder to track down.</p>
+</div>
+<div id="fix-2.1---ugly-hack-to-give-me-the-location" class="section level2">
+<h2>Fix #2.1 - ugly hack to give me the location</h2>
+<p>The second solution can be made slightly better by making the description of the test more informative.</p>
+<pre class="r"><code>test_wrong_input &lt;- function(clr_) {
+  test_that(paste0(&quot;test_wrong_input: &quot;,
+                   deparse(substitute(clr_)),
+                   &quot;() complains when col type is wrong.&quot;), {
+  expect_error(clr_(&quot;not a color&quot;))
+
+  expect_error(clr_(list(pal = &quot;#000000&quot;)))
+
+  expect_error(clr_(&quot;pink&quot;))
+  })
+}</code></pre>
+<p><img src="style2.5-error.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>It takes more work upfront when writing the test functions.
+But it gives a compromise between the brevity of test files and the clarity of the debugging page.</p>
+<p>Thanks for reading along! I hope you found it useful!</p>
+</div>
+</div>

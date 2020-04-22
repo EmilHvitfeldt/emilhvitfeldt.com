@@ -1,0 +1,51 @@
+---
+title: Emoji use on Twitter
+date: '2018-06-04'
+categories: [tidytext]
+---
+
+
+
+<p><em>This code have been lightly revised to make sure it works as of 2018-12-16.</em></p>
+<p>This post will be a short demonstration on how the the occurrence of emojis on twitter can be analysed using tidytools. We start of loading the necessary packages.</p>
+<pre class="r"><code>library(tidyverse)
+## Warning: package &#39;tibble&#39; was built under R version 3.6.2
+library(tidytext)
+library(rtweet)</code></pre>
+<p>I have decided that for this example that I would focus on tweets that include the hash tags #happy and #sad in the hope that both would include a similar number of emojis but hopefully of different groups. We will use the <code>rtweet</code> package which already conforms to the tidy principles. Notice the <code>retryonratelimit = TRUE</code> argument as the combined number of tweets (10000 + 10000 = 20000) is larger the the 15 min limit of 18000.</p>
+<pre class="r"><code>tweets_happy &lt;- search_tweets(&quot;#happy&quot;, n = 10000, include_rts = FALSE)
+tweets_sad &lt;- search_tweets(&quot;#sad&quot;, n = 10000, include_rts = FALSE, 
+                            retryonratelimit = TRUE)</code></pre>
+<p>As a safety will we save these tweets.</p>
+<pre class="r"><code>write_as_csv(tweets_happy, &quot;tweets_happy.csv&quot;)
+write_as_csv(tweets_sad, &quot;tweets_sad.csv&quot;)</code></pre>
+<p>Now we load this data.frame that contains information regarding the various emojis.</p>
+<pre class="r"><code>emoji &lt;- readr::read_csv(&quot;https://raw.githubusercontent.com/EmilHvitfeldt/Emoji-table/master/emoji.csv&quot;)</code></pre>
+<p>Next we add the hash tag label as the <code>emotion</code> variable, next we tokenize all the tweets according to characters (this is done since a lot of the tweets didn’t use spaces emojis rendering them hard to detect.) and left join with the <code>emoji</code> data.frame such that we get the descriptions.</p>
+<pre class="r"><code>tweets_all &lt;- bind_rows(
+  tweets_happy %&gt;% mutate(emotion = &quot;#happy&quot;),
+  tweets_sad %&gt;% mutate(emotion = &quot;#sad&quot;)
+)
+
+emoji_all &lt;- unnest_tokens(tweets_all, word, text, 
+                           token = &quot;characters&quot;) %&gt;%
+  select(word, emotion) %&gt;%
+  left_join(emoji, by = c(&quot;word&quot; = &quot;utf&quot;)) %&gt;%
+  filter(!is.na(shortname))</code></pre>
+<p>Lastly we create a simple faceted bar chart of the number of emojis used within each hash tag.</p>
+<pre class="r"><code>emoji_all %&gt;%
+  count(word, emotion, shortname) %&gt;%
+  group_by(emotion) %&gt;%
+  arrange(desc(n)) %&gt;%
+  top_n(10, n) %&gt;%
+  ungroup() %&gt;%
+  mutate(emoji = reorder(shortname, n)) %&gt;%
+  ggplot(aes(emoji, n)) +
+  geom_col() +
+  facet_grid(emotion ~ ., scales = &quot;free_y&quot;) +
+  coord_flip() +
+  theme_minimal() +
+  labs(title = &quot;Emojis used in #happy and #sad tweets&quot;,
+       y = &quot;Count&quot;, x = &quot;&quot;)</code></pre>
+<p><img src="unnamed-chunk-7-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>Using the <code>emoji</code> data.frame allows us to gain quick insight with the descriptive short names.</p>

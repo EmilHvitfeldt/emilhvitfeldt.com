@@ -1,0 +1,173 @@
+---
+title: Predicting authorship in The Federalist Papers with tidytext
+date: '2018-01-30'
+categories: [tidytext]
+---
+
+
+
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<p>In this post we will</p>
+<ul>
+<li>talk about The Federalist Papers</li>
+<li>access and tidy the text using the tidytext package</li>
+<li>apply our model to the data to predict the author of the disputed papers</li>
+</ul>
+</div>
+<div id="the-federalist-papers" class="section level2">
+<h2>The Federalist Papers</h2>
+<p>In the early days of The United States of America around the time when the Constitution was being signed did a series of articles published in various newspapers. These papers where writing under the false name <em>Publius</em>. It was later revealed to have been the collected works of Alexander Hamilton, James Madison and John Jay.</p>
+<p>The Interesting thing in this was that the authorship of these papers were not consistent. In This is where we come in, in this blog post will we try to see if we are able to classify the troublesome papers.</p>
+<p>If you would like to read more about this story including past attempts to solve this problem please read <a href="https://priceonomics.com/how-statistics-solved-a-175-year-old-mystery-about/">How Statistics Solved a 175-Year-Old Mystery About Alexander Hamilton</a> by Ben Christopher.</p>
+</div>
+<div id="libraries" class="section level2">
+<h2>Libraries</h2>
+<p>We will start by loading the libraries which includes <code>glmnet</code> that will be used to construct the predictive model later.</p>
+<pre class="r"><code>library(tidyverse)
+## Warning: package &#39;tibble&#39; was built under R version 3.6.2
+library(tidytext)
+library(gutenbergr)
+library(glmnet)</code></pre>
+</div>
+<div id="data" class="section level2">
+<h2>Data</h2>
+<p>We are lucky today because all of The Federalist Papers happens to be on gutenberg</p>
+<pre class="r"><code>papers &lt;- gutenberg_download(1404)
+head(papers, n = 10)
+## # A tibble: 10 x 2
+##    gutenberg_id text                                                
+##           &lt;int&gt; &lt;chr&gt;                                               
+##  1         1404 &quot;THE FEDERALIST PAPERS&quot;                             
+##  2         1404 &quot;&quot;                                                  
+##  3         1404 &quot;By Alexander Hamilton, John Jay, and James Madison&quot;
+##  4         1404 &quot;&quot;                                                  
+##  5         1404 &quot;&quot;                                                  
+##  6         1404 &quot;&quot;                                                  
+##  7         1404 &quot;&quot;                                                  
+##  8         1404 &quot;FEDERALIST No. 1&quot;                                  
+##  9         1404 &quot;&quot;                                                  
+## 10         1404 &quot;General Introduction&quot;</code></pre>
+<p>For the predictive modeling we are going to do later, I would like to divide each paper up into sentences. This is a rather complicated affair, but I will take a rather ad hoc approach that will be good enough for the purpose of this post. We will do this by collapsing all the lines together and splitting them by ., ! and ?’s.</p>
+<pre class="r"><code>papers_sentences &lt;- pull(papers, text) %&gt;% 
+  str_c(collapse = &quot; &quot;) %&gt;%
+  str_split(pattern = &quot;\\.|\\?|\\!&quot;) %&gt;%
+  unlist() %&gt;%
+  tibble(text = .) %&gt;%
+  mutate(sentence = row_number())</code></pre>
+<p>We would like to assign each of these sentences to the corresponding article number and author. Thus we will first assign each of the 85 papers to the 3 authors and a group for the papers of interest.</p>
+<pre class="r"><code>hamilton &lt;- c(1, 6:9, 11:13, 15:17, 21:36, 59:61, 65:85)
+madison &lt;- c(10, 14, 18:20, 37:48)
+jay &lt;- c(2:5, 64)
+unknown &lt;- c(49:58, 62:63)</code></pre>
+<p>Next we will simple look for lines that include “FEDERALIST No” as they would indicate the start of a paper and then label them accordingly.</p>
+<pre class="r"><code>papers_words &lt;- papers_sentences %&gt;%
+  mutate(no = cumsum(str_detect(text, regex(&quot;FEDERALIST No&quot;,
+                                            ignore_case = TRUE)))) %&gt;%
+  unnest_tokens(word, text) %&gt;%
+  mutate(author = case_when(no %in% hamilton ~ &quot;hamilton&quot;,
+                            no %in% madison ~ &quot;madison&quot;,
+                            no %in% jay ~ &quot;jay&quot;,
+                            no %in% unknown ~ &quot;unknown&quot;),
+         id = paste(no, sentence, sep = &quot;-&quot;))</code></pre>
+<p>lets take a quick count before we move on</p>
+<pre class="r"><code>papers_words %&gt;%
+  count(author)
+## # A tibble: 4 x 2
+##   author        n
+##   &lt;chr&gt;     &lt;int&gt;
+## 1 hamilton 114688
+## 2 jay        8539
+## 3 madison   45073
+## 4 unknown   24471</code></pre>
+<p>We see that Jay didn’t post as many articles as the other two gentlemen so we will exclude him from further analysis</p>
+<pre class="r"><code>papers_words &lt;- papers_words %&gt;%
+  filter(author != &quot;jay&quot;)</code></pre>
+</div>
+<div id="predictive-modeling" class="section level2">
+<h2>Predictive modeling</h2>
+<p>To make this predictive model we will use the term-frequency matrix as our input and as the response will be an indicator that Hamilton wrote the paper. For this modeling we will use the <code>glmnet</code> package which fits a generalized linear model via penalized maximum likelihood. It is quite fast and works great with sparse matrix input, hence the term-frequency matrix.</p>
+<p>The response is set to the binomial family because of the binary nature of the response (did Hamilton write the sentence).</p>
+<p>First we get the term-frequency matrix with the <code>cast_</code> family in tidytext.</p>
+<pre class="r"><code>papers_dtm &lt;- papers_words %&gt;%
+  count(id, word, sort = TRUE) %&gt;%
+  cast_sparse(id, word, n)</code></pre>
+<p>We will need to define a response variable, which we will do with a simple <code>mutate</code>, along with an indicator for our training set which will be the articles with known authors.</p>
+<pre class="r"><code>meta &lt;- data.frame(id = dimnames(papers_dtm)[[1]]) %&gt;%
+  left_join(papers_words[!duplicated(papers_words$id), ], by = &quot;id&quot;) %&gt;%
+  mutate(y = as.numeric(author == &quot;hamilton&quot;),
+         train = author != &quot;unknown&quot;)
+## Warning: Column `id` joining factor and character vector, coercing into
+## character vector</code></pre>
+<p>We will use cross-validation to obtain the best value of the models tuning parameter. This part takes a couple of minutes.</p>
+<pre class="r"><code>predictor &lt;- papers_dtm[meta$train, ]
+response &lt;- meta$y[meta$train]
+
+model &lt;- cv.glmnet(predictor, response, family = &quot;binomial&quot;, alpha = 0.9)</code></pre>
+<p>After running the model, we will add the predicted values to our <code>meta</code> data.frame.</p>
+<pre class="r"><code>meta &lt;- meta %&gt;%
+  mutate(pred = predict(model, newx = as.matrix(papers_dtm), type = &quot;response&quot;,
+                        s = model$lambda.1se) %&gt;% as.numeric())</code></pre>
+<p>It is now time to visualize the results. First we will look at how the training set have been separated.</p>
+<pre class="r"><code>meta %&gt;%
+  filter(train) %&gt;%
+  ggplot(aes(factor(no), pred)) + 
+  geom_boxplot(aes(fill = author)) +
+  theme_minimal() +
+  labs(y = &quot;predicted probability&quot;,
+       x = &quot;Article number&quot;) +
+  theme(legend.position = &quot;top&quot;) +
+  scale_fill_manual(values = c(&quot;#304890&quot;, &quot;#6A7E50&quot;)) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))</code></pre>
+<p><img src="/post/2018-01-30-predicting-authorship-in-the-federalist-papers-tidytext/index_files/figure-html/old-plot1-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>The box plot of predicted probabilities, one value for each sentence, for the 68 papers by
+Alexander Hamilton and James Madison. The probability represents the extent to which the
+model believe the sentence was written by Alexander Hamilton.</p>
+<p>Lets see if this model can settle the dispute of the 12 papers. We will plot the predicted probabilities of the unknown papers alongside the training set.</p>
+<pre class="r"><code>meta %&gt;%
+  ggplot(aes(factor(no), pred)) + 
+  geom_boxplot(aes(fill = author)) +
+  theme_minimal() +
+  labs(y = &quot;predicted probability&quot;,
+       x = &quot;Article number&quot;) +
+  theme(legend.position = &quot;top&quot;) +
+  scale_fill_manual(values = c(&quot;#304890&quot;, &quot;#6A7E50&quot;, &quot;#D6BBD0&quot;)) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))</code></pre>
+<p><img src="/post/2018-01-30-predicting-authorship-in-the-federalist-papers-tidytext/index_files/figure-html/old-plot1-pink-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>we notice that the predicted probabilities don’t quite makes up able to determine who the original author is. This can be due to a variety of different reasons. One of them could be that Madison wrote them and Hamilton edited them.</p>
+<p>Despite the unsuccessful attempt to predict the secret author we still managed to showcase the method which while being unsuccessful in this case could provide useful in other cases.</p>
+</div>
+<div id="working-showcase" class="section level2">
+<h2>Working showcase</h2>
+<p>Since the method proved unsuccessful in determining the secret author did I decide to add an example where the authorship is know. We will use the same data from earlier, only look at known Hamilton and Madison papers, train on some of them and show that the algorithm is able to detect the authorship of the other.</p>
+<pre class="r"><code>papers_dtm &lt;- papers_words %&gt;%
+  filter(author != &quot;unknown&quot;) %&gt;%
+  count(id, word, sort = TRUE) %&gt;% 
+  cast_dtm(id, word, n)</code></pre>
+<p>here we let the first 16 papers that they wrote be the test set and the rest be training set.</p>
+<pre class="r"><code>meta &lt;- data.frame(id = dimnames(papers_dtm)[[1]]) %&gt;%
+  left_join(papers_words[!duplicated(papers_words$id), ], by = &quot;id&quot;) %&gt;%
+  mutate(y = as.numeric(author == &quot;hamilton&quot;),
+         train = no &gt; 20)
+## Warning: Column `id` joining factor and character vector, coercing into
+## character vector</code></pre>
+<pre class="r"><code>predictor &lt;- papers_dtm[meta$train, ] %&gt;% as.matrix()
+response &lt;- meta$y[meta$train]
+
+model &lt;- cv.glmnet(predictor, response, family = &quot;binomial&quot;, alpha = 0.9)</code></pre>
+<pre class="r"><code>meta &lt;- meta %&gt;%
+  mutate(pred = predict(model, newx = as.matrix(papers_dtm), type = &quot;response&quot;,
+                        s = model$lambda.1se) %&gt;% as.numeric())</code></pre>
+<pre class="r"><code>meta %&gt;%
+  ggplot(aes(factor(no), pred)) + 
+  geom_boxplot(aes(fill = author)) +
+  theme_minimal() +
+  labs(y = &quot;predicted probability&quot;,
+       x = &quot;Article number&quot;) +
+  theme(legend.position = &quot;top&quot;) +
+  scale_fill_manual(values = c(&quot;#304890&quot;, &quot;#6A7E50&quot;)) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  geom_vline(aes(xintercept = 16.5), color = &quot;red&quot;)</code></pre>
+<p><img src="/post/2018-01-30-predicting-authorship-in-the-federalist-papers-tidytext/index_files/figure-html/old-plot2-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>So we see that while it isn’t as crystal clear what what the test set predictions are giving us, they still give a pretty good indication.</p>
+</div>

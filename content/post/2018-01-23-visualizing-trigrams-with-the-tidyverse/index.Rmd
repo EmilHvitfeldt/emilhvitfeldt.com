@@ -1,0 +1,603 @@
+---
+title: Visualizing trigrams with the Tidyverse
+date: '2018-01-23'
+categories: [tidytext, ggplot2]
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+opts_chunk$set(
+  echo = TRUE, 
+  cache = TRUE,
+  collapse = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
+
+*This code have been lightly revised to make sure it works as of 2018-12-16.*  
+
+In this post I'll go though how I created the data visualization I posted yesterday on twitter:  
+
+<blockquote class="twitter-tweet" data-lang="da"><p lang="en" dir="ltr">Trying something new! Visualizing top trigrams in Jane Austen&#39;s Emma using <a href="https://twitter.com/hashtag/tidytext?src=hash&amp;ref_src=twsrc%5Etfw">#tidytext</a> and <a href="https://twitter.com/hashtag/tidyverse?src=hash&amp;ref_src=twsrc%5Etfw">#tidyverse</a>! Blogpost coming soon! 🤗 <a href="https://twitter.com/hashtag/rstats?src=hash&amp;ref_src=twsrc%5Etfw">#rstats</a> <a href="https://twitter.com/hashtag/dataviz?src=hash&amp;ref_src=twsrc%5Etfw">#dataviz</a> <a href="https://t.co/Sy1fQJB5Ih">pic.twitter.com/Sy1fQJB5Ih</a></p>&mdash; Emil Hvitfeldt (@Emil_Hvitfeldt) <a href="https://twitter.com/Emil_Hvitfeldt/status/955675169422327808?ref_src=twsrc%5Etfw">23. januar 2018</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+## What am I looking at?
+
+So for this particular data-viz I took novel Emma by Jane Austen, extracted all the trigrams (sentences of length 3), took the 150 most frequent ones and visualized those.
+
+This visualization is layered horizontal tree graph where the 3 levels (vertical columns of words) correspond words that appear at the nth place in the trigrams, e.g. first column have the first words of the trigram, second column have middle words of trigrams etc. Up to 20 words in each column are kept and they are ordered and sized according to occurrence in the data.  
+
+The curves represent how often two words co-occur, with the color representing starting word and transparency related to frequency.  
+
+All code is presented in the following [gist](https://gist.github.com/EmilHvitfeldt/f69a65436915ff8b0406cdd27a194e28).
+
+## Packages and parameters
+
+We will be using the following packages:  
+
+```{r message=FALSE}
+library(tidyverse)
+library(tidytext)
+library(purrrlyr)
+```
+
+And the overall parameters outlined in description are defined here:
+
+```{r}
+n_word <- 20
+n_top <- 150
+n_gramming <- 3
+```
+
+## Trigrams
+
+If you have read [Text Mining with R](https://www.tidytextmining.com/) I'm sure you have encountered the `janeaustenr` package. We will use the Emma novel, and `tidytext`'s `unnest_tokens` to calculate the trigrams we need. We also specify the starting words.  
+
+```{r}
+trigrams <- tibble(text = janeaustenr::emma) %>%
+  unnest_tokens(trigram, text, token = "ngrams", n = n_gramming)
+
+start_words <- c("he", "she")
+```
+
+next we find the top 150 trigrams using `count` and some regex magic. And we use those top words to filter such that we only will be looking at the top 150.  
+
+```{r}
+pattern <- str_c("^", start_words, " ", collapse = "|")
+top_words <- trigrams %>%
+  filter(str_detect(trigram, pattern)) %>%
+  count(trigram, sort = TRUE) %>%
+  slice(seq_len(n_top)) %>%
+  pull(trigram)
+
+trigrams <- trigrams %>%
+  filter(trigram %in% top_words)
+```
+
+## Nodes
+
+Since we know that each trigram have a sample format, we can create a simple function to extract the nth word in a string.  
+
+```{r}
+str_nth_word <- function(x, n, sep = " ") {
+  str_split(x, pattern = " ") %>%
+  map_chr(~ .x[n])
+}
+```
+
+The following `purrr::map_df` 
+
+1. Extracts the nth word in the trigram  
+2. Counts and sorts the occurrences  
+3. Grabs the top 20 words
+4. Equally space them along the y-axis  
+
+```{r}
+nodes <- map_df(seq_len(n_gramming),
+       ~ trigrams %>%
+           mutate(word = str_nth_word(trigram, .x)) %>%
+           count(word, sort = TRUE) %>%
+           slice(seq_len(n_word)) %>% 
+           mutate(y = seq(from = n_word + 1, to = 0, 
+                          length.out = n() + 2)[seq_len(n()) + 1],
+                  x = .x))
+```
+
+### plot of node positions
+
+Lets see the words so far:
+
+```{r}
+nodes %>% 
+  ggplot(aes(x, y, label = word)) +
+  geom_text()
+```
+
+## Edges
+
+When we look at the final visualization we see that the words are connected by curved lines. I achieved that by using a sigmoid curve and then transform it to match the starting and end points.
+
+```{r}
+sigmoid <- function(x_from, x_to, y_from, y_to, scale = 5, n = 100) {
+  x <- seq(-scale, scale, length = n)
+  y <- exp(x) / (exp(x) + 1)
+  tibble(x = (x + scale) / (scale * 2) * (x_to - x_from) + x_from,
+         y = y * (y_to - y_from) + y_from)
+}
+```
+
+The following function takes
+
+- a list of trigrams
+- a data.frame of "from" nodes
+- a data.frame of "to" nodes
+
+and returns a data.frame containing the data points for the curves wee need to draw with correct starting and ending points.  
+
+```{r}
+egde_lines <- function(trigram, from_word, to_word, scale = 5, n = 50, 
+                       x_space = 0) {
+
+  from_word <- from_word %>%
+    select(-n) %>%
+    set_names(c("from", "y_from", "x_from"))
+  
+  to_word <- to_word %>%
+    select(-n) %>%
+    set_names(c("to", "y_to", "x_to"))
+  
+  links <- crossing(from = from_word$from, 
+                    to = to_word$to) %>%
+    mutate(word_pair = paste(from, to),
+           number = map_dbl(word_pair, 
+                            ~ sum(str_detect(trigram$trigram, .x)))) %>%
+    left_join(from_word, by = "from") %>%
+    left_join(to_word, by = "to")
+  
+  links %>%
+    by_row(~ sigmoid(x_from = .x$x_from + 0.2 + x_space,
+                     x_to = .x$x_to - 0.05, 
+                     y_from = .x$y_from, y_to = .x$y_to, 
+                     scale = scale, n = n) %>%
+    mutate(word_pair = .x$word_pair,
+           number = .x$number,
+           from = .x$from)) %>%
+    pull(.out) %>%
+    bind_rows()
+}
+```
+
+### plot of first set of egdes
+
+Lets take a look at the first set of edges to see if it is working.
+
+```{r}
+egde_lines(trigram = trigrams, 
+           from_word = filter(nodes, x == 1), 
+           to_word = filter(nodes, x == 2)) %>%
+  filter(number > 0) %>%
+  ggplot(aes(x, y, group = word_pair, alpha = number, color = from)) +
+  geom_line()
+```
+
+### Calculating all egdes
+
+For ease (and laziness) I have desired to calculate the edges in sections  
+
+- edges between first and second column
+- edges between second and third column for words that start with "he"
+- edges between second and third column for words that start with "she"
+
+and combine by the end.
+
+```{r}
+# egdes between first and second column
+egde1 <- egde_lines(trigram = trigrams, 
+           from_word = filter(nodes, x == 1), 
+           to_word = filter(nodes, x == 2), 
+           n = 50) %>%
+           filter(number > 0) %>%
+  mutate(id = word_pair)
+
+# Words in second colunm
+## That start with he
+second_word_he <- nodes %>%
+  filter(x == 2) %>%
+  select(-n) %>%
+  left_join(
+    trigrams %>% 
+      filter(str_nth_word(trigram, 1) == start_words[1]) %>%
+      mutate(word = str_nth_word(trigram, 2)) %>%
+      count(word), 
+    by = "word"
+  ) %>%
+  replace_na(list(n = 0))
+
+## That start with she
+second_word_she <- nodes %>%
+  filter(x == 2) %>%
+  select(-n) %>%
+  left_join(
+    trigrams %>% 
+      filter(str_nth_word(trigram, 1) == start_words[2]) %>%
+      mutate(word = str_nth_word(trigram, 2)) %>%
+      count(word), 
+    by = "word"
+  ) %>%
+  replace_na(list(n = 0))
+
+# Words in third colunm
+## That start with he
+third_word_he <- nodes %>%
+  filter(x == 3) %>%
+  select(-n) %>%
+  left_join(
+    trigrams %>% 
+      filter(str_nth_word(trigram, 1) == start_words[1]) %>%
+      mutate(word = str_nth_word(trigram, 3)) %>%
+      count(word), 
+    by = "word"
+  ) %>%
+  replace_na(list(n = 0))
+
+## That start with she
+third_word_she <- nodes %>%
+  filter(x == 3) %>%
+  select(-n) %>%
+  left_join(
+    trigrams %>% 
+      filter(str_nth_word(trigram, 1) == start_words[2]) %>%
+      mutate(word = str_nth_word(trigram, 3)) %>%
+      count(word), 
+    by = "word"
+  ) %>%
+  replace_na(list(n = 0))
+
+# egdes between second and third column that starts with he
+egde2_he <- egde_lines(filter(trigrams, 
+                              str_detect(trigram, paste0("^", start_words[1], " "))), 
+             second_word_he, third_word_he, n = 50) %>%
+  mutate(y = y + 0.05,
+         from = start_words[1],
+         id = str_c(from, word_pair, sep = " ")) %>%
+  filter(number > 0)
+
+# egdes between second and third column that starts with she
+egde2_she <- egde_lines(filter(trigrams, 
+                              str_detect(trigram, paste0("^", start_words[2], " "))), 
+             second_word_she, third_word_she, n = 50) %>%
+  mutate(y = y - 0.05,
+         from = start_words[2],
+         id = str_c(from, word_pair, sep = " ")) %>%
+  filter(number > 0)
+
+# All edges
+edges <- bind_rows(egde1, egde2_he, egde2_she)
+```
+
+## vizualisation
+
+Now we just add it all together. All labels, change colors, adjust `xlim` to fit words on the page.
+
+```{r, fig.width=7, fig.height=8}
+p <- nodes %>% 
+  ggplot(aes(x, y, label = word, size = n)) +
+  geom_text(hjust = 0, color = "#DDDDDD") +
+  theme_void() +
+  geom_line(data = edges,
+            aes(x, y, group = id, color = from, alpha = sqrt(number)),
+            inherit.aes = FALSE) +
+  theme(plot.background = element_rect(fill = "#666666", colour = 'black'),
+        text = element_text(color = "#EEEEEE", size = 15)) +
+  guides(alpha = "none", color = "none", size = "none") +
+  xlim(c(0.9, 3.2)) +
+  scale_color_manual(values = c("#5EF1F1", "#FA62D0")) +
+  labs(title = " Vizualizing trigrams in Jane Austen's, Emma") + 
+  scale_size(range = c(3, 8))
+p
+```
+
+## Notes
+
+There are a couple of differences between the Viz I posted online yesterday and the result here in this post due to a couple of mistakes found in the code during cleanup.  
+
+## Extra vizualisations
+
+```{r eval=FALSE}
+n_word <- 20
+n_top <- 150
+n_gramming <- 3
+
+trigrams <- tibble(text = janeaustenr::emma) %>%
+  unnest_tokens(trigram, text, token = "ngrams", n = n_gramming)
+
+start_words <- c("i", "you")
+```
+
+```{r echo=FALSE, fig.width=7, fig.height=8}
+n_word <- 20
+n_top <- 150
+n_gramming <- 3
+
+trigrams <- tibble(text = janeaustenr::emma) %>%
+  unnest_tokens(trigram, text, token = "ngrams", n = n_gramming)
+
+start_words <- c("i", "you")
+
+pattern <- str_c("^", start_words, " ", collapse = "|")
+top_words <- trigrams %>%
+  filter(str_detect(trigram, pattern)) %>%
+  count(trigram, sort = TRUE) %>%
+  slice(seq_len(n_top)) %>%
+  pull(trigram)
+
+trigrams <- trigrams %>%
+  filter(trigram %in% top_words)
+
+nodes <- map_df(seq_len(n_gramming),
+       ~ trigrams %>%
+           mutate(word = str_nth_word(trigram, .x)) %>%
+           count(word, sort = TRUE) %>%
+           slice(seq_len(n_word)) %>% 
+           mutate(y = seq(from = n_word + 1, to = 0, 
+                          length.out = n() + 2)[seq_len(n()) + 1],
+                  x = .x))
+
+# egdes between first and second column
+egde1 <- egde_lines(trigram = trigrams, 
+           from_word = filter(nodes, x == 1), 
+           to_word = filter(nodes, x == 2), 
+           n = 50) %>%
+           filter(number > 0) %>%
+  mutate(id = word_pair)
+
+# Words in second colunm
+## That start with he
+second_word_he <- nodes %>%
+  filter(x == 2) %>%
+  select(-n) %>%
+  left_join(
+    trigrams %>% 
+      filter(str_nth_word(trigram, 1) == start_words[1]) %>%
+      mutate(word = str_nth_word(trigram, 2)) %>%
+      count(word), 
+    by = "word"
+  ) %>%
+  replace_na(list(n = 0))
+
+## That start with she
+second_word_she <- nodes %>%
+  filter(x == 2) %>%
+  select(-n) %>%
+  left_join(
+    trigrams %>% 
+      filter(str_nth_word(trigram, 1) == start_words[2]) %>%
+      mutate(word = str_nth_word(trigram, 2)) %>%
+      count(word), 
+    by = "word"
+  ) %>%
+  replace_na(list(n = 0))
+
+# Words in third colunm
+## That start with he
+third_word_he <- nodes %>%
+  filter(x == 3) %>%
+  select(-n) %>%
+  left_join(
+    trigrams %>% 
+      filter(str_nth_word(trigram, 1) == start_words[1]) %>%
+      mutate(word = str_nth_word(trigram, 3)) %>%
+      count(word), 
+    by = "word"
+  ) %>%
+  replace_na(list(n = 0))
+
+## That start with she
+third_word_she <- nodes %>%
+  filter(x == 3) %>%
+  select(-n) %>%
+  left_join(
+    trigrams %>% 
+      filter(str_nth_word(trigram, 1) == start_words[2]) %>%
+      mutate(word = str_nth_word(trigram, 3)) %>%
+      count(word), 
+    by = "word"
+  ) %>%
+  replace_na(list(n = 0))
+
+# egdes between second and third column that starts with he
+egde2_he <- egde_lines(filter(trigrams, 
+                              str_detect(trigram, paste0("^", start_words[1], " "))), 
+             second_word_he, third_word_he, n = 50) %>%
+  mutate(y = y + 0.05,
+         from = start_words[1],
+         id = str_c(from, word_pair, sep = " ")) %>%
+  filter(number > 0)
+
+# egdes between second and third column that starts with she
+egde2_she <- egde_lines(filter(trigrams, 
+                              str_detect(trigram, paste0("^", start_words[2], " "))), 
+             second_word_she, third_word_she, n = 50) %>%
+  mutate(y = y - 0.05,
+         from = start_words[2],
+         id = str_c(from, word_pair, sep = " ")) %>%
+  filter(number > 0)
+
+# All edges
+edges <- bind_rows(egde1, egde2_he, egde2_she)
+
+p <- nodes %>% 
+  ggplot(aes(x, y, label = word, size = n)) +
+  geom_text(hjust = 0, color = "#DDDDDD") +
+  theme_void() +
+  geom_line(data = edges,
+            aes(x, y, group = id, color = from, alpha = sqrt(number)),
+            inherit.aes = FALSE) +
+  theme(plot.background = element_rect(fill = "#666666", colour = 'black'),
+        text = element_text(color = "#EEEEEE", size = 15)) +
+  guides(alpha = "none", color = "none", size = "none") +
+  xlim(c(0.9, 3.2)) +
+  scale_color_manual(values = c("#F7E720", "#7FD24E")) +
+  labs(title = " Vizualizing trigrams in Jane Austen's, Emma") + 
+  scale_size(range = c(3, 8))
+p
+```
+
+```{r message=FALSE, eval=FALSE}
+n_word <- 20
+n_top <- 150
+n_gramming <- 3
+
+library(rvest)
+sherlock_holmes <- read_html("https://sherlock-holm.es/stories/plain-text/cnus.txt") %>%
+  html_text() %>% 
+  str_split("\n") %>%
+  unlist()
+
+trigrams <- tibble(text = sherlock_holmes) %>%
+  unnest_tokens(trigram, text, token = "ngrams", n = n_gramming)
+
+start_words <- c("holmes", "watson")
+```
+
+```{r echo=FALSE, fig.width=7, fig.height=8}
+n_word <- 20
+n_top <- 150
+n_gramming <- 3
+
+library(rvest)
+sherlock_holmes <- read_html("https://sherlock-holm.es/stories/plain-text/cnus.txt") %>%
+  html_text() %>% 
+  str_split("\n") %>%
+  unlist()
+
+trigrams <- tibble(text = sherlock_holmes) %>%
+  unnest_tokens(trigram, text, token = "ngrams", n = n_gramming)
+
+start_words <- c("holmes", "watson")
+
+pattern <- str_c("^", start_words, " ", collapse = "|")
+top_words <- trigrams %>%
+  filter(str_detect(trigram, pattern)) %>%
+  count(trigram, sort = TRUE) %>%
+  slice(seq_len(n_top)) %>%
+  pull(trigram)
+
+trigrams <- trigrams %>%
+  filter(trigram %in% top_words)
+
+nodes <- map_df(seq_len(n_gramming),
+       ~ trigrams %>%
+           mutate(word = str_nth_word(trigram, .x)) %>%
+           count(word, sort = TRUE) %>%
+           slice(seq_len(n_word)) %>% 
+           mutate(y = seq(from = n_word + 1, to = 0, 
+                          length.out = n() + 2)[seq_len(n()) + 1],
+                  x = .x))
+
+# egdes between first and second column
+egde1 <- egde_lines(trigram = trigrams, 
+           from_word = filter(nodes, x == 1), 
+           to_word = filter(nodes, x == 2), 
+           n = 50, x_space = 0.2) %>%
+           filter(number > 0) %>%
+  mutate(id = word_pair)
+
+# Words in second colunm
+## That start with he
+second_word_he <- nodes %>%
+  filter(x == 2) %>%
+  select(-n) %>%
+  left_join(
+    trigrams %>% 
+      filter(str_nth_word(trigram, 1) == start_words[1]) %>%
+      mutate(word = str_nth_word(trigram, 2)) %>%
+      count(word), 
+    by = "word"
+  ) %>%
+  replace_na(list(n = 0))
+
+## That start with she
+second_word_she <- nodes %>%
+  filter(x == 2) %>%
+  select(-n) %>%
+  left_join(
+    trigrams %>% 
+      filter(str_nth_word(trigram, 1) == start_words[2]) %>%
+      mutate(word = str_nth_word(trigram, 2)) %>%
+      count(word), 
+    by = "word"
+  ) %>%
+  replace_na(list(n = 0))
+
+# Words in third colunm
+## That start with he
+third_word_he <- nodes %>%
+  filter(x == 3) %>%
+  select(-n) %>%
+  left_join(
+    trigrams %>% 
+      filter(str_nth_word(trigram, 1) == start_words[1]) %>%
+      mutate(word = str_nth_word(trigram, 3)) %>%
+      count(word), 
+    by = "word"
+  ) %>%
+  replace_na(list(n = 0))
+
+## That start with she
+third_word_she <- nodes %>%
+  filter(x == 3) %>%
+  select(-n) %>%
+  left_join(
+    trigrams %>% 
+      filter(str_nth_word(trigram, 1) == start_words[2]) %>%
+      mutate(word = str_nth_word(trigram, 3)) %>%
+      count(word), 
+    by = "word"
+  ) %>%
+  replace_na(list(n = 0))
+
+# egdes between second and third column that starts with he
+egde2_he <- egde_lines(filter(trigrams, 
+                              str_detect(trigram, paste0("^", start_words[1], " "))), 
+             second_word_he, third_word_he, n = 50) %>%
+  mutate(y = y + 0.05,
+         from = start_words[1],
+         id = str_c(from, word_pair, sep = " ")) %>%
+  filter(number > 0)
+
+# egdes between second and third column that starts with she
+egde2_she <- egde_lines(filter(trigrams, 
+                              str_detect(trigram, paste0("^", start_words[2], " "))), 
+             second_word_she, third_word_she, n = 50) %>%
+  mutate(y = y - 0.05,
+         from = start_words[2],
+         id = str_c(from, word_pair, sep = " ")) %>%
+  filter(number > 0)
+
+# All edges
+edges <- bind_rows(egde1, egde2_he, egde2_she)
+
+p <- nodes %>% 
+  ggplot(aes(x, y, label = word, size = n)) +
+  geom_text(hjust = 0, color = "#DDDDDD") +
+  theme_void() +
+  geom_line(data = edges,
+            aes(x, y, group = id, color = from, alpha = sqrt(number)),
+            inherit.aes = FALSE) +
+  theme(plot.background = element_rect(fill = "#666666", colour = 'black'),
+        text = element_text(color = "#EEEEEE", size = 15)) +
+  guides(alpha = "none", color = "none", size = "none") +
+  xlim(c(0.9, 3.2)) +
+  scale_color_manual(values = c("#8524A5", "#F79341")) +
+  labs(title = " Vizualizing trigrams in Sherlock Holmes") + 
+  scale_size(range = c(3, 8))
+p
+```
+
+
+

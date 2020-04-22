@@ -1,0 +1,16 @@
+base
+knitr
+tidytext
+tidyverse
+ggplot2
+tibble
+tidyr
+readr
+purrr
+dplyr
+stringr
+forcats
+stm
+hcandersenr
+SnowballC
+details

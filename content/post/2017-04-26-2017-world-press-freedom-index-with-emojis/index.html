@@ -1,0 +1,194 @@
+---
+title: 2017 World Press Freedom Index with emojis
+date: '2017-04-26'
+categories: [ggplot2]
+---
+
+
+
+<p><em>This code have been lightly revised to make sure it works as of 2018-12-16.</em></p>
+<p>With <a href="https://rsf.org/en">Reporters Without Borders</a> coming out with its <a href="https://rsf.org/en/ranking/2017">2017 World Press Freedom Index</a> in the same week as Hadley Wickham coming out with the <a href="https://github.com/hadley/emo">emo(ji)</a> package, I had no choice but to explore both of them at the same time.</p>
+<p>Disclaimer! This post is not an exercise in statistical inference but rather a proof of concept of how to use the emo(ji) package with ggplot2.</p>
+<div id="loading-packages" class="section level3">
+<h3>Loading packages</h3>
+<pre class="r"><code>library(hrbrthemes)
+library(tidyverse)</code></pre>
+<pre><code>## Warning: package &#39;tibble&#39; was built under R version 3.6.2</code></pre>
+<pre class="r"><code>library(stringr)
+library(tibble)
+# remotes::install_github(&#39;hadley/emo&#39;)
+library(emo)</code></pre>
+<p>The <a href="https://github.com/hrbrmstr/hrbrthemes">hrbrthemes</a> is not necessary for this project but it is one of my personal favorite ggplot2 themes.</p>
+</div>
+<div id="gathering-data" class="section level3">
+<h3>Gathering data</h3>
+<p>Here we collect the data from Reporters Without Borders, emoji flags and The World Bank (so we have something to plot against).</p>
+<div id="world-press-freedom-index" class="section level4">
+<h4>2017 World Press Freedom Index</h4>
+<p>We have the <a href="https://rsf.org/en/ranking/2017">2017 World Press Freedom Index</a> <a href="https://rsf.org/sites/default/files/index_format_upload_2017-v2_1_0.csv">(direct download link)</a> data which we load in as normal.</p>
+<pre class="r"><code>(freedom_index &lt;- read_csv(&quot;https://rsf.org/sites/default/files/index_format_upload_2017-v2_1_0.csv&quot;))</code></pre>
+<pre><code>## # A tibble: 180 x 12
+##    ISO    Rank FR_Country EN_country ES_country `Underlying sit…
+##    &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;                 &lt;dbl&gt;
+##  1 NOR       1 Norvège    Norway     Noruega                 760
+##  2 SWE       2 Suede      Sweden     Suecia                  759
+##  3 FIN       3 Finlande   Finland    Finlandia               892
+##  4 DNK       4 Danemark   Denmark    Dinamarca              1036
+##  5 NLD       5 Pays-Bas   Netherlan… Países Ba…              963
+##  6 CRI       6 Costa Rica Costa Rica Costa Rica             1193
+##  7 CHE       7 Suisse     Switzerla… Suiza                  1213
+##  8 JAM       8 Jamaïque   Jamaica    Jamaica                1273
+##  9 BEL       9 Belgique   Belgium    Bélgica                1247
+## 10 ISL      10 Islande    Iceland    Islandia               1303
+## # … with 170 more rows, and 6 more variables: `Abuse score 2016` &lt;chr&gt;,
+## #   `Overall Score 2016` &lt;dbl&gt;, `Progression RANK` &lt;dbl&gt;, `Rank 2015` &lt;dbl&gt;,
+## #   `Score 2015` &lt;dbl&gt;, Zone &lt;chr&gt;</code></pre>
+<p>and we see that a total of 180 countries have a score (Overall Score 2016).</p>
+</div>
+<div id="gdp-per-capita" class="section level4">
+<h4>GDP per capita</h4>
+<p>To have something somehow meaningful to compare the freedom index to. I’ve found some data about GDP per capita, mostly because I figured it would have data for quite a lot of the countries covered by the freedom index. So from <a href="http://data.worldbank.org/indicator/NY.GDP.PCAP.CD">The World Bank</a> <a href="http://api.worldbank.org/v2/en/indicator/NY.GDP.PCAP.CD?downloadformat=csv">(direct download link)</a>
+which we load in as normal.</p>
+<pre class="r"><code>(gdp_pcap &lt;- read_csv(&quot;API_NY.GDP.PCAP.CD_DS2_en_csv_v2.csv&quot;, skip = 2))</code></pre>
+<p>which have quite a few variables but for now we will just focus on the 2015 variable as the 2016 appears empty. Now that we have two data sets which we would like to combine, a general question would be if the gdp_pcap data have information matching our 180 countries. So with the following bit of code we join the two datasets together by the ICO ALPHA-3 Code available in both datasets and select the countries who don’t have a value for the year 2015.</p>
+<pre class="r"><code>left_join(freedom_index, gdp_pcap, by = c(&quot;ISO&quot; = &quot;Country Code&quot;)) %&gt;% 
+  filter(is.na(`2015`)) %&gt;% 
+  select(EN_country)</code></pre>
+<pre><code>## # A tibble: 12 x 1
+##    EN_country                           
+##    &lt;chr&gt;                                
+##  1 Liechtenstein                        
+##  2 Andorra                              
+##  3 OECS                                 
+##  4 Taiwan                               
+##  5 Papua New Guinea                     
+##  6 Cyprus North                         
+##  7 Kosovo                               
+##  8 Venezuela                            
+##  9 Libya                                
+## 10 Syrian Arab Republic                 
+## 11 Eritrea                              
+## 12 Democratic People&#39;s Republic of Korea</code></pre>
+<p>which leaves us with 166 countries. I could have looked for the data for these countries, but that is outside the reach for this post.</p>
+</div>
+<div id="flag-emoji" class="section level4">
+<h4>Flag emoji</h4>
+<p>I would like to use the different flag emojis</p>
+<pre><code>## 🇦🇨🇦🇩🇦🇪🇦🇫🇦🇬🇦🇮🇦🇱🇦🇲🇦🇴🇦🇶🇦🇷🇦🇸🇦🇹🇦🇺🇦🇼🇦🇽🇦🇿🇧🇦🇧🇧🇧🇩🇧🇪🇧🇫🇧🇬🇧🇭🇧🇮🇧🇯🇧🇱🇧🇲🇧🇳🇧🇴🇧🇶🇧🇷🇧🇸🇧🇹🇧🇻🇧🇼🇧🇾🇧🇿🇨🇦🇨🇨🇨🇩🇨🇫🇨🇬🇨🇭🇨🇮🇨🇰🇨🇱🇨🇲🇨🇳🇨🇴🇨🇵🇨🇷🇨🇺🇨🇻🇨🇼🇨🇽🇨🇾🇨🇿🇩🇪🇩🇪🇩🇬🇩🇯🇩🇰🇩🇲🇩🇴🇩🇿🇪🇦🇪🇨🇪🇪🇪🇬🇪🇭🇪🇷🇪🇸🇪🇹🇪🇺🇫🇮🇫🇯🇫🇰🇫🇲🇫🇴🇫🇷🇬🇦🇬🇧🇬🇧🇬🇩🇬🇪🇬🇫🇬🇬🇬🇭🇬🇮🇬🇱🇬🇲🇬🇳🇬🇵🇬🇶🇬🇷🇬🇸🇬🇹🇬🇺🇬🇼🇬🇾🇭🇰🇭🇲🇭🇳🇭🇷🇭🇹🇭🇺🇮🇨🇮🇩🇮🇪🇮🇱🇮🇲🇮🇳🇮🇴🇮🇶🇮🇷🇮🇸🇮🇹🇯🇪🇯🇲🇯🇴🇯🇵🇰🇪🇰🇬🇰🇭🇰🇮🇰🇲🇰🇳🇰🇵🇰🇷🇰🇼🇰🇾🇰🇿🇱🇦🇱🇧🇱🇨🇱🇮🇱🇰🇱🇷🇱🇸🇱🇹🇱🇺🇱🇻🇱🇾🇲🇦🇲🇨🇲🇩🇲🇪🇲🇫🇲🇬🇲🇭🇲🇰🇲🇱🇲🇲🇲🇳🇲🇴🇲🇵🇲🇶🇲🇷🇲🇸🇲🇹🇲🇺🇲🇻🇲🇼🇲🇽🇲🇾🇲🇿🇳🇦🇳🇨🇳🇪🇳🇫🇳🇬🇳🇮🇳🇱🇳🇴🇳🇵🇳🇷🇳🇺🇳🇿🇴🇲🇵🇦🇵🇪🇵🇫🇵🇬🇵🇭🇵🇰🇵🇱🇵🇲🇵🇳🇵🇷🇵🇸🇵🇹🇵🇼🇵🇾🇶🇦🇷🇪🇷🇴🇷🇸🇷🇺🇷🇼🇸🇦🇸🇧🇸🇨🇸🇩🇸🇪🇸🇬🇸🇭🇸🇮🇸🇯🇸🇰🇸🇱🇸🇲🇸🇳🇸🇴🇸🇷🇸🇸🇸🇹🇸🇻🇸🇽🇸🇾🇸🇿🇹🇦🇹🇨🇹🇩🇹🇫🇹🇬🇹🇭🇹🇯🇹🇰🇹🇱🇹🇲🇹🇳🇹🇴🇹🇷🇹🇹🇹🇻🇹🇼🇹🇿🇺🇦🇺🇬🇺🇲🇺🇳🇺🇸🇺🇸🇺🇾🇺🇿🇻🇦🇻🇨🇻🇪🇻🇬🇻🇮🇻🇳🇻🇺🇼🇫🇼🇸🇽🇰🇾🇪🇾🇹🇿🇦🇿🇲🇿🇼🏴󠁧󠁢󠁥󠁮󠁧󠁿🏴󠁧󠁢󠁳󠁣󠁴󠁿🏴󠁧󠁢󠁷󠁬󠁳󠁿</code></pre>
+<p>which all can be found with the new emo(ji) package</p>
+<pre class="r"><code>emo::ji_find(&quot;flag&quot;)</code></pre>
+<pre><code>## # A tibble: 264 x 2
+##    name                 emoji
+##    &lt;chr&gt;                &lt;chr&gt;
+##  1 Ascension_Island     🇦🇨   
+##  2 andorra              🇦🇩   
+##  3 united_arab_emirates 🇦🇪   
+##  4 afghanistan          🇦🇫   
+##  5 antigua_barbuda      🇦🇬   
+##  6 anguilla             🇦🇮   
+##  7 albania              🇦🇱   
+##  8 armenia              🇦🇲   
+##  9 angola               🇦🇴   
+## 10 antarctica           🇦🇶   
+## # … with 254 more rows</code></pre>
+<p>we first notice that the first two emojis are not country flags, and that the name of the countries are not on same format as what we have from earlier, so we replace the underscores with spaces and translate everything to lowercase before joining. This time by country name. Again we check for missed joints.</p>
+<pre class="r"><code>left_join(freedom_index, gdp_pcap, by = c(&quot;ISO&quot; = &quot;Country Code&quot;)) %&gt;% 
+  mutate(EN_country = tolower(EN_country)) %&gt;% 
+  left_join(emo::ji_find(&quot;flag&quot;) %&gt;% 
+              mutate(name = str_replace_all(name, &quot;_&quot;, &quot; &quot;)) %&gt;% 
+              filter(name != &quot;japan&quot;, name != &quot;crossed flags&quot;), 
+            by = c(&quot;EN_country&quot; = &quot;name&quot;))  %&gt;% 
+  filter(!is.na(`2015`)) %&gt;% 
+  filter(is.na(emoji)) %&gt;% 
+  select(EN_country)</code></pre>
+<pre><code>## # A tibble: 22 x 1
+##    EN_country            
+##    &lt;chr&gt;                 
+##  1 germany               
+##  2 spain                 
+##  3 trinidad and tobago   
+##  4 france                
+##  5 united kingdom        
+##  6 united states         
+##  7 italy                 
+##  8 south korea           
+##  9 bosnia and herzegovina
+## 10 japan                 
+## # … with 12 more rows</code></pre>
+<p>Which is quite a few. It turns out that the naming convention for the emoji names have not been that consistent, “de” used instead of “germany” etc. To clear up code later on we make a new emoji tibble with all the changes.</p>
+<pre class="r"><code>newemoji &lt;- emo::ji_find(&quot;flag&quot;) %&gt;% 
+              mutate(name = str_replace_all(string = name,
+                                            pattern = &quot;_&quot;,
+                                            replacement =  &quot; &quot;)) %&gt;% 
+  filter(name != &quot;japan&quot;, name != &quot;crossed flags&quot;) %&gt;% 
+  mutate(name = str_replace(name, &quot;^de$&quot;, &quot;germany&quot;),
+         name = str_replace(name, &quot;^es$&quot;, &quot;spain&quot;),
+         name = str_replace(name, &quot;^trinidad tobago$&quot;, &quot;trinidad and tobago&quot;),
+         name = str_replace(name, &quot;^fr$&quot;, &quot;france&quot;),
+         name = str_replace(name, &quot;^uk$&quot;, &quot;united kingdom&quot;),
+         name = str_replace(name, &quot;^us$&quot;, &quot;united states&quot;),
+         name = str_replace(name, &quot;^it$&quot;, &quot;italy&quot;),
+         name = str_replace(name, &quot;^kr$&quot;, &quot;south korea&quot;),
+         name = str_replace(name, &quot;^bosnia herzegovina$&quot;, &quot;bosnia and herzegovina&quot;),
+         name = str_replace(name, &quot;^guinea bissau$&quot;, &quot;guinea-bissau&quot;),
+         name = str_replace(name, &quot;^cote divoire$&quot;, &quot;ivory coast&quot;),
+         name = str_replace(name, &quot;^timor leste$&quot;, &quot;east timor&quot;),
+         name = str_replace(name, &quot;^congo brazzaville$&quot;, &quot;congo&quot;),
+         name = str_replace(name, &quot;^palestinian territories$&quot;, &quot;palestine&quot;),
+         name = str_replace(name, &quot;^ru$&quot;, &quot;russian federation&quot;),
+         name = str_replace(name, &quot;^congo kinshasa$&quot;, &quot;the democratic republic of the congo&quot;),
+         name = str_replace(name, &quot;^tr$&quot;, &quot;turkey&quot;),
+         name = str_replace(name, &quot;^brunei$&quot;, &quot;brunei darussalam&quot;),
+         name = str_replace(name, &quot;^laos$&quot;, &quot;lao people&#39;s democratic republic&quot;),
+         name = str_replace(name, &quot;^cn$&quot;, &quot;china&quot;),
+         name = str_replace(name, &quot;^jp$&quot;, &quot;japan&quot;))
+newemoji</code></pre>
+<pre><code>## # A tibble: 264 x 2
+##    name                 emoji
+##    &lt;chr&gt;                &lt;chr&gt;
+##  1 Ascension Island     🇦🇨   
+##  2 andorra              🇦🇩   
+##  3 united arab emirates 🇦🇪   
+##  4 afghanistan          🇦🇫   
+##  5 antigua barbuda      🇦🇬   
+##  6 anguilla             🇦🇮   
+##  7 albania              🇦🇱   
+##  8 armenia              🇦🇲   
+##  9 angola               🇦🇴   
+## 10 antarctica           🇦🇶   
+## # … with 254 more rows</code></pre>
+</div>
+</div>
+<div id="plotting-it-all-with-ggplot2" class="section level3">
+<h3>Plotting it all with ggplot2</h3>
+<p>Now with all the preparation done we do a naive first plot.</p>
+<pre class="r"><code>left_join(freedom_index, gdp_pcap, by = c(&quot;ISO&quot; = &quot;Country Code&quot;)) %&gt;% 
+  mutate(EN_country = tolower(EN_country)) %&gt;% 
+  left_join(newemoji, by = c(&quot;EN_country&quot; = &quot;name&quot;)) %&gt;% 
+  ggplot(aes(x = `2015`, y = `Overall Score 2016`)) +
+  geom_text(aes(label = emoji))</code></pre>
+<pre><code>## Warning: Removed 14 rows containing missing values (geom_text).</code></pre>
+<p><img src="/post/2017-04-26-2017-world-press-freedom-index-with-emojis/index_files/figure-html/unnamed-chunk-10-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>But wait, we have a couple of problems:</p>
+<ul>
+<li>The emojis don’t show up.</li>
+<li>The freedom score is 100 times to much as the actual.</li>
+<li>The gdp_pcap is quite skewed.</li>
+</ul>
+<p>But these are not problems too great for us. It turns out that R’s graphical devices don’t support AppleColorEmoji font. We can alleviate the that problem by saving the plot as a svg file. And we will do a simple log transformation of the gdp_pcap.</p>
+<p>Our final plot is thus the following:</p>
+<pre class="r"><code>left_join(freedom_index, gdp_pcap, by = c(&quot;ISO&quot; = &quot;Country Code&quot;)) %&gt;% 
+  mutate(EN_country = tolower(EN_country),
+         `Overall Score 2016` = `Overall Score 2016` / 100) %&gt;% 
+  left_join(newemoji, by = c(&quot;EN_country&quot; = &quot;name&quot;)) %&gt;% 
+  ggplot(aes(x = `2015`, y = `Overall Score 2016`)) +
+  stat_smooth(method = &quot;lm&quot;, color = &quot;grey&quot;, se = FALSE) +
+  geom_text(aes(label = emoji)) +
+  scale_x_log10() +
+  annotation_logticks(sides = &quot;b&quot;)  +
+  theme_ipsum() +
+  labs(x = &quot;GDP per capita (current US$)&quot;, y = &quot;2017 World Press Freedom Index&quot;,
+       title = &quot;Countries with high GDP per capita\ntend to have low Freedom Index&quot;,
+       subtitle = &quot;Visualized with emojis&quot;)</code></pre>
+<p><img src="final.svg" width="700px" style="display: block; margin: auto;" /></p>
+</div>

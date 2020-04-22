@@ -1,0 +1,81 @@
+---
+title: Paletteer version 1.0.0
+date: '2019-12-18'
+categories: [color]
+---
+
+
+
+<p>I’m over-the-moon excited to announce the release of version 1.0.0 of <a href="https://github.com/EmilHvitfeldt/paletteer">paletteer</a>.
+This version comes with breaking changes and major quality of life improvements.
+I will unironically name this the “first useable version” for reasons that will be obvious later in this post.</p>
+<div id="breaking-changes" class="section level2">
+<h2>Breaking Changes 💥</h2>
+<p>There has been a significant change in syntax for this version.
+For versions &lt;= 0.2.1 the way to specify a palette was done using the arguments <code>package</code> and <code>palette</code>.
+Both could be taken as both string or unquoted strings.</p>
+<pre class="r"><code># versions &lt;= 0.2.1
+paletteer_c(&quot;gameofthrones&quot;, &quot;baratheon&quot;, 10)
+
+paletteer_d(nord, halifax_harbor)</code></pre>
+<p>While convinient and cool to use <a href="https://edwinth.github.io/blog/nse/">NSE</a>,
+tt was not very useful and I had <a href="https://github.com/EmilHvitfeldt/paletteer/issues/17">several</a> <a href="https://github.com/EmilHvitfeldt/paletteer/issues/13">people</a> <a href="https://github.com/EmilHvitfeldt/paletteer/issues/53">complaining</a>.
+I realized that using NSE wasn’t a good fit at all for this package.
+This means that from version 1.0.0 and moving forward only strings will be used to specify palettes.</p>
+<p>Secondly, I have eliminated the <code>package</code> argument and from now on all specification is done on the form <code>package::palette</code></p>
+<pre class="r"><code># versions &gt;= 1.0.0
+paletteer_c(&quot;gameofthrones::baratheon&quot;, 10)
+
+paletteer_d(&quot;nord::halifax_harbor&quot;)</code></pre>
+<p>The above change is the most likely to break your earlier code.</p>
+</div>
+<div id="autocomplete" class="section level2">
+<h2>Autocomplete 🎉</h2>
+<p>The biggest downside to the original version of <strong>paletteer</strong> and later version was the lack of discoverability.
+Unless you knew the palette you wanted and the EXACT spelling you couldn’t really use <strong>paletteer</strong>.
+Sure you could browse <code>palettes_c_names</code> and <code>palettes_d_names</code> like some caveman,
+but to be honest the package felt more like a novelty project than a useful tool.</p>
+<p>All of this changes with version 1.0.0 🎉!
+Simply starting by typing <code>paletteer_d()</code> or any of the other related functions and simply hit tab.
+This will prompt all the names of available palettes which you then can search through using fuzzy search.</p>
+<p><img src="complete1.gif" width="700px" style="display: block; margin: auto;" /></p>
+<p>This change is the single biggest improvement to this package.</p>
+<ul>
+<li>Discoverability ✅</li>
+<li>No more missspellings ✅</li>
+<li>Total awesomeness ✅</li>
+</ul>
+<p>And yes, it also work with the <code>scale_*_paletteer()</code> functions 🙌</p>
+<p><img src="complete2.gif" width="700px" style="display: block; margin: auto;" /></p>
+</div>
+<div id="prismatic-integration" class="section level2">
+<h2>Prismatic integration 💎</h2>
+<p>You can see from the first gif that the output is a little more colorful then what you are used to.
+This all comes from the <a href="https://github.com/EmilHvitfeldt/prismatic">prismatic</a> package I released earlier this year.
+The <strong>prismatic</strong> colors objects that are returned from all <strong>paletteer</strong> functions will be printed with colorful backgrounds provided that the <a href="https://github.com/r-lib/crayon">crayon</a> package is available, otherwise, it will just print normally.
+This is great for when you want to take a quick look at the colors you are about to use.
+Please note that the background can only take <a href="https://github.com/r-lib/crayon#256-colors">256</a> different colors.
+Some palettes will fit nicely inside these 256 values and will display nicely (viridis::magma) below, while other palettes with a lot of value will show weird jumps in colors (gameofthrones::greyjoy)</p>
+<p><img src="prismatic1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>If you want more accurate color depictions you can simply <code>plot()</code> the output to see the real colors</p>
+<pre class="r"><code>plot(paletteer_c(&quot;viridis::magma&quot;, 10))</code></pre>
+<p><img src="/post/2019-12-19-paletteer-version-1-0-0/index_files/figure-html/unnamed-chunk-7-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>plot(paletteer_c(&quot;gameofthrones::greyjoy&quot;, 100))</code></pre>
+<p><img src="/post/2019-12-19-paletteer-version-1-0-0/index_files/figure-html/unnamed-chunk-8-1.png" width="700px" style="display: block; margin: auto;" /></p>
+</div>
+<div id="more-color-palettes" class="section level2">
+<h2>More color palettes 🌈</h2>
+<p>It wouldn’t be a <strong>paletteer</strong> release without more palettes.
+And this release is no different!
+This update brings us 654 new palettes!!! from 19 different packages bringing out total up to 1759.
+I did a little live-tweeting while implementing these packages so you can take a look at the newly included palettes here:</p>
+<blockquote class="twitter-tweet">
+<p lang="en" dir="ltr">
+I'll be adding a whole bunch of new palettes to {paletteer} tonight! 🌈<br><br>Read this thread if you want to see the new colorful goodies coming your way!<br><br>❤️💙💚🧡💛💜<a href="https://twitter.com/hashtag/rstats?src=hash&amp;ref_src=twsrc%5Etfw">#rstats</a> <a href="https://t.co/c0qK27nc4N">pic.twitter.com/c0qK27nc4N</a>
+</p>
+— Emil Hvitfeldt (<span class="citation">@Emil_Hvitfeldt</span>) <a href="https://twitter.com/Emil_Hvitfeldt/status/1203508809269800962?ref_src=twsrc%5Etfw">December 8, 2019</a>
+</blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p>That is all I have for you this time around if you create or find more palette packages please go over and file <a href="https://github.com/EmilHvitfeldt/paletteer/issues">an issue</a> so they can be included as well.
+Thank you!</p>
+</div>

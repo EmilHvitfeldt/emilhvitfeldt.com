@@ -1,0 +1,278 @@
+---
+title: ggplot2 trial and error - US trade data
+date: '2018-06-12'
+categories: [ggplot2, web scraping]
+---
+
+
+
+<p><em>This code have been lightly revised to make sure it works as of 2018-12-16.</em></p>
+<p>This blogpost will showcase an example of a workflow and its associated thought process when iterating though visualization styles working with <code>ggplot2</code>. For this reason will this post include a lot of sub par charts as you are seeing the steps not just the final product.</p>
+<p>We will use census data concerning US trade with other nations which we scrape as well.</p>
+<div id="setting-up" class="section level2">
+<h2>Setting up</h2>
+<p>We will using a standard set of packages, <code>tidyverse</code> for general data manipulation, <code>rvest</code> and <code>httr</code> for scraping and manipulation.</p>
+<pre class="r"><code>library(tidyverse)
+## Warning: package &#39;tibble&#39; was built under R version 3.6.2
+library(rvest)
+## Warning: package &#39;xml2&#39; was built under R version 3.6.2
+library(httr)</code></pre>
+</div>
+<div id="getting-the-data" class="section level2">
+<h2>Getting the data</h2>
+<p>This project started when I found the following link <a href="https://www.census.gov/foreign-trade/balance/c4099.html">https://www.census.gov/foreign-trade/balance/c4099.html</a>. It include a month by month breakdown of U.S. trade in goods with Denmark from 1985 till the present. Unfortunately the data is given in yearly tables, so we have a little bit of munching to do. First we notice that the last part of the url include <code>c4099</code>, which after some googling reveals that 4099 is the country code for Denmark. The fill list of country trade codes are given on the following page <a href="https://www.census.gov/foreign-trade/schedules/c/countrycode.html">https://www.census.gov/foreign-trade/schedules/c/countrycode.html</a> which also include a <code>.txt</code> file so we don’t have to scrape. We will remove the first entry and last 6 since US doesn’t trade with itself.</p>
+<pre class="r"><code>continent_df &lt;- tibble(number = as.character(1:7),
+                       continent = c(&quot;North America&quot;, &quot;Central America&quot;, 
+                                     &quot;South America&quot;, &quot;Europe&quot;, &quot;Asia&quot;, 
+                                     &quot;Australia and Oceania&quot;, &quot;Africa&quot;))
+
+code_df &lt;- read_lines(&quot;https://www.census.gov/foreign-trade/schedules/c/country.txt&quot;,
+                      skip = 5) %&gt;%
+  tibble(code = .) %&gt;%
+  separate(code, c(&quot;code&quot;, &quot;name&quot;, &quot;iso&quot;), sep = &quot;\\|&quot;) %&gt;%
+  mutate_all(trimws) %&gt;%
+  mutate(con_code = str_sub(code, 1, 1)) %&gt;%
+  filter(!is.na(iso), 
+         name != &quot;United States of America&quot;, 
+         con_code != 9) %&gt;%
+  left_join(continent_df, by = c(&quot;con_code&quot; = &quot;number&quot;)) %&gt;%
+  select(-con_code)</code></pre>
+<p>With these code we create the targeted urls we will be scraping</p>
+<pre class="r"><code>target_urls &lt;- str_glue(&quot;https://www.census.gov/foreign-trade/balance/c{code_df$code}.html&quot;)</code></pre>
+<p>We will be replication hrbrmstr’s scraping code <a href="https://rud.is/b/2017/09/19/pirating-web-content-responsibly-with-r/">found here</a> since it works wonderfully.</p>
+<pre class="r"><code>s_GET &lt;- safely(GET)
+
+pb &lt;- progress_estimated(length(target_urls))
+map(target_urls, ~{
+  pb$tick()$print()
+  Sys.sleep(5)
+  s_GET(.x)
+}) -&gt; httr_raw_responses
+
+write_rds(httr_raw_responses, &quot;data/2018-us-trade-raw-httr-responses.rds&quot;)
+
+good_responses &lt;- keep(httr_raw_responses, ~!is.null(.x$result))</code></pre>
+<p>then we wrangle all the html files by extracting all the tables, parse the numeric variables and combining them to one table.</p>
+<pre class="r"><code>wrangle &lt;- function(x, name) {
+  # Read html and extract tables
+  read_html(x[[1]]) %&gt;%
+  html_nodes(&quot;table&quot;) %&gt;%
+  html_table() %&gt;%
+  # parse numeric columns
+  map(~ mutate_at(.x, vars(Exports:Balance), funs(parse_number))) %&gt;%
+  bind_rows() %&gt;%
+  mutate(Country = name)
+}
+
+full_data &lt;- map2_df(good_responses, code_df$code, wrangle)</code></pre>
+<p>Lastly we do some polishing up with the date variables and join in the country information.</p>
+<pre class="r"><code>trade_data &lt;- full_data %&gt;%
+  filter(!str_detect(Month, &quot;TOTAL&quot;)) %&gt;%
+  mutate(Date = parse_date(Month, format = &quot;%B %Y&quot;), 
+         Month = lubridate::month(Date),
+         Year = lubridate::year(Date)) %&gt;%
+  left_join(code_df, by = c(&quot;Country&quot; = &quot;code&quot;))</code></pre>
+<p>Giving us this data to work with:</p>
+<pre class="r"><code>glimpse(trade_data)
+## Rows: 75,379
+## Columns: 10
+## $ Month     &lt;dbl&gt; 1, 2, 3, 4, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3,…
+## $ Exports   &lt;dbl&gt; 0.1, 0.4, 1.8, 0.2, 0.1, 1.3, 3.2, 0.6, 0.3, 0.6, 0.7, 1.4,…
+## $ Imports   &lt;dbl&gt; 1.0, 2.4, 2.2, 0.8, 0.2, 0.5, 0.8, 0.9, 0.4, 2.4, 0.5, 1.0,…
+## $ Balance   &lt;dbl&gt; -0.8, -2.0, -0.4, -0.6, -0.1, 0.7, 2.4, -0.3, -0.1, -1.8, 0…
+## $ Country   &lt;dbl&gt; 1010, 1010, 1010, 1010, 1010, 1010, 1010, 1010, 1010, 1010,…
+## $ Date      &lt;date&gt; 2018-01-01, 2018-02-01, 2018-03-01, 2018-04-01, 2017-01-01…
+## $ Year      &lt;dbl&gt; 2018, 2018, 2018, 2018, 2017, 2017, 2017, 2017, 2017, 2017,…
+## $ name      &lt;chr&gt; &quot;Greenland&quot;, &quot;Greenland&quot;, &quot;Greenland&quot;, &quot;Greenland&quot;, &quot;Greenl…
+## $ iso       &lt;chr&gt; &quot;GL&quot;, &quot;GL&quot;, &quot;GL&quot;, &quot;GL&quot;, &quot;GL&quot;, &quot;GL&quot;, &quot;GL&quot;, &quot;GL&quot;, &quot;GL&quot;, &quot;GL&quot;,…
+## $ continent &lt;chr&gt; &quot;North America&quot;, &quot;North America&quot;, &quot;North America&quot;, &quot;North A…</code></pre>
+</div>
+<div id="lets-get-vizualising" class="section level2">
+<h2>Lets get vizualising!</h2>
+<p>Lets set a different theme for now.</p>
+<pre class="r"><code>theme_set(theme_minimal())</code></pre>
+<p>Lets start out nice and simple by plotting a simple scatter plot for just a single country to get a feel for the data.</p>
+<pre class="r"><code>trade_data %&gt;% 
+  filter(name == &quot;Greenland&quot;) %&gt;%
+  ggplot(aes(Date, Balance)) +
+  geom_point() +
+  labs(title = &quot;United States Trade Balance in Goods with Greenland&quot;)</code></pre>
+<p><img src="/post/2018-06-12-ggplot2-trial-and-error-us-trade-data/index_files/figure-html/unnamed-chunk-9-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>Which looks good already! Lets see how it would look with as a line chart instead</p>
+<pre class="r"><code>trade_data %&gt;% 
+  filter(name == &quot;Greenland&quot;) %&gt;%
+  ggplot(aes(Date, Balance)) +
+  geom_line() +
+  labs(title = &quot;United States Trade Balance in Goods with Greenland&quot;)</code></pre>
+<p><img src="/post/2018-06-12-ggplot2-trial-and-error-us-trade-data/index_files/figure-html/unnamed-chunk-10-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>it sure it quite jagged! Lets take a loot at the 4 biggest spiked to see if it is a indication of a trend</p>
+<pre class="r"><code>trade_data %&gt;% 
+  filter(name == &quot;Greenland&quot;, Balance &gt; 5)
+## # A tibble: 4 x 10
+##   Month Exports Imports Balance Country Date        Year name   iso   continent 
+##   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;date&gt;     &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;     
+## 1     3     7.9     0.5     7.4    1010 2014-03-01  2014 Green… GL    North Ame…
+## 2     3    10.4     1       9.4    1010 2013-03-01  2013 Green… GL    North Ame…
+## 3     3    10.5     0.6     9.9    1010 2012-03-01  2012 Green… GL    North Ame…
+## 4     9    20       1.3    18.8    1010 2008-09-01  2008 Green… GL    North Ame…</code></pre>
+<p>Which didn’t give us much, 3 of the spikes happened in March and the last one a random September. It was worth a try, back to plotting! Lets see how a smooth curve would look overlaid the line chart</p>
+<pre class="r"><code>trade_data %&gt;% 
+  filter(name == &quot;Greenland&quot;) %&gt;%
+  ggplot(aes(Date, Balance)) +
+  geom_line() +
+  geom_smooth(se = FALSE) +
+  labs(title = &quot;United States Trade Balance in Goods with Greenland&quot;)</code></pre>
+<p><img src="/post/2018-06-12-ggplot2-trial-and-error-us-trade-data/index_files/figure-html/unnamed-chunk-12-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>Which looks nice in and off itself, however since this chart looks at the trade balance between two countries is the value 0 quite important and should be highlighted better. I will add a line behind the data points such that it highlights rather then hides</p>
+<pre class="r"><code>trade_data %&gt;% 
+  filter(name == &quot;Greenland&quot;) %&gt;%
+  ggplot(aes(Date, Balance)) +
+  geom_abline(slope = 0, intercept = 0, color = &quot;orange&quot;) +
+  geom_line() +
+  geom_smooth(se = FALSE) +
+  labs(title = &quot;United States Trade Balance in Goods with Greenland&quot;)</code></pre>
+<p><img src="/post/2018-06-12-ggplot2-trial-and-error-us-trade-data/index_files/figure-html/unnamed-chunk-13-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>This gives us better indication for when the trade is positive or negative with respect to the United States. Lets take it up a notch and include a couple more countries. We remove the filter and add <code>Country</code> as the <code>group</code> aesthetic.</p>
+<pre class="r"><code>trade_data %&gt;% 
+  ggplot(aes(Date, Balance, group = Country)) +
+  geom_line() +
+  labs(title = &quot;United States Trade Balance in Goods with all countries&quot;)</code></pre>
+<p><img src="/post/2018-06-12-ggplot2-trial-and-error-us-trade-data/index_files/figure-html/unnamed-chunk-14-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>So we have 3 different problems I would like to fix right now. The scale between these different countries is massively different! The very negative balance of one country is making it hard to see what happens to the other countries. Secondly it is hard to distinguish the different countries since they are all the same color. And lastly there is some serious over plotting, this point is tired to the other problems so lets see if we can fix them one at a time.</p>
+<p>First lets transform the scales on the y axis such that we better can identify individual lines. We do this with the square root transformation which gives weights to values close to 0 and shrinks values far away form 0.</p>
+<pre class="r"><code>trade_data %&gt;% 
+  ggplot(aes(Date, Balance, group = Country)) +
+  geom_line() + 
+  scale_y_sqrt() +
+  labs(title = &quot;United States Trade Balance in Goods with all countries&quot;,
+       subtitle = &quot;With square root transformation&quot;)
+## Warning in self$trans$transform(x): NaNs produced
+## Warning: Transformation introduced infinite values in continuous y-axis
+## Warning: Removed 11918 row(s) containing missing values (geom_path).</code></pre>
+<p><img src="/post/2018-06-12-ggplot2-trial-and-error-us-trade-data/index_files/figure-html/unnamed-chunk-15-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>Oh no! We lost all the negative values. This happened because the normal square root operation only works with positive numbers. We fix this by using the <em>signed square root</em> which apply the square root to both the positive and negative as if they were positive and then signs them accordingly. for this we create a new transformation with the <code>scales</code> package.</p>
+<pre class="r"><code>S_sqrt &lt;- function(x) sign(x) * sqrt(abs(x))
+IS_sqrt &lt;- function(x) x ^ 2 * sign(x) 
+S_sqrt_trans &lt;- function() scales::trans_new(&quot;S_sqrt&quot;, S_sqrt, IS_sqrt)
+
+trade_data %&gt;% 
+  ggplot(aes(Date, Balance, group = Country)) +
+  geom_line() + 
+  coord_trans(y = &quot;S_sqrt&quot;) +
+  labs(title = &quot;United States Trade Balance in Goods with all countries&quot;,
+       subtitle = &quot;With signed square root transformation&quot;)</code></pre>
+<p><img src="/post/2018-06-12-ggplot2-trial-and-error-us-trade-data/index_files/figure-html/unnamed-chunk-16-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>Much better! We will fix the the breaks a little bit too.</p>
+<pre class="r"><code>trade_data %&gt;% 
+  ggplot(aes(Date, Balance, group = Country)) +
+  geom_line() + 
+  coord_trans(y = &quot;S_sqrt&quot;) +
+  scale_y_continuous(breaks = c(0, -1750, -7500, -17000, -30000, 0, 1750, 7500),
+                     minor_breaks = NULL) +
+  labs(title = &quot;United States Trade Balance in Goods with all countries&quot;,
+       subtitle = &quot;With signed square root transformation&quot;)</code></pre>
+<p><img src="/post/2018-06-12-ggplot2-trial-and-error-us-trade-data/index_files/figure-html/unnamed-chunk-17-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>Now lets solve the problem with over plotting, a standard trick is to introduce transparency, this is done using the <code>alpha</code> aesthetic. Lets start with <code>0.5</code> alpha.</p>
+<pre class="r"><code>trade_data %&gt;% 
+  ggplot(aes(Date, Balance, group = Country)) +
+  geom_line(alpha = 0.5) + 
+  coord_trans(y = &quot;S_sqrt&quot;) +
+  scale_y_continuous(breaks = c(0, -1750, -7500, -17000, -30000, 0, 1750, 7500),
+                     minor_breaks = NULL) +
+  labs(title = &quot;United States Trade Balance in Goods with all countries&quot;,
+       subtitle = &quot;With signed square root transformation&quot;)</code></pre>
+<p><img src="/post/2018-06-12-ggplot2-trial-and-error-us-trade-data/index_files/figure-html/unnamed-chunk-18-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>slightly better but not good enough, lets try <code>0.2</code></p>
+<pre class="r"><code>trade_data %&gt;% 
+  ggplot(aes(Date, Balance, group = Country)) +
+  geom_line(alpha = 0.2) + 
+  coord_trans(y = &quot;S_sqrt&quot;) +
+  scale_y_continuous(breaks = c(0, -1750, -7500, -17000, -30000, 0, 1750, 7500),
+                     minor_breaks = NULL) +
+  labs(title = &quot;United States Trade Balance in Goods with all countries&quot;,
+       subtitle = &quot;With signed square root transformation&quot;)</code></pre>
+<p><img src="/post/2018-06-12-ggplot2-trial-and-error-us-trade-data/index_files/figure-html/unnamed-chunk-19-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>much better! Another thing we could do if coloring depending on the the continent.</p>
+<pre class="r"><code>trade_data %&gt;% 
+  ggplot(aes(Date, Balance, group = Country, color = continent)) +
+  geom_line(alpha = 0.2) + 
+  coord_trans(y = &quot;S_sqrt&quot;) +
+  scale_y_continuous(breaks = c(0, -1750, -7500, -17000, -30000, 0, 1750, 7500),
+                     minor_breaks = NULL) +
+  labs(title = &quot;United States Trade Balance in Goods with all countries&quot;,
+       subtitle = &quot;With signed square root transformation&quot;)</code></pre>
+<p><img src="/post/2018-06-12-ggplot2-trial-and-error-us-trade-data/index_files/figure-html/unnamed-chunk-20-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>This is quite messy, however we notice that the data for the African countries don’t cover the same range as the other countries. Lets see if there are some overall trends within each continent.</p>
+<pre class="r"><code>trade_data %&gt;% 
+  ggplot(aes(Date, Balance, group = Country)) +
+  geom_line(alpha = 0.2) + 
+  geom_smooth(aes(Date, Balance, group = continent, color = continent), se = FALSE) +
+  coord_trans(y = &quot;S_sqrt&quot;) +
+  scale_y_continuous(breaks = c(0, -1750, -7500, -17000, -30000, 0, 1750, 7500),
+                     minor_breaks = NULL) +
+  labs(title = &quot;United States Trade Balance in Goods with all countries&quot;,
+       subtitle = &quot;With signed square root transformation&quot;)</code></pre>
+<p><img src="/post/2018-06-12-ggplot2-trial-and-error-us-trade-data/index_files/figure-html/unnamed-chunk-21-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>This gives some more tangible information. There is a upwards trend within North America for the last 10 years, where Asia have had a slow decline since the beginning of the data collection.</p>
+<p>Next lets see what happens when you facet depending on continent</p>
+<pre class="r"><code>trade_data %&gt;% 
+  ggplot(aes(Date, Balance, group = Country)) +
+  facet_wrap(~ continent) +
+  geom_line(alpha = 0.2) + 
+  coord_trans(y = &quot;S_sqrt&quot;) +
+  scale_y_continuous(breaks = c(0, -1750, -7500, -17000, -30000, 0, 1750, 7500),
+                     minor_breaks = NULL) +
+  labs(title = &quot;United States Trade Balance in Goods with all countries&quot;,
+       subtitle = &quot;With signed square root transformation faceted depending on continent&quot;)</code></pre>
+<p><img src="/post/2018-06-12-ggplot2-trial-and-error-us-trade-data/index_files/figure-html/unnamed-chunk-22-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>These look really nice, lets free up the scale on the y axis within each facet such that we can differentiate the lines better, on top of that lets re introduce the colors.</p>
+<pre class="r"><code>trade_data %&gt;% 
+  ggplot(aes(Date, Balance, group = Country, color = continent)) +
+  facet_wrap(~ continent, scales = &quot;free_y&quot;) +
+  geom_line(alpha = 0.2) + 
+  coord_trans(y = &quot;S_sqrt&quot;) +
+  scale_y_continuous(breaks = c(0, -1750, -7500, -17000, -30000, 0, 1750, 7500),
+                     minor_breaks = NULL) +
+  labs(title = &quot;United States Trade Balance in Goods with all countries&quot;,
+       subtitle = &quot;With signed square root transformation faceted depending on continent&quot;)</code></pre>
+<p><img src="/post/2018-06-12-ggplot2-trial-and-error-us-trade-data/index_files/figure-html/unnamed-chunk-23-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>lets remove the color legend as the information is already present in the facet labels.</p>
+<pre class="r"><code>trade_data %&gt;% 
+  ggplot(aes(Date, Balance, group = Country, color = continent)) +
+  facet_wrap(~ continent, scales = &quot;free_y&quot;) +
+  geom_line(alpha = 0.2) + 
+  coord_trans(y = &quot;S_sqrt&quot;) +
+  scale_y_continuous(breaks = c(0, -1750, -7500, -17000, -30000, 0, 1750, 7500),
+                     minor_breaks = NULL) +
+  labs(title = &quot;United States Trade Balance in Goods with all countries&quot;,
+       subtitle = &quot;With signed square root transformation faceted depending on continent&quot;) +
+  guides(color = &quot;none&quot;)</code></pre>
+<p><img src="/post/2018-06-12-ggplot2-trial-and-error-us-trade-data/index_files/figure-html/unnamed-chunk-24-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>Lastly lets overlay the smooth continent average</p>
+<pre class="r"><code>trade_data %&gt;% 
+  ggplot(aes(Date, Balance, group = Country, color = continent)) +
+  facet_wrap(~ continent, scales = &quot;free_y&quot;) +
+  geom_line(alpha = 0.2) + 
+  geom_smooth(aes(group = continent), color = &quot;grey40&quot;, se = FALSE) +
+  coord_trans(y = &quot;S_sqrt&quot;) +
+  scale_y_continuous(breaks = c(0, -1750, -7500, -17000, -30000, 0, 1750, 7500),
+                     minor_breaks = NULL) +
+  labs(title = &quot;United States Trade Balance in Goods with all countries&quot;,
+       subtitle = &quot;With signed square root transformation faceted depending on continent&quot;) +
+  guides(color = &quot;none&quot;)
+## `geom_smooth()` using method = &#39;gam&#39; and formula &#39;y ~ s(x, bs = &quot;cs&quot;)&#39;</code></pre>
+<p><img src="/post/2018-06-12-ggplot2-trial-and-error-us-trade-data/index_files/figure-html/unnamed-chunk-25-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>Unfortunately doesn’t add too much information so lets remove it again. Lastly lets update the the labels to reflect the the unit.</p>
+<pre class="r"><code>trade_data %&gt;% 
+  ggplot(aes(Date, Balance, group = Country, color = continent)) +
+  facet_wrap(~ continent, scales = &quot;free_y&quot;) +
+  geom_line(alpha = 0.2) + 
+  coord_trans(y = &quot;S_sqrt&quot;) +
+  scale_y_continuous(breaks = c(0, -1750, -7500, -17000, -30000, 0, 1750, 7500),
+                     minor_breaks = NULL) +
+  labs(title = &quot;United States Trade Balance in Goods with all countries&quot;,
+       subtitle = &quot;With signed square root transformation faceted depending on continent&quot;,
+       y = &quot;Balance (in millions of U.S. dollars on a nominal basis)&quot;) +
+  guides(color = &quot;none&quot;)</code></pre>
+<p><img src="/post/2018-06-12-ggplot2-trial-and-error-us-trade-data/index_files/figure-html/unnamed-chunk-26-1.png" width="700px" style="display: block; margin: auto;" /></p>
+</div>

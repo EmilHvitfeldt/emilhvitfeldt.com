@@ -1,0 +1,364 @@
+---
+title: Text Classification with Tidymodels
+date: '2018-12-29'
+categories: [tidymodels, textrecipes]
+---
+
+<link href="/rmarkdown-libs/font-awesome/css/all.css" rel="stylesheet" />
+<link href="/rmarkdown-libs/font-awesome/css/v4-shims.css" rel="stylesheet" />
+
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>I have previously used this blog to talk about text classification a couple of times. <a href="https://github.com/tidymodels/tidymodels">tidymodels</a> have since then seen quite a bit of progress. I did in addition get the <a href="https://github.com/tidymodels/textrecipes">textrecipes</a> package on CRAN, which provides extra steps to <a href="https://github.com/tidymodels/recipes">recipes</a> package from tidymodels.</p>
+<p>Seeing the always wonderful post by Julia Silge on <a href="https://juliasilge.com/blog/tidy-text-classification/">text classification with tidy data principles</a> encouraged me to show how the same workflow also can be accomplished in tidymodels.</p>
+<p>To give this post a little spice will we only be using stop words. Yes, you read that right, we will only keep stop words. Words you are often encouraged to exclude as they don’t provide much information. We will challenge that assumption in this post! To have a baseline for our stop word model will I be using the same data as Julia used in her post.</p>
+</div>
+<div id="data" class="section level2">
+<h2>Data</h2>
+<p>The data we will be using is the text from <em>Pride and Prejudice</em> and text from <em>The War of the Worlds</em>. These texts can we get from <a href="https://www.gutenberg.org/">Project Gutenberg</a> using the <a href="https://github.com/ropensci/gutenbergr">gutenbergr</a> package.</p>
+<pre class="r"><code>library(tidyverse)
+## Warning: package &#39;tibble&#39; was built under R version 3.6.2
+library(gutenbergr)
+
+titles &lt;- c(
+  &quot;The War of the Worlds&quot;,
+  &quot;Pride and Prejudice&quot;
+)
+books &lt;- gutenberg_works(title %in% titles) %&gt;%
+  gutenberg_download(meta_fields = &quot;title&quot;) %&gt;%
+  mutate(title = as.factor(title)) %&gt;%
+  select(-gutenberg_id)
+
+books
+## # A tibble: 19,504 x 2
+##    text                                                      title              
+##    &lt;chr&gt;                                                     &lt;fct&gt;              
+##  1 &quot;The War of the Worlds&quot;                                   The War of the Wor…
+##  2 &quot;&quot;                                                        The War of the Wor…
+##  3 &quot;by H. G. Wells [1898]&quot;                                   The War of the Wor…
+##  4 &quot;&quot;                                                        The War of the Wor…
+##  5 &quot;&quot;                                                        The War of the Wor…
+##  6 &quot;     But who shall dwell in these worlds if they be&quot;     The War of the Wor…
+##  7 &quot;     inhabited? .  .  .  Are we or they Lords of the&quot;    The War of the Wor…
+##  8 &quot;     World? .  .  .  And how are all things made for ma… The War of the Wor…
+##  9 &quot;          KEPLER (quoted in The Anatomy of Melancholy)&quot;  The War of the Wor…
+## 10 &quot;&quot;                                                        The War of the Wor…
+## # … with 19,494 more rows</code></pre>
+<p>(deviating from Julia, will we drop the <code>gutenberg_id</code> variable as it is redundant, remove the <code>document</code> variable as it isn’t needed in the tidymodels framework and set the <code>title</code> variable as a factor as it works better with tidymodels used later on.)</p>
+<p>I’m going to quote Julia to explain the modeling problem we are facing;</p>
+<blockquote>
+<p>We have the text data now, and let’s frame the kind of prediction problem we are going to work on. Imagine that we take each book and cut it up into lines, like strips of paper (✨ confetti ✨) with an individual line on each paper. Let’s train a model that can take an individual line and give us a probability that this book comes from Pride and Prejudice vs. from The War of the Worlds.</p>
+</blockquote>
+<p>So that is fairly straight-forward task, we already have the data as we want in <code>books</code>. Before we go on lets investigate the class imbalance.</p>
+<pre class="r"><code>books %&gt;%
+  ggplot(aes(title)) +
+  geom_bar() +
+  theme_minimal() +
+  labs(x = NULL,
+       y = &quot;Count&quot;,
+       title = &quot;Number of Strips in &#39;Pride and Prejudice&#39; and &#39;The War of the Worlds&#39;&quot;)</code></pre>
+<p><img src="/post/2018-12-29-text-classification-with-tidymodels/index_files/figure-html/proportional-plot-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>It is a little uneven, but we will carry on.</p>
+</div>
+<div id="stop-words" class="section level2">
+<h2>Stop words</h2>
+<p>Lets first have a talk about stop words. These are the words that are needed for the sentences to be structurally sound, but doesn’t add any information. however such a concept as “non-informational” is quite abstract and is bound to be highly domain specific. We will be using the English snowball stop word lists provided by the <a href="https://github.com/quanteda/stopwords">stopwords</a> package (because that is what textrecipes naively uses).</p>
+<pre class="r"><code>library(stopwords)
+stopwords(language = &quot;en&quot;, source = &quot;snowball&quot;) %&gt;% sort()
+##   [1] &quot;a&quot;          &quot;about&quot;      &quot;above&quot;      &quot;after&quot;      &quot;again&quot;     
+##   [6] &quot;against&quot;    &quot;all&quot;        &quot;am&quot;         &quot;an&quot;         &quot;and&quot;       
+##  [11] &quot;any&quot;        &quot;are&quot;        &quot;aren&#39;t&quot;     &quot;as&quot;         &quot;at&quot;        
+##  [16] &quot;be&quot;         &quot;because&quot;    &quot;been&quot;       &quot;before&quot;     &quot;being&quot;     
+##  [21] &quot;below&quot;      &quot;between&quot;    &quot;both&quot;       &quot;but&quot;        &quot;by&quot;        
+##  [26] &quot;can&#39;t&quot;      &quot;cannot&quot;     &quot;could&quot;      &quot;couldn&#39;t&quot;   &quot;did&quot;       
+##  [31] &quot;didn&#39;t&quot;     &quot;do&quot;         &quot;does&quot;       &quot;doesn&#39;t&quot;    &quot;doing&quot;     
+##  [36] &quot;don&#39;t&quot;      &quot;down&quot;       &quot;during&quot;     &quot;each&quot;       &quot;few&quot;       
+##  [41] &quot;for&quot;        &quot;from&quot;       &quot;further&quot;    &quot;had&quot;        &quot;hadn&#39;t&quot;    
+##  [46] &quot;has&quot;        &quot;hasn&#39;t&quot;     &quot;have&quot;       &quot;haven&#39;t&quot;    &quot;having&quot;    
+##  [51] &quot;he&quot;         &quot;he&#39;d&quot;       &quot;he&#39;ll&quot;      &quot;he&#39;s&quot;       &quot;her&quot;       
+##  [56] &quot;here&quot;       &quot;here&#39;s&quot;     &quot;hers&quot;       &quot;herself&quot;    &quot;him&quot;       
+##  [61] &quot;himself&quot;    &quot;his&quot;        &quot;how&quot;        &quot;how&#39;s&quot;      &quot;i&quot;         
+##  [66] &quot;i&#39;d&quot;        &quot;i&#39;ll&quot;       &quot;i&#39;m&quot;        &quot;i&#39;ve&quot;       &quot;if&quot;        
+##  [71] &quot;in&quot;         &quot;into&quot;       &quot;is&quot;         &quot;isn&#39;t&quot;      &quot;it&quot;        
+##  [76] &quot;it&#39;s&quot;       &quot;its&quot;        &quot;itself&quot;     &quot;let&#39;s&quot;      &quot;me&quot;        
+##  [81] &quot;more&quot;       &quot;most&quot;       &quot;mustn&#39;t&quot;    &quot;my&quot;         &quot;myself&quot;    
+##  [86] &quot;no&quot;         &quot;nor&quot;        &quot;not&quot;        &quot;of&quot;         &quot;off&quot;       
+##  [91] &quot;on&quot;         &quot;once&quot;       &quot;only&quot;       &quot;or&quot;         &quot;other&quot;     
+##  [96] &quot;ought&quot;      &quot;our&quot;        &quot;ours&quot;       &quot;ourselves&quot;  &quot;out&quot;       
+## [101] &quot;over&quot;       &quot;own&quot;        &quot;same&quot;       &quot;shan&#39;t&quot;     &quot;she&quot;       
+## [106] &quot;she&#39;d&quot;      &quot;she&#39;ll&quot;     &quot;she&#39;s&quot;      &quot;should&quot;     &quot;shouldn&#39;t&quot; 
+## [111] &quot;so&quot;         &quot;some&quot;       &quot;such&quot;       &quot;than&quot;       &quot;that&quot;      
+## [116] &quot;that&#39;s&quot;     &quot;the&quot;        &quot;their&quot;      &quot;theirs&quot;     &quot;them&quot;      
+## [121] &quot;themselves&quot; &quot;then&quot;       &quot;there&quot;      &quot;there&#39;s&quot;    &quot;these&quot;     
+## [126] &quot;they&quot;       &quot;they&#39;d&quot;     &quot;they&#39;ll&quot;    &quot;they&#39;re&quot;    &quot;they&#39;ve&quot;   
+## [131] &quot;this&quot;       &quot;those&quot;      &quot;through&quot;    &quot;to&quot;         &quot;too&quot;       
+## [136] &quot;under&quot;      &quot;until&quot;      &quot;up&quot;         &quot;very&quot;       &quot;was&quot;       
+## [141] &quot;wasn&#39;t&quot;     &quot;we&quot;         &quot;we&#39;d&quot;       &quot;we&#39;ll&quot;      &quot;we&#39;re&quot;     
+## [146] &quot;we&#39;ve&quot;      &quot;were&quot;       &quot;weren&#39;t&quot;    &quot;what&quot;       &quot;what&#39;s&quot;    
+## [151] &quot;when&quot;       &quot;when&#39;s&quot;     &quot;where&quot;      &quot;where&#39;s&quot;    &quot;which&quot;     
+## [156] &quot;while&quot;      &quot;who&quot;        &quot;who&#39;s&quot;      &quot;whom&quot;       &quot;why&quot;       
+## [161] &quot;why&#39;s&quot;      &quot;will&quot;       &quot;with&quot;       &quot;won&#39;t&quot;      &quot;would&quot;     
+## [166] &quot;wouldn&#39;t&quot;   &quot;you&quot;        &quot;you&#39;d&quot;      &quot;you&#39;ll&quot;     &quot;you&#39;re&quot;    
+## [171] &quot;you&#39;ve&quot;     &quot;your&quot;       &quot;yours&quot;      &quot;yourself&quot;   &quot;yourselves&quot;</code></pre>
+<p>this list contains 175 words. Many of these words will at first glance pass the “non-informational” test. However if you look at it more you will realize that many of these can have meaning in certain contexts. The word “i” for example will be used more in blog posts then legal documents. Secondly there appear to be quite a lot of negation words, “wouldn’t”, “don’t”, “doesn’t” and “mustn’t” just to list a few. This is another reminder that constructing your own stop word list can be highly beneficial for your project as the default list might not work in your field.</p>
+<p>While these words are assumed to have little information, the distribution of them and the relational information contained with how the stop word are used compared to each other might give us some information anyways. One author might use negations more often then another, maybe someon really like to use the word “nor”. These kind of features can be extracted as the distributional information, or in other words “counts”. We will count how often each stop word appear and hope that some of the words can divide the authors. Next we have the order of which words appear in. This is related to writing style, some authors might write “… will you please…” while others might use “… you will handle…”. The way each word combination is used might be worth a little bit of information. We will capture the relational information with ngrams.</p>
+<p>We will briefly showcase how this works with an example.</p>
+<pre class="r"><code>sentence &lt;- &quot;This an example sentence that is used to explain the concept of ngrams.&quot;</code></pre>
+<p>to extract the ngrams we will use the <a href="https://github.com/ropensci/tokenizers">tokenizers</a> package (also default in textrecipes). Here we can get all the trigrams (ngrams of length 3).</p>
+<pre class="r"><code>library(tokenizers)
+tokenize_ngrams(sentence, n = 3)
+## [[1]]
+##  [1] &quot;this an example&quot;       &quot;an example sentence&quot;   &quot;example sentence that&quot;
+##  [4] &quot;sentence that is&quot;      &quot;that is used&quot;          &quot;is used to&quot;           
+##  [7] &quot;used to explain&quot;       &quot;to explain the&quot;        &quot;explain the concept&quot;  
+## [10] &quot;the concept of&quot;        &quot;concept of ngrams&quot;</code></pre>
+<p>however we would also like to the singular word counts (unigrams) and bigrams (ngrams of length 2). This can easily be done by setting the <code>n_min</code> argument.</p>
+<pre class="r"><code>tokenize_ngrams(sentence, n = 3, n_min = 1)
+## [[1]]
+##  [1] &quot;this&quot;                  &quot;this an&quot;               &quot;this an example&quot;      
+##  [4] &quot;an&quot;                    &quot;an example&quot;            &quot;an example sentence&quot;  
+##  [7] &quot;example&quot;               &quot;example sentence&quot;      &quot;example sentence that&quot;
+## [10] &quot;sentence&quot;              &quot;sentence that&quot;         &quot;sentence that is&quot;     
+## [13] &quot;that&quot;                  &quot;that is&quot;               &quot;that is used&quot;         
+## [16] &quot;is&quot;                    &quot;is used&quot;               &quot;is used to&quot;           
+## [19] &quot;used&quot;                  &quot;used to&quot;               &quot;used to explain&quot;      
+## [22] &quot;to&quot;                    &quot;to explain&quot;            &quot;to explain the&quot;       
+## [25] &quot;explain&quot;               &quot;explain the&quot;           &quot;explain the concept&quot;  
+## [28] &quot;the&quot;                   &quot;the concept&quot;           &quot;the concept of&quot;       
+## [31] &quot;concept&quot;               &quot;concept of&quot;            &quot;concept of ngrams&quot;    
+## [34] &quot;of&quot;                    &quot;of ngrams&quot;             &quot;ngrams&quot;</code></pre>
+<p>Now we get unigrams, bigrams and trigrams in one. But wait, we wanted to limit our focus to stop words. Here is how the end result will look once we exclude all non-stop words and perform the ngram operation.</p>
+<pre class="r"><code>tokenize_words(sentence) %&gt;%
+  unlist() %&gt;%
+  intersect(stopwords(language = &quot;en&quot;, source = &quot;snowball&quot;)) %&gt;%
+  paste(collapse = &quot; &quot;) %&gt;%
+  print() %&gt;%
+  tokenize_ngrams(n = 3, n_min = 1)
+## [1] &quot;this an that is to the of&quot;
+## [[1]]
+##  [1] &quot;this&quot;         &quot;this an&quot;      &quot;this an that&quot; &quot;an&quot;           &quot;an that&quot;     
+##  [6] &quot;an that is&quot;   &quot;that&quot;         &quot;that is&quot;      &quot;that is to&quot;   &quot;is&quot;          
+## [11] &quot;is to&quot;        &quot;is to the&quot;    &quot;to&quot;           &quot;to the&quot;       &quot;to the of&quot;   
+## [16] &quot;the&quot;          &quot;the of&quot;       &quot;of&quot;</code></pre>
+<p>We have quite a reduction in ngrams then the full sentence, but hopefully there is some information within.</p>
+</div>
+<div id="training-testing-split" class="section level2">
+<h2>Training &amp; testing split</h2>
+<p>Before we start modeling we need to split our data into a testing and training set. This is easily done using the <a href="https://github.com/tidymodels/rsample">rsample</a> package from tidymodels.</p>
+<pre class="r"><code>library(tidymodels)
+## Warning: package &#39;rsample&#39; was built under R version 3.6.2
+set.seed(1234) 
+
+books_split &lt;- initial_split(books, strata = &quot;title&quot;, p = 0.75)
+train_data &lt;- training(books_split)
+test_data &lt;- testing(books_split)</code></pre>
+</div>
+<div id="preprocessing" class="section level2">
+<h2>Preprocessing</h2>
+<p>Next step is to do the preprocessing. For this will we use the <a href="https://github.com/tidymodels/recipes">recipes</a> from tidymodels. This allows us to specify a preprocessing design that can be train on the training data and applied to the training and testing data alike. I created textrecipes as recipes doesn’t naively support text preprocessing.</p>
+<p>I’m are going to replicate Julia’s preprocessing here to make comparisons easier for myself. Notice the <code>step_filter()</code> call, the original text have quite a lot of empty lines and these don’t contain any textual information at all so we will filter away these observations. Note also that we could have used <code>all_predictors()</code> instead of <code>text</code> at it is the only predictor we have.</p>
+<pre class="r"><code>library(textrecipes)
+julia_rec &lt;- recipe(title ~ ., data = train_data) %&gt;%
+  step_filter(text != &quot;&quot;) %&gt;%
+  step_tokenize(text) %&gt;%
+  step_tokenfilter(text, min_times = 11) %&gt;%
+  step_tf(text) %&gt;%
+  prep(training = train_data)
+julia_rec
+## Data Recipe
+## 
+## Inputs:
+## 
+##       role #variables
+##    outcome          1
+##  predictor          1
+## 
+## Training data contained 14629 data points and no missing data.
+## 
+## Operations:
+## 
+## Row filtering [trained]
+## Tokenization for text [trained]
+## Text filtering for text [trained]
+## Term frequency with text [trained]</code></pre>
+<p>This recipe will remove empty texts, tokenize to words (default in <code>step_tokenize()</code>), keeping words that appear 10 times or more in the training set and then count how many times each word appears. The processed data looks like this</p>
+<pre class="r"><code>julia_train_data &lt;- juice(julia_rec)
+julia_test_data  &lt;- bake(julia_rec, test_data)
+
+str(julia_train_data, list.len = 10)
+## tibble [12,138 × 101] (S3: tbl_df/tbl/data.frame)
+##  $ title            : Factor w/ 2 levels &quot;Pride and Prejudice&quot;,..: 2 2 2 2 2 2 2 2 2 2 ...
+##  $ tf_text_a        : num [1:12138] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ tf_text_about    : num [1:12138] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ tf_text_after    : num [1:12138] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ tf_text_again    : num [1:12138] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ tf_text_all      : num [1:12138] 0 0 0 0 1 0 0 0 0 0 ...
+##  $ tf_text_am       : num [1:12138] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ tf_text_an       : num [1:12138] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ tf_text_and      : num [1:12138] 0 0 0 0 1 0 0 0 0 0 ...
+##  $ tf_text_any      : num [1:12138] 0 0 0 0 0 0 0 0 0 0 ...
+##   [list output truncated]</code></pre>
+<p>The reason we get 101 features and Julia got 1652 is because she did her filtering on the full dataset where we only did the filtering on the training set and that Julia didn’t explicitly remove empty oberservations.</p>
+<p>Back to stop words!! In this case we need a slightly more complicated recipe</p>
+<pre class="r"><code>stopword_rec &lt;- recipe(title ~ ., data = train_data) %&gt;%
+  step_filter(text != &quot;&quot;) %&gt;%
+  step_tokenize(text) %&gt;%
+  step_stopwords(text, keep = TRUE) %&gt;%
+  step_untokenize(text) %&gt;%
+  step_tokenize(text, token = &quot;ngrams&quot;, options = list(n = 3, n_min = 1)) %&gt;%
+  step_tokenfilter(text, min_times = 10) %&gt;%
+  step_tf(text) %&gt;%
+  prep(training = train_data)
+stopword_rec
+## Data Recipe
+## 
+## Inputs:
+## 
+##       role #variables
+##    outcome          1
+##  predictor          1
+## 
+## Training data contained 14629 data points and no missing data.
+## 
+## Operations:
+## 
+## Row filtering [trained]
+## Tokenization for text [trained]
+## Stop word removal for text [trained]
+## Untokenization for text [trained]
+## Tokenization for text [trained]
+## Text filtering for text [trained]
+## Term frequency with text [trained]</code></pre>
+<p>First we tokenize to words, remove all non-stop words, untokenize (which is basically just <code>paste()</code> with a fancy name), tokenize to ngrams, remove ngrams that appear less then 10 times and lastly we count how often each ngram appear.</p>
+<pre class="r"><code># Processed data
+stopword_train_data &lt;- juice(stopword_rec)
+stopword_test_data  &lt;- bake(stopword_rec, test_data)
+
+str(stopword_train_data, list.len = 10)
+## tibble [12,138 × 101] (S3: tbl_df/tbl/data.frame)
+##  $ title             : Factor w/ 2 levels &quot;Pride and Prejudice&quot;,..: 2 2 2 2 2 2 2 2 2 2 ...
+##  $ tf_text_a         : num [1:12138] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ tf_text_a and     : num [1:12138] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ tf_text_a of      : num [1:12138] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ tf_text_about     : num [1:12138] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ tf_text_after     : num [1:12138] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ tf_text_again     : num [1:12138] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ tf_text_all       : num [1:12138] 0 0 0 0 1 0 0 0 0 0 ...
+##  $ tf_text_am        : num [1:12138] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ tf_text_an        : num [1:12138] 0 0 0 0 0 0 0 0 0 0 ...
+##   [list output truncated]</code></pre>
+<p>And we are left with 101 features.</p>
+</div>
+<div id="modeling" class="section level2">
+<h2>Modeling</h2>
+<p>For modeling we will be using the <a href="https://github.com/tidymodels/parsnip">parsnip</a> package from tidymodels. First we start by defining a model specification. This defines the intent of our model, what we want to do, not what we want to do it on. Meaning we don’t include the data yet, just the kind of model, its hyperparameters and the engine (the package that will do the work). We will be be using glmnet package here so we will specify a logistic regression model</p>
+<pre class="r"><code>glmnet_model &lt;- logistic_reg(mixture = 0, penalty = 0.1) %&gt;%
+  set_engine(&quot;glmnet&quot;)
+glmnet_model
+## Logistic Regression Model Specification (classification)
+## 
+## Main Arguments:
+##   penalty = 0.1
+##   mixture = 0
+## 
+## Computational engine: glmnet</code></pre>
+<p>Here we will fit the models using both our training data, first using the stop words, then using the simple would count approach.</p>
+<pre class="r"><code>stopword_model &lt;- glmnet_model %&gt;%
+  fit(title ~ ., data = stopword_train_data)
+
+julia_model &lt;- glmnet_model %&gt;%
+  fit(title ~ ., data = julia_train_data)</code></pre>
+<p>This is the part of the workflow where one should do hyperparameter optimization and explore different models to find the best model for the task. For the interest of the length of this post will this step be excluded, possible to be explored in a future post 😉.</p>
+</div>
+<div id="evaluation" class="section level2">
+<h2>Evaluation</h2>
+<p>Now that we have fitted the data based on the training data we can evaluate based on the testing data set. Here we will use the parsnip functions <code>predict_class()</code> and <code>predict_classprob()</code> to give us the predicted class and predicted probabilities for the two models. Neatly collecting the whole thing in one tibble.</p>
+<pre class="r"><code>eval_tibble &lt;- stopword_test_data %&gt;%
+  select(title) %&gt;%
+  mutate(
+    class_stopword = parsnip:::predict_class(stopword_model, stopword_test_data),
+    class_julia    = parsnip:::predict_class(julia_model, julia_test_data),
+    prop_stopword  = parsnip:::predict_classprob(stopword_model, stopword_test_data) %&gt;% pull(`The War of the Worlds`),
+    prop_julia     = parsnip:::predict_classprob(julia_model, julia_test_data) %&gt;% pull(`The War of the Worlds`)
+  )
+
+eval_tibble
+## # A tibble: 4,027 x 5
+##    title           class_stopword     class_julia       prop_stopword prop_julia
+##    &lt;fct&gt;           &lt;fct&gt;              &lt;fct&gt;                     &lt;dbl&gt;      &lt;dbl&gt;
+##  1 The War of the… Pride and Prejudi… The War of the W…         0.475      0.508
+##  2 The War of the… Pride and Prejudi… Pride and Prejud…         0.498      0.388
+##  3 The War of the… Pride and Prejudi… Pride and Prejud…         0.335      0.315
+##  4 The War of the… The War of the Wo… The War of the W…         0.690      0.710
+##  5 The War of the… The War of the Wo… The War of the W…         0.650      0.607
+##  6 The War of the… Pride and Prejudi… Pride and Prejud…         0.241      0.264
+##  7 The War of the… Pride and Prejudi… Pride and Prejud…         0.369      0.351
+##  8 The War of the… Pride and Prejudi… The War of the W…         0.403      0.568
+##  9 The War of the… The War of the Wo… The War of the W…         0.520      0.631
+## 10 The War of the… The War of the Wo… The War of the W…         0.511      0.545
+## # … with 4,017 more rows</code></pre>
+<p>Tidymodels includes the <a href="https://github.com/tidymodels/yardstick">yardstick</a> package which makes evaluation calculations much easier and tidy. It can allow us to calculate the accuracy by calling the <code>accuracy()</code> function</p>
+<pre class="r"><code>accuracy(eval_tibble, truth = title, estimate = class_stopword)
+## # A tibble: 1 x 3
+##   .metric  .estimator .estimate
+##   &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
+## 1 accuracy binary         0.778
+accuracy(eval_tibble, truth = title, estimate = class_julia)
+## # A tibble: 1 x 3
+##   .metric  .estimator .estimate
+##   &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
+## 1 accuracy binary         0.801</code></pre>
+<p>And we see that the stop words model beats the naive model (one that always picks the majority class), while lacking behind the word count model.</p>
+<pre class="r"><code>test_data %&gt;%
+  filter(text != &quot;&quot;) %&gt;%
+  summarise(mean(title == &quot;Pride and Prejudice&quot;))
+## # A tibble: 1 x 1
+##   `mean(title == &quot;Pride and Prejudice&quot;)`
+##                                    &lt;dbl&gt;
+## 1                                  0.662</code></pre>
+<p>We are also able to plot the ROC curve using <code>roc_curve()</code>(notice how we are using the predicted probabilities instead of class) and <code>autoplot()</code></p>
+<pre class="r"><code>eval_tibble %&gt;%
+  roc_curve(title, prop_stopword) %&gt;%
+  autoplot()</code></pre>
+<p><img src="/post/2018-12-29-text-classification-with-tidymodels/index_files/figure-html/unnamed-chunk-5-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>To superimpose both ROC curve we are going to tidyr our data a little bit.</p>
+<pre class="r"><code>eval_tibble %&gt;%
+  rename(`Word Count` = prop_julia, `Stopwords` = prop_stopword) %&gt;%
+  gather(&quot;Stopwords&quot;, &quot;Word Count&quot;, key = &quot;Model&quot;, value = &quot;Prop&quot;) %&gt;%
+  group_by(Model) %&gt;%
+  roc_curve(title, Prop) %&gt;%
+  autoplot() +
+  labs(title = &quot;ROC curve for text classification using word count or stopwords&quot;,
+       subtitle = &quot;Predicting whether text was written by Jane Austen or H.G. Wells&quot;) +
+  paletteer::scale_color_paletteer_d(&quot;ggsci::category10_d3&quot;)</code></pre>
+<p><img src="/post/2018-12-29-text-classification-with-tidymodels/index_files/figure-html/unnamed-chunk-6-1.png" width="700px" style="display: block; margin: auto;" /></p>
+</div>
+<div id="conclusion" class="section level2">
+<h2>Conclusion</h2>
+<p>I’m not going to tell you that you should run a “all stop words only” model every-time you want to do text classification. But I hope this exercise shows you that stop words which are assumed to have no information does indeed have some degree on information. Please always look at your stop word list, check if you even need to remove them, some studies <a href="http://www.cs.cornell.edu/~xanda/stopwords2017.pdf">shows that removal of stop words might not provide the benefit you thought</a>.</p>
+<p>Furthermore I hope to have showed the power of tidymodels. Tidymodels is still growing, so if you have any feedback/bug reports/suggests please go to the respective repositories, we would highly appreciate it!</p>
+</div>
+<div id="comments" class="section level2">
+<h2>Comments</h2>
+<p>This plot was suggested in the comments, Thanks Isaiah!</p>
+<pre class="r"><code>stopword_model$fit %&gt;% 
+  tidy() %&gt;%
+  mutate(term = str_replace(term, &quot;tf_text_&quot;, &quot;&quot;)) %&gt;%
+  group_by(estimate &gt; 0) %&gt;%
+  top_n(10, abs(estimate)) %&gt;%
+  ungroup() %&gt;%
+  ggplot(aes(fct_reorder(term, estimate), estimate, fill = estimate &gt; 0)) +
+  geom_col(alpha = 0.8, show.legend = FALSE) +
+  coord_flip() +
+  theme_minimal() +
+  labs(x = NULL,
+  title = &quot;Coefficients that increase/decrease probability the most&quot;,
+  subtitle = &quot;Stopwords only&quot;)</code></pre>
+<p><img src="/post/2018-12-29-text-classification-with-tidymodels/index_files/figure-html/unnamed-chunk-7-1.png" width="700px" style="display: block; margin: auto;" /></p>
+<p>And Isaiah notes that</p>
+<blockquote>
+<p>Whereas Julia’s analysis using non stop words showed that Elizabeth is the opposite of a Martian, stop words shows that Pride and Prejudice talks of men and women, and War of the Worlds makes declarations about existence.</p>
+</blockquote>
+<p>Which I would like to say looks pretty spot on.</p>
+</div>
