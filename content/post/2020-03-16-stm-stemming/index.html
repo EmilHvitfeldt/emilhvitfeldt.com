@@ -21,12 +21,10 @@ I propose a workflow to investigate if stemming is appropriate as a method for d
 If the words are predicted to be indifferent topics then we have a suspicion that the stemmed and unstemmed words have different uses and stemming would be ill-advised.</p>
 <p>First, we load the packages we will be using.</p>
 <pre class="r"><code>library(tidytext)
-library(tidyverse)</code></pre>
-<pre><code>## Warning: package &#39;tibble&#39; was built under R version 3.6.2</code></pre>
-<pre class="r"><code>library(stm)
+library(tidyverse)
+library(stm)
 library(hcandersenr)
 library(SnowballC)</code></pre>
-<pre><code>## Warning: package &#39;SnowballC&#39; was built under R version 3.6.2</code></pre>
 <p>As a first test, we pick 3 fairy tales by H.C. Andersens using the <a href="https://github.com/EmilHvitfeldt/hcandersenr">hcandersenr</a> package.
 To create multiple “documents” for each fairy tale we start by tokenizing to sentences.
 Then we give each sentence a unique identifier.</p>
@@ -38,8 +36,8 @@ Then we give each sentence a unique identifier.</p>
   ungroup() %&gt;%
   unite(document, book, sentence)
 
-fairy_tales</code></pre>
-<pre><code>## # A tibble: 501 x 2
+fairy_tales
+## # A tibble: 501 x 2
 ##    document       token                                                         
 ##    &lt;chr&gt;          &lt;chr&gt;                                                         
 ##  1 The fir tree_1 &quot;far down in the forest, where the warm sun and the fresh air…
@@ -58,8 +56,8 @@ fairy_tales</code></pre>
   unnest_tokens(token, token) %&gt;%
   mutate(token_stem = wordStem(token))
 
-fairy_tales_tokens</code></pre>
-<pre><code>## # A tibble: 10,577 x 3
+fairy_tales_tokens
+## # A tibble: 10,577 x 3
 ##    document       token  token_stem
 ##    &lt;chr&gt;          &lt;chr&gt;  &lt;chr&gt;     
 ##  1 The fir tree_1 far    far       
@@ -79,8 +77,8 @@ fairy_tales_tokens</code></pre>
   filter(token != token_stem) %&gt;%
   unique()
 
-different</code></pre>
-<pre><code>## # A tibble: 759 x 2
+different
+## # A tibble: 759 x 2
 ##    token      token_stem
 ##    &lt;chr&gt;      &lt;chr&gt;     
 ##  1 resting    rest      
@@ -97,8 +95,8 @@ different</code></pre>
 <p>In this example, we have 759 different tokens.
 But since stemming can collapse multiple different tokens into one.</p>
 <pre class="r"><code>different %&gt;%
-  count(token_stem, sort = TRUE)</code></pre>
-<pre><code>## # A tibble: 672 x 2
+  count(token_stem, sort = TRUE)
+## # A tibble: 672 x 2
 ##    token_stem     n
 ##    &lt;chr&gt;      &lt;int&gt;
 ##  1 seiz           4
@@ -116,8 +114,8 @@ But since stemming can collapse multiple different tokens into one.</p>
 <pre class="r"><code>stem_buckets &lt;- split(different$token, different$token_stem) %&gt;%
   imap(~ c(.x, .y))
 
-stem_buckets[21:25]</code></pre>
-<pre><code>## $anxiou
+stem_buckets[21:25]
+## $anxiou
 ## [1] &quot;anxious&quot; &quot;anxiou&quot; 
 ## 
 ## $anyth
@@ -138,8 +136,8 @@ The main point of this exercise is to see if the words in these groups of words 
   cast_sparse(document, token, n) %&gt;%
   stm(K = 3, verbose = FALSE)
 
-stm_model</code></pre>
-<pre><code>## A topic model with 3 topics, 501 documents and a 1518 word dictionary.</code></pre>
+stm_model
+## A topic model with 3 topics, 501 documents and a 1518 word dictionary.</code></pre>
 <p>In this case, I fit the model to 3 topics because I knew that would be the right number since I picked the data.
 When doing this on your data you should run multiple models with a varying number of topics to find the best one.
 For more information please read <a href="https://juliasilge.com/blog/evaluating-stm/">Training, Evaluating, and Interpreting Topic Models</a> by <a href="https://twitter.com/juliasilge">Julia Silge</a>.</p>
@@ -158,19 +156,19 @@ Below is a function that will take a vector of characters and a <code>stm</code>
   topics == 1
 }</code></pre>
 <p>As an example, if we pass the words “believed” and “believ”</p>
-<pre class="r"><code>stm_match(c(&quot;believed&quot;, &quot;believ&quot;), stm_model)</code></pre>
-<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code>stm_match(c(&quot;believed&quot;, &quot;believ&quot;), stm_model)
+## [1] TRUE</code></pre>
 <p>We see that they did end up in the same bucket.
 If we instead pass in “dog” and “happy” they land in different topics.</p>
-<pre class="r"><code>stm_match(c(&quot;dog&quot;, &quot;happy&quot;), stm_model)</code></pre>
-<pre><code>## [1] FALSE</code></pre>
+<pre class="r"><code>stm_match(c(&quot;dog&quot;, &quot;happy&quot;), stm_model)
+## [1] FALSE</code></pre>
 <p>All of this is not perfect, there is still some uncertainty but it is a good first step to evaluate if stemming is appropriate for your application.</p>
 <pre class="r"><code>tested &lt;- tibble(terms = stem_buckets,
                  stem = names(stem_buckets)) %&gt;%
   mutate(match = map_lgl(terms, stm_match, stm_model))
 
-tested</code></pre>
-<pre><code>## # A tibble: 672 x 3
+tested
+## # A tibble: 672 x 3
 ##    terms        stem      match
 ##    &lt;named list&gt; &lt;chr&gt;     &lt;lgl&gt;
 ##  1 &lt;chr [2]&gt;    a         FALSE
@@ -200,8 +198,8 @@ On the other side, we have that the words “allowed” and “allow” are both
 <pre class="r"><code>tested %&gt;%
   filter(match) %&gt;%
   slice(10:15) %&gt;%
-  pull(terms)</code></pre>
-<pre><code>## [[1]]
+  pull(terms)
+## [[1]]
 ## [1] &quot;alighted&quot; &quot;alight&quot;  
 ## 
 ## [[2]]
@@ -224,8 +222,8 @@ These cases are still not going to be perfect, but will again be an indication.<
 <pre class="r"><code>tested %&gt;%
   filter(!match) %&gt;%
   pull(terms) %&gt;%
-  head()</code></pre>
-<pre><code>## [[1]]
+  head()
+## [[1]]
 ## [1] &quot;as&quot; &quot;a&quot; 
 ## 
 ## [[2]]
@@ -257,7 +255,7 @@ Check to make sure that you are okay with the number and count of misgroupings y
  collate  en_US.UTF-8                 
  ctype    en_US.UTF-8                 
  tz       America/Los_Angeles         
- date     2020-04-21                  
+ date     2020-04-22                  
 
 ─ Packages ───────────────────────────────────────────────────────────────────
  package     * version date       lib source        

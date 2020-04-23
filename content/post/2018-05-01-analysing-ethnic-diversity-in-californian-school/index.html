@@ -17,11 +17,9 @@ categories: [ggplot2]
 <div id="loading-packages" class="section level2">
 <h2>Loading packages</h2>
 <p>This will be a fairly standard data science exercise so we will stick to the <code>tidyverse</code>, <code>rvest</code> for scraping, <code>patchwork</code> for plot stitching and add a little fancyness with <code>ggmap</code> for local maps.</p>
-<pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>## Warning: package &#39;tibble&#39; was built under R version 3.6.2</code></pre>
-<pre class="r"><code>library(rvest)</code></pre>
-<pre><code>## Warning: package &#39;xml2&#39; was built under R version 3.6.2</code></pre>
-<pre class="r"><code>library(patchwork)
+<pre class="r"><code>library(tidyverse)
+library(rvest)
+library(patchwork)
 library(ggmap)</code></pre>
 </div>
 <div id="enrollment-data" class="section level2">
@@ -29,8 +27,8 @@ library(ggmap)</code></pre>
 <p>We start by downloading the dataset to our local disk and read it from there this is mainly to be nice, and for the fact the the download speed on the files we work with are a little slow. This can be done using <code>readr</code>’s <code>read_tsv()</code>.</p>
 <pre class="r"><code>data &lt;- readr::read_tsv(&quot;filesenr.asp.txt&quot;)</code></pre>
 <p>To get an idea of the data lets have a quick <code>glimpse()</code></p>
-<pre class="r"><code>glimpse(data)</code></pre>
-<pre><code>## Rows: 129,813
+<pre class="r"><code>glimpse(data)
+## Rows: 129,813
 ## Columns: 23
 ## $ CDS_CODE  &lt;chr&gt; &quot;33672490000001&quot;, &quot;33672490000001&quot;, &quot;33672490000001&quot;, &quot;3367…
 ## $ COUNTY    &lt;chr&gt; &quot;Riverside&quot;, &quot;Riverside&quot;, &quot;Riverside&quot;, &quot;Riverside&quot;, &quot;Rivers…
@@ -64,8 +62,8 @@ library(ggmap)</code></pre>
 longlat &lt;- longlat_raw %&gt;%
   select(CDSCode, Latitude, Longitude, School, City)</code></pre>
 <p>Lets have a peak at the data:</p>
-<pre class="r"><code>glimpse(longlat)</code></pre>
-<pre><code>## Rows: 10,014
+<pre class="r"><code>glimpse(longlat)
+## Rows: 10,014
 ## Columns: 5
 ## $ CDSCode   &lt;chr&gt; &quot;01100170000000&quot;, &quot;01100170109835&quot;, &quot;01100170112607&quot;, &quot;0110…
 ## $ Latitude  &lt;dbl&gt; 37.65821, 37.52144, 37.80452, 37.86899, 37.78465, 37.84737,…
@@ -88,8 +86,8 @@ income_data &lt;- read_html(url) %&gt;%
               &quot;per_capita_income&quot;, &quot;median_household_income&quot;,
               &quot;median_family_income&quot;))</code></pre>
 <p>lets take a look at the table:</p>
-<pre class="r"><code>glimpse(income_data)</code></pre>
-<pre><code>## Rows: 58
+<pre class="r"><code>glimpse(income_data)
+## Rows: 58
 ## Columns: 6
 ## $ county                  &lt;chr&gt; &quot;Alameda&quot;, &quot;Alpine&quot;, &quot;Amador&quot;, &quot;Butte&quot;, &quot;Cala…
 ## $ population              &lt;chr&gt; &quot;1,559,308&quot;, &quot;1,202&quot;, &quot;37,159&quot;, &quot;221,578&quot;, &quot;4…
@@ -102,8 +100,8 @@ income_data &lt;- read_html(url) %&gt;%
 <pre class="r"><code>income_data_clean &lt;- income_data %&gt;%
   mutate_at(vars(population:median_family_income), parse_number)</code></pre>
 <p>a quick glimpse to see everything went well</p>
-<pre class="r"><code>glimpse(income_data_clean)</code></pre>
-<pre><code>## Rows: 58
+<pre class="r"><code>glimpse(income_data_clean)
+## Rows: 58
 ## Columns: 6
 ## $ county                  &lt;chr&gt; &quot;Alameda&quot;, &quot;Alpine&quot;, &quot;Amador&quot;, &quot;Butte&quot;, &quot;Cala…
 ## $ population              &lt;dbl&gt; 1559308, 1202, 37159, 221578, 44921, 21424, 1…
@@ -140,8 +138,8 @@ income_data &lt;- read_html(url) %&gt;%
 <p><img src="/post/2018-05-01-analysing-ethnic-diversity-in-californian-school/index_files/figure-html/unnamed-chunk-16-1.png" width="700px" style="display: block; margin: auto;" /></p>
 <p>Now that we have seen the diversity index in use lets apply it to the data we have collected.</p>
 <p>We would like to have the data in a different kind of tidy format, namely we want each row to represent each school. Taking another look at the data</p>
-<pre class="r"><code>glimpse(data)</code></pre>
-<pre><code>## Rows: 129,813
+<pre class="r"><code>glimpse(data)
+## Rows: 129,813
 ## Columns: 23
 ## $ CDS_CODE  &lt;chr&gt; &quot;33672490000001&quot;, &quot;33672490000001&quot;, &quot;33672490000001&quot;, &quot;3367…
 ## $ COUNTY    &lt;chr&gt; &quot;Riverside&quot;, &quot;Riverside&quot;, &quot;Riverside&quot;, &quot;Riverside&quot;, &quot;Rivers…
@@ -173,8 +171,8 @@ income_data &lt;- read_html(url) %&gt;%
   summarize(ENR_TOTAL = sum(ENR_TOTAL)) %&gt;%
   spread(ETHNIC, ENR_TOTAL, fill = 0) %&gt;%
   ungroup()</code></pre>
-<pre class="r"><code>glimpse(small_data)</code></pre>
-<pre><code>## Rows: 10,483
+<pre class="r"><code>glimpse(small_data)
+## Rows: 10,483
 ## Columns: 10
 ## $ CDS_CODE &lt;chr&gt; &quot;01100170112607&quot;, &quot;01100170123968&quot;, &quot;01100170124172&quot;, &quot;01100…
 ## $ `0`      &lt;dbl&gt; 0, 3, 0, 2, 0, 0, 1, 0, 0, 0, 0, 0, 0, 3, 23, 0, 4, 2, 7, 0,…
@@ -237,12 +235,12 @@ income_data &lt;- read_html(url) %&gt;%
 <pre class="r"><code>data_diversity &lt;- small_data %&gt;%
   mutate(diversity = diversity(`1`, `2`, `3`, `4`, `5`, `6`, `7`, y = `9`))</code></pre>
 <p>Lets run a <code>summary</code> to see what ranges we get.</p>
-<pre class="r"><code>summary(data_diversity$diversity)</code></pre>
-<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA&#39;s 
+<pre class="r"><code>summary(data_diversity$diversity)
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA&#39;s 
 ##  0.0000  0.3113  0.5216  0.4686  0.6351  1.0000      88</code></pre>
 <p>Interesting. All the number are between 0 and 1 which is good! that means that the <code>diversity</code> worked as intended. However there are 88 schools have <code>NA</code> valued diversity, lets look at those schools:</p>
-<pre class="r"><code>filter(data_diversity, is.na(diversity)) %&gt;% head()</code></pre>
-<pre><code>## # A tibble: 6 x 11
+<pre class="r"><code>filter(data_diversity, is.na(diversity)) %&gt;% head()
+## # A tibble: 6 x 11
 ##   CDS_CODE         `0`   `1`   `2`   `3`   `4`   `5`   `6`   `7`   `9` diversity
 ##   &lt;chr&gt;          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
 ## 1 01612590121210     0     0     0     0     0     0     1     0     0       NaN
@@ -261,8 +259,8 @@ income_data &lt;- read_html(url) %&gt;%
 <p>We notice that most of the schools follow a nice shape, except a spike at 0 and 1. Lets look at the 0’s first:</p>
 <pre class="r"><code>data_diversity %&gt;%
   filter(diversity == 0) %&gt;%
-  head(20)</code></pre>
-<pre><code>## # A tibble: 20 x 11
+  head(20)
+## # A tibble: 20 x 11
 ##    CDS_CODE        `0`   `1`   `2`   `3`   `4`   `5`   `6`   `7`   `9` diversity
 ##    &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
 ##  1 016116800000…     0     0     0     0     0     0     2     0     0         0
@@ -288,8 +286,8 @@ income_data &lt;- read_html(url) %&gt;%
 <p>These all appear to be schools with just one race in them, most appear to be of category 5 which is “Hispanic or Latino”. Next lets take a look at the 1’s:</p>
 <pre class="r"><code>data_diversity %&gt;%
   filter(diversity == 1) %&gt;%
-  head(20)</code></pre>
-<pre><code>## # A tibble: 20 x 11
+  head(20)
+## # A tibble: 20 x 11
 ##    CDS_CODE        `0`   `1`   `2`   `3`   `4`   `5`   `6`   `7`   `9` diversity
 ##    &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
 ##  1 016112700000…     0     0     1     0     0     1     0     1     0         1
@@ -313,8 +311,8 @@ income_data &lt;- read_html(url) %&gt;%
 ## 19 316684500000…     0     0     0     0     0     1     0     1     0         1
 ## 20 336697701341…     0     0     0     0     0     1     1     1     0         1</code></pre>
 <p>As we have seen before, a diversity index of 1 can only happen if the maximal number of student in each category is 1. These schools seem to be rather small. Taking a look at the first school here</p>
-<pre class="r"><code>data %&gt;% filter(CDS_CODE == &quot;17640220000001&quot;) %&gt;% pull(SCHOOL)</code></pre>
-<pre><code>## [1] &quot;Nonpublic, Nonsectarian Schools&quot; &quot;Nonpublic, Nonsectarian Schools&quot;</code></pre>
+<pre class="r"><code>data %&gt;% filter(CDS_CODE == &quot;17640220000001&quot;) %&gt;% pull(SCHOOL)
+## [1] &quot;Nonpublic, Nonsectarian Schools&quot; &quot;Nonpublic, Nonsectarian Schools&quot;</code></pre>
 <p>and we get that it is a “Nonpublic, Nonsectarian Schools” which by further investigation shows that there are quite a few of those. Lets take a look at the total enrollment in each of the schools, we have seen a couple of instances with low enrollment and we wouldn’t want those to distort our view.</p>
 <pre class="r"><code>total_students &lt;- data %&gt;% 
   select(CDS_CODE:SCHOOL, ENR_TOTAL) %&gt;% 
@@ -352,15 +350,15 @@ income_data &lt;- read_html(url) %&gt;%
   ylim(0, 1) +
   labs(x = &quot;Enrollment&quot;, 
        y = &quot;Diversity Index&quot;,
-       title = &quot;Larger Californian schools tend to have a higher diversity index&quot;)</code></pre>
-<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+       title = &quot;Larger Californian schools tend to have a higher diversity index&quot;)
+## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
 <p><img src="/post/2018-05-01-analysing-ethnic-diversity-in-californian-school/index_files/figure-html/unnamed-chunk-37-1.png" width="700px" style="display: block; margin: auto;" /></p>
 <p>Its quite a small slope but still about 5% increase in diversity per 2000 students. Lets verify the correlation by checking the null hypothesis.</p>
 <pre class="r"><code>data_enrollment %&gt;%
   mutate(ENR_TOTAL = ENR_TOTAL / 1000) %&gt;%
   lm(diversity ~ ENR_TOTAL, data = .) %&gt;%
-  summary()</code></pre>
-<pre><code>## 
+  summary()
+## 
 ## Call:
 ## lm(formula = diversity ~ ENR_TOTAL, data = .)
 ## 
@@ -383,8 +381,8 @@ income_data &lt;- read_html(url) %&gt;%
 <div id="where-are-we" class="section level2">
 <h2>Where are we?</h2>
 <p>Lets try to join the enrollment data to the geographical data so we can bring out some maps! The <code>longlat</code> dataset has quite a unfortunate number of missing values.</p>
-<pre class="r"><code>longlat$Latitude %&gt;% is.na() %&gt;% mean()</code></pre>
-<pre><code>## [1] 0.2784102</code></pre>
+<pre class="r"><code>longlat$Latitude %&gt;% is.na() %&gt;% mean()
+## [1] 0.2784102</code></pre>
 <p>But we will see if we can work with it anyways.</p>
 <pre class="r"><code>miss_lat_div &lt;- data_enrollment %&gt;%
   left_join(longlat, by = c(&quot;CDS_CODE&quot; = &quot;CDSCode&quot;)) %&gt;% 

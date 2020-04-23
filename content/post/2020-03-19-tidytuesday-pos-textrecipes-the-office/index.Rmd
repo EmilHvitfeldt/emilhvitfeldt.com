@@ -9,6 +9,7 @@ library(knitr)
 opts_chunk$set(
   echo = TRUE,
   cache = TRUE,
+  collapse = TRUE,
   eval = FALSE,
   fig.width = 7, 
   fig.align = 'center',

@@ -10,9 +10,8 @@ categories: [tidytext, ggplot2]
 More specifically I’m thinking of two groups of paired words.</p>
 <div id="packages" class="section level2">
 <h2>Packages 📦</h2>
-<pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>## Warning: package &#39;tibble&#39; was built under R version 3.6.2</code></pre>
-<pre class="r"><code>library(hcandersenr)
+<pre class="r"><code>library(tidyverse)
+library(hcandersenr)
 library(tidytext)
 library(paletteer)
 library(ggrepel)</code></pre>
@@ -136,8 +135,8 @@ words &lt;- hcandersen_en %&gt;%
   pull(word)
 
 plot_fun(words, ref, direction = -1) +
-  labs(title = &quot;Masculine gendered words appeared more often in H.C. Andersen&#39;s fairy tales&quot;)</code></pre>
-<pre><code>## Warning: Ignoring unknown aesthetics: segment.colour
+  labs(title = &quot;Masculine gendered words appeared more often in H.C. Andersen&#39;s fairy tales&quot;)
+## Warning: Ignoring unknown aesthetics: segment.colour
 
 ## Warning: Ignoring unknown aesthetics: segment.colour</code></pre>
 <p><img src="/post/2020-03-17-word-rank-slope-charts/index_files/figure-html/unnamed-chunk-8-1.png" width="700px" style="display: block; margin: auto;" /></p>
@@ -159,8 +158,8 @@ words &lt;- janeaustenr::austen_books() %&gt;%
   pull(word)
 
 plot_fun(words, ref, direction = -1) +
-  labs(title = &quot;Masculine gendered words appeared less often in Jane Austen Novels&quot;)</code></pre>
-<pre><code>## Warning: Ignoring unknown aesthetics: segment.colour
+  labs(title = &quot;Masculine gendered words appeared less often in Jane Austen Novels&quot;)
+## Warning: Ignoring unknown aesthetics: segment.colour
 
 ## Warning: Ignoring unknown aesthetics: segment.colour</code></pre>
 <p><img src="/post/2020-03-17-word-rank-slope-charts/index_files/figure-html/unnamed-chunk-9-1.png" width="700px" style="display: block; margin: auto;" /></p>
@@ -181,8 +180,8 @@ words &lt;- tidygutenbergr::phantom_of_the_opera() %&gt;%
   pull(word)
 
 plot_fun(words, ref, &quot;scico::berlin&quot;) +
-  labs(title = &quot;Masculine gendered words appeared more often in Phantom of the Opera&quot;)</code></pre>
-<pre><code>## Warning: Ignoring unknown aesthetics: segment.colour
+  labs(title = &quot;Masculine gendered words appeared more often in Phantom of the Opera&quot;)
+## Warning: Ignoring unknown aesthetics: segment.colour
 
 ## Warning: Ignoring unknown aesthetics: segment.colour</code></pre>
 <p><img src="/post/2020-03-17-word-rank-slope-charts/index_files/figure-html/unnamed-chunk-10-1.png" width="700px" style="display: block; margin: auto;" /></p>
@@ -198,8 +197,8 @@ words &lt;- tidygutenbergr::dracula() %&gt;%
   pull(word)
 
 plot_fun(words, ref, palette = &quot;scico::tokyo&quot;) +
-  labs(title = &quot;Positive adjectives appeared more often in Dracula&quot;)</code></pre>
-<pre><code>## Warning: Ignoring unknown aesthetics: segment.colour
+  labs(title = &quot;Positive adjectives appeared more often in Dracula&quot;)
+## Warning: Ignoring unknown aesthetics: segment.colour
 
 ## Warning: Ignoring unknown aesthetics: segment.colour</code></pre>
 <p><img src="/post/2020-03-17-word-rank-slope-charts/index_files/figure-html/unnamed-chunk-11-1.png" width="700px" style="display: block; margin: auto;" /></p>

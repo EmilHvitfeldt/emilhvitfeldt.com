@@ -76,8 +76,8 @@ plot(img1)</code></pre>
 plot(img)</code></pre>
 <p><img src="/post/2018-02-14-rvision-a-first-look/index_files/figure-html/unnamed-chunk-12-1.png" width="700px" style="display: block; margin: auto;" /></p>
 <p>For our further calculations we need to know what color space this image is in</p>
-<pre class="r"><code>colorspace(img)</code></pre>
-<pre><code>## [1] &quot;BGR&quot;</code></pre>
+<pre class="r"><code>colorspace(img)
+## [1] &quot;BGR&quot;</code></pre>
 <p>Which is different then the correctly commonly used RGB. In the following code I tried to find all the blue balls. For that I used the <code>split</code> function to split the <code>Image</code> object into 3, one for each color channel. Then I used a <code>do.call</code> to return a object where the blue channel is more the 200, and the red and green are less then 200, in the hope that it would be enough to identify the blue color without also finding bright areas. This being a logical expression gives us a image file that is white when true and black when it isn’t. Lastly we used the <code>medianBlur</code> to remove any rough edges and flicker. (you can try comment out the <code>medianBlur</code> and see what changes)</p>
 <pre class="r"><code>img %&gt;%
   split() %&gt;%

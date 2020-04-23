@@ -12,9 +12,8 @@ categories: [ggplot2]
 <div id="loading-packages" class="section level3">
 <h3>Loading packages</h3>
 <pre class="r"><code>library(hrbrthemes)
-library(tidyverse)</code></pre>
-<pre><code>## Warning: package &#39;tibble&#39; was built under R version 3.6.2</code></pre>
-<pre class="r"><code>library(stringr)
+library(tidyverse)
+library(stringr)
 library(tibble)
 # remotes::install_github(&#39;hadley/emo&#39;)
 library(emo)</code></pre>
@@ -26,8 +25,8 @@ library(emo)</code></pre>
 <div id="world-press-freedom-index" class="section level4">
 <h4>2017 World Press Freedom Index</h4>
 <p>We have the <a href="https://rsf.org/en/ranking/2017">2017 World Press Freedom Index</a> <a href="https://rsf.org/sites/default/files/index_format_upload_2017-v2_1_0.csv">(direct download link)</a> data which we load in as normal.</p>
-<pre class="r"><code>(freedom_index &lt;- read_csv(&quot;https://rsf.org/sites/default/files/index_format_upload_2017-v2_1_0.csv&quot;))</code></pre>
-<pre><code>## # A tibble: 180 x 12
+<pre class="r"><code>(freedom_index &lt;- read_csv(&quot;https://rsf.org/sites/default/files/index_format_upload_2017-v2_1_0.csv&quot;))
+## # A tibble: 180 x 12
 ##    ISO    Rank FR_Country EN_country ES_country `Underlying sit…
 ##    &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;                 &lt;dbl&gt;
 ##  1 NOR       1 Norvège    Norway     Noruega                 760
@@ -53,8 +52,8 @@ which we load in as normal.</p>
 <p>which have quite a few variables but for now we will just focus on the 2015 variable as the 2016 appears empty. Now that we have two data sets which we would like to combine, a general question would be if the gdp_pcap data have information matching our 180 countries. So with the following bit of code we join the two datasets together by the ICO ALPHA-3 Code available in both datasets and select the countries who don’t have a value for the year 2015.</p>
 <pre class="r"><code>left_join(freedom_index, gdp_pcap, by = c(&quot;ISO&quot; = &quot;Country Code&quot;)) %&gt;% 
   filter(is.na(`2015`)) %&gt;% 
-  select(EN_country)</code></pre>
-<pre><code>## # A tibble: 12 x 1
+  select(EN_country)
+## # A tibble: 12 x 1
 ##    EN_country                           
 ##    &lt;chr&gt;                                
 ##  1 Liechtenstein                        
@@ -76,8 +75,8 @@ which we load in as normal.</p>
 <p>I would like to use the different flag emojis</p>
 <pre><code>## 🇦🇨🇦🇩🇦🇪🇦🇫🇦🇬🇦🇮🇦🇱🇦🇲🇦🇴🇦🇶🇦🇷🇦🇸🇦🇹🇦🇺🇦🇼🇦🇽🇦🇿🇧🇦🇧🇧🇧🇩🇧🇪🇧🇫🇧🇬🇧🇭🇧🇮🇧🇯🇧🇱🇧🇲🇧🇳🇧🇴🇧🇶🇧🇷🇧🇸🇧🇹🇧🇻🇧🇼🇧🇾🇧🇿🇨🇦🇨🇨🇨🇩🇨🇫🇨🇬🇨🇭🇨🇮🇨🇰🇨🇱🇨🇲🇨🇳🇨🇴🇨🇵🇨🇷🇨🇺🇨🇻🇨🇼🇨🇽🇨🇾🇨🇿🇩🇪🇩🇪🇩🇬🇩🇯🇩🇰🇩🇲🇩🇴🇩🇿🇪🇦🇪🇨🇪🇪🇪🇬🇪🇭🇪🇷🇪🇸🇪🇹🇪🇺🇫🇮🇫🇯🇫🇰🇫🇲🇫🇴🇫🇷🇬🇦🇬🇧🇬🇧🇬🇩🇬🇪🇬🇫🇬🇬🇬🇭🇬🇮🇬🇱🇬🇲🇬🇳🇬🇵🇬🇶🇬🇷🇬🇸🇬🇹🇬🇺🇬🇼🇬🇾🇭🇰🇭🇲🇭🇳🇭🇷🇭🇹🇭🇺🇮🇨🇮🇩🇮🇪🇮🇱🇮🇲🇮🇳🇮🇴🇮🇶🇮🇷🇮🇸🇮🇹🇯🇪🇯🇲🇯🇴🇯🇵🇰🇪🇰🇬🇰🇭🇰🇮🇰🇲🇰🇳🇰🇵🇰🇷🇰🇼🇰🇾🇰🇿🇱🇦🇱🇧🇱🇨🇱🇮🇱🇰🇱🇷🇱🇸🇱🇹🇱🇺🇱🇻🇱🇾🇲🇦🇲🇨🇲🇩🇲🇪🇲🇫🇲🇬🇲🇭🇲🇰🇲🇱🇲🇲🇲🇳🇲🇴🇲🇵🇲🇶🇲🇷🇲🇸🇲🇹🇲🇺🇲🇻🇲🇼🇲🇽🇲🇾🇲🇿🇳🇦🇳🇨🇳🇪🇳🇫🇳🇬🇳🇮🇳🇱🇳🇴🇳🇵🇳🇷🇳🇺🇳🇿🇴🇲🇵🇦🇵🇪🇵🇫🇵🇬🇵🇭🇵🇰🇵🇱🇵🇲🇵🇳🇵🇷🇵🇸🇵🇹🇵🇼🇵🇾🇶🇦🇷🇪🇷🇴🇷🇸🇷🇺🇷🇼🇸🇦🇸🇧🇸🇨🇸🇩🇸🇪🇸🇬🇸🇭🇸🇮🇸🇯🇸🇰🇸🇱🇸🇲🇸🇳🇸🇴🇸🇷🇸🇸🇸🇹🇸🇻🇸🇽🇸🇾🇸🇿🇹🇦🇹🇨🇹🇩🇹🇫🇹🇬🇹🇭🇹🇯🇹🇰🇹🇱🇹🇲🇹🇳🇹🇴🇹🇷🇹🇹🇹🇻🇹🇼🇹🇿🇺🇦🇺🇬🇺🇲🇺🇳🇺🇸🇺🇸🇺🇾🇺🇿🇻🇦🇻🇨🇻🇪🇻🇬🇻🇮🇻🇳🇻🇺🇼🇫🇼🇸🇽🇰🇾🇪🇾🇹🇿🇦🇿🇲🇿🇼🏴󠁧󠁢󠁥󠁮󠁧󠁿🏴󠁧󠁢󠁳󠁣󠁴󠁿🏴󠁧󠁢󠁷󠁬󠁳󠁿</code></pre>
 <p>which all can be found with the new emo(ji) package</p>
-<pre class="r"><code>emo::ji_find(&quot;flag&quot;)</code></pre>
-<pre><code>## # A tibble: 264 x 2
+<pre class="r"><code>emo::ji_find(&quot;flag&quot;)
+## # A tibble: 264 x 2
 ##    name                 emoji
 ##    &lt;chr&gt;                &lt;chr&gt;
 ##  1 Ascension_Island     🇦🇨   
@@ -100,8 +99,8 @@ which we load in as normal.</p>
             by = c(&quot;EN_country&quot; = &quot;name&quot;))  %&gt;% 
   filter(!is.na(`2015`)) %&gt;% 
   filter(is.na(emoji)) %&gt;% 
-  select(EN_country)</code></pre>
-<pre><code>## # A tibble: 22 x 1
+  select(EN_country)
+## # A tibble: 22 x 1
 ##    EN_country            
 ##    &lt;chr&gt;                 
 ##  1 germany               
@@ -142,8 +141,8 @@ which we load in as normal.</p>
          name = str_replace(name, &quot;^laos$&quot;, &quot;lao people&#39;s democratic republic&quot;),
          name = str_replace(name, &quot;^cn$&quot;, &quot;china&quot;),
          name = str_replace(name, &quot;^jp$&quot;, &quot;japan&quot;))
-newemoji</code></pre>
-<pre><code>## # A tibble: 264 x 2
+newemoji
+## # A tibble: 264 x 2
 ##    name                 emoji
 ##    &lt;chr&gt;                &lt;chr&gt;
 ##  1 Ascension Island     🇦🇨   
@@ -166,8 +165,8 @@ newemoji</code></pre>
   mutate(EN_country = tolower(EN_country)) %&gt;% 
   left_join(newemoji, by = c(&quot;EN_country&quot; = &quot;name&quot;)) %&gt;% 
   ggplot(aes(x = `2015`, y = `Overall Score 2016`)) +
-  geom_text(aes(label = emoji))</code></pre>
-<pre><code>## Warning: Removed 14 rows containing missing values (geom_text).</code></pre>
+  geom_text(aes(label = emoji))
+## Warning: Removed 14 rows containing missing values (geom_text).</code></pre>
 <p><img src="/post/2017-04-26-2017-world-press-freedom-index-with-emojis/index_files/figure-html/unnamed-chunk-10-1.png" width="700px" style="display: block; margin: auto;" /></p>
 <p>But wait, we have a couple of problems:</p>
 <ul>
