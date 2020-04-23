@@ -177,3 +177,10 @@ left_join(freedom_index, gdp_pcap, by = c("ISO" = "Country Code")) %>%
 ```{r echo=FALSE, fig.align='center'}
 knitr::include_graphics("final.svg")
 ```
+
+```{r details, echo=FALSE}
+library(details) 
+
+sessioninfo::session_info() %>%
+  details::details(summary = 'session information')
+```

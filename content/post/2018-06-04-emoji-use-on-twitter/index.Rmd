@@ -94,3 +94,10 @@ knitr::include_graphics("unnamed-chunk-7-1.png")
 ```
 
 Using the `emoji` data.frame allows us to gain quick insight with the descriptive short names.
+
+```{r details, echo=FALSE}
+library(details) 
+
+sessioninfo::session_info() %>%
+  details::details(summary = 'session information')
+```

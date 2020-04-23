@@ -390,7 +390,6 @@ swatchplot(
 )
 ```
 
-
 ## Comparison Code
 
 ```{r, eval=FALSE}
@@ -413,3 +412,9 @@ swatchplot(
 )
 ```
 
+```{r details, echo=FALSE}
+library(details) 
+
+sessioninfo::session_info() %>%
+  details::details(summary = 'session information')
+```

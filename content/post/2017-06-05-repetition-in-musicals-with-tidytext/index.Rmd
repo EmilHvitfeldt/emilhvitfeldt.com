@@ -193,3 +193,9 @@ rbind(billyelliot, thebookofmormon, lionking, avenueq, oklahoma,
                                  "The Sound of music", "Avenue Q", "Lion King"))
 ```
 
+```{r details, echo=FALSE}
+library(details) 
+
+sessioninfo::session_info() %>%
+  details::details(summary = 'session information')
+```

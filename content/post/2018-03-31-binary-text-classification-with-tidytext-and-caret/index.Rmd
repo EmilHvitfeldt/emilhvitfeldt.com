@@ -367,3 +367,10 @@ And we see that it appear to be just around 1. It is important to search multipl
 I will leave to you the reader to find out which of the models have the highest accuracy after doing parameter tuning.  
 
 I hope you have enjoyed this overview of binary text classification. 
+
+```{r details, echo=FALSE}
+library(details) 
+
+sessioninfo::session_info() %>%
+  details::details(summary = 'session information')
+```

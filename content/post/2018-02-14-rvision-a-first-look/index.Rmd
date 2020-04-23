@@ -297,3 +297,10 @@ Its a little choppy but that might be because of my now quite old Macbook.
 ## Conclusion
 
 I had a blast working with `Rvision` and I look forward to use it is future projects! I would also recommend against using eatable data points as they tend to disappear over time. 
+
+```{r details, echo=FALSE}
+library(details) 
+
+sessioninfo::session_info() %>%
+  details::details(summary = 'session information')
+```

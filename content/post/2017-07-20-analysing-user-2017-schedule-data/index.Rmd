@@ -253,4 +253,11 @@ Which yields us with the wonderful graph which show a somehow clear divide betwe
 visNetwork(nodes, edges, width = "100%")
 ```
 
-I hope you enjoyed this post and I would love you see any and all visualization or analysis you might have regarding this data. 
+I hope you enjoyed this post and I would love you see any and all visualization or analysis you might have regarding this data.
+
+```{r details, echo=FALSE}
+library(details) 
+
+sessioninfo::session_info() %>%
+  details::details(summary = 'session information')
+```

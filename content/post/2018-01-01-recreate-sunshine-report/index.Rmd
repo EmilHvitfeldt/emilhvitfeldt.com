@@ -416,3 +416,9 @@ full_data2 %>%
   labs(x = NULL, y = NULL, title = "Sunshine report of Los Angeles 2017")
 ```
 
+```{r details, echo=FALSE}
+library(details) 
+
+sessioninfo::session_info() %>%
+  details::details(summary = 'session information')
+```

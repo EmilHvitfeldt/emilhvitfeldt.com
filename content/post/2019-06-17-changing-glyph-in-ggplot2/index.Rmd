@@ -140,3 +140,9 @@ grid.draw(legend)
 purrr::walk(draws[14:16], legend_fun)
 ```
 
+```{r details, echo=FALSE}
+library(details) 
+
+sessioninfo::session_info() %>%
+  details::details(summary = 'session information')
+```

@@ -168,3 +168,10 @@ It takes more work upfront when writing the test functions.
 But it gives a compromise between the brevity of test files and the clarity of the debugging page.
 
 Thanks for reading along! I hope you found it useful!
+
+```{r details, echo=FALSE}
+library(details) 
+
+sessioninfo::session_info() %>%
+  details::details(summary = 'session information')
+```

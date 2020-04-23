@@ -315,3 +315,10 @@ http://colinfay.me/purrr-statistics/
 [^5]: [A Crazy Little Thing Called {purrr} - Part 5: code optimization](http://colinfay.me/purrr-code-optim/)
 
 [^6]: [Labeling Data with purrr](http://www.json.blog/2017/03/labeling-data-with-purrr/)
+
+```{r details, echo=FALSE}
+library(details) 
+
+sessioninfo::session_info() %>%
+  details::details(summary = 'session information')
+```

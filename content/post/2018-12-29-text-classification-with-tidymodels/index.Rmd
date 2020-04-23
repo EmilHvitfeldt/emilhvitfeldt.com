@@ -290,3 +290,10 @@ And Isaiah notes that
 > Whereas Julia's analysis using non stop words showed that Elizabeth is the opposite of a Martian, stop words shows that Pride and Prejudice talks of men and women, and War of the Worlds makes declarations about existence.
 
 Which I would like to say looks pretty spot on.
+
+```{r details, echo=FALSE}
+library(details) 
+
+sessioninfo::session_info() %>%
+  details::details(summary = 'session information')
+```

@@ -330,3 +330,10 @@ bind_cols(
 ```
 
 One thing I noticed is that many of Pam's lines start with "Oh my" and that might have been a unique character trait that got picked up in the bi-grams.
+
+```{r details, echo=FALSE}
+library(details) 
+
+sessioninfo::session_info() %>%
+  details::details(summary = 'session information')
+```

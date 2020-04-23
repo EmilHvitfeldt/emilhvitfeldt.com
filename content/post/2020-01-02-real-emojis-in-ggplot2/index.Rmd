@@ -204,4 +204,3 @@ library(details)
 sessioninfo::session_info()  %>%
   details::details(summary = 'current session info')
 ```
-

@@ -145,3 +145,10 @@ rights_text %>%
 ```
 
 This is just a couple of different ways to use this package. I look forward to see what you guys can come up with.
+
+```{r details, echo=FALSE}
+library(details) 
+
+sessioninfo::session_info() %>%
+  details::details(summary = 'session information')
+```

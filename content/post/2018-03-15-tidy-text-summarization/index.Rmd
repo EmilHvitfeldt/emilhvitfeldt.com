@@ -194,6 +194,11 @@ emma_summary[["sentences"]] %>%
   scale_x_continuous(breaks = seq(from = 0, to = 55, by = 5))
 ```
 
-Which doesn't appear to be the case in this particular text (which is properly good since skipping a chapter would be discouraged in a book like Emma). however it might prove helpful in non-chronological texts.  
+Which doesn't appear to be the case in this particular text (which is properly good since skipping a chapter would be discouraged in a book like Emma). however it might prove helpful in non-chronological texts.
 
-There is plenty more to look at but I'll stop for now. If you have any feedback or suggestions please leave a comment, send a email [emilhhvitfeldt@gmail.com](mailto:emilhhvitfeldt@gmail.com) or hit me up on twitter [Emil_Hvitfeldt](https://twitter.com/Emil_Hvitfeldt).
+```{r details, echo=FALSE}
+library(details) 
+
+sessioninfo::session_info() %>%
+  details::details(summary = 'session information')
+```

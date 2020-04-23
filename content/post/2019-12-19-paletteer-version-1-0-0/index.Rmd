@@ -116,3 +116,10 @@ I did a little live-tweeting while implementing these packages so you can take a
 
 That is all I have for you this time around if you create or find more palette packages please go over and file [an issue](https://github.com/EmilHvitfeldt/paletteer/issues) so they can be included as well. 
 Thank you!
+
+```{r details, echo=FALSE}
+library(details) 
+
+sessioninfo::session_info() %>%
+  details::details(summary = 'session information')
+```

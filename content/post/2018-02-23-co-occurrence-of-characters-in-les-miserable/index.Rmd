@@ -249,3 +249,10 @@ co_occurrence_comm %>%
 
 While I wasn't able to find as full clusters as Jacques Bertin I still managed to get quite a lot of information out of the text regardless. I had fun in the progress and there are many more things I see myself doing with this new data set and `spacyr`.  
 And while I couldn't find a good way to include it in the main body of text. I almost finished the main analysis before realizing that [Monsieur](https://en.wikipedia.org/wiki/Monsieur) means. Mention your mistakes in your posts so others can learn from them!
+
+```{r details, echo=FALSE}
+library(details) 
+
+sessioninfo::session_info() %>%
+  details::details(summary = 'session information')
+```

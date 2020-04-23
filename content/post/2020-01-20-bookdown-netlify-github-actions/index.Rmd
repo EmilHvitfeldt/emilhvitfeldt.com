@@ -186,3 +186,9 @@ So if you have set it to `output_dir: "docs"` then you need to change the deploy
 netlify deploy --prod --dir docs
 ```
 
+```{r details, echo=FALSE}
+library(details) 
+
+sessioninfo::session_info() %>%
+  details::details(summary = 'session information')
+```

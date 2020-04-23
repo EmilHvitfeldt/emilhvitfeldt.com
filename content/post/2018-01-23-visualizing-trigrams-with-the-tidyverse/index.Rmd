@@ -599,5 +599,9 @@ p <- nodes %>%
 p
 ```
 
+```{r details, echo=FALSE}
+library(details) 
 
-
+sessioninfo::session_info() %>%
+  details::details(summary = 'session information')
+```

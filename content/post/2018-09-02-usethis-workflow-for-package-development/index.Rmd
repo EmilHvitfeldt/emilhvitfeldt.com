@@ -268,3 +268,10 @@ And you are good to go!
 ## Conclusion
 
 This is the end of this post, and there are many more functions in **usethis** that I haven't covered here, both for development and otherwise. One set of functions I would like to highlight in particular is the [Helpers for tidyverse development](http://usethis.r-lib.org/reference/tidyverse.html) which helps you follow tidyverse conventions which are generally a little stricter than the defaults. If you have any questions or additions you would like to have added please don't refrain from contacting me!
+
+```{r details, echo=FALSE}
+library(details) 
+
+sessioninfo::session_info() %>%
+  details::details(summary = 'session information')
+```

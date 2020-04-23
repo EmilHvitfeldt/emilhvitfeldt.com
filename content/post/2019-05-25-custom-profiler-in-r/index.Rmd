@@ -251,3 +251,10 @@ NA_character_, NA_character_, NA_character_, NA_character_, NA_character_,
 NA_character_, NA_character_, NA_character_)), row.names = c(NA, 
 45L), class = "data.frame"), interval = 20, files = list())$prof
 ```
+
+```{r details, echo=FALSE}
+library(details) 
+
+sessioninfo::session_info() %>%
+  details::details(summary = 'session information')
+```

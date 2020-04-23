@@ -262,3 +262,10 @@ final_predict %>%
 ## Conclusion
 
 In this post we have touched a lot of different topics; tidymodels, text preprocessing, parallel computing etc. Since we have covered so many topics have left each section not covered it a lot of detail. In a more proper analysis you would want to try some different models and different ways to do the preprocessing.
+
+```{r details, echo=FALSE}
+library(details) 
+
+sessioninfo::session_info() %>%
+  details::details(summary = 'session information')
+```

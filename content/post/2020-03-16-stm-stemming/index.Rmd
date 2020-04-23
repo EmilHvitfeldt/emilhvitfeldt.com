@@ -203,6 +203,5 @@ Check to make sure that you are okay with the number and count of misgroupings y
 library(details) 
 
 sessioninfo::session_info() %>%
-  details::details(summary = 'current session info')
+  details::details(summary = 'session information')
 ```
-

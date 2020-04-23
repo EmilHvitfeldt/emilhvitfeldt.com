@@ -227,3 +227,10 @@ meta %>%
 ```
 
 So we see that while it isn't as crystal clear what what the test set predictions are giving us, they still give a pretty good indication.
+
+```{r details, echo=FALSE}
+library(details) 
+
+sessioninfo::session_info() %>%
+  details::details(summary = 'session information')
+```

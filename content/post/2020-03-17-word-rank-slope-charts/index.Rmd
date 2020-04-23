@@ -235,3 +235,10 @@ words <- tidygutenbergr::dracula() %>%
 plot_fun(words, ref, palette = "scico::tokyo") +
   labs(title = "Positive adjectives appeared more often in Dracula")
 ```
+
+```{r details, echo=FALSE}
+library(details) 
+
+sessioninfo::session_info() %>%
+  details::details(summary = 'session information')
+```

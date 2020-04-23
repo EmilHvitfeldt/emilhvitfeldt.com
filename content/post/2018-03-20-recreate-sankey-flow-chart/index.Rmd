@@ -262,3 +262,10 @@ knitr::include_graphics("07-old.gif")
 ```
 
 And this is what I have for you for now. Counters on the right hand side could be done in much the same way as we have seen here, but wouldn't add much value to showcase that here.
+
+```{r details, echo=FALSE}
+library(details) 
+
+sessioninfo::session_info() %>%
+  details::details(summary = 'session information')
+```

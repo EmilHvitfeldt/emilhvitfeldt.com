@@ -258,4 +258,9 @@ p6 <- circle_heart(500, heart_fun(100), heart_fun(100) / 20,
 p1 + p2 + p3 + p4 + p5 + p6 + plot_layout(ncol = 3)
 ```
 
+```{r details, echo=FALSE}
+library(details) 
 
+sessioninfo::session_info() %>%
+  details::details(summary = 'session information')
+```

@@ -536,3 +536,10 @@ diversity_plot <- function(makeup, fix = 0.45) {
                         signif(mean(df1$fill %in% c("diag", "other")), digits = 3)))
 }
 ```
+
+```{r details, echo=FALSE}
+library(details) 
+
+sessioninfo::session_info() %>%
+  details::details(summary = 'session information')
+```

@@ -208,3 +208,10 @@ map_df(c(-1, 1) * 20,
 ```
 
 This is all I have for this time. Hope you enjoyed it!
+
+```{r details, echo=FALSE}
+library(details) 
+
+sessioninfo::session_info() %>%
+  details::details(summary = 'session information')
+```
