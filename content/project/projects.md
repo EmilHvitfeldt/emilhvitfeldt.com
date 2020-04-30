@@ -28,6 +28,10 @@ subtitle = ""
   [[content.filter_button]]
     name = "R Package"
     tag = "R Package"
+    
+  [[content.filter_button]]
+    name = "tidymodels"
+    tag = "tidymodels"
   
   [[content.filter_button]]
     name = "Other"
