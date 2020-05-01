@@ -34,7 +34,7 @@ library(furrr) # to be able to fit the models in parallel
 
 ## Fetching the Data
 
-The text is provided from the [Gutenberg Project](https://www.gutenberg.org/wiki/Main_Page). A simple search reveals that the Federalist Papers have the id of 1404. 
+The text is provided from the [Gutenberg Project](https://www.gutenberg.org/wiki/Main_Page). A simple search reveals that the Federalist Papers have the id of 1404. Note that the text is in English^[[#benderrule](https://thegradient.pub/the-benderrule-on-naming-the-languages-we-study-and-why-it-matters/)].
 
 ```{r}
 papers <- gutenberg_download(1404)

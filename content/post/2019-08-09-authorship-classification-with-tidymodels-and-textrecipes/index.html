@@ -18,7 +18,7 @@ library(furrr) # to be able to fit the models in parallel</code></pre>
 </div>
 <div id="fetching-the-data" class="section level2">
 <h2>Fetching the Data</h2>
-<p>The text is provided from the <a href="https://www.gutenberg.org/wiki/Main_Page">Gutenberg Project</a>. A simple search reveals that the Federalist Papers have the id of 1404.</p>
+<p>The text is provided from the <a href="https://www.gutenberg.org/wiki/Main_Page">Gutenberg Project</a>. A simple search reveals that the Federalist Papers have the id of 1404. Note that the text is in English<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>.</p>
 <pre class="r"><code>papers &lt;- gutenberg_download(1404)
 papers</code></pre>
 </div>
@@ -184,4 +184,10 @@ final &lt;- param_grid %&gt;%
 <div id="conclusion" class="section level2">
 <h2>Conclusion</h2>
 <p>In this post we have touched a lot of different topics; tidymodels, text preprocessing, parallel computing etc. Since we have covered so many topics have left each section not covered it a lot of detail. In a more proper analysis you would want to try some different models and different ways to do the preprocessing.</p>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="https://thegradient.pub/the-benderrule-on-naming-the-languages-we-study-and-why-it-matters/">#benderrule</a><a href="#fnref1" class="footnote-back">↩</a></p></li>
+</ol>
 </div>

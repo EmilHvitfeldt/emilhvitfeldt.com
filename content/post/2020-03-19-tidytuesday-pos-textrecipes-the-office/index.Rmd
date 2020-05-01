@@ -50,7 +50,7 @@ And lastly, we use [paletteer](https://github.com/EmilHvitfeldt/paletteer) to ge
 
 ## Exploring the data `r emo::ji("pick")`
 
-The data comes with a lot of different variables. We will be focusing on `character` and `text`.
+The data comes with a lot of different variables. We will be focusing on `character` and `text` which contains the character and what they said, in English^[[#benderrule](https://thegradient.pub/the-benderrule-on-naming-the-languages-we-study-and-why-it-matters/)].
 First, let us take a look at how many lines each character has
 
 ```{r}

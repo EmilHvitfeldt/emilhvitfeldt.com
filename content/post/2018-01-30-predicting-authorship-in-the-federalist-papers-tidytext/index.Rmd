@@ -47,7 +47,7 @@ library(glmnet)
 
 ## Data
 
-We are lucky today because all of The Federalist Papers happens to be on gutenberg
+We are lucky today because all of The Federalist Papers happens to be on gutenberg, which are written in English^[[#benderrule](https://thegradient.pub/the-benderrule-on-naming-the-languages-we-study-and-why-it-matters/)]
 
 ```{r old-paper, message=FALSE}
 papers <- gutenberg_download(1404)

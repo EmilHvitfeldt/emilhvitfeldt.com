@@ -32,7 +32,7 @@ library(glmnet)</code></pre>
 </div>
 <div id="data" class="section level2">
 <h2>Data</h2>
-<p>We are lucky today because all of The Federalist Papers happens to be on gutenberg</p>
+<p>We are lucky today because all of The Federalist Papers happens to be on gutenberg, which are written in English<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
 <pre class="r"><code>papers &lt;- gutenberg_download(1404)
 head(papers, n = 10)
 ## # A tibble: 10 x 2
@@ -272,4 +272,10 @@ model &lt;- cv.glmnet(predictor, response, family = &quot;binomial&quot;, alpha 
 </code></pre>
 </details>
 <p><br></p>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="https://thegradient.pub/the-benderrule-on-naming-the-languages-we-study-and-why-it-matters/">#benderrule</a><a href="#fnref1" class="footnote-back">↩</a></p></li>
+</ol>
 </div>

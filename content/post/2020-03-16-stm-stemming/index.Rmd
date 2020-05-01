@@ -20,8 +20,6 @@ knit_hooks$set(optipng = hook_optipng)
 opts_chunk$set("optipng" = "-o5")
 ```
 
-*Photo by Plush Design Studio on Unsplash*
-
 It is known that topic modeling does not benefit from stemming [ref](https://mimno.infosci.cornell.edu/papers/schofield_tacl_2016.pdf).
 I propose a workflow to investigate if stemming is appropriate as a method for data reduction. 
 
@@ -43,7 +41,7 @@ library(hcandersenr)
 library(SnowballC)
 ```
 
-As a first test, we pick 3 fairy tales by H.C. Andersens using the [hcandersenr](https://github.com/EmilHvitfeldt/hcandersenr) package. 
+As a first test, we pick 3 English^[[#benderrule](https://thegradient.pub/the-benderrule-on-naming-the-languages-we-study-and-why-it-matters/)] fairy tales by H.C. Andersens using the [hcandersenr](https://github.com/EmilHvitfeldt/hcandersenr) package. 
 To create multiple "documents" for each fairy tale we start by tokenizing to sentences.
 Then we give each sentence a unique identifier.
 

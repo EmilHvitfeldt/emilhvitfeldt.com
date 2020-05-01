@@ -20,7 +20,7 @@ opts_chunk$set("optipng" = "-o5")
 
 *This code have been lightly revised to make sure it works as of 2018-12-20.*  
 
-In this post we will look at a handful of movies reviews from [imdb](https://www.imdb.com/) which I have scraped and placed in this repository [movie reviews](https://github.com/EmilHvitfeldt/movie-reviews). I took a look at the best and worst rated movies with their best and worst reviews respectively. From that we will try to see if we are able to see how positive reviews on good movies are different then positive reviews on bad movies and so on.
+In this post we will look at a handful of English^[[#benderrule](https://thegradient.pub/the-benderrule-on-naming-the-languages-we-study-and-why-it-matters/)] movies reviews from [imdb](https://www.imdb.com/) which I have scraped and placed in this repository [movie reviews](https://github.com/EmilHvitfeldt/movie-reviews). I took a look at the best and worst rated movies with their best and worst reviews respectively. From that we will try to see if we are able to see how positive reviews on good movies are different then positive reviews on bad movies and so on.
 
 We will use fairly standard packages with the inclusion of **paletteer** for the sole reason of self promotion. (yay!!!)
 

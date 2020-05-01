@@ -33,7 +33,7 @@ And lastly, we use <a href="https://github.com/EmilHvitfeldt/paletteer">palettee
 </div>
 <div id="exploring-the-data" class="section level2">
 <h2>Exploring the data ⛏</h2>
-<p>The data comes with a lot of different variables. We will be focusing on <code>character</code> and <code>text</code>.
+<p>The data comes with a lot of different variables. We will be focusing on <code>character</code> and <code>text</code> which contains the character and what they said, in English<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>.
 First, let us take a look at how many lines each character has</p>
 <pre class="r"><code>theoffice %&gt;%
   count(character, sort = TRUE)</code></pre>
@@ -222,4 +222,10 @@ class_predictions</code></pre>
   select(-name, -value) %&gt;%
   reactable::reactable()</code></pre>
 <p>One thing I noticed is that many of Pam’s lines start with “Oh my” and that might have been a unique character trait that got picked up in the bi-grams.</p>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="https://thegradient.pub/the-benderrule-on-naming-the-languages-we-study-and-why-it-matters/">#benderrule</a><a href="#fnref1" class="footnote-back">↩</a></p></li>
+</ol>
 </div>

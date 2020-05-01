@@ -35,7 +35,7 @@ library(broom)
 library(randomForest)
 ```
 
-The data we will be using for this demonstration will be some [social media disaster tweets](https://data.world/crowdflower/disasters-on-social-media) discussed in [this article](https://arxiv.org/pdf/1705.02009.pdf). 
+The data we will be using for this demonstration will be some English^[[#benderrule](https://thegradient.pub/the-benderrule-on-naming-the-languages-we-study-and-why-it-matters/)] [social media disaster tweets](https://data.world/crowdflower/disasters-on-social-media) discussed in [this article](https://arxiv.org/pdf/1705.02009.pdf). 
 It consist of a number of tweets regarding accidents mixed in with a selection control tweets (not about accidents). We start by loading in the data.
 
 ```{r data_import, message=FALSE} 

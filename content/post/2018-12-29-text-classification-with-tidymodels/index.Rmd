@@ -32,7 +32,7 @@ To give this post a little spice will we only be using stop words. Yes, you read
 
 ## Data
 
-The data we will be using is the text from *Pride and Prejudice* and text from *The War of the Worlds*. These texts can we get from [Project Gutenberg](https://www.gutenberg.org/) using the [gutenbergr](https://github.com/ropensci/gutenbergr) package.
+The data we will be using is the text from *Pride and Prejudice* and text from *The War of the Worlds*. These texts can we get from [Project Gutenberg](https://www.gutenberg.org/) using the [gutenbergr](https://github.com/ropensci/gutenbergr) package. Note that both works are in English^[[#benderrule](https://thegradient.pub/the-benderrule-on-naming-the-languages-we-study-and-why-it-matters/)].
 
 ```{r data, message=FALSE}
 library(tidyverse)

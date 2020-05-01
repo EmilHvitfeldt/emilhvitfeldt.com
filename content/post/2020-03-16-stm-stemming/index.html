@@ -8,7 +8,6 @@ image:
 
 
 
-<p><em>Photo by Plush Design Studio on Unsplash</em></p>
 <p>It is known that topic modeling does not benefit from stemming <a href="https://mimno.infosci.cornell.edu/papers/schofield_tacl_2016.pdf">ref</a>.
 I propose a workflow to investigate if stemming is appropriate as a method for data reduction.</p>
 <ol style="list-style-type: decimal">
@@ -25,7 +24,7 @@ library(tidyverse)
 library(stm)
 library(hcandersenr)
 library(SnowballC)</code></pre>
-<p>As a first test, we pick 3 fairy tales by H.C. Andersens using the <a href="https://github.com/EmilHvitfeldt/hcandersenr">hcandersenr</a> package.
+<p>As a first test, we pick 3 English<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> fairy tales by H.C. Andersens using the <a href="https://github.com/EmilHvitfeldt/hcandersenr">hcandersenr</a> package.
 To create multiple “documents” for each fairy tale we start by tokenizing to sentences.
 Then we give each sentence a unique identifier.</p>
 <pre class="r"><code>fairy_tales &lt;- hcandersen_en %&gt;%
@@ -341,3 +340,9 @@ Check to make sure that you are okay with the number and count of misgroupings y
 </code></pre>
 </details>
 <p><br></p>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="https://thegradient.pub/the-benderrule-on-naming-the-languages-we-study-and-why-it-matters/">#benderrule</a><a href="#fnref1" class="footnote-back">↩</a></p></li>
+</ol>
+</div>

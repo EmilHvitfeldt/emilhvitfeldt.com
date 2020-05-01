@@ -22,7 +22,7 @@ opts_chunk$set("optipng" = "-o5")
 
 ## What are we doing?
 
-The inspiration for this post is [this beutiful vizualization](https://bost.ocks.org/mike/miserables/) from [Mike Bostock](https://bost.ocks.org/mike/). It nicely visualizes the co-occurrence of characters (when two characters appear in the same chapter) in the novel [Les Misérables](https://en.wikipedia.org/wiki/Les_Mis%C3%A9rables) by [Victor Hugo](https://en.wikipedia.org/wiki/Victor_Hugo) using the data collected by [Jacques Bertin](https://en.wikipedia.org/wiki/Jacques_Bertin) (and his assistants).  
+The inspiration for this post is [this beutiful vizualization](https://bost.ocks.org/mike/miserables/) from [Mike Bostock](https://bost.ocks.org/mike/). It nicely visualizes the co-occurrence of characters (when two characters appear in the same chapter) in the English^[[#benderrule](https://thegradient.pub/the-benderrule-on-naming-the-languages-we-study-and-why-it-matters/)] version of the novel [Les Misérables](https://en.wikipedia.org/wiki/Les_Mis%C3%A9rables) by [Victor Hugo](https://en.wikipedia.org/wiki/Victor_Hugo) using the data collected by [Jacques Bertin](https://en.wikipedia.org/wiki/Jacques_Bertin) (and his assistants).  
 
 The way this post will differentiate itself from this is that we are going to collect the data ourselves using [named entity recognition](https://en.wikipedia.org/wiki/Named-entity_recognition). Named entity recognition is the discipline of location and classifying named entities in text. Furthermore will we also try to cluster the characters according to their appearance in the novel. 
 
