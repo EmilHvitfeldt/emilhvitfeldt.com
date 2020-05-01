@@ -26,3 +26,16 @@ code {
 .hljs {
 	background: #fff;
 }
+
+/* images more like cards; iframes more seamless */
+
+img {
+	margin-bottom: 2rem;
+	overflow: hidden;
+	background: #fff;
+	box-shadow: 0 2px 4px 0 rgba(0,0,0,.2);
+}
+
+iframe {
+	border: 0;
+}
