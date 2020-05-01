@@ -8,18 +8,18 @@
   weight = 10
 
 [[main]]
-  name = "GenArt"
-  url = "genart"
-  weight = 20
-
-[[main]]
   name = "Projects"
   url = "project"
-  weight = 30
+  weight = 20
 
 [[main]]
   name = "Talks"
   url = "talk"
+  weight = 30
+
+[[main]]
+  name = "Art"
+  url = "art"
   weight = 40
 
 [[main]]
