@@ -2,6 +2,8 @@
 title: Repetition in musicals with tidytext
 date: '2017-06-05'
 categories: [tidytext, web scraping]
+image:
+  preview_only: true
 ---
 
 ```{r setup, include=FALSE}

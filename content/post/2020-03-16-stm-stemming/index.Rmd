@@ -4,6 +4,7 @@ date: '2020-03-16'
 categories: [tidytext]
 image:
   caption: 'Image credit: [**Jess Bailey**](https://unsplash.com/photos/aQm-rXgZ4n8)'
+  preview_only: false
 ---
 
 ```{r setup, include=FALSE}

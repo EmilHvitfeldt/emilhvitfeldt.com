@@ -2,6 +2,8 @@
 title: Creating RStudio addin to modify selection
 date: '2019-07-30'
 categories: [rstudio addin]
+image:
+  preview_only: true
 ---
 
 ```{r setup, include=FALSE}

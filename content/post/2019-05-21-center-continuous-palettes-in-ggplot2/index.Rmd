@@ -2,6 +2,8 @@
 title: Center continuous palettes in ggplot2
 date: '2019-05-21'
 categories: [ggplot2]
+image:
+  preview_only: true
 ---
 
 ```{r setup, include=FALSE}

@@ -2,6 +2,8 @@
 title: Visualizing trigrams with the Tidyverse
 date: '2018-01-23'
 categories: [tidytext, ggplot2]
+image:
+  preview_only: true
 ---
 
 ```{r setup, include=FALSE}

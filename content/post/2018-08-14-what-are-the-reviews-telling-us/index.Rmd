@@ -2,6 +2,8 @@
 title: What are the reviews telling us?
 date: '2018-08-17'
 categories: [tidytext, ggplot2, plotly]
+image:
+  preview_only: true
 ---
 
 ```{r setup, include=FALSE}

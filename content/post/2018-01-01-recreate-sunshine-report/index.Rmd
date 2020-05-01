@@ -2,6 +2,8 @@
 title: Recreate - Sunshine Report
 date: '2018-01-01'
 categories: [recreate, ggplot2, web scraping]
+image:
+  preview_only: true
 ---
 
 ```{r setup, include=FALSE}

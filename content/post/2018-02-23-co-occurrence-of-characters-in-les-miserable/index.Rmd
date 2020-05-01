@@ -2,6 +2,8 @@
 title: Co Occurrence of Characters in Les Miserable
 date: '2018-02-23'
 categories: [spacyr, ggplot2]
+image:
+  preview_only: true
 ---
 
 ```{r setup, include=FALSE}

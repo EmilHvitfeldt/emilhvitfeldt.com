@@ -2,6 +2,8 @@
 title: Use prismatic with after_scale() for finer control of colors in ggplot2
 date: '2020-02-25'
 categories: [color, ggplot2]
+image:
+  preview_only: true
 ---
 
 ```{r setup, include=FALSE}

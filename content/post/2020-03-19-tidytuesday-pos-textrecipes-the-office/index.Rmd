@@ -2,6 +2,8 @@
 title: 'tidytuesday: Part-of-Speech and textrecipes with The Office'
 date: '2020-03-19'
 categories: [tidymodels, textrecipes, tidytuesday]
+image:
+  preview_only: true
 ---
 
 ```{r setup, include=FALSE}

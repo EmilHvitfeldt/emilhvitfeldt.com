@@ -2,6 +2,8 @@
 title: Deploy your bookdown project to Netlify with Github Actions
 date: '2020-01-20'
 categories: []
+image:
+  preview_only: true
 ---
 
 ```{r setup, include=FALSE}

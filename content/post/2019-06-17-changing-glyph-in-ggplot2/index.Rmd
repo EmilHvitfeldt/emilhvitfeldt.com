@@ -2,6 +2,8 @@
 title: Changing Glyph in legend in ggplot2
 date: '2019-06-17'
 categories: [ggplot2]
+image:
+  preview_only: true
 ---
 
 ```{r setup, include=FALSE}

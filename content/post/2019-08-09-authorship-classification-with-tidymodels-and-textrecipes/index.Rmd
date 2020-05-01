@@ -2,6 +2,8 @@
 title: Authorship classification with tidymodels and textrecipes
 date: '2019-08-09'
 categories: [tidymodels, textrecipes]
+image:
+  preview_only: true
 ---
 
 ```{r setup, include=FALSE}
