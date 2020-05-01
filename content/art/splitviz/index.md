@@ -8,7 +8,8 @@ weight = 20  # Order that this section will appear.
 title = "Splitviz"
 subtitle = ""
 
-columns = "1"
+[design]
+  columns = "1"
 +++
 
 {{< gallery >}}

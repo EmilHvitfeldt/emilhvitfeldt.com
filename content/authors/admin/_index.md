@@ -38,4 +38,4 @@ user_groups:
 - Visitors
 ---
 
-Hello, my name is Emil Hvitfeldt. I’m a Research Programmer at University of Southern California. I love to develop and make things in R. Working on natural language processing, visualization styles, modeling techniques and general workflow problems. M.S. in Statistics from University of Copenhagen.
+Hello, my name is Emil Hvitfeldt. I’m a Research Programmer at University of Southern California. I love to develop and make things in R. Working on natural language processing, visualization styles, modeling techniques and general workflow problems.
