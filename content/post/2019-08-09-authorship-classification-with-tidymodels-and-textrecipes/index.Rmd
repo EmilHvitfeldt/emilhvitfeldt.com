@@ -21,6 +21,10 @@ knit_hooks$set(optipng = hook_optipng)
 opts_chunk$set("optipng" = "-o5")
 ```
 
+:::redirect
+This post was written with early versions of [tidymodels](https://www.tidymodels.org/) packages. And in some ways have not aged perfectly. The general idea about this post is still valid, but if you wan't more up to date code please refer to [tidymodels.com](https://www.tidymodels.org/).
+:::
+
 In this post we will revisit on of my earlier [blogposts](https://www.hvitfeldt.me/blog/predicting-authorship-in-the-federalist-papers-with-tidytext/) where I tried to use tidytext and glmnet to predict the authorship of the anonymous Federalist Papers. If you want more information regarding the data, please read the old post. In the post we will try to achieve the same goal, but use the [tidymodels](https://www.tidyverse.org/articles/2018/08/tidymodels-0-0-1/) framework.
 
 ## Loading Packages
