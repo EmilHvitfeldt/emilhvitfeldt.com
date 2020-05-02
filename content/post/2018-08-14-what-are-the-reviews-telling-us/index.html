@@ -16,7 +16,9 @@ image:
 <script src="/rmarkdown-libs/plotly-main/plotly-latest.min.js"></script>
 
 
-<p><em>This code have been lightly revised to make sure it works as of 2018-12-20.</em></p>
+<div class="note">
+<p>This code have been lightly revised to make sure it works as of 2018-12-20.</p>
+</div>
 <p>In this post we will look at a handful of English<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> movies reviews from <a href="https://www.imdb.com/">imdb</a> which I have scraped and placed in this repository <a href="https://github.com/EmilHvitfeldt/movie-reviews">movie reviews</a>. I took a look at the best and worst rated movies with their best and worst reviews respectively. From that we will try to see if we are able to see how positive reviews on good movies are different then positive reviews on bad movies and so on.</p>
 <p>We will use fairly standard packages with the inclusion of <strong>paletteer</strong> for the sole reason of self promotion. (yay!!!)</p>
 <pre class="r"><code>library(tidyverse)

@@ -8,6 +8,9 @@ image:
 
 
 
+<div class="note">
+<p>This post was written before the <a href="https://tidymodels.github.io/textrecipes/dev/news/index.html#textrecipes-0-2-0-2020-04-14">change</a> to <em>textrecipes</em> to support <em>spacyr</em> as an engine to <code>step_tokenize()</code>. It is still a good demonstration of how to use a custom tokenizer.</p>
+</div>
 <p>I’m ready for my second <a href="https://github.com/rfordatascience/tidytuesday">#tidytuesday</a> and as a massive <a href="https://www.imdb.com/title/tt0386676/">The Office</a> fan this dataset is right up my alley. In this post, you will read how to</p>
 <ul>
 <li>Use the R wrapper <a href="http://spacyr.quanteda.io/">spacyr</a> of <a href="https://spacy.io/">spacy</a> to extract part of speech tags</li>
@@ -161,6 +164,9 @@ tune_spec</code></pre>
 office_boot &lt;- bootstraps(office_train_prepped, strata = character, times = 10)
 
 hyper_grid &lt;- grid_regular(penalty(), mixture(), levels = 10)</code></pre>
+<div class="warning">
+<p>We are experiencing a little bit of <a href="https://towardsdatascience.com/data-leakage-in-machine-learning-10bdd3eec742">data leakage</a> since we don’t perform the preprocessing within each bootstrap.</p>
+</div>
 <p>Now we pass all the objects to <code>tune_grid()</code>.
 It is also possible to combine our recipe and model object into a workflow object to pass to tune_grid instead.
 However, since the preprocessing step took so long and we didn’t vary anything it makes more sense time-wise to use <code>tune_grid()</code> with a formula instead.

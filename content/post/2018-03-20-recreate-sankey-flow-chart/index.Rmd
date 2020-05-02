@@ -20,7 +20,9 @@ knit_hooks$set(optipng = hook_optipng)
 opts_chunk$set("optipng" = "-o5")
 ```
 
-**This blogpost uses the old api for gganimate and will not work with current version. No update of this blogpost is planned for this moment.**
+:::warning
+This blogpost uses the old api for gganimate and will not work with current version. No update of this blogpost is planned for this moment.
+:::
 
 Hello again! I this mini-series (of in-determined length) will I try as best as I can to recreate great visualizations in tidyverse. The recreation may be exact in terms of data, or using data of a similar style. 
 

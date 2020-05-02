@@ -21,6 +21,10 @@ knit_hooks$set(optipng = hook_optipng)
 opts_chunk$set("optipng" = "-o5")
 ```
 
+:::note
+This post was written before the [change](https://tidymodels.github.io/textrecipes/dev/news/index.html#textrecipes-0-2-0-2020-04-14) to *textrecipes* to support *spacyr* as an engine to `step_tokenize()`. It is still a good demonstration of how to use a custom tokenizer.
+:::
+
 I'm ready for my second [#tidytuesday](https://github.com/rfordatascience/tidytuesday) and as a massive [The Office](https://www.imdb.com/title/tt0386676/) fan this dataset is right up my alley. In this post, you will read how to
 
 - Use the R wrapper [spacyr](http://spacyr.quanteda.io/) of [spacy](https://spacy.io/) to extract part of speech tags
@@ -239,6 +243,10 @@ office_boot <- bootstraps(office_train_prepped, strata = character, times = 10)
 
 hyper_grid <- grid_regular(penalty(), mixture(), levels = 10)
 ```
+
+:::warning
+We are experiencing a little bit of [data leakage](https://towardsdatascience.com/data-leakage-in-machine-learning-10bdd3eec742) since we don't perform the preprocessing within each bootstrap.
+:::
 
 Now we pass all the objects to `tune_grid()`.
 It is also possible to combine our recipe and model object into a workflow object to pass to tune_grid instead.

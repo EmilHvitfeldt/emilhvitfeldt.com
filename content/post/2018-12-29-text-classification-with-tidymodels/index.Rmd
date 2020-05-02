@@ -24,6 +24,10 @@ knit_hooks$set(optipng = hook_optipng)
 opts_chunk$set("optipng" = "-o5")
 ```
 
+:::redirect
+This post was written with early versions of [tidymodels](https://www.tidymodels.org/) packages. And in some ways have not aged perfectly. The general idea about this post is still valid, but if you wan't more up to date code please refer to [tidymodels.com](https://www.tidymodels.org/).
+:::
+
 ## Introduction
 
 I have previously used this blog to talk about text classification a couple of times. [tidymodels](https://github.com/tidymodels/tidymodels) have since then seen quite a bit of progress. I did in addition get the [textrecipes](https://github.com/tidymodels/textrecipes) package on CRAN, which provides extra steps to [recipes](https://github.com/tidymodels/recipes) package from tidymodels.  

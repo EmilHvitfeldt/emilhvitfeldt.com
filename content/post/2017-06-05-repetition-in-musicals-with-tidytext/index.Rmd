@@ -20,7 +20,9 @@ knit_hooks$set(optipng = hook_optipng)
 opts_chunk$set("optipng" = "-o5")
 ```
 
-*This code have been lightly revised to make sure it works as of 2018-12-16.*  
+:::note
+This code have been lightly revised to make sure it works as of 2018-12-16.
+:::
 
 Lately I have been wondering how to quantify how repetitive a text is, specifically how repetitive are the lyrics to songs. I will specifically limit this post to English^[[#benderrule](https://thegradient.pub/the-benderrule-on-naming-the-languages-we-study-and-why-it-matters/)] lyrics. I'm by no means the first one, Colin Morris did a great piece on language compression with his [Are Pop Lyrics Getting More Repetitive?](https://pudding.cool/2017/05/song-repetition/) which i highly recommend you go read. Instead of looking at pop lyrics will we instead be focusing some popular musicals to see if general patterns emerge within each show.
 

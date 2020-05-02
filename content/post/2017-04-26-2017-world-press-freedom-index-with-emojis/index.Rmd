@@ -20,7 +20,9 @@ knit_hooks$set(optipng = hook_optipng)
 opts_chunk$set("optipng" = "-o5")
 ```
 
-*This code have been lightly revised to make sure it works as of 2018-12-16.*  
+:::note
+This code have been lightly revised to make sure it works as of 2018-12-16.
+:::
 
 With [Reporters Without Borders](https://rsf.org/en) coming out with its [2017 World Press Freedom Index](https://rsf.org/en/ranking/2017) in the same week as Hadley Wickham coming out with the [emo(ji)](https://github.com/hadley/emo) package, I had no choice but to explore both of them at the same time.  
 

@@ -20,7 +20,9 @@ knit_hooks$set(optipng = hook_optipng)
 opts_chunk$set("optipng" = "-o5")
 ```
 
-*This code have been lightly revised to make sure it works as of 2018-12-16.*  
+:::note
+This code have been lightly revised to make sure it works as of 2018-12-16.
+:::
 
 After attending useR!2017 for the first time, which great pleasure and new connections made. I decided to see if I could extract some of the information available in the public schedule. So as with my last post I'll do a bit of scraping followed by a few visualizations. 
 

@@ -20,7 +20,9 @@ knit_hooks$set(optipng = hook_optipng)
 opts_chunk$set("optipng" = "-o5")
 ```
 
-*This code have been lightly revised to make sure it works as of 2018-12-16.*  
+:::note
+This code have been lightly revised to make sure it works as of 2018-12-16.
+:::
 
 ## ggpage version 0.2.0
 

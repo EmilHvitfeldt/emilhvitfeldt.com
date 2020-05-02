@@ -20,7 +20,9 @@ knit_hooks$set(optipng = hook_optipng)
 opts_chunk$set("optipng" = "-o5")
 ```
 
-*This code have been lightly revised to make sure it works as of 2018-12-16.*  
+:::note
+This code have been lightly revised to make sure it works as of 2018-12-16.
+:::
 
 I will In this post explore the ethnic diversity of the student population in schools in California. We will utilize the data provided by [California Department of Education](https://www.cde.ca.gov/) that has [Enrollment by School](https://www.cde.ca.gov/ds/sd/sd/filesenr.asp) which includes "school-level enrollment by racial/ethnic designation, gender, and grade".  
 

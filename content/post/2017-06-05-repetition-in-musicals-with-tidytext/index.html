@@ -8,7 +8,9 @@ image:
 
 
 
-<p><em>This code have been lightly revised to make sure it works as of 2018-12-16.</em></p>
+<div class="note">
+<p>This code have been lightly revised to make sure it works as of 2018-12-16.</p>
+</div>
 <p>Lately I have been wondering how to quantify how repetitive a text is, specifically how repetitive are the lyrics to songs. I will specifically limit this post to English<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> lyrics. I’m by no means the first one, Colin Morris did a great piece on language compression with his <a href="https://pudding.cool/2017/05/song-repetition/">Are Pop Lyrics Getting More Repetitive?</a> which i highly recommend you go read. Instead of looking at pop lyrics will we instead be focusing some popular musicals to see if general patterns emerge within each show.</p>
 <p>My plan is to use the magic of the <code>tidyverse</code> with the inclusion of <code>tidytext</code> to find the percentage of repeated consecutive sequences of words() also called n-grams) of varying length and then compare the results. We will use <code>rvest</code> to extract the lyrics from the web. However for larger data needs official APIs are recommended.</p>
 <div id="extracting-song-lyrics" class="section level2">

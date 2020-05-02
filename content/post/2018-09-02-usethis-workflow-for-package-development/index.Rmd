@@ -20,7 +20,9 @@ knit_hooks$set(optipng = hook_optipng)
 opts_chunk$set("optipng" = "-o5")
 ```
 
-*This code have been lightly revised to make sure it works as of 2018-12-20.*  
+:::note
+This code have been lightly revised to make sure it works as of 2018-12-20.
+:::
 
 There have been a lot of progress in the aid of package development in R in recent times. The classic blogpost by Hilary Parker [Writing an R Package From Scratch](https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/) and its younger sister [Writing an R package from scratch](https://r-mageddon.netlify.com/post/writing-an-r-package-from-scratch/) by Tomas Westlake are both great sources of information to create a package. Fo more general documentation on package development you would be right to look at Hadley Wickhams book [R packages](http://r-pkgs.had.co.nz/). The **devtools** package have always been instrumental for good package development, but some of these features and additional ones are now to be found in the [usethis](https://github.com/r-lib/usethis) package. The **usethis** promises to
 

@@ -96,7 +96,7 @@ selected_text <- stringr::str_replace_all(selected_text, " ", "-")
 
 Which gave me this little gem of a addin! 
 
-![](https://i.imgur.com/hbrPc6d.gif)
+![](htrPc6d.gif)
 
 ```{r details, echo=FALSE}
 library(details) 
