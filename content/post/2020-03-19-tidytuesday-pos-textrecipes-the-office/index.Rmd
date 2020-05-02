@@ -13,7 +13,6 @@ opts_chunk$set(
   echo = TRUE,
   cache = TRUE,
   collapse = TRUE,
-  eval = FALSE,
   fig.width = 7, 
   fig.align = 'center',
   fig.asp = 0.618, # 1 / phi
@@ -42,6 +41,7 @@ I'll not be explaining each line of code for those, but you are encouraged to pl
 library(schrute)
 library(tidytext)
 library(tidymodels)
+library(tidyr)
 library(tokenizers)
 library(textrecipes)
 library(spacyr)

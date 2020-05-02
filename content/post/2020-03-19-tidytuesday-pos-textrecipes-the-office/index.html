@@ -7,6 +7,12 @@ image:
   preview_only: true
 ---
 
+<script src="/rmarkdown-libs/core-js/shim.min.js"></script>
+<script src="/rmarkdown-libs/react/react.min.js"></script>
+<script src="/rmarkdown-libs/react/react-dom.min.js"></script>
+<script src="/rmarkdown-libs/reactwidget/react-tools.js"></script>
+<script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="/rmarkdown-libs/reactable-binding/reactable.js"></script>
 
 
 <div class="note">
@@ -26,6 +32,7 @@ I’ll not be explaining each line of code for those, but you are encouraged to 
 <pre class="r"><code>library(schrute)
 library(tidytext)
 library(tidymodels)
+library(tidyr)
 library(tokenizers)
 library(textrecipes)
 library(spacyr)
@@ -42,7 +49,21 @@ And lastly, we use <a href="https://github.com/EmilHvitfeldt/paletteer">palettee
 <p>The data comes with a lot of different variables. We will be focusing on <code>character</code> and <code>text</code> which contains the character and what they said, in English<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>.
 First, let us take a look at how many lines each character has</p>
 <pre class="r"><code>theoffice %&gt;%
-  count(character, sort = TRUE)</code></pre>
+  count(character, sort = TRUE)
+## # A tibble: 773 x 2
+##    character     n
+##    &lt;chr&gt;     &lt;int&gt;
+##  1 Michael   10921
+##  2 Dwight     6847
+##  3 Jim        6303
+##  4 Pam        5031
+##  5 Andy       3754
+##  6 Angela     1569
+##  7 Kevin      1564
+##  8 Erin       1440
+##  9 Oscar      1368
+## 10 Ryan       1198
+## # … with 763 more rows</code></pre>
 <p>Micheal, Dwight, Jim, and Pam are dominating the charts.
 This is unsurprising since they are some of the main characters having a central role in the episodes they appear in.
 This will be too many classes for the scope of this post so I’ll limit it to the top 5 characters with the most lines since the number drops off more after the first 5.</p>
@@ -62,6 +83,7 @@ This is going to be a problem for us later on as predicting with shorter text is
   theme_minimal() +
   theme(legend.position = &quot;top&quot;, 
         plot.title.position = &quot;plot&quot;) </code></pre>
+<p><img src="/post/2020-03-19-tidytuesday-pos-textrecipes-the-office/index_files/figure-html/unnamed-chunk-4-1.png" width="700px" style="display: block; margin: auto;" /></p>
 <p>These lines are thankfully pretty similar, which will make it easier for us to make a good predictive model.
 However, we can still see some differences.
 Pam and Jim both have shorter lines than the rest,
@@ -70,7 +92,25 @@ and Michael and Andy both have fewer shorter lines in exchange for more long lin
 It isn’t always needed but I’m going to explicitly initialize the spacy model</p>
 <pre class="r"><code>spacy_initialize(model = &quot;en_core_web_sm&quot;)</code></pre>
 <p>the spacyr package outputs in this nice format with <code>doc_id</code>, <code>sentence_id</code>, <code>token_id</code>, <code>token</code> and <code>pos</code>.</p>
-<pre class="r"><code>spacy_parse(small_office$text[1], entity = FALSE, lemma = FALSE)</code></pre>
+<pre class="r"><code>spacy_parse(small_office$text[1], entity = FALSE, lemma = FALSE)
+##    doc_id sentence_id token_id       token   pos
+## 1   text1           1        1         All   ADV
+## 2   text1           1        2       right   ADV
+## 3   text1           1        3         Jim PROPN
+## 4   text1           1        4           . PUNCT
+## 5   text1           2        1        Your   ADJ
+## 6   text1           2        2 quarterlies  NOUN
+## 7   text1           2        3        look  VERB
+## 8   text1           2        4        very   ADV
+## 9   text1           2        5        good   ADJ
+## 10  text1           2        6           . PUNCT
+## 11  text1           3        1         How   ADV
+## 12  text1           3        2         are  VERB
+## 13  text1           3        3      things  NOUN
+## 14  text1           3        4          at   ADP
+## 15  text1           3        5         the   DET
+## 16  text1           3        6     library  NOUN
+## 17  text1           3        7           ? PUNCT</code></pre>
 <p>Normally I would just analyze the data in this format.
 But since I have to create a custom wrapper for textrecipes anyway I’ll do the remaining of the text mining in tidytext.
 textrecipes requires that the tokenizer returns the tokens in a list format similar to the tokenizers in <strong>tokenizers</strong>.
@@ -87,7 +127,15 @@ The following function takes a character vector and returns the part of speech t
 <p>Little example to showcase the function</p>
 <pre class="r"><code>example_string &lt;- c(&quot;Hello there pig&quot;, &quot;&quot;, &quot;One more pig here&quot;)
 
-spacy_pos(x = example_string)</code></pre>
+spacy_pos(x = example_string)
+## [[1]]
+## [1] &quot;INTJ&quot; &quot;ADV&quot;  &quot;VERB&quot;
+## 
+## [[2]]
+## character(0)
+## 
+## [[3]]
+## [1] &quot;NUM&quot;  &quot;ADJ&quot;  &quot;NOUN&quot; &quot;ADV&quot;</code></pre>
 <p>We can use a custom tokenizer by simply passing it to the <code>token</code> argument.
 This is going to take a little longer than normal since POS tagging takes longer than simply tokenizing.</p>
 <pre class="r"><code>small_office_tokens &lt;- small_office %&gt;%
@@ -105,6 +153,7 @@ small_office_tokens %&gt;%
   guides(fill = &quot;none&quot;) +
   theme_minimal() +
   theme(plot.title.position = &quot;plot&quot;) </code></pre>
+<p><img src="/post/2020-03-19-tidytuesday-pos-textrecipes-the-office/index_files/figure-html/unnamed-chunk-10-1.png" width="700px" style="display: block; margin: auto;" /></p>
 <p>I found it initially surprising that punctuation (<code>PUNCT</code>) was leading the chart.
 But after thinking about it a little bit it, I can imagine it has something to do with all the lines being very short and having to end in some kind of punctuation.</p>
 <p>We can facet this by the character to see who uses what part of speech.</p>
@@ -121,6 +170,7 @@ But after thinking about it a little bit it, I can imagine it has something to d
   theme_minimal() +
   theme(legend.position = &quot;top&quot;, 
         plot.title.position = &quot;plot&quot;) </code></pre>
+<p><img src="/post/2020-03-19-tidytuesday-pos-textrecipes-the-office/index_files/figure-html/unnamed-chunk-11-1.png" width="700px" style="display: block; margin: auto;" /></p>
 <p>I don’t immediately see anything popping out at me, but it is a very pretty chart otherwise.
 I feel like I have seen enough, lets get to modeling!</p>
 </div>
@@ -159,7 +209,14 @@ This model has two hyperparameters, which we will be doing a grid search over to
 We specify that we want to tune these parameters by passing <code>tune()</code> to them.</p>
 <pre class="r"><code>tune_spec &lt;- multinom_reg(penalty = tune(), mixture = tune()) %&gt;%
   set_engine(&quot;glmnet&quot;)
-tune_spec</code></pre>
+tune_spec
+## Multinomial Regression Model Specification (classification)
+## 
+## Main Arguments:
+##   penalty = tune()
+##   mixture = tune()
+## 
+## Computational engine: glmnet</code></pre>
 <p>Next we set up a bootstrap sampler and grid to optimize over.</p>
 <pre class="r"><code>set.seed(12345)
 office_boot &lt;- bootstraps(office_train_prepped, strata = character, times = 10)
@@ -179,10 +236,24 @@ fitted_grid &lt;- tune_grid(
   resamples = office_boot,
   grid = hyper_grid,
   control = control_grid(verbose = TRUE)
-)</code></pre>
+)
+## Warning: `tune_grid.formula()` is deprecated as of lifecycle 0.1.0.
+## The first argument to `tune_grid()` should be either a model or a workflow. In the future, you can use:
+## tune_grid(tune_spec, character ~ ., resamples = office_boot, 
+##     grid = hyper_grid, control = control_grid(verbose = TRUE))
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_warnings()` to see where this warning was generated.</code></pre>
 <p>We can now look at the best performing models with <code>show_best()</code></p>
 <pre class="r"><code>fitted_grid %&gt;%
-  show_best(&quot;roc_auc&quot;)</code></pre>
+  show_best(&quot;roc_auc&quot;)
+## # A tibble: 5 x 7
+##   penalty mixture .metric .estimator  mean     n  std_err
+##     &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;    &lt;dbl&gt;
+## 1 0.00599   0.444 roc_auc hand_till  0.568    10 0.000724
+## 2 0.00599   0.556 roc_auc hand_till  0.568    10 0.000722
+## 3 0.00599   0.333 roc_auc hand_till  0.567    10 0.000716
+## 4 0.00599   0.667 roc_auc hand_till  0.567    10 0.000715
+## 5 0.00599   0.222 roc_auc hand_till  0.567    10 0.000700</code></pre>
 <p>And we can use the values from the best performing model to fit our final model.</p>
 <pre class="r"><code>final_model &lt;- tune_spec %&gt;%
   update(penalty = 0.005994843, mixture = 1 / 3) %&gt;%
@@ -197,12 +268,27 @@ fitted_grid &lt;- tune_grid(
 ) %&gt;%
   conf_mat(truth = character, estimate = .pred_class) %&gt;%
   autoplot(type = &quot;heatmap&quot;)</code></pre>
+<p><img src="/post/2020-03-19-tidytuesday-pos-textrecipes-the-office/index_files/figure-html/unnamed-chunk-20-1.png" width="700px" style="display: block; margin: auto;" /></p>
 <p>These are not going too well.
 It is doing best at predicting Michael correctly, and it seems to confuse Dwight and Michael a little bit.</p>
 <p>Let us investigate the cases that didn’t go too well.
 We can get the individual class probabilities by setting <code>type = "prob"</code> in <code>predict()</code></p>
 <pre class="r"><code>class_predictions &lt;- predict(final_model, office_test_prepped, type = &quot;prob&quot;)
-class_predictions</code></pre>
+class_predictions
+## # A tibble: 8,212 x 5
+##    .pred_Andy .pred_Dwight .pred_Jim .pred_Michael .pred_Pam
+##         &lt;dbl&gt;        &lt;dbl&gt;     &lt;dbl&gt;         &lt;dbl&gt;     &lt;dbl&gt;
+##  1      0.239        0.167     0.237         0.248    0.108 
+##  2      0.235        0.232     0.186         0.180    0.168 
+##  3      0.176        0.101     0.344         0.322    0.0571
+##  4      0.188        0.193     0.220         0.190    0.208 
+##  5      0.250        0.178     0.171         0.216    0.184 
+##  6      0.208        0.183     0.193         0.186    0.230 
+##  7      0.166        0.137     0.256         0.199    0.242 
+##  8      0.185        0.145     0.185         0.247    0.237 
+##  9      0.195        0.226     0.212         0.180    0.188 
+## 10      0.155        0.211     0.245         0.190    0.200 
+## # … with 8,202 more rows</code></pre>
 <p>We can do some wrangling to get the 5 worst predicted texts for each character:</p>
 <pre class="r"><code>bind_cols(
   class_predictions,
@@ -216,6 +302,8 @@ class_predictions</code></pre>
   ungroup() %&gt;%
   select(-name, -value) %&gt;%
   reactable::reactable()</code></pre>
+<div id="htmlwidget-1" class="reactable html-widget" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"character":["Andy","Andy","Andy","Andy","Andy","Dwight","Dwight","Dwight","Dwight","Dwight","Jim","Jim","Jim","Jim","Jim","Michael","Michael","Michael","Michael","Michael","Pam","Pam","Pam","Pam","Pam"],"text":["I don't even know what the truth is anymore.","You know what? Chill, ok? I own the boat. Not gonna sue myself. Alright, so just- wow.","You know what, that's my new one. I'm taking that one, too.","I think he can hear us.","No, no. No, no, no! Don't! Damn it, Tuna!","I think I saw it!","Yeah, I bet you wish you had a Nakiri, though.","I think we'll be fine.","Oh my god.","No, that was my Sensei.","And Beesly. Tonight we're in two seperate rooms and tomorrow night is the honeymoon suite.","Wow, that's great, because I need paper.","I want to clamp Michael's face in a George Foreman grill.","That's it. I want to talk to this guy. Put me in his ear.","So, the situation is the worst.","You can't quit! On the first day. That's heresy, my friend! Okay, let's talk about this. What happened? I mean, what... Was it Toby? Did he say something? Cause he's... what?","I like Donna. Is it wrong to keep seeing her? Depends on who you ask. I mean, if you ask her husband... or you took a random poll, yeah, it's wrong.","And another thing about the Indian people... they love s*x positions. I present to you the Kama Sutra. I mean look at that. Who's seen that before?","Working in an office can lead to depression. Which can lead to suicide. I mean this is really serious stuff.","Jim, this has to get out, so we can all deal with it.","All right. Cool, well... thanks.","All right, what'd you do?","Oh, okay. Okay, I will.","You are?","Okay, everybody! After you walk the runway everyone has to vote for who gets the coupon book. And you can't vote for yourself."]},"columns":[{"accessor":"character","name":"character","type":"character"},{"accessor":"text","name":"text","type":"character"}],"defaultPageSize":10,"paginationType":"numbers","showPageInfo":true,"minRows":1,"dataKey":"042f4edebfd4fa7f7686ba7506b60589"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
 <p>So the first striking thing here is that many of the lines are quite short, with most of Pam’s being 5 words or less. On the other hand, all the wrongly predicted lines for Michael are quite a bit longer than the rest.</p>
 <p>We can also get the best predicted lines for each character by flipping the sign with <code>desc()</code></p>
 <pre class="r"><code>bind_cols(
@@ -230,7 +318,365 @@ class_predictions</code></pre>
   ungroup() %&gt;%
   select(-name, -value) %&gt;%
   reactable::reactable()</code></pre>
+<div id="htmlwidget-2" class="reactable html-widget" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-2">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"character":["Andy","Andy","Andy","Andy","Andy","Dwight","Dwight","Dwight","Dwight","Dwight","Jim","Jim","Jim","Jim","Jim","Michael","Michael","Michael","Michael","Michael","Pam","Pam","Pam","Pam","Pam"],"text":["Did someone change my name to Baskin Robbin? Because I feel like a banana split. Woo!","Michael Gary Scott rolling like a pimp!","It's like a ten minute walk.","\"Applicant has a head shaped like a trapezoid.\"","You guys ready to party?","The eyes are the groin of the head.","Who has put a number seven plastic in a number four bin?","I'll take the entirety of the second floor.","Mm-hm. Powerpoints are the peacocks of the business world. All show, no meat.","Fine. Minutes from previous meeting of Knights of the Night. That's our official name, Jim.","Not now, Toby, my God!","I think it's definitely... Well, okay. Either way...","Nah, I think it's mine. Lemme just check real quick, here. Alright.","You know, man, it's really you're call.","All right!","Hey, ya know what? Forgive me for caring. Right?","Uh, yes you are.","Yes you are. Oh, buckle up Jim.","You are relieved.","Kelly, you are Hindu, so you believe in Buddha.","Oh my gosh.","Oh my gosh.","Oh my gosh, please, don't.","Oh, my...","No, not $50,000, $41,000, I think. $41,500."]},"columns":[{"accessor":"character","name":"character","type":"character"},{"accessor":"text","name":"text","type":"character"}],"defaultPageSize":10,"paginationType":"numbers","showPageInfo":true,"minRows":1,"dataKey":"c565090486aafb22d1e2d0324669c30b"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
 <p>One thing I noticed is that many of Pam’s lines start with “Oh my” and that might have been a unique character trait that got picked up in the bi-grams.</p>
+<details closed>
+<p><summary> <span title="Click to Expand"> session information </span> </summary></p>
+<pre class="r"><code>
+─ Session info ───────────────────────────────────────────────────────────────
+ setting  value                       
+ version  R version 3.6.0 (2019-04-26)
+ os       macOS Mojave 10.14.6        
+ system   x86_64, darwin15.6.0        
+ ui       X11                         
+ language (EN)                        
+ collate  en_US.UTF-8                 
+ ctype    en_US.UTF-8                 
+ tz       America/Los_Angeles         
+ date     2020-05-02                  
+
+─ Packages ───────────────────────────────────────────────────────────────────
+ ! package       * version    date       lib
+ P assertthat      0.2.1      2019-03-21 [?]
+ P backports       1.1.6      2020-04-05 [?]
+ P base64enc       0.1-3      2015-07-28 [?]
+ P bayesplot       1.7.1      2019-12-01 [?]
+ P blogdown        0.18       2020-03-04 [?]
+ P bookdown        0.18       2020-03-05 [?]
+ P boot            1.3-24     2019-12-20 [?]
+ P broom         * 0.5.5      2020-02-29 [?]
+ P callr           3.4.3      2020-03-28 [?]
+ P class           7.3-16     2020-03-25 [?]
+ P cli             2.0.2      2020-02-28 [?]
+ P clipr           0.7.0      2019-07-23 [?]
+ P cluster         2.1.0      2019-06-19 [?]
+ P codetools       0.2-16     2018-12-24 [?]
+ P colorspace      1.4-1      2019-03-18 [?]
+ P colourpicker    1.0        2017-09-27 [?]
+ P crayon          1.3.4      2017-09-16 [?]
+ P crosstalk       1.1.0.1    2020-03-13 [?]
+ P data.table      1.12.8     2019-12-09 [?]
+ P desc            1.2.0      2018-05-01 [?]
+ P details       * 0.2.1      2020-01-12 [?]
+ P dials         * 0.0.6      2020-04-03 [?]
+ P DiceDesign      1.8-1      2019-07-31 [?]
+ P dichromat       2.0-0      2013-01-24 [?]
+ P digest          0.6.25     2020-02-23 [?]
+ P dplyr         * 0.8.5      2020-03-07 [?]
+ P DT              0.13       2020-03-23 [?]
+ P dygraphs        1.1.1.6    2018-07-11 [?]
+ P ellipsis        0.3.0      2019-09-20 [?]
+ P emo             0.0.0.9000 2019-12-18 [?]
+ P evaluate        0.14       2019-05-28 [?]
+ P fansi           0.4.1      2020-01-08 [?]
+ P farver          2.0.3      2020-01-16 [?]
+ P fastmap         1.0.1      2019-10-08 [?]
+ P forcats         0.5.0      2020-03-01 [?]
+ P foreach         1.5.0      2020-03-30 [?]
+ P furrr           0.1.0      2018-05-16 [?]
+ P future          1.16.0     2020-01-16 [?]
+ P generics        0.0.2      2018-11-29 [?]
+ P ggplot2       * 3.3.0      2020-03-05 [?]
+ P ggridges        0.5.2      2020-01-12 [?]
+ P glmnet          3.0-2      2019-12-11 [?]
+ P globals         0.12.5     2019-12-07 [?]
+ P glue            1.4.0      2020-04-03 [?]
+ P gower           0.2.1      2019-05-14 [?]
+ P GPfit           1.0-8      2019-02-08 [?]
+ P gridExtra       2.3        2017-09-09 [?]
+ P gtable          0.3.0      2019-03-25 [?]
+ P gtools          3.8.2      2020-03-31 [?]
+ P hardhat         0.1.2      2020-02-28 [?]
+ P htmltools       0.4.0      2019-10-04 [?]
+ P htmlwidgets     1.5.1      2019-10-08 [?]
+ P httpuv          1.5.2      2019-09-11 [?]
+ P httr            1.4.1      2019-08-05 [?]
+ P igraph          1.2.5      2020-03-19 [?]
+ P infer         * 0.5.1      2019-11-19 [?]
+ P inline          0.3.15     2018-05-18 [?]
+ P ipred           0.9-9      2019-04-28 [?]
+ P iterators       1.0.12     2019-07-26 [?]
+ P janeaustenr     0.1.5      2017-06-10 [?]
+ P jcolors         0.0.4      2019-12-08 [?]
+ P jsonlite        1.6.1      2020-02-02 [?]
+ P knitr         * 1.28       2020-02-06 [?]
+ P labeling        0.3        2014-08-23 [?]
+ P later           1.0.0      2019-10-04 [?]
+ P lattice         0.20-41    2020-04-02 [?]
+ P lava            1.6.7      2020-03-05 [?]
+ P lhs             1.0.1      2019-02-03 [?]
+ P lifecycle       0.2.0      2020-03-06 [?]
+ P listenv         0.8.0      2019-12-05 [?]
+ P lme4            1.1-23     2020-04-07 [?]
+ P loo             2.2.0      2019-12-19 [?]
+ P lubridate       1.7.8      2020-04-06 [?]
+ P magrittr        1.5        2014-11-22 [?]
+ P mapproj         1.2.7      2020-02-03 [?]
+ P maps            3.3.0      2018-04-03 [?]
+ P markdown        1.1        2019-08-07 [?]
+ P MASS            7.3-51.5   2019-12-20 [?]
+ P Matrix          1.2-18     2019-11-27 [?]
+ P matrixStats     0.56.0     2020-03-13 [?]
+ P mime            0.9        2020-02-04 [?]
+ P miniUI          0.1.1.1    2018-05-18 [?]
+ P minqa           1.2.4      2014-10-09 [?]
+ P munsell         0.5.0      2018-06-12 [?]
+ P nlme            3.1-145    2020-03-04 [?]
+ P nloptr          1.2.2.1    2020-03-11 [?]
+ P nnet            7.3-13     2020-02-25 [?]
+ P oompaBase       3.2.9      2019-08-24 [?]
+ P paletteer     * 1.1.0      2020-03-10 [?]
+ P palr            0.2.0      2020-01-30 [?]
+ P pals            1.6        2019-12-04 [?]
+ P parsnip       * 0.1.0.9001 2020-04-17 [?]
+ P pillar          1.4.3      2019-12-20 [?]
+ P pkgbuild        1.0.6      2019-10-09 [?]
+ P pkgconfig       2.0.3      2019-09-22 [?]
+ P plyr            1.8.6      2020-03-03 [?]
+ P png             0.1-7      2013-12-03 [?]
+ P prettyunits     1.1.1      2020-01-24 [?]
+ P prismatic       0.2.0.9000 2020-03-15 [?]
+ P pROC            1.16.2     2020-03-19 [?]
+ P processx        3.4.2      2020-02-09 [?]
+ P prodlim         2019.11.13 2019-11-17 [?]
+ P promises        1.1.0      2019-10-04 [?]
+ P ps              1.3.2      2020-02-13 [?]
+ P purrr         * 0.3.3      2019-10-18 [?]
+ P R6              2.4.1      2019-11-12 [?]
+ P Rcpp            1.0.4.6    2020-04-09 [?]
+ P reactable       0.1.0.1    2020-02-29 [?]
+ P reactR          0.4.2      2020-01-24 [?]
+ P recipes       * 0.1.10     2020-03-18 [?]
+ P rematch2        2.1.1      2020-03-28 [?]
+   renv            0.9.3      2020-02-10 [1]
+ P reshape2        1.4.4      2020-04-09 [?]
+ P reticulate      1.15       2020-04-02 [?]
+ P rlang           0.4.5      2020-03-01 [?]
+ P rmarkdown       2.1        2020-01-20 [?]
+ P rpart           4.1-15     2019-04-12 [?]
+ P rprojroot       1.3-2      2018-01-03 [?]
+ P rsample       * 0.0.6      2020-03-31 [?]
+ P rsconnect       0.8.16     2019-12-13 [?]
+ P rstan           2.19.3     2020-02-11 [?]
+ P rstanarm        2.19.3     2020-02-11 [?]
+ P rstantools      2.0.0      2019-09-15 [?]
+ P rstudioapi      0.11       2020-02-07 [?]
+ P scales        * 1.1.0      2019-11-18 [?]
+ P schrute       * 0.2.1      2020-03-30 [?]
+ P scico           1.1.0      2018-11-20 [?]
+ P sessioninfo     1.1.1      2018-11-05 [?]
+ P shape           1.4.4      2018-02-07 [?]
+ P shiny           1.4.0.2    2020-03-13 [?]
+ P shinyjs         1.1        2020-01-13 [?]
+ P shinystan       2.5.0      2018-05-01 [?]
+ P shinythemes     1.1.2      2018-11-06 [?]
+ P SnowballC       0.7.0      2020-04-01 [?]
+ P spacyr        * 1.2.1      2020-03-04 [?]
+ P StanHeaders     2.21.0-1   2020-01-19 [?]
+ P statmod         1.4.34     2020-02-17 [?]
+ P stopwords       1.0        2019-07-24 [?]
+ P stringi         1.4.6      2020-02-17 [?]
+ P stringr         1.4.0      2019-02-10 [?]
+ P survival        3.1-12     2020-03-28 [?]
+ P textrecipes   * 0.1.0.9000 2020-04-11 [?]
+ P threejs         0.3.3      2020-01-21 [?]
+ P tibble        * 3.0.1      2020-04-20 [?]
+ P tidymodels    * 0.1.0      2020-02-16 [?]
+ P tidyposterior   0.0.2      2018-11-15 [?]
+ P tidypredict     0.4.5      2020-02-10 [?]
+ P tidyr         * 1.0.2      2020-01-24 [?]
+ P tidyselect      1.0.0      2020-01-27 [?]
+ P tidytext      * 0.2.3      2020-03-04 [?]
+ P timeDate        3043.102   2018-02-21 [?]
+ P tokenizers    * 0.2.1      2018-03-29 [?]
+ P tune          * 0.1.0      2020-04-02 [?]
+ P utf8            1.1.4      2018-05-24 [?]
+ P vctrs           0.2.4      2020-03-10 [?]
+ P viridisLite     0.3.0      2018-02-01 [?]
+ P withr           2.1.2      2018-03-15 [?]
+ P workflows     * 0.1.1      2020-03-17 [?]
+ P xfun            0.13       2020-04-13 [?]
+ P xml2            1.3.0      2020-04-01 [?]
+ P xtable          1.8-4      2019-04-21 [?]
+ P xts             0.12-0     2020-01-19 [?]
+ P yaml            2.2.1      2020-02-01 [?]
+ P yardstick     * 0.0.6      2020-03-17 [?]
+ P zoo             1.8-7      2020-01-10 [?]
+ source                              
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.2)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ Github (hadley/emo@3f03b11)         
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.2)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.2)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ Github (jaredhuling/jcolors@f200755)
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ local                               
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ local                               
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.2)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.2)                      
+ CRAN (R 3.6.2)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.2)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.2)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.2)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ Github (therneau/survival@c55af18)  
+ local                               
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.2)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.2)                      
+ CRAN (R 3.6.2)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+ CRAN (R 3.6.0)                      
+
+[1] /Users/emilhvitfeldthansen/Desktop/blogv4/renv/library/R-3.6/x86_64-apple-darwin15.6.0
+[2] /private/var/folders/m0/zmxymdmd7ps0q_tbhx0d_26w0000gn/T/RtmpcBhzUv/renv-system-library
+
+ P ── Loaded and on-disk path mismatch.
+</code></pre>
+</details>
+<p><br></p>
 </div>
 <div class="footnotes">
 <hr />
