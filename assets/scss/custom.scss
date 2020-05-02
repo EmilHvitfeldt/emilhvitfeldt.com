@@ -1,3 +1,19 @@
+
+/* Text */
+h1, h2, h3, h4, h5, h6 {
+  color: #333;
+  font-weight: 400;
+}
+
+body {
+  color: #333;
+}
+
+h2 {
+  margin-top: 2rem;
+  font-size: 1.8rem;
+}
+
 /* code */
 /* https://github.com/rstudio/blogdown/blob/master/docs/02-hugo.Rmd */
 
@@ -87,4 +103,14 @@ div.warning a {
 
 div.note a {
   color: #2333a8;
+}
+
+/* buttons */
+.btn-toolbar {
+  justify-content: center;
+}
+
+
+.home-section {
+  padding: 50px 0 0 0;
 }
