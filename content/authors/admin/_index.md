@@ -2,11 +2,6 @@
 authors:
 - admin
 bio: 
-education:
-  courses:
-  - course: MSc in Statistics
-    institution: Copenhagen University
-    year: 2017
 email: ""
 interests:
 - Data science / statistics
