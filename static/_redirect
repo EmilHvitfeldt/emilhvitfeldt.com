@@ -1,1 +1,2 @@
 /:year/:month/:slug  /blog/:slug 301!
+https://www.hvitfeldt.me/packagecalendar/*  https://emilhvitfeldt.github.io/packagecalendar/ 301!
