@@ -4,7 +4,7 @@ date: '2020-05-05'
 slug: textrecipes-series-tf
 categories: [tidymodels, textrecipes, textrecipes series, tidytuesday]
 image:
-  preview_only: true
+  preview_only: false
 ---
 
 ```{r setup, include=FALSE}
