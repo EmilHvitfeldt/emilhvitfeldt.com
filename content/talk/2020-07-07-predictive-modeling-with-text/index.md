@@ -7,12 +7,20 @@ date: '2020-07-07T19:00:00Z'
 draft: no
 featured: no
 lastmod: '2020-07-07'
+links:
+- icon: door-open
+  icon_pack: fas
+  name: slides
+  url: https://emilhvitfeldt.github.io/useR2020-text-modeling-tutorial/
+- icon: github
+  icon_pack: fab
+  name: materials
+  url: https://github.com/EmilHvitfeldt/useR2020-text-modeling-tutorial
 location: St. Louis, MO
 publishdate: '2020-07-07'
 all_day: no
 ---
 
-**Cancelled because of COVID19**
 
 J. Silge and E. Hvitfeldt
 
