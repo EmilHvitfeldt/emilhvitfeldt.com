@@ -33,4 +33,4 @@ user_groups:
 - Visitors
 ---
 
-Hello, my name is Emil Hvitfeldt. I’m a Research Programmer at University of Southern California. I love to develop and make things in R. Working on natural language processing, visualization styles, modeling techniques and general workflow problems.
+Hello, my name is Emil Hvitfeldt. I’m a Research Programmer at University of Southern California. Co-organizer of East Los Angeles R Users Group, and is the author of [Supervised Machine Learning for Text Analysis in R](https://smltar.com/) with my coauthor [Julia Silge](https://juliasilge.com/). My interests include developing tools for natural language processing for machine learning models and the use of colors in data visualizations.
