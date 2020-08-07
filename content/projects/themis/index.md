@@ -12,7 +12,7 @@ links:
   icon_pack: fab
   name: CRAN
   url: https://CRAN.R-project.org/package=themis
-summary: Extra Recipes Steps for Dealing with Unbalanced Data
+summary: satirical Gender Classification service
 tags:
 - R Package
 - tidymodels
