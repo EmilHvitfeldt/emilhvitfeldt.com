@@ -119,7 +119,7 @@ Click "Generate token" when you are done.
 
 Here is your authentication token. 
 Copy it and don't lose it!
-Once you leave this site you can get it back.
+Once you leave this site you **can not** get it back.
 
 ![](created-token.png)
 
