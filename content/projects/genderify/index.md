@@ -16,3 +16,4 @@ https://emilhvitfeldt.github.io/genderify/
 Mentioned in:
 
 - https://syncedreview.com/2020/07/30/ai-powered-genderify-platform-shut-down-after-bias-based-backlash/
+- https://tampere.ai/en/kite-blog-anticipation-impact-and-accountability-in-ai
