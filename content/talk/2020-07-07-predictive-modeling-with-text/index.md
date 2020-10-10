@@ -16,6 +16,10 @@ links:
   icon_pack: fab
   name: materials
   url: https://github.com/EmilHvitfeldt/useR2020-text-modeling-tutorial
+- icon: play-circle
+  icon_pack: fas
+  name: video
+  url: https://www.youtube.com/watch?v=Sz8RB_fPYOk
 location: St. Louis, MO
 publishdate: '2020-07-07'
 all_day: no
