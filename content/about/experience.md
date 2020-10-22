@@ -18,12 +18,26 @@ date_format = "Jan 2006"
 #   Leave `date_end` empty if it's your current employer.
 #   Begin/end multi-line descriptions with 3 quotes `"""`.
 [[experience]]
+  title = "Data Analyst"
+  company = "Livongo Health"
+  company_url = "https://www2.livongo.com/"
+  location = "Remote"
+  date_start = "2020-10-19"
+  date_end = ""
+  description = """
+  Responsibilities include:
+  
+  * Development and maintenance of internal R packages for reporting and analysis.
+  """
+
+
+[[experience]]
   title = "Research Programmer"
   company = "University of Southern California"
   company_url = "https://www.usc.edu/"
   location = "California"
   date_start = "2019-01-07"
-  date_end = ""
+  date_end = "2020-10-16"
   description = """
   Responsibilities include:
   
