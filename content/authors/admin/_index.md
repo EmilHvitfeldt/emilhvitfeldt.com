@@ -12,7 +12,7 @@ interests:
 organizations:
 - name: Livongo Health
   url: "https://www2.livongo.com/"
-role: Research Programmer
+role: Data Analyst
 social:
 - icon: envelope
   icon_pack: fas
