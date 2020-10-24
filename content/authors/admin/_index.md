@@ -33,4 +33,4 @@ user_groups:
 - Visitors
 ---
 
-Hello, my name is Emil Hvitfeldt. I’m a Data Analyst at Livongo Health. Co-organizer of East Los Angeles R Users Group, and is the author of [Supervised Machine Learning for Text Analysis in R](https://smltar.com/) with my coauthor [Julia Silge](https://juliasilge.com/). My interests include developing tools for natural language processing for machine learning models and the use of colors in data visualizations.
+Hello, my name is Emil Hvitfeldt. I’m a Data Analyst at Livongo Health, co-organizer of East Los Angeles R Users Group, and co-author of [Supervised Machine Learning for Text Analysis in R](https://smltar.com/) with [Julia Silge](https://juliasilge.com/). My interests include developing tools for natural language processing for machine learning models and the use of colors in data visualizations.
