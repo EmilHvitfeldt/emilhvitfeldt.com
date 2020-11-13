@@ -1,0 +1,460 @@
+---
+title: 'Textrecipes Version 0.4.0'
+date: '2020-11-13'
+slug: textrecipes-version-0-4-0
+categories: [tidymodels, textrecipes]
+image:
+  preview_only: true
+
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+<link href="/rmarkdown-libs/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/anchor-sections/anchor-sections.js"></script>
+
+
+<p>I’m happy to announce that version 0.4.0 of <a href="https://textrecipes.tidymodels.org/">textrecipes</a> got on CRAN a couple of days ago.
+This will be a brief post going over the major additions and changes.</p>
+<div id="breaking-changes" class="section level2">
+<h2>Breaking changes 💣</h2>
+<p>I put this change at the top of this post to make sure it gets enough coverage.
+The <code>step_lda()</code> function will no longer accepts character variables and instead takes <a href="https://textrecipes.tidymodels.org/reference/tokenlist.html">tokenlist</a> variables.
+I don’t expect this to affect too many people since it appears that the use of this step is fairly limited.</p>
+<p>For a recipe where <code>step_lda()</code> is used on a variable <code>text_var</code></p>
+<pre class="r"><code>recipe(~ text_var, data = data) %&gt;%
+  step_lda(text_var)</code></pre>
+<p>can be made to work the same as before by including this <code>step_tokenize()</code> step before it.
+It includes a custom tokenizer which was used inside the old version of <code>step_lda()</code></p>
+<pre class="r"><code>
+recipe(~ text_var, data = data) %&gt;%
+  step_tokenize(text_var, 
+                custom_token = function(x) text2vec::word_tokenizer(tolower(x))) %&gt;%
+  step_lda(text_var)</code></pre>
+<p>This change was long overdue since it didn’t follow the rest of the steps since it was doing tokenization internally.
+This change provides more flexability when using <code>step_lda()</code> in its current state and allows me to consider <a href="https://github.com/tidymodels/textrecipes/issues/112">adding more engine to <code>step_lda()</code></a>.</p>
+</div>
+<div id="cleaning" class="section level2">
+<h2>Cleaning 🧼</h2>
+<p>If your data has weird characters and spaces in them messing up your model then the following steps will make you very happy.
+<code>step_clean_levels()</code> and <code>step_clean_names()</code> works much like <a href="https://garthtarr.github.io/meatR/janitor.html">janitor</a>’s <code>clean_names()</code> function.
+Character variables and column names are changes such that they only contain alphanumeric characters and underscores.</p>
+<p>Consider the <code>Smithsonian</code> data.frame.
+The <code>name</code> variable contains entries with many character, cases, spaces, and punctuations.</p>
+<pre class="r"><code>library(recipes)
+library(textrecipes)
+library(modeldata)
+
+data(Smithsonian)
+Smithsonian
+## # A tibble: 20 x 3
+##    name                                                    latitude longitude
+##    &lt;chr&gt;                                                      &lt;dbl&gt;     &lt;dbl&gt;
+##  1 Anacostia Community Museum                                  38.9     -77.0
+##  2 Arthur M. Sackler Gallery                                   38.9     -77.0
+##  3 Arts and Industries Building                                38.9     -77.0
+##  4 Cooper Hewitt, Smithsonian Design Museum                    40.8     -74.0
+##  5 Freer Gallery of Art                                        38.9     -77.0
+##  6 Hirshhorn Museum and Sculpture Garden                       38.9     -77.0
+##  7 National Air and Space Museum                               38.9     -77.0
+##  8 Steven F. Udvar-Hazy Center                                 38.9     -77.4
+##  9 National Museum of African American History and Culture     38.9     -77.0
+## 10 National Museum of African Art                              38.9     -77.0
+## 11 National Museum of American History                         38.9     -77.0
+## 12 National Museum of the American Indian                      38.9     -77.0
+## 13 George Gustav Heye Center                                   40.7     -74.0
+## 14 National Museum of Natural History                          38.9     -77.0
+## 15 National Portrait Gallery                                   38.9     -77.0
+## 16 National Postal Museum                                      38.9     -77.0
+## 17 Renwick Gallery                                             38.9     -77.0
+## 18 Smithsonian American Art Museum                             38.9     -77.0
+## 19 Smithsonian Institution Building                            38.9     -77.0
+## 20 National Zoological Park                                    38.9     -77.1</code></pre>
+<p>When using <code>step_clean_levels()</code></p>
+<pre class="r"><code>recipe(~ name, data = Smithsonian) %&gt;%
+  step_clean_levels(name) %&gt;%
+  prep() %&gt;%
+  bake(new_data = NULL)
+## # A tibble: 20 x 1
+##    name                                                   
+##    &lt;fct&gt;                                                  
+##  1 anacostia_community_museum                             
+##  2 arthur_m_sackler_gallery                               
+##  3 arts_and_industries_building                           
+##  4 cooper_hewitt_smithsonian_design_museum                
+##  5 freer_gallery_of_art                                   
+##  6 hirshhorn_museum_and_sculpture_garden                  
+##  7 national_air_and_space_museum                          
+##  8 steven_f_udvar_hazy_center                             
+##  9 national_museum_of_african_american_history_and_culture
+## 10 national_museum_of_african_art                         
+## 11 national_museum_of_american_history                    
+## 12 national_museum_of_the_american_indian                 
+## 13 george_gustav_heye_center                              
+## 14 national_museum_of_natural_history                     
+## 15 national_portrait_gallery                              
+## 16 national_postal_museum                                 
+## 17 renwick_gallery                                        
+## 18 smithsonian_american_art_museum                        
+## 19 smithsonian_institution_building                       
+## 20 national_zoological_park</code></pre>
+<p>We see that everything has been cleaned to avoid potential confusion and errors.</p>
+<p>the almost more important step is <code>step_clean_names()</code> as it allows you to clean the variables names that could trip up various modeling packages</p>
+<pre class="r"><code>ugly_names &lt;- tibble(
+  `        Some      spaces     ` = 1,
+  `BIGG and small case` = 2,
+  `.period` = 3
+)
+
+recipe(~ ., data = ugly_names) %&gt;%
+  step_clean_names(all_predictors()) %&gt;%
+  prep() %&gt;%
+  bake(new_data = NULL)
+## # A tibble: 1 x 3
+##   some_spaces bigg_and_small_case period
+##         &lt;dbl&gt;               &lt;dbl&gt;  &lt;dbl&gt;
+## 1           1                   2      3</code></pre>
+</div>
+<div id="new-tokenizers" class="section level2">
+<h2>New tokenizers</h2>
+<p>There is two new <code>engine</code>s available in <code>step_tokenize()</code>.
+the <a href="https://github.com/bnosac/tokenizers.bpe">tokenizers.bpe</a> engine lets you perform <a href="https://en.wikipedia.org/wiki/Byte_pair_encoding">Byte Pair Encoding</a> on you text as a mean of tokenization.</p>
+<pre class="r"><code>data(&quot;okc_text&quot;)
+
+recipe(~ essay6, data = okc_text) %&gt;%
+  step_tokenize(essay6, engine = &quot;tokenizers.bpe&quot;) %&gt;%
+  step_tokenfilter(essay6, max_times = 100) %&gt;%
+  step_tf(essay6) %&gt;%
+  prep() %&gt;%
+  bake(new_data = NULL)
+## # A tibble: 750 x 100
+##    `tf_essay6_:` `tf_essay6_!` `tf_essay6_?` `tf_essay6_?&lt;br` tf_essay6_...
+##            &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;            &lt;dbl&gt;         &lt;dbl&gt;
+##  1             1             0             0                0             0
+##  2             0             0             0                0             0
+##  3             0             0             0                0             0
+##  4             0             0             0                0             0
+##  5             0             0             0                0             0
+##  6             0             0             0                0             0
+##  7             0             0             0                1             0
+##  8             0             0             0                0             0
+##  9             0             0             0                0             0
+## 10             0             0             0                0             0
+## # … with 740 more rows, and 95 more variables: `tf_essay6_&#39;s` &lt;dbl&gt;,
+## #   `tf_essay6_&quot;` &lt;dbl&gt;, `tf_essay6_&quot;&gt;` &lt;dbl&gt;, `tf_essay6_)` &lt;dbl&gt;,
+## #   `tf_essay6_▁-` &lt;dbl&gt;, `tf_essay6_▁(` &lt;dbl&gt;, `tf_essay6_▁&lt;a` &lt;dbl&gt;,
+## #   `tf_essay6_▁all` &lt;dbl&gt;, `tf_essay6_▁also` &lt;dbl&gt;, `tf_essay6_▁always` &lt;dbl&gt;,
+## #   `tf_essay6_▁am` &lt;dbl&gt;, `tf_essay6_▁an` &lt;dbl&gt;, `tf_essay6_▁as` &lt;dbl&gt;,
+## #   `tf_essay6_▁at` &lt;dbl&gt;, `tf_essay6_▁being` &lt;dbl&gt;, `tf_essay6_▁better` &lt;dbl&gt;,
+## #   `tf_essay6_▁but` &lt;dbl&gt;, `tf_essay6_▁class=&quot;ilink&quot;` &lt;dbl&gt;,
+## #   `tf_essay6_▁d` &lt;dbl&gt;, `tf_essay6_▁doing` &lt;dbl&gt;, `tf_essay6_▁friends` &lt;dbl&gt;,
+## #   `tf_essay6_▁from` &lt;dbl&gt;, `tf_essay6_▁future` &lt;dbl&gt;, `tf_essay6_▁get` &lt;dbl&gt;,
+## #   `tf_essay6_▁go` &lt;dbl&gt;, `tf_essay6_▁going` &lt;dbl&gt;, `tf_essay6_▁good` &lt;dbl&gt;,
+## #   `tf_essay6_▁have` &lt;dbl&gt;, `tf_essay6_▁href=` &lt;dbl&gt;, `tf_essay6_▁i&#39;ve` &lt;dbl&gt;,
+## #   `tf_essay6_▁if` &lt;dbl&gt;, `tf_essay6_▁into` &lt;dbl&gt;, `tf_essay6_▁it&#39;s` &lt;dbl&gt;,
+## #   `tf_essay6_▁just` &lt;dbl&gt;, `tf_essay6_▁know` &lt;dbl&gt;, `tf_essay6_▁life` &lt;dbl&gt;,
+## #   `tf_essay6_▁life,` &lt;dbl&gt;, `tf_essay6_▁life.` &lt;dbl&gt;, `tf_essay6_▁lot` &lt;dbl&gt;,
+## #   `tf_essay6_▁love` &lt;dbl&gt;, `tf_essay6_▁m` &lt;dbl&gt;, `tf_essay6_▁make` &lt;dbl&gt;,
+## #   `tf_essay6_▁me` &lt;dbl&gt;, `tf_essay6_▁more` &lt;dbl&gt;, `tf_essay6_▁much` &lt;dbl&gt;,
+## #   `tf_essay6_▁myself` &lt;dbl&gt;, `tf_essay6_▁new` &lt;dbl&gt;, `tf_essay6_▁not` &lt;dbl&gt;,
+## #   `tf_essay6_▁one` &lt;dbl&gt;, `tf_essay6_▁other` &lt;dbl&gt;, `tf_essay6_▁our` &lt;dbl&gt;,
+## #   `tf_essay6_▁out` &lt;dbl&gt;, `tf_essay6_▁p` &lt;dbl&gt;, `tf_essay6_▁people` &lt;dbl&gt;,
+## #   `tf_essay6_▁really` &lt;dbl&gt;, `tf_essay6_▁right` &lt;dbl&gt;,
+## #   `tf_essay6_▁should` &lt;dbl&gt;, `tf_essay6_▁so` &lt;dbl&gt;, `tf_essay6_▁some` &lt;dbl&gt;,
+## #   `tf_essay6_▁spend` &lt;dbl&gt;, `tf_essay6_▁take` &lt;dbl&gt;, `tf_essay6_▁than` &lt;dbl&gt;,
+## #   `tf_essay6_▁there` &lt;dbl&gt;, `tf_essay6_▁they` &lt;dbl&gt;,
+## #   `tf_essay6_▁things` &lt;dbl&gt;, `tf_essay6_▁thinking` &lt;dbl&gt;,
+## #   `tf_essay6_▁this` &lt;dbl&gt;, `tf_essay6_▁time` &lt;dbl&gt;,
+## #   `tf_essay6_▁travel` &lt;dbl&gt;, `tf_essay6_▁up` &lt;dbl&gt;, `tf_essay6_▁want` &lt;dbl&gt;,
+## #   `tf_essay6_▁way` &lt;dbl&gt;, `tf_essay6_▁we` &lt;dbl&gt;, `tf_essay6_▁what&#39;s` &lt;dbl&gt;,
+## #   `tf_essay6_▁when` &lt;dbl&gt;, `tf_essay6_▁where` &lt;dbl&gt;,
+## #   `tf_essay6_▁whether` &lt;dbl&gt;, `tf_essay6_▁who` &lt;dbl&gt;, `tf_essay6_▁why` &lt;dbl&gt;,
+## #   `tf_essay6_▁will` &lt;dbl&gt;, `tf_essay6_▁work` &lt;dbl&gt;, `tf_essay6_▁world` &lt;dbl&gt;,
+## #   `tf_essay6_▁would` &lt;dbl&gt;, `tf_essay6_▁you` &lt;dbl&gt;, tf_essay6_a &lt;dbl&gt;,
+## #   tf_essay6_al &lt;dbl&gt;, tf_essay6_ed &lt;dbl&gt;, tf_essay6_er &lt;dbl&gt;,
+## #   tf_essay6_es &lt;dbl&gt;, tf_essay6_ing &lt;dbl&gt;, `tf_essay6_ing,` &lt;dbl&gt;,
+## #   tf_essay6_ly &lt;dbl&gt;, `tf_essay6_s,` &lt;dbl&gt;, tf_essay6_s. &lt;dbl&gt;,
+## #   tf_essay6_y &lt;dbl&gt;</code></pre>
+<p>additional arguments can be passed to <code>tokenizers.bpe::bpe()</code> via the <code>training_options</code> argument.</p>
+<pre class="r"><code>recipe(~ essay6, data = okc_text) %&gt;%
+  step_tokenize(essay6, 
+                engine = &quot;tokenizers.bpe&quot;,
+                training_options = list(vocab_size = 100)) %&gt;%
+  step_tf(essay6) %&gt;%
+  prep() %&gt;%
+  bake(new_data = NULL)
+## # A tibble: 750 x 100
+##    `tf_essay6_-` `tf_essay6_,` `tf_essay6_;` `tf_essay6_:` `tf_essay6_!`
+##            &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;
+##  1             0             1             1             2             0
+##  2             0            13             1             0             0
+##  3             0             1             0             0             1
+##  4             0             0             0             0             0
+##  5             0             0             0             0             1
+##  6             0             1             0             0             0
+##  7             0             4             0             1             0
+##  8             2             0             0             0             0
+##  9             0             0             0             0             0
+## 10             0            10             0             0             0
+## # … with 740 more rows, and 95 more variables: `tf_essay6_?` &lt;dbl&gt;,
+## #   tf_essay6_. &lt;dbl&gt;, `tf_essay6_&#39;` &lt;dbl&gt;, `tf_essay6_&quot;` &lt;dbl&gt;,
+## #   `tf_essay6_(` &lt;dbl&gt;, `tf_essay6_)` &lt;dbl&gt;, `tf_essay6_[` &lt;dbl&gt;,
+## #   `tf_essay6_]` &lt;dbl&gt;, `tf_essay6_*` &lt;dbl&gt;, `tf_essay6_/` &lt;dbl&gt;,
+## #   `tf_essay6_&amp;` &lt;dbl&gt;, `tf_essay6_+` &lt;dbl&gt;, `tf_essay6_&lt;` &lt;dbl&gt;,
+## #   `tf_essay6_&lt;BOS&gt;` &lt;dbl&gt;, `tf_essay6_&lt;br` &lt;dbl&gt;, `tf_essay6_&lt;EOS&gt;` &lt;dbl&gt;,
+## #   `tf_essay6_&lt;PAD&gt;` &lt;dbl&gt;, `tf_essay6_&lt;UNK&gt;` &lt;dbl&gt;, `tf_essay6_=` &lt;dbl&gt;,
+## #   `tf_essay6_&gt;` &lt;dbl&gt;, `tf_essay6_~` &lt;dbl&gt;, `tf_essay6_▁` &lt;dbl&gt;,
+## #   `tf_essay6_▁/` &lt;dbl&gt;, `tf_essay6_▁/&gt;` &lt;dbl&gt;, `tf_essay6_▁a` &lt;dbl&gt;,
+## #   `tf_essay6_▁and` &lt;dbl&gt;, `tf_essay6_▁b` &lt;dbl&gt;, `tf_essay6_▁c` &lt;dbl&gt;,
+## #   `tf_essay6_▁d` &lt;dbl&gt;, `tf_essay6_▁f` &lt;dbl&gt;, `tf_essay6_▁g` &lt;dbl&gt;,
+## #   `tf_essay6_▁h` &lt;dbl&gt;, `tf_essay6_▁i` &lt;dbl&gt;, `tf_essay6_▁l` &lt;dbl&gt;,
+## #   `tf_essay6_▁m` &lt;dbl&gt;, `tf_essay6_▁o` &lt;dbl&gt;, `tf_essay6_▁p` &lt;dbl&gt;,
+## #   `tf_essay6_▁s` &lt;dbl&gt;, `tf_essay6_▁t` &lt;dbl&gt;, `tf_essay6_▁th` &lt;dbl&gt;,
+## #   `tf_essay6_▁the` &lt;dbl&gt;, `tf_essay6_▁to` &lt;dbl&gt;, `tf_essay6_▁w` &lt;dbl&gt;,
+## #   `tf_essay6_▁wh` &lt;dbl&gt;, tf_essay6_0 &lt;dbl&gt;, tf_essay6_1 &lt;dbl&gt;,
+## #   tf_essay6_2 &lt;dbl&gt;, tf_essay6_3 &lt;dbl&gt;, tf_essay6_4 &lt;dbl&gt;, tf_essay6_5 &lt;dbl&gt;,
+## #   tf_essay6_6 &lt;dbl&gt;, tf_essay6_8 &lt;dbl&gt;, tf_essay6_9 &lt;dbl&gt;, tf_essay6_a &lt;dbl&gt;,
+## #   tf_essay6_al &lt;dbl&gt;, tf_essay6_an &lt;dbl&gt;, tf_essay6_at &lt;dbl&gt;,
+## #   tf_essay6_b &lt;dbl&gt;, tf_essay6_br &lt;dbl&gt;, tf_essay6_c &lt;dbl&gt;,
+## #   tf_essay6_d &lt;dbl&gt;, tf_essay6_e &lt;dbl&gt;, tf_essay6_en &lt;dbl&gt;,
+## #   tf_essay6_er &lt;dbl&gt;, tf_essay6_es &lt;dbl&gt;, tf_essay6_f &lt;dbl&gt;,
+## #   tf_essay6_g &lt;dbl&gt;, tf_essay6_h &lt;dbl&gt;, tf_essay6_i &lt;dbl&gt;,
+## #   tf_essay6_in &lt;dbl&gt;, tf_essay6_ing &lt;dbl&gt;, tf_essay6_it &lt;dbl&gt;,
+## #   tf_essay6_j &lt;dbl&gt;, tf_essay6_k &lt;dbl&gt;, tf_essay6_l &lt;dbl&gt;, tf_essay6_m &lt;dbl&gt;,
+## #   tf_essay6_n &lt;dbl&gt;, tf_essay6_nd &lt;dbl&gt;, tf_essay6_o &lt;dbl&gt;,
+## #   tf_essay6_on &lt;dbl&gt;, tf_essay6_or &lt;dbl&gt;, tf_essay6_ou &lt;dbl&gt;,
+## #   tf_essay6_ow &lt;dbl&gt;, tf_essay6_p &lt;dbl&gt;, tf_essay6_q &lt;dbl&gt;,
+## #   tf_essay6_r &lt;dbl&gt;, tf_essay6_re &lt;dbl&gt;, tf_essay6_s &lt;dbl&gt;,
+## #   tf_essay6_t &lt;dbl&gt;, tf_essay6_u &lt;dbl&gt;, tf_essay6_v &lt;dbl&gt;, tf_essay6_w &lt;dbl&gt;,
+## #   tf_essay6_x &lt;dbl&gt;, tf_essay6_y &lt;dbl&gt;, tf_essay6_z &lt;dbl&gt;</code></pre>
+<p>The second engine is access to <a href="https://github.com/bnosac/udpipe">udpipe</a>.
+To use this engine you must first download a udpipe model</p>
+<pre class="r"><code>library(udpipe)
+udmodel &lt;- udpipe_download_model(language = &quot;english&quot;)
+udmodel
+##      language
+## 1 english-ewt
+##                                                                                                                          file_model
+## 1 /Users/emilhvitfeldthansen/Github/hvitfeldt.me/content/post/2020-11-13-textrecipes-0.4.0-release/english-ewt-ud-2.5-191206.udpipe
+##                                                                                                                                  url
+## 1 https://raw.githubusercontent.com/jwijffels/udpipe.models.ud.2.5/master/inst/udpipe-ud-2.5-191206/english-ewt-ud-2.5-191206.udpipe
+##   download_failed download_message
+## 1           FALSE               OK</code></pre>
+<p>And then you need to pass it into <code>training_options</code> under the name <code>model</code>.
+This will then use the tokenizer</p>
+<pre class="r"><code>recipe(~ essay6, data = okc_text) %&gt;%
+  step_tokenize(essay6, engine = &quot;udpipe&quot;, 
+                training_options = list(model = udmodel)) %&gt;%
+  step_tf(essay6) %&gt;%
+  prep() %&gt;%
+  bake(new_data = NULL)
+## # A tibble: 750 x 4,044
+##    `tf_essay6_-` `tf_essay6_--` `tf_essay6_---` `tf_essay6_---&lt;` `tf_essay6_--&amp;`
+##            &lt;dbl&gt;          &lt;dbl&gt;           &lt;dbl&gt;            &lt;dbl&gt;           &lt;dbl&gt;
+##  1             0              0               0                0               0
+##  2             0              0               0                0               0
+##  3             0              0               0                0               0
+##  4             0              0               0                0               0
+##  5             0              0               0                0               0
+##  6             0              0               0                0               0
+##  7             0              0               0                0               0
+##  8             2              0               0                0               0
+##  9             0              0               0                0               0
+## 10             0              0               0                0               0
+## # … with 740 more rows, and 4,039 more variables: `tf_essay6_--ernesto` &lt;dbl&gt;,
+## #   `tf_essay6_-apocalypse.&lt;` &lt;dbl&gt;, `tf_essay6_-dominated` &lt;dbl&gt;,
+## #   `tf_essay6_-friendly` &lt;dbl&gt;, `tf_essay6_-insane` &lt;dbl&gt;,
+## #   `tf_essay6_-languages` &lt;dbl&gt;, `tf_essay6_-linear` &lt;dbl&gt;,
+## #   `tf_essay6_-my` &lt;dbl&gt;, `tf_essay6_-numbingly` &lt;dbl&gt;,
+## #   `tf_essay6_-voyeurism` &lt;dbl&gt;, `tf_essay6_,` &lt;dbl&gt;, `tf_essay6_,&lt;` &lt;dbl&gt;,
+## #   `tf_essay6_;` &lt;dbl&gt;, `tf_essay6_;-)` &lt;dbl&gt;, `tf_essay6_;)` &lt;dbl&gt;,
+## #   `tf_essay6_:` &lt;dbl&gt;, `tf_essay6_:-)` &lt;dbl&gt;, `tf_essay6_:-d` &lt;dbl&gt;,
+## #   `tf_essay6_:)` &lt;dbl&gt;, `tf_essay6_:&lt;` &lt;dbl&gt;, `tf_essay6_:d` &lt;dbl&gt;,
+## #   `tf_essay6_:p` &lt;dbl&gt;, `tf_essay6_!` &lt;dbl&gt;, `tf_essay6_!!` &lt;dbl&gt;,
+## #   `tf_essay6_!!!` &lt;dbl&gt;, `tf_essay6_!)` &lt;dbl&gt;, `tf_essay6_!&lt;` &lt;dbl&gt;,
+## #   `tf_essay6_?` &lt;dbl&gt;, `tf_essay6_?!` &lt;dbl&gt;, `tf_essay6_?!?!` &lt;dbl&gt;,
+## #   `tf_essay6_?!&lt;` &lt;dbl&gt;, `tf_essay6_??` &lt;dbl&gt;, `tf_essay6_????` &lt;dbl&gt;,
+## #   `tf_essay6_??&lt;` &lt;dbl&gt;, `tf_essay6_?&quot;` &lt;dbl&gt;, `tf_essay6_?&lt;` &lt;dbl&gt;,
+## #   tf_essay6_. &lt;dbl&gt;, tf_essay6_.. &lt;dbl&gt;, tf_essay6_... &lt;dbl&gt;,
+## #   tf_essay6_.... &lt;dbl&gt;, `tf_essay6_....?` &lt;dbl&gt;, tf_essay6_..... &lt;dbl&gt;,
+## #   tf_essay6_...... &lt;dbl&gt;, tf_essay6_....... &lt;dbl&gt;, tf_essay6_........ &lt;dbl&gt;,
+## #   tf_essay6_.......... &lt;dbl&gt;, tf_essay6_........... &lt;dbl&gt;,
+## #   tf_essay6_....fishing &lt;dbl&gt;, tf_essay6_...jk &lt;dbl&gt;,
+## #   tf_essay6_...zombies &lt;dbl&gt;, `tf_essay6_.)` &lt;dbl&gt;, `tf_essay6_.&lt;` &lt;dbl&gt;,
+## #   tf_essay6_.erykah &lt;dbl&gt;, tf_essay6_.sex &lt;dbl&gt;, `tf_essay6_&#39;` &lt;dbl&gt;,
+## #   `tf_essay6_&#39;.` &lt;dbl&gt;, `tf_essay6_&#39;&lt;` &lt;dbl&gt;, `tf_essay6_&#39;d` &lt;dbl&gt;,
+## #   `tf_essay6_&#39;em` &lt;dbl&gt;, `tf_essay6_&#39;ll` &lt;dbl&gt;, `tf_essay6_&#39;m` &lt;dbl&gt;,
+## #   `tf_essay6_&#39;re` &lt;dbl&gt;, `tf_essay6_&#39;s` &lt;dbl&gt;, `tf_essay6_&#39;ve` &lt;dbl&gt;,
+## #   `tf_essay6_&quot;` &lt;dbl&gt;, `tf_essay6_&quot;&gt;` &lt;dbl&gt;, `tf_essay6_&quot;&gt;modest` &lt;dbl&gt;,
+## #   `tf_essay6_(` &lt;dbl&gt;, `tf_essay6_(:` &lt;dbl&gt;, `tf_essay6_)` &lt;dbl&gt;,
+## #   `tf_essay6_[` &lt;dbl&gt;, `tf_essay6_]` &lt;dbl&gt;, `tf_essay6_*` &lt;dbl&gt;,
+## #   `tf_essay6_/` &lt;dbl&gt;, `tf_essay6_/&gt;` &lt;dbl&gt;, `tf_essay6_/a` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=actuary` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=anything+frivolous` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=art` &lt;dbl&gt;, `tf_essay6_/interests?i=bdsm` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=bigender&quot;&gt;` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=brunch` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=comfortable` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=communication` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=community` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=documentary` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=entp` &lt;dbl&gt;, `tf_essay6_/interests?i=field` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=film` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=filmmaking` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=gender-identity` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=gender&quot;&gt;` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=honey%0abees` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=integrity` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=legos` &lt;dbl&gt;, `tf_essay6_/interests?i=life` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=love` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=masturbatory` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=modest+running+shorts+in+neutral+tones` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=muzak` &lt;dbl&gt;, …</code></pre>
+<p>But where it gets really interesting is that we are able to extract the lemmas</p>
+<pre class="r"><code>recipe(~ essay6, data = okc_text) %&gt;%
+  step_tokenize(essay6, engine = &quot;udpipe&quot;, 
+                training_options = list(model = udmodel)) %&gt;%
+  step_lemma(essay6) %&gt;%
+  step_tf(essay6) %&gt;%
+  prep() %&gt;%
+  bake(new_data = NULL)
+## # A tibble: 750 x 3,546
+##    `tf_essay6_-` `tf_essay6_--` `tf_essay6_---` `tf_essay6_---&lt;` `tf_essay6_--&amp;`
+##            &lt;dbl&gt;          &lt;dbl&gt;           &lt;dbl&gt;            &lt;dbl&gt;           &lt;dbl&gt;
+##  1             0              0               0                0               0
+##  2             0              0               0                0               0
+##  3             0              0               0                0               0
+##  4             0              0               0                0               0
+##  5             0              0               0                0               0
+##  6             0              0               0                0               0
+##  7             0              0               0                0               0
+##  8             2              0               0                0               0
+##  9             0              0               0                0               0
+## 10             0              0               0                0               0
+## # … with 740 more rows, and 3,541 more variables: `tf_essay6_--ernesto` &lt;dbl&gt;,
+## #   `tf_essay6_-apocalypse.&lt;` &lt;dbl&gt;, `tf_essay6_-dominated` &lt;dbl&gt;,
+## #   `tf_essay6_-friendly` &lt;dbl&gt;, `tf_essay6_-insane` &lt;dbl&gt;,
+## #   `tf_essay6_-language` &lt;dbl&gt;, `tf_essay6_-linear` &lt;dbl&gt;,
+## #   `tf_essay6_-my` &lt;dbl&gt;, `tf_essay6_-numbingly` &lt;dbl&gt;,
+## #   `tf_essay6_-voyeurism` &lt;dbl&gt;, `tf_essay6_,` &lt;dbl&gt;, `tf_essay6_,&lt;` &lt;dbl&gt;,
+## #   `tf_essay6_;` &lt;dbl&gt;, `tf_essay6_;-)` &lt;dbl&gt;, `tf_essay6_;)` &lt;dbl&gt;,
+## #   `tf_essay6_:` &lt;dbl&gt;, `tf_essay6_:-)` &lt;dbl&gt;, `tf_essay6_:-d` &lt;dbl&gt;,
+## #   `tf_essay6_:)` &lt;dbl&gt;, `tf_essay6_:&lt;` &lt;dbl&gt;, `tf_essay6_:d` &lt;dbl&gt;,
+## #   `tf_essay6_:p` &lt;dbl&gt;, `tf_essay6_!` &lt;dbl&gt;, `tf_essay6_!!` &lt;dbl&gt;,
+## #   `tf_essay6_!!!` &lt;dbl&gt;, `tf_essay6_!)` &lt;dbl&gt;, `tf_essay6_!&lt;` &lt;dbl&gt;,
+## #   `tf_essay6_?` &lt;dbl&gt;, `tf_essay6_?!` &lt;dbl&gt;, `tf_essay6_?!?!` &lt;dbl&gt;,
+## #   `tf_essay6_?!&lt;` &lt;dbl&gt;, `tf_essay6_??` &lt;dbl&gt;, `tf_essay6_????` &lt;dbl&gt;,
+## #   `tf_essay6_??&lt;` &lt;dbl&gt;, `tf_essay6_?&quot;` &lt;dbl&gt;, `tf_essay6_?&lt;` &lt;dbl&gt;,
+## #   tf_essay6_. &lt;dbl&gt;, tf_essay6_.. &lt;dbl&gt;, tf_essay6_... &lt;dbl&gt;,
+## #   tf_essay6_.... &lt;dbl&gt;, `tf_essay6_....?` &lt;dbl&gt;, tf_essay6_..... &lt;dbl&gt;,
+## #   tf_essay6_...... &lt;dbl&gt;, tf_essay6_....... &lt;dbl&gt;, tf_essay6_........ &lt;dbl&gt;,
+## #   tf_essay6_.......... &lt;dbl&gt;, tf_essay6_........... &lt;dbl&gt;,
+## #   tf_essay6_....fish &lt;dbl&gt;, tf_essay6_...jk &lt;dbl&gt;, tf_essay6_...zomby &lt;dbl&gt;,
+## #   `tf_essay6_.)` &lt;dbl&gt;, `tf_essay6_.&lt;` &lt;dbl&gt;, tf_essay6_.erykah &lt;dbl&gt;,
+## #   tf_essay6_.sex &lt;dbl&gt;, `tf_essay6_&#39;` &lt;dbl&gt;, `tf_essay6_&#39;.` &lt;dbl&gt;,
+## #   `tf_essay6_&#39;&lt;` &lt;dbl&gt;, `tf_essay6_&#39;s` &lt;dbl&gt;, `tf_essay6_&quot;` &lt;dbl&gt;,
+## #   `tf_essay6_&quot;&gt;` &lt;dbl&gt;, `tf_essay6_&quot;&gt;modest` &lt;dbl&gt;, `tf_essay6_(` &lt;dbl&gt;,
+## #   `tf_essay6_(:` &lt;dbl&gt;, `tf_essay6_)` &lt;dbl&gt;, `tf_essay6_[` &lt;dbl&gt;,
+## #   `tf_essay6_]` &lt;dbl&gt;, `tf_essay6_*` &lt;dbl&gt;, `tf_essay6_/` &lt;dbl&gt;,
+## #   `tf_essay6_/&gt;` &lt;dbl&gt;, `tf_essay6_/a` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=actuary` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=anything+frivolous` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=art` &lt;dbl&gt;, `tf_essay6_/interests?i=bdsm` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=bigender&quot;&gt;` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=brunch` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=comfortable` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=communication` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=community` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=documentary` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=entp` &lt;dbl&gt;, `tf_essay6_/interests?i=field` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=film` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=filmmaking` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=gender-identity` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=gender&quot;&gt;` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=honey%0abee` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=integrity` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=lego` &lt;dbl&gt;, `tf_essay6_/interests?i=life` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=love` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=masturbatory` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=modest+running+shorts+in+neutral+tone` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=muzak` &lt;dbl&gt;, `tf_essay6_/interests?i=my` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=non-profit&quot;&gt;non-profit&lt;/a` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=nvc&quot;&gt;nvc&lt;/a` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=organize` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=politic` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=polyamory` &lt;dbl&gt;, …</code></pre>
+<p>or use the <a href="https://en.wikipedia.org/wiki/Part_of_speech">part of speech tags</a> in later steps, such as below where we are filtering to only keep nouns.</p>
+<pre class="r"><code>recipe(~ essay6, data = okc_text) %&gt;%
+  step_tokenize(essay6, engine = &quot;udpipe&quot;, 
+                training_options = list(model = udmodel)) %&gt;%
+  step_pos_filter(essay6, keep_tags = &quot;NOUN&quot;) %&gt;%
+  step_tf(essay6) %&gt;%
+  prep() %&gt;%
+  bake(new_data = NULL)
+## # A tibble: 750 x 1,970
+##    `tf_essay6_--er… `tf_essay6_-lan… `tf_essay6_-voy… `tf_essay6_:d`
+##               &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;          &lt;dbl&gt;
+##  1                0                0                0              0
+##  2                0                0                0              0
+##  3                0                0                0              0
+##  4                0                0                0              0
+##  5                0                0                0              0
+##  6                0                0                0              0
+##  7                0                0                0              0
+##  8                0                0                0              0
+##  9                0                0                0              0
+## 10                0                0                0              0
+## # … with 740 more rows, and 1,966 more variables: `tf_essay6_:p` &lt;dbl&gt;,
+## #   tf_essay6_...jk &lt;dbl&gt;, tf_essay6_...zombies &lt;dbl&gt;, `tf_essay6_&#39;` &lt;dbl&gt;,
+## #   `tf_essay6_/a` &lt;dbl&gt;, `tf_essay6_/interests?i=anything+frivolous` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=art` &lt;dbl&gt;, `tf_essay6_/interests?i=bdsm` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=brunch` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=communication` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=community` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=documentary` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=entp` &lt;dbl&gt;, `tf_essay6_/interests?i=film` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=filmmaking` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=gender-identity` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=honey%0abees` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=integrity` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=legos` &lt;dbl&gt;, `tf_essay6_/interests?i=life` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=love` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=masturbatory` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=modest+running+shorts+in+neutral+tones` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=muzak` &lt;dbl&gt;, `tf_essay6_/interests?i=my` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=politics` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=polyamory` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=production` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=science&quot;` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=synesthesia` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=technology` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=tennis` &lt;dbl&gt;,
+## #   `tf_essay6_/interests?i=truisms` &lt;dbl&gt;, `tf_essay6_+theory` &lt;dbl&gt;,
+## #   `tf_essay6_&lt;a` &lt;dbl&gt;, `tf_essay6_=p` &lt;dbl&gt;, `tf_essay6_&gt;.` &lt;dbl&gt;,
+## #   `tf_essay6_&gt;communication` &lt;dbl&gt;, `tf_essay6_&gt;my` &lt;dbl&gt;,
+## #   `tf_essay6_&gt;science&lt;/a` &lt;dbl&gt;, `tf_essay6_&gt;truisms` &lt;dbl&gt;,
+## #   `tf_essay6_&gt;urban` &lt;dbl&gt;, tf_essay6_1st &lt;dbl&gt;, tf_essay6_a &lt;dbl&gt;,
+## #   tf_essay6_abba &lt;dbl&gt;, tf_essay6_ability &lt;dbl&gt;, tf_essay6_absence &lt;dbl&gt;,
+## #   tf_essay6_abstract &lt;dbl&gt;, tf_essay6_abundance &lt;dbl&gt;,
+## #   tf_essay6_accents &lt;dbl&gt;, tf_essay6_acceptance &lt;dbl&gt;,
+## #   tf_essay6_accident &lt;dbl&gt;, tf_essay6_action &lt;dbl&gt;, tf_essay6_actions &lt;dbl&gt;,
+## #   tf_essay6_activities &lt;dbl&gt;, tf_essay6_activity &lt;dbl&gt;,
+## #   tf_essay6_actors &lt;dbl&gt;, tf_essay6_acts &lt;dbl&gt;,
+## #   tf_essay6_actualization &lt;dbl&gt;, tf_essay6_addition &lt;dbl&gt;,
+## #   tf_essay6_adult &lt;dbl&gt;, tf_essay6_adventure &lt;dbl&gt;,
+## #   tf_essay6_adventures &lt;dbl&gt;, tf_essay6_adversity &lt;dbl&gt;,
+## #   tf_essay6_advocate &lt;dbl&gt;, tf_essay6_aeropress &lt;dbl&gt;,
+## #   tf_essay6_affairs &lt;dbl&gt;, tf_essay6_afterlife &lt;dbl&gt;,
+## #   tf_essay6_afternoon &lt;dbl&gt;, tf_essay6_age &lt;dbl&gt;, tf_essay6_agenda &lt;dbl&gt;,
+## #   tf_essay6_agent &lt;dbl&gt;, tf_essay6_ages &lt;dbl&gt;, tf_essay6_aggregate &lt;dbl&gt;,
+## #   tf_essay6_agriculture &lt;dbl&gt;, tf_essay6_ai &lt;dbl&gt;, tf_essay6_air &lt;dbl&gt;,
+## #   tf_essay6_aka &lt;dbl&gt;, tf_essay6_alarm &lt;dbl&gt;, tf_essay6_alert &lt;dbl&gt;,
+## #   tf_essay6_algorithms &lt;dbl&gt;, tf_essay6_alibi &lt;dbl&gt;, tf_essay6_aliens &lt;dbl&gt;,
+## #   tf_essay6_aloha &lt;dbl&gt;, tf_essay6_alps &lt;dbl&gt;, tf_essay6_am &lt;dbl&gt;,
+## #   tf_essay6_amnesia &lt;dbl&gt;, tf_essay6_amount &lt;dbl&gt;, tf_essay6_amp &lt;dbl&gt;,
+## #   tf_essay6_anagrams &lt;dbl&gt;, tf_essay6_analyzing &lt;dbl&gt;,
+## #   tf_essay6_anarchism &lt;dbl&gt;, tf_essay6_anarchists &lt;dbl&gt;,
+## #   tf_essay6_anaximander &lt;dbl&gt;, tf_essay6_android &lt;dbl&gt;,
+## #   tf_essay6_animal &lt;dbl&gt;, tf_essay6_animals &lt;dbl&gt;, tf_essay6_answer &lt;dbl&gt;,
+## #   tf_essay6_answers &lt;dbl&gt;, tf_essay6_anxiety &lt;dbl&gt;, …</code></pre>
+<p>This is all for this release. I hope you found some of it useful. I would love to hear what you are using <code>textrecipes</code> with!</p>
+</div>
