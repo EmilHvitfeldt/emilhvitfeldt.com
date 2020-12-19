@@ -1,0 +1,27 @@
++++
+abstract = "BACKGROUND Health disparities have emerged with the COVID-19 epidemic because the risk of exposure to infection and the prevalence of risk factors for severe outcomes given infection vary within and between populations. However, estimated epidemic quantities such as rates of severe illness and death, the case fatality rate (CFR), and infection fatality rate (IFR), are often expressed in terms of aggregated population-level estimates due to the lack of epidemiological data at the refined subpopulation level. For public health policy makers to better address the pandemic, stratified estimates are necessary to investigate the potential outcomes of policy scenarios targeting specific subpopulations. METHODS We develop a framework for using available data on the prevalence of COVID-19 risk factors (age, comorbidities, BMI, smoking status) in subpopulations, and epidemic dynamics at the population level and stratified by age, to estimate subpopulation-stratified probabilities of severe illness and the CFR (as deaths over observed infections) and IFR (as deaths over estimated total infections) across risk profiles representing all combinations of risk factors including age, comorbidities, obesity class, and smoking status. A dynamic epidemic model is integrated with a relative risk model to produce time-varying subpopulation-stratified estimates. The integrated model is used to analyze dynamic outcomes and parameters by population and subpopulation, and to simulate alternate policy scenarios that protect specific at-risk subpopulations or modify the population-wide transmission rate. The model is calibrated to data from the Los Angeles County population during the period March 1 - October 15 2020. FINDINGS We estimate a rate of 0.23 (95% CI: 0.13,0.33) of infections observed before April 15, which increased over the epidemic course to 0.41 (0.11,0.69). Overall population-average IFR(t) estimates for LAC peaked at 0.77% (0.38%,1.15%) on May 15 and decreased to 0.55% (0.24%,0.90%) by October 15. The population-average IFR(t) stratified by age group varied extensively across subprofiles representing each combination of the additional risk factors considered (comorbidities, BMI, smoking). We found median IFRs ranging from 0.009%-0.04% in the youngest age group (0-19), from 0.1%-1.8% for those aged 20-44, 0.36%-4.3% for those aged 45-64, and 1.02%-5.42% for those aged 65+. In the group aged 65+ for which the rate of unobserved infections is likely much lower, we find median CFRs in the range 4.4%-23.45%. The initial societal lockdown period avoided overwhelming healthcare capacity and greatly reduced the observed death count. In comparative scenario analysis, alternative policies in which the population-wide transmission rate is reduced to a moderate and sustainable level of non-pharmaceutical interventions (NPIs) would not have been sufficient to avoid overwhelming healthcare capacity, and additionally would have exceeded the observed death count. Combining the moderate NPI policy with stringent protection of the at-risk subpopulation of individuals 65+ would have resulted in a death count similar to observed levels, but hospital counts would have approached capacity limits. INTERPRETATION The risk of severe illness and death of COVID-19 varies tremendously across subpopulations and over time, suggesting that it is inappropriate to summarize epidemiological parameters for the entire population and epidemic time period. This includes variation not only across age groups, but also within age categories combined with other risk factors analyzed in this study (comorbidities, obesity status, smoking). In the policy analysis accounting for differences in IFR across risk groups in comparing the control of infections and protection of higher risk groups, we find that the strict initial lockdown period in LAC was effective because it both reduced overall transmission and protected individuals at greater risk, resulting in preventing both healthcare overload and deaths. While similar numbers of deaths as observed in LAC could have been achieved with a more moderate NPI policy combined with greater protection of individuals 65+, this would have come at the expense of overwhelming the healthcare system. In anticipation of a continued rise in cases in LAC this winter, policy makers need to consider the trade offs of various policy options on the numbers of the overall population that may become infected, severely ill, and that die when considering policies targeted at subpopulations at greatest risk of transmitting infection and at greatest risk for developing severe outcomes."
+
+authors = ["Abigail L. Horn", "Lai Jiang", "Faith Washburn", "Emil Hvitfeldt", "Kayla de la Haye", "William Nicholas", "Paul Simon", "Maryann Pentz", "Wendy Cozen", "Neeraj Sood", "David V. Conti"]
+date = "2020-12-14"
+image_preview = ""
+math = true
+publication_types = ["3"]
+selected = false
+title = "Estimation of COVID-19 risk-stratified epidemiological parameters and policy implications for Los Angeles County through an integrated risk and stochastic epidemiological model"
+url_code = "https://github.com/AbigailHorn/COV2-LA"
+url_dataset = ""
+url_pdf = ""
+url_project = "https://www.medrxiv.org/content/10.1101/2020.12.11.20209627v1"
+url_slides = ""
+url_video = ""
+
+[[url_custom]]
+name = "View Journal Article"
+url = "https://www.medrxiv.org/content/10.1101/2020.12.11.20209627v1"
+
+# Optional featured image (relative to `static/img/` folder).
+[header]
+image = ""
+caption = ""
+
++++
