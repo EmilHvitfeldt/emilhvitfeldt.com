@@ -19,8 +19,8 @@ date_format = "Jan 2006"
 #   Begin/end multi-line descriptions with 3 quotes `"""`.
 [[experience]]
   title = "Data Analyst"
-  company = "Livongo Health"
-  company_url = "https://www2.livongo.com/"
+  company = "Teladoc Health"
+  company_url = "https://teladochealth.com/"
   location = "Remote"
   date_start = "2020-10-19"
   date_end = ""
