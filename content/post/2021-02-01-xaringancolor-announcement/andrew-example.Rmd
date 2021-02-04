@@ -1,0 +1,115 @@
+---
+title: "Coloring stuff!"
+author: "Andrew Heiss"
+date: "`r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    lib_dir: "libs"
+    seal: false  # No title slide
+    self_contained: true
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: "7:5"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, 
+                      fig.retina = 3, fig.align = "center")
+```
+
+<div style = "position:fixed; visibility: hidden">
+$$\require{color}\definecolor{orange}{rgb}{1, 0.52156862745098, 0.105882352941176}$$
+$$\require{color}\definecolor{blue}{rgb}{0, 0.454901960784314, 0.850980392156863}$$
+$$\require{color}\definecolor{green}{rgb}{0.180392156862745, 0.8, 0.250980392156863}$$
+$$\require{color}\definecolor{cyan}{rgb}{0.223529411764706, 0.8, 0.8}$$
+</div>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: {
+    Macros: {
+      orange: ["{\\color{orange}{#1}}", 1],
+      blue: ["{\\color{blue}{#1}}", 1],
+      green: ["{\\color{green}{#1}}", 1],
+      cyan: ["{\\color{cyan}{#1}}", 1]
+    },
+    loader: {load: ['[tex]/color']},
+    tex: {packages: {'[+]': ['color']}}
+  }
+});
+</script>
+
+<style>
+.orange {color: #FF851B;}
+.blue {color: #0074D9;}
+.green {color: #2ECC40;}
+.cyan {color: #39CCCC;}
+</style>
+
+
+```{r flair_color, echo=FALSE}
+library(flair)
+orange <- "#FF851B"
+blue <- "#0074D9"
+green <- "#2ECC40"
+cyan <- "#39CCCC"
+```
+
+```{r load-libraries, include=FALSE}
+library(tidyverse)
+library(ggdag)
+```
+
+# DAGs and models
+
+```{r mpg-dag, echo=FALSE, fig.width=5, fig.height=3.5, out.width="40%"}
+mpg_dag <- dagify(hwy ~ drv + disp + cyl,
+                  disp ~ drv + cyl,
+                  labels = c("hwy" = "Highway MPG",
+                             "drv" = "Drive",
+                             "disp" = "Displacement",
+                             "cyl" = "Cylinders"),
+                  coords = list(x = c(hwy = 3, drv = 2, disp = 2, cyl = 1),
+                                y = c(hwy = 2, drv = 1, disp = 3, cyl = 2))) %>% 
+  tidy_dagitty()
+  
+color_pal <- c(cyan, green, blue, orange)
+
+ggplot(mpg_dag, aes(x = x, y = y, xend = xend, yend = yend)) + 
+  geom_dag_edges() +
+  geom_dag_point(aes(color = label)) +
+  geom_dag_label_repel(aes(label = label, fill = label), seed = 1234,
+                       direction = "y", fontface = "bold", color = "white") +
+  scale_fill_manual(values = color_pal) +
+  scale_color_manual(values = color_pal) +
+  guides(color = FALSE, fill = FALSE) +
+  theme_dag()
+```
+
+
+.pull-left[
+```{r example-model, include=FALSE, eval=FALSE}
+model <- lm(hwy ~ drv + displ + cyl, 
+            data = mpg)
+```
+
+```{r colored-model, echo=FALSE}
+decorate("example-model") %>% 
+  flair("hwy", color = orange) %>% 
+  flair("drv", color = blue) %>% 
+  flair("displ", color = green) %>% 
+  flair("cyl", color = cyan)
+```
+]
+
+.pull-right[
+$$
+\begin{aligned}
+\orange{Highway MPG} =\ & \beta_0 + \beta_1 \blue{Drive} + \\
+&\beta_2 \green{Displacement} + \\
+&\beta_3 \cyan{Cylinders} + \varepsilon
+\end{aligned}
+$$
+]

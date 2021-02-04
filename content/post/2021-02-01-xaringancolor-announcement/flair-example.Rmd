@@ -1,0 +1,80 @@
+---
+output:
+  xaringan::moon_reader:
+    lib_dir: "libs"
+    seal: false  # No title slide
+    self_contained: TRUE
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: "7:5"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, 
+                      fig.retina = 3, fig.align = "center")
+```
+
+<div style = "position:fixed; visibility: hidden">
+$$\require{color}\definecolor{yellow}{rgb}{1, 0.8, 0.16078431372549}$$
+$$\require{color}\definecolor{orange}{rgb}{0.96078431372549, 0.525490196078431, 0.203921568627451}$$
+$$\require{color}\definecolor{green}{rgb}{0, 0.474509803921569, 0.396078431372549}$$
+</div>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: {
+    Macros: {
+      yellow: ["{\\color{yellow}{#1}}", 1],
+      orange: ["{\\color{orange}{#1}}", 1],
+      green: ["{\\color{green}{#1}}", 1]
+    },
+    loader: {load: ['[tex]/color']},
+    tex: {packages: {'[+]': ['color']}}
+  }
+});
+</script>
+
+<style>
+.yellow {color: #FFCC29;}
+.orange {color: #F58634;}
+.green {color: #007965;}
+</style>
+
+```{r flair_color, echo=FALSE}
+library(flair)
+yellow <- "#FFCC29"
+orange <- "#F58634"
+green <- "#007965"
+```
+
+```{r load-libraries, include=FALSE}
+library(tidyverse)
+```
+
+.pull-left[
+
+And now we add a .green[fitted line] to the ggplot
+
+```{r example-model, include=FALSE, eval=FALSE}
+ggplot(data = mtcars, aes(mpg, disp)) +
+  geom_point() +
+  geom_smooth(se = FALSE) +
+  theme_minimal()
+```
+
+```{r colored-model, echo=FALSE}
+decorate("example-model", eval=FALSE) %>% 
+  flair("geom_point", color = green)
+```
+]
+
+.pull-right[
+```{r, echo=FALSE}
+ggplot(data = mtcars, aes(mpg, disp)) +
+  geom_point() +
+  geom_smooth(se = FALSE, color = green) +
+  theme_minimal()
+```
+]
