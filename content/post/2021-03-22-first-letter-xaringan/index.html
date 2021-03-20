@@ -1,0 +1,86 @@
+---
+title: 'xaringan first-letter'
+date: '2021-03-22'
+slug: xaringan-first-letter
+categories: [xaringan]
+image:
+  caption: 'Photo from *Essays, or Counsels Civil and Moral* [1812 and 1825] by Francis Bacon, George Bell, and Sons, London, 1881'
+  preview_only: true
+---
+
+<script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
+<script src="{{< blogdown/postref >}}index_files/fitvids/fitvids.min.js"></script>
+
+
+<p>I recently saw the use of the <a href="https://css-tricks.com/almanac/selectors/f/first-letter/">::first-letter</a> pseudo selector and I was hooked! and I was hooked! This selector allows you to style the first letter in a block, sometimes called a <a href="https://en.wikipedia.org/wiki/Initial">drop cap</a>, and can be used to add a little flair to your <a href="https://github.com/yihui/xaringan">xaringan</a> slides. These selectors can just as well be used in any other Html output, they are not limited to xaringan.</p>
+<p>You can either add the pseudo selector to an existing class, but I’m going to add a new CSS class so I can apply it whenever I want. Below is a class called <code>.drop-cap</code> that doesn’t do anything by itself, but has a <code>::first-letter</code> pseudo selector that doubles the font-size of the first letter.</p>
+<pre class="css"><code>.drop-cap::first-letter {
+  font-size: 200%;
+}</code></pre>
+<style type="text/css">
+.drop-cap::first-letter {
+  font-size: 200%;
+}
+</style>
+<p>Next, we have the information we are putting in the slide</p>
+<pre class="html"><code>.drop-cap[
+# Sample Header
+]
+
+.drop-cap[
+&gt; All the .drop-cap[statistics] in the world can&#39;t measure the warmth of a smile.
+]
+
+.drop-cap[
+Duis vel viverra elit, eget hendrerit odio. Curabitur cursus elit nec diam vulputate, nec sollicitudin nunc ornare. Ut mi lectus, aliquet non ligula sed, lobortis vehicula erat. Morbi porttitor orci ut semper dapibus. Donec sodales tellus varius tortor varius, ornare commodo augue maximus. Vestibulum quis bibendum mi, sit amet lobortis leo. Morbi vulputate orci arcu, ac lobortis sapien gravida eget. Nulla non interdum orci, nec congue ligula.
+]</code></pre>
+<p>And the result:</p>
+<div class="shareagain" style="min-width:300px;margin:1em auto;">
+<iframe src="first-letter.html" width="700" height="500" style="border:2px solid currentColor;" loading="lazy" allowfullscreen></iframe>
+<script>fitvids('.shareagain', {players: 'iframe'});</script>
+</div>
+<p>and look, each of the first letters of the selected blocks has had their size doubled. Notice that while the word statistics had a <code>.drop-cap</code> around it, it remained unchanged, this is because <code>::first-letter</code> only works on blocks.</p>
+<p>We can also get a little bit fancier with our styling to create nice-looking drop caps, next example is inspired by this <a href="https://thegymnasium.com/take5/creating-beautiful-and-accessible-drop-caps">video</a> by Ethan Marcotte.</p>
+<pre class="css"><code>.drop-cap::first-letter {
+  color: #B22222;
+  float: left;
+  font-size: 75px;
+  line-height: 60px;
+  padding-top: 4px;
+  padding-right: 8px;
+  padding-left: 3px;
+}</code></pre>
+<style type="text/css">
+.drop-cap::first-letter {
+  color: #B22222;
+  float: left;
+  font-size: 75px;
+  line-height: 60px;
+  padding-top: 4px;
+  padding-right: 8px;
+  padding-left: 3px;
+}
+</style>
+<p>Here we get a nice drop cap that spans multiple lines.</p>
+<div class="shareagain" style="min-width:300px;margin:1em auto;">
+<iframe src="fancy-first-letter.html" width="700" height="500" style="border:2px solid currentColor;" loading="lazy" allowfullscreen></iframe>
+<script>fitvids('.shareagain', {players: 'iframe'});</script>
+</div>
+<p>Lastly, there is also a related selector called <a href="https://www.w3schools.com/cssref/sel_firstline.asp">first-line</a> that works in just the same way as <code>::first-letter</code> except that it applies the style to the entire first line.</p>
+<pre class="css"><code>.super-line::first-line {
+  color: #B22222;
+  font-size: 120%;
+  font-weight: bold;
+}</code></pre>
+<style type="text/css">
+.super-line::first-line {
+  color: #B22222;
+  font-size: 120%;
+  font-weight: bold;
+}
+</style>
+<div class="shareagain" style="min-width:300px;margin:1em auto;">
+<iframe src="first-line.html" width="700" height="500" style="border:2px solid currentColor;" loading="lazy" allowfullscreen></iframe>
+<script>fitvids('.shareagain', {players: 'iframe'});</script>
+</div>
+<p>I hope you can use these two selectors to add a little something special to your next set of xaringan slides!</p>

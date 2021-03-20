@@ -1,0 +1,31 @@
+---
+title: "Fancy first-letter"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    seal: FALSE
+    self_contained: TRUE
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+<style>
+.drop-cap::first-letter {
+  color: #B22222;
+  float: left;
+  font-size: 75px;
+  line-height: 60px;
+  padding-top: 4px;
+  padding-right: 8px;
+  padding-left: 3px;
+}
+</style>
+
+# Sample Header
+
+.drop-cap[
+Duis vel viverra elit, eget hendrerit odio. Curabitur cursus elit nec diam vulputate, nec sollicitudin nunc ornare. Ut mi lectus, aliquet non ligula sed, lobortis vehicula erat. Morbi porttitor orci ut semper dapibus. Donec sodales tellus varius tortor varius, ornare commodo augue maximus. Vestibulum quis bibendum mi, sit amet lobortis leo. Morbi vulputate orci arcu, ac lobortis sapien gravida eget. Nulla non interdum orci, nec congue ligula.
+]
+

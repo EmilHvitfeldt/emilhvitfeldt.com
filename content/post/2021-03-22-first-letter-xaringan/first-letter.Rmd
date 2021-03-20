@@ -1,0 +1,40 @@
+---
+title: "Presentation Ninja"
+subtitle: "⚔<br/>with xaringan"
+author: "Yihui Xie"
+institute: "RStudio, PBC"
+date: "2016/12/12 (updated: `r Sys.Date()`)"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    seal: FALSE
+    self_contained: TRUE
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+```
+
+
+<style>
+.drop-cap::first-letter {
+  font-size: 200%;
+}
+</style>
+
+.drop-cap[
+# Sample Header
+]
+
+.drop-cap[
+> All the .drop-cap[statistics] in the world can't measure the warmth of a smile.
+]
+
+.drop-cap[
+Duis vel viverra elit, eget hendrerit odio. Curabitur cursus elit nec diam vulputate, nec sollicitudin nunc ornare. Ut mi lectus, aliquet non ligula sed, lobortis vehicula erat. Morbi porttitor orci ut semper dapibus. Donec sodales tellus varius tortor varius, ornare commodo augue maximus. Vestibulum quis bibendum mi, sit amet lobortis leo. Morbi vulputate orci arcu, ac lobortis sapien gravida eget. Nulla non interdum orci, nec congue ligula.
+]
+

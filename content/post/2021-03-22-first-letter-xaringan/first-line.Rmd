@@ -1,0 +1,27 @@
+---
+title: "::first-line"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    seal: FALSE
+    self_contained: TRUE
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+<style>
+.super-line::first-line {
+  color: #B22222;
+  font-size: 120%;
+  font-weight: bold;
+}
+</style>
+
+# Sample Header
+
+.super-line[
+Duis vel viverra elit, eget hendrerit odio. Curabitur cursus elit nec diam vulputate, nec sollicitudin nunc ornare. Ut mi lectus, aliquet non ligula sed, lobortis vehicula erat. Morbi porttitor orci ut semper dapibus. Donec sodales tellus varius tortor varius, ornare commodo augue maximus. Vestibulum quis bibendum mi, sit amet lobortis leo. Morbi vulputate orci arcu, ac lobortis sapien gravida eget. Nulla non interdum orci, nec congue ligula.
+]
+
