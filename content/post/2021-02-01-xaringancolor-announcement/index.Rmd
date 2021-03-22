@@ -49,9 +49,7 @@ And that is all the setup you need to do to have color support across your docum
 
 xaringancolor sets up a css class for each of the colors you specify with the sole purpose of changing the color. So In our example, writing `.orange[hello]` would produce a orange hello
 
-```{r, echo=FALSE, eval=TRUE}
-xaringanExtra::embed_xaringan(url = "css-example.html", ratio = "7:5")
-```
+<div class="iframe-container iframe-slides"><iframe src="css-example.html" width="700px" height="500px" style="border:2px solid currentColor;" data-external=1></iframe></div>
 
 [Source Code](https://gist.github.com/EmilHvitfeldt/7daa57156a6e844423942ed1daf0d175)
 
@@ -61,9 +59,7 @@ Code highlighting using flair is done the same as you normally would, see [this 
 
 You now just use `color = green` in `flair()` instead of supplying a hex-color and it will match the color used in the css classes. Furthermore since we have the the `green` variable, you can use it to specify colors in charts as well for maximum effect! 
 
-```{r, echo=FALSE, eval=TRUE}
-xaringanExtra::embed_xaringan(url = "flair-example.html", ratio = "7:5")
-```
+<div class="iframe-container iframe-slides"><iframe src="flair-example.html" width="700px" height="500px" style="border:2px solid currentColor;" data-external=1></iframe></div>
 
 [Source Code](https://gist.github.com/EmilHvitfeldt/ec081d53929da50f344c2a8ede0a7033)
 
@@ -71,9 +67,7 @@ xaringanExtra::embed_xaringan(url = "flair-example.html", ratio = "7:5")
 
 To use the colors in LaTeX equations you need to use LaTeX macros/functions. So you have a green X you would write `\green{X}`.
 
-```{r, echo=FALSE, eval=TRUE}
-xaringanExtra::embed_xaringan(url = "latex-example.html", ratio = "7:5")
-```
+<div class="iframe-container iframe-slides"><iframe src="latex-example.html" width="700px" height="500px" style="border:2px solid currentColor;" data-external=1></iframe></div>
 
 [Source Code](https://gist.github.com/EmilHvitfeldt/1767bc72d7dd6400a75c55e8be8e7a90)
 
@@ -81,8 +75,6 @@ xaringanExtra::embed_xaringan(url = "latex-example.html", ratio = "7:5")
 
 Last example is a re-implementation of [Andrew Heiss](https://twitter.com/andrewheiss) absolutely amazing [colorful slide](https://twitter.com/andrewheiss/status/1250517766731423745)
 
-```{r, echo=FALSE, eval=TRUE}
-xaringanExtra::embed_xaringan(url = "andrew-example.html", ratio = "7:5")
-```
+<div class="iframe-container iframe-slides"><iframe src="andrew-example.html" width="700px" height="500px" style="border:2px solid currentColor;" data-external=1></iframe></div>
 
 [Source Code](https://gist.github.com/EmilHvitfeldt/858e388e06fca27aff9693b0262bad84)

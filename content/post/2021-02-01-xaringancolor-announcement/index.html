@@ -9,7 +9,6 @@ image:
 ---
 
 <script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
-<script src="{{< blogdown/postref >}}index_files/fitvids/fitvids.min.js"></script>
 
 
 <p>I’m happy to announce a small new package of mine: <a href="https://github.com/EmilHvitfeldt/xaringancolor">xaringancolor</a>.
@@ -31,9 +30,9 @@ setup_colors(
 <div id="html" class="section level1">
 <h1>HTML</h1>
 <p>xaringancolor sets up a css class for each of the colors you specify with the sole purpose of changing the color. So In our example, writing <code>.orange[hello]</code> would produce a orange hello</p>
-<div class="shareagain" style="min-width:300px;margin:1em auto;">
-<iframe src="css-example.html" width="700" height="500" style="border:2px solid currentColor;" loading="lazy" allowfullscreen></iframe>
-<script>fitvids('.shareagain', {players: 'iframe'});</script>
+<div class="iframe-container iframe-slides">
+<iframe src="css-example.html" width="700px" height="500px" style="border:2px solid currentColor;" data-external="1">
+</iframe>
 </div>
 <p><a href="https://gist.github.com/EmilHvitfeldt/7daa57156a6e844423942ed1daf0d175">Source Code</a></p>
 </div>
@@ -41,27 +40,27 @@ setup_colors(
 <h1>Code highlighting</h1>
 <p>Code highlighting using flair is done the same as you normally would, see <a href="https://education.rstudio.com/blog/2020/05/flair/">this article</a> for more examples.</p>
 <p>You now just use <code>color = green</code> in <code>flair()</code> instead of supplying a hex-color and it will match the color used in the css classes. Furthermore since we have the the <code>green</code> variable, you can use it to specify colors in charts as well for maximum effect!</p>
-<div class="shareagain" style="min-width:300px;margin:1em auto;">
-<iframe src="flair-example.html" width="700" height="500" style="border:2px solid currentColor;" loading="lazy" allowfullscreen></iframe>
-<script>fitvids('.shareagain', {players: 'iframe'});</script>
+<div class="iframe-container iframe-slides">
+<iframe src="flair-example.html" width="700px" height="500px" style="border:2px solid currentColor;" data-external="1">
+</iframe>
 </div>
 <p><a href="https://gist.github.com/EmilHvitfeldt/ec081d53929da50f344c2a8ede0a7033">Source Code</a></p>
 </div>
 <div id="equations" class="section level1">
 <h1>Equations</h1>
 <p>To use the colors in LaTeX equations you need to use LaTeX macros/functions. So you have a green X you would write <code>\green{X}</code>.</p>
-<div class="shareagain" style="min-width:300px;margin:1em auto;">
-<iframe src="latex-example.html" width="700" height="500" style="border:2px solid currentColor;" loading="lazy" allowfullscreen></iframe>
-<script>fitvids('.shareagain', {players: 'iframe'});</script>
+<div class="iframe-container iframe-slides">
+<iframe src="latex-example.html" width="700px" height="500px" style="border:2px solid currentColor;" data-external="1">
+</iframe>
 </div>
 <p><a href="https://gist.github.com/EmilHvitfeldt/1767bc72d7dd6400a75c55e8be8e7a90">Source Code</a></p>
 </div>
 <div id="advanced-examples" class="section level1">
 <h1>Advanced Examples</h1>
 <p>Last example is a re-implementation of <a href="https://twitter.com/andrewheiss">Andrew Heiss</a> absolutely amazing <a href="https://twitter.com/andrewheiss/status/1250517766731423745">colorful slide</a></p>
-<div class="shareagain" style="min-width:300px;margin:1em auto;">
-<iframe src="andrew-example.html" width="700" height="500" style="border:2px solid currentColor;" loading="lazy" allowfullscreen></iframe>
-<script>fitvids('.shareagain', {players: 'iframe'});</script>
+<div class="iframe-container iframe-slides">
+<iframe src="andrew-example.html" width="700px" height="500px" style="border:2px solid currentColor;" data-external="1">
+</iframe>
 </div>
 <p><a href="https://gist.github.com/EmilHvitfeldt/858e388e06fca27aff9693b0262bad84">Source Code</a></p>
 </div>
