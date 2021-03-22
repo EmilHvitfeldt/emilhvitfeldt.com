@@ -12,7 +12,7 @@ image:
 library(knitr)
 opts_chunk$set(
   echo = TRUE,
-  cache = TRUE,
+  cache = FALSE,
   collapse = TRUE,
   fig.width = 7, 
   fig.align = 'center',
