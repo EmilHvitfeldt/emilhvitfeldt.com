@@ -53,7 +53,7 @@ xaringancolor sets up a css class for each of the colors you specify with the so
 
 [Source Code](https://gist.github.com/EmilHvitfeldt/7daa57156a6e844423942ed1daf0d175)
 
-# Code highlighting
+# Code highlighting 
 
 Code highlighting using flair is done the same as you normally would, see [this article](https://education.rstudio.com/blog/2020/05/flair/) for more examples.
 
