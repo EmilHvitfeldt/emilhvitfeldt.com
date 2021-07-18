@@ -5,7 +5,7 @@ categories:
 - rpharma
 date: '2020-10-09T19:00:00Z'
 draft: no
-featured: no
+featured: true
 lastmod: '2020-10-09'
 links:
 - icon: github

@@ -1,0 +1,263 @@
+---
+title: 'Textrecipes series: Term Frequency'
+date: '2020-05-05'
+slug: textrecipes-series-tf
+categories:
+  - text classification
+  - tidymodels
+  - textrecipes
+  - tidytuesday
+  - textrecipes series
+tags:
+  - tidymodels
+  - textecipes
+  - tidytuesday
+summary: This is the first blog post in a series I am starting to go over the various text preprocessing workflows you can do with textrecipes.
+image:
+  preview_only: true
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+opts_chunk$set(
+  echo = TRUE,
+  cache = TRUE,
+  collapse = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
+
+This is the first blog post in a series I am starting to go over the various text preprocessing workflows you can do with [textrecipes](https://github.com/tidymodels/textrecipes). This post will we start simple with [term frequencies](https://en.wikipedia.org/wiki/Tf%E2%80%93idf#Term_frequency_2).
+
+Today we are lucky with timing to be able to use the current [#tidytuesday](https://github.com/rfordatascience/tidytuesday) dataset about [Animal Crossing - New Horizons](https://github.com/rfordatascience/tidytuesday/tree/master/data/2020/2020-05-05).
+There are a lot of different datasets available for us this week but we will only be looking at the user reviews.
+
+## Packages `r emo::ji("package")`
+
+We are going fairly light package-wise this time only needing [tidymodels](https://www.tidymodels.org/), textrecipes, and lastly tidytext for EDA.
+
+```{r, message=FALSE, warning=FALSE}
+library(tidymodels)
+library(textrecipes)
+library(tidytext)
+theme_set(theme_minimal())
+```
+
+## Exploring the data `r emo::ji("pick")`
+
+We start by reading in the data. 
+I want to set the goal of this modeling task to predict if a review is positive or not. 
+More specifically I (somehow arbitrarily) denote a review with a grade of 8 or higher to be a "High" review and everything else "Low".
+I split the data into a training and testing dataset right away before looking at the data.
+
+```{r, message=FALSE}
+user_reviews <- readr::read_tsv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-05-05/user_reviews.tsv')
+```
+
+```{r}
+user_reviews <- user_reviews %>%
+  mutate(grade = factor(grade > 7, c(TRUE, FALSE), c("High", "Low")))
+
+set.seed(1234)
+review_split <- initial_split(user_reviews)
+
+review_training <- training(review_split)
+review_testing <- training(review_split)
+```
+
+Taking a `glimpse()` of the data reveals 4 variables. 
+`grade` is a factor with the two levels "High" and "Low".
+This is what we are trying to predict.
+Next, we have `user_name` which we won't be using for this analysis, `text` is the most important variable as it contains the reviews. We also get a `date` variable denoting the date the review was submitted. 
+
+```{r}
+glimpse(review_training)
+```
+
+We First look at the distribution of "High" and "Low" scoring reviews.
+
+```{r}
+review_training %>%
+  ggplot(aes(grade)) +
+  geom_bar()
+```
+
+it is slightly skewed but we will soldier on and ignore it. Next, let us take a look at the distribution of the dates.
+Remember that the game release on March 20th of this year, so we can plot the distribution of days since release.
+This provides us with an upper bound of how many days they have access to the game before leaving the review.
+
+```{r}
+review_training %>%
+  transmute(date = as.numeric(date - as.Date("2020-03-20"))) %>%
+  ggplot(aes(date)) +
+  geom_bar() +
+  labs(title = "Number of days since release")
+```
+
+We see a spike on the 1st day as well as the 5th.
+This is a little worrisome considering Animal Crossing games tend to be played casually over a long period of time and are tend to be slow and [take a long time to beat](https://howlongtobeat.com/game.php?id=474).
+
+Lastly, let us get ourselves some summary stats of the text itself.
+
+```{r}
+review_tokens <- review_training %>%
+  unnest_tokens(tokens, text)
+```
+
+We can look at the distribution of the number of tokens in the reviews
+
+```{r}
+review_tokens %>%
+  count(user_name) %>%
+  ggplot(aes(n)) +
+  geom_histogram(binwidth = 10) +
+  geom_vline(xintercept = 100, color = "firebrick") +
+  annotate("text", x = 105, y = 205, hjust = 0, color = "firebrick",
+           label = "Sharp clif between reviews with less and more then 100 word") +
+  labs(title = "Distribution of number of words in user reviews")
+```
+
+This is a highly [bimodal distribution](https://en.wikipedia.org/wiki/Multimodal_distribution).
+This is something we should include in our model. 
+But we are sadly too early in our *textrecipes series* to address this kind of preprocessing, in a later post will we take a look at [step_textfeature()](https://tidymodels.github.io/textrecipes/reference/step_textfeature.html) that can do that.
+
+## Modeling `r emo::ji("gear")`
+
+In the preprocessing, we are including both the `date` and `text` variables.
+There are many different things we could do with the data variable. 
+I'll go simple and calculate the difference in time between the release day and the date the review was submitted.
+For the text we will again go simple, I'll start by tokenizing to words with the default *tokenizers* engine.
+Next, we will remove stopwords, being conservative to only use the snowball stopword list which removes the least amount of words.
+Let us take a look at the words we are trying to remove to verify they ate appropriate.
+
+```{r}
+stopwords::data_stopwords_snowball$en
+```
+
+The list contains a good amount of pronouns and negations, but considering the subject matter, I don't think it will introduce much bias.
+We will apply a `step_tokenfilter()` to filter the tokens we keep based on frequency. 
+We use `tune()` to indicate that we want to do hyperparameter tuning to determine the optimal number of tokens to keep.
+We end our recipe with `step_tf()` to calculate term frequencies from the tokens we kept.
+
+```{r}
+rec_spec <- recipe(grade ~ text + date, review_training) %>%
+  # Days since release
+  step_mutate(date = as.numeric(date - as.Date("2020-03-20"))) %>%
+  # Tokenize to words
+  step_tokenize(text) %>%
+  # Remove stopwords
+  step_stopwords(text) %>%
+  # Remove less frequent words
+  step_tokenfilter(text, max_tokens = tune()) %>%
+  # Calculate term frequencies
+  step_tf(text, weight_scheme = "binary")
+```
+
+`step_tf()` has one main argument `weight_scheme` which determines how the term frequencies should be represented. I will be using "binary" This will return a 1 if the word is present in the review an 0. This is a kind of scaling since we are assuming that having the word "good" in the document once is providing as much evidence as if it appeared 10 times.
+See [?step_tf()](https://tidymodels.github.io/textrecipes/reference/step_tf.html) for more detail and other options.
+
+The modeling will be using a radial basis function support vector machines (SVM). 
+
+```{r}
+mod_spec <- svm_rbf(cost = tune(), rbf_sigma = tune()) %>%
+  set_engine("kernlab") %>%
+  set_mode("classification")
+```
+
+We will be tuning both the `cost` and `rbf_sigma` arguments.
+
+To calculate the performance over the hyperparameter space will we do some V-fold Cross-Validation on our data.
+
+```{r}
+set.seed(1234)
+review_folds <- vfold_cv(review_training, v = 5)
+```
+
+Now we are pretty much ready to run our model. We combine our model specification with the recipe specification to create a workflow object. This way we can tune the recipe and model jointly.
+
+```{r}
+review_wf <- workflow() %>%
+  add_recipe(rec_spec) %>%
+  add_model(mod_spec)
+```
+
+With everything in place will we go to `tune_grid()` to perform the model tuning via a grid search.
+
+```{r, message=FALSE}
+tune_res <- tune_grid(
+  review_wf,
+  resamples = review_folds,
+  grid = 25,
+  control = control_grid(verbose = TRUE)
+)
+```
+
+Now that we have the rune results we can find the best candidates we can simply use `show_best()`
+
+```{r}
+show_best(tune_res, "accuracy")
+```
+
+We notice that the top candidates have very similar `.estimator`s but the 3 parameters vary quite a bit. Lets do a little vizualizations to see what is happening:
+
+```{r}
+collect_metrics(tune_res) %>%
+  filter(.metric == "accuracy") %>%
+  ggplot(aes(cost, rbf_sigma, size = max_tokens, color = mean)) +
+  geom_point() +
+  scale_y_log10() +
+  scale_x_log10() +
+  scale_color_viridis_c()
+```
+
+when we are evaluating the accuracy it seems that a combination of high `rbf_sigma` and high `cost` yields to high accuracy.
+
+When we are evaluating the roc_auc then it appears that both `max_tokens` and `cost` don't have too much influence and a high value of `rbf_sigma` is really bad.
+
+```{r}
+collect_metrics(tune_res) %>%
+  filter(.metric == "roc_auc") %>%
+  ggplot(aes(cost, rbf_sigma, size = max_tokens, color = mean)) +
+  geom_point() +
+  scale_y_log10() +
+  scale_x_log10() +
+  scale_color_viridis_c()
+```
+
+I'll select a model with the highest accuracy in this use case. 
+We can do that with the `select_best()` function.
+Then we can use the `finalize_workflow()` function to update our workflow with the new hyperparameters.
+
+```{r}
+best_accuracy <- select_best(tune_res, "accuracy")
+
+final_wf <- finalize_workflow(
+  review_wf,
+  best_accuracy
+)
+
+final_wf
+```
+
+lastly, we will do a list fit and see how well the final model did on our testing data:
+
+```{r}
+final_res <- final_wf %>%
+  last_fit(review_split)
+
+final_res %>%
+  collect_metrics()
+```
+
+We did decently well on both accounts.
+
+```{r details, echo=FALSE}
+library(details) 
+
+sessioninfo::session_info() %>%
+  details::details(summary = 'session information')
+```

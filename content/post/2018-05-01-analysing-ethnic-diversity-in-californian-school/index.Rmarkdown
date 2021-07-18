@@ -1,0 +1,553 @@
+---
+title: Analysing ethnic diversity in Californian school
+date: '2018-05-01'
+categories:
+  - ggplot2
+tags:
+  - ggplot2
+summary: An interesting study of a measure of diversity. This diversity measure was then applied to schools in California.
+image:
+  preview_only: true
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+opts_chunk$set(
+  echo = TRUE, 
+  cache = TRUE,
+  collapse = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
+
+<div class = "note">
+This code has been lightly revised to make sure it works as of 2018-12-16.
+</div>
+
+I will In this post explore the ethnic diversity of the student population in schools in California. We will utilize the data provided by [California Department of Education](https://www.cde.ca.gov/) that has [Enrollment by School](https://www.cde.ca.gov/ds/sd/sd/filesenr.asp) which includes "school-level enrollment by racial/ethnic designation, gender, and grade".  
+
+We will combine this data with two other datasets that contain:  
+
+- Longitude and latitude of the schools
+- Income information of the cities the schools are located in
+
+Hopefully, we will be able to draw some cool inferences using these datasets while working through the complications you get when you combine datasets from the wild.
+
+## Loading packages
+
+This will be a fairly standard data science exercise so we will stick to the `tidyverse`, `rvest` for scraping, `patchwork` for plot stitching, and add a little fanciness with `ggmap` for local maps. 
+
+```{r, message=FALSE}
+library(tidyverse)
+library(rvest)
+library(patchwork)
+library(ggmap)
+```
+
+## Enrollment data
+
+We start by downloading the dataset to our local disk and read it from there this is mainly to be nice, and for the fact, the download speed on the files we work with are a little slow. This can be done using `readr`'s `read_tsv()`.
+
+```{r, eval=FALSE}
+data <- readr::read_tsv("filesenr.asp.txt")
+```
+
+```{r, include=FALSE}
+data <- readr::read_tsv("filesenr.asp.txt")
+```
+
+To get an idea of the data let's have a quick `glimpse()`
+
+```{r}
+glimpse(data)
+```
+
+and we notice that `CDS_CODE` is being read as a chr which is favorable in this case since we don't want it as an integer but rather as an ID variable. If this column had been converted to integers we would have lost leading zeros which could lead to trouble.
+
+## Longitude and latitude data
+
+The longitude and latitude of the schools are also available on the California Department of Education's website [here](https://www.cde.ca.gov/ds/si/ds/fspubschls.asp). It includes quite a lot of information, a lot of it uninteresting for this project so will take a subset of it for further analysis. `read_tsv` complaints a little bit when reading it in, but after some crosschecking with the .xls file also provided, does it seem to be correct so we will ignore the error (don't just ignore error all the time! most of the time they are telling you something important! in this case, the problems stem from missing values and tab-separated values don't mix that nicely).
+
+```{r, eval=FALSE}
+longlat_raw <- read_tsv("pubschls.txt")
+longlat <- longlat_raw %>%
+  select(CDSCode, Latitude, Longitude, School, City)
+```
+
+```{r, include=FALSE}
+longlat_raw <- read_tsv("pubschls.txt")
+longlat <- longlat_raw %>%
+  select(CDSCode, Latitude, Longitude, School, City)
+```
+
+Let us have a peek at the data:
+
+```{r}
+glimpse(longlat)
+```
+
+we see that the columns have been read in appropriate ways. We recognize the `CDS_CODE` from before as `CDSCode` in this dataset which we will use to combine the datasets later.
+
+## Income data
+
+Lastly, we will get some income data, I found some fairly good data on [Wikipedia](https://en.wikipedia.org/wiki/List_of_California_locations_by_income). We use simple `rvest` tools to extract the table from the website and give it column names.  
+
+While the income data is quite lovely, would it be outside the scope of this post to identify which census-designated place (CDP) each of the schools belongs it. The second best option is to use the income data on a county-by-county basis. This will mean that we trade a bit of granularity for time. But hopefully, it will still lead to some meaningful findings.
+
+```{r}
+url <- "https://en.wikipedia.org/wiki/List_of_California_locations_by_income"
+income_data <- read_html(url) %>%
+  html_nodes("table") %>%
+  .[2] %>%
+  html_table() %>%
+  .[[1]] %>%
+  set_names(c("county", "population", "population_density", 
+              "per_capita_income", "median_household_income",
+              "median_family_income"))
+```
+
+lets take a look at the table:
+
+```{r}
+glimpse(income_data)
+```
+
+here we see a couple of things that look weirds. Every column character is valued, which it shouldn't be since 5 out of the 6 variables should be numerical.  
+
+We will use the wonderful `parse_number` function from the `readr` package to convert the character values to numeric.
+
+```{r}
+income_data_clean <- income_data %>%
+  mutate_at(vars(population:median_family_income), parse_number)
+```
+
+a quick glimpse to see everything went well
+
+```{r}
+glimpse(income_data_clean)
+```
+
+And we are good to go!
+
+## Ethnic diversity
+
+To be able to compare the ethnic diversity between schools we need a measure that describes diversity, to begin with. I'll use the diversity index [developed in 1991](https://www.unc.edu/~pmeyer/carstat/tools.html) by a researcher at the University of North Carolina at Chapel Hill. The index simply asks: "What is the probability that two people in a population picked at random will be from different ethnicity". At first, this can be seen as a daunting task, but if we look at it geometrically we notice that the calculations are quite straightforward.  
+
+If we imagine a population of 10 people split into two ethnicities, with 5 in each. Then we can draw the following outcome space:
+
+```{r include=FALSE}
+diversity_plot <- function(makeup, fix = 0.45) {
+  df <- tibble(id = seq_len(sum(makeup)),
+               race = imap(makeup, ~ rep(.y, .x)) %>% unlist())
+  
+  cols <- structure(rainbow(length(makeup)), 
+            names = as.character(seq_len(length(makeup)))) %>%
+    c("diag" = "grey30",
+      "other" = "grey70")
+  
+  df1 <- df %>%
+    mutate(new_df = map(seq_len(n()), ~ set_names(df, c("id1", "race1")))) %>%
+    unnest(c(new_df)) %>%
+    mutate(fill = case_when(id == id1 ~ "diag",
+                            race == race1 ~ as.character(race),
+                            TRUE ~ "other")) 
+  
+  df1 %>%
+    ggplot(aes(xmin = id - fix, xmax = id + fix,
+               ymin = id1 - fix, ymax = id1 + fix)) +
+    geom_rect(aes(fill = fill)) +
+    theme(panel.background = element_blank(), 
+          panel.border = element_blank()) +
+    scale_y_continuous(breaks = df[["id"]], labels = df[["race"]]) +
+    scale_x_continuous(breaks = df[["id"]], labels = df[["race"]]) +
+    coord_fixed() +
+    scale_fill_manual(values = cols) +
+    guides(fill = "none") +
+    labs(title = paste0("The diversity index is ", 
+                        signif(mean(df1$fill[df1$fill != "diag"] == "other"), digits = 3)))
+}
+```
+
+```{r}
+diversity_plot(makeup = rep(5, 2))
+```
+
+(the code for `diversity_plot` is displayed at the end of the article for those interested.)
+
+Where the colored squares represent random picks with the same ethnicity, light grey squares pick with different ethnicities. Dark grey indicates impossible picks (the same person picked twice) and should be ignored. Now the diversity index can be calculated by dividing the number of light grey squares by the sum of light grey and colored squares.  
+
+Before we go on, let us look at how different populations have different diversity indexes. If we only have two groups, will the diversity score converge to 0.5 for large populations, however with small populations will the index be quite large since each person contributes such a big percentage of the group, making it harder to pick another one in the same group.
+
+```{r}
+diversity_plot(rep(1, 2)) + 
+  diversity_plot(rep(2, 2)) +
+  diversity_plot(rep(4, 2)) +
+  diversity_plot(rep(8, 2))
+```
+
+Effectively giving that adding a single person from a new group will maximize the contribution to the index.
+
+```{r}
+diversity_plot(c(rep(1, 2), 1, 1, 1)) + 
+  diversity_plot(c(rep(2, 2), 1, 1, 1)) +
+  diversity_plot(c(rep(4, 2), 1, 1, 1)) +
+  diversity_plot(c(rep(8, 2), 1, 1, 1))
+```
+
+```{r}
+diversity_plot(c(2, 3, 4, 5, 6) * 1) + 
+  diversity_plot(c(2, 3, 4, 5, 6) * 2) +
+  diversity_plot(c(2, 3, 4, 5, 6) * 3) +
+  diversity_plot(c(2, 3, 4, 5, 6) * 4)
+```
+
+Now that we have seen the diversity index in use let's apply it to the data we have collected.
+
+We would like to have the data in a different kind of tidy format, namely we want each row to represent each school. Taking another look at the data
+
+```{r}
+glimpse(data)
+```
+
+and we would like to across each `ETHNIC` category within each school, ignoring `GENDER` (including gender could be an interesting question for another time). Luckily the total enrollment is already calculated for us `ENR_TOTAL` so we don't have to do that manually.
+
+```{r}
+small_data <- data %>%
+  select(CDS_CODE, ETHNIC, ENR_TOTAL) %>%
+  group_by(CDS_CODE, ETHNIC) %>%
+  summarize(ENR_TOTAL = sum(ENR_TOTAL)) %>%
+  spread(ETHNIC, ENR_TOTAL, fill = 0) %>%
+  ungroup()
+```
+
+```{r}
+glimpse(small_data)
+```
+Before we move on, let us reference the data documentation to see what each of the `ETHNIC` numbers means. [File Structure](https://www.cde.ca.gov/ds/sd/sd/fsenr.asp) which states the following:
+
+- Code 0 = Not reported
+- Code 1 = American Indian or Alaska Native, Not Hispanic
+- Code 2 = Asian, Not Hispanic
+- Code 3 = Pacific Islander, Not Hispanic
+- Code 4 = Filipino, Not Hispanic
+- Code 5 = Hispanic or Latino
+- Code 6 = African American, not Hispanic
+- Code 7 = White, not Hispanic
+- Code 9 = Two or More Races, Not Hispanic
+
+So now we have two decisions we need to deal with before moving on. How to take care of the "Not reported" cases, and "Two or More Races, Not Hispanic". The second point has been discussed before [Updating the USA TODAY Diversity Index](https://www.unc.edu/~pmeyer/carstat/tools.html).
+
+Let's start with the case of code 0. We notice that the category generally is quite small compared to the other groups, so we need to reason about what would happen if we drop them.
+
+```{r}
+diversity_plot(c(10, 10, 2)) +
+  diversity_plot(c(10, 10)) +
+  diversity_plot(c(11, 11)) +
+  diversity_plot(c(10, 10, 10, 3)) +
+  diversity_plot(c(10, 10, 10)) +
+  diversity_plot(c(11, 11, 11)) +
+  plot_layout(nrow = 2)
+```
+
+as we see that having them be a separate group (first column), gives a higher diversity score than ignoring them (second column) or adding them evenly to the remaining groups (third column). However, ignoring them and spreading them gives mostly the same diversity index (when the group is small compared to the whole). Thus we will drop the "Not reported" column as it would otherwise inflate the diversity index.  
+
+Coping with multi-ethnicity is quite hard, and we will pick between four options. 
+
+- Assume everyone in "Two or More Races, Not Hispanic" is the same ethnicity
+- Assume everyone in "Two or More Races, Not Hispanic" is all different ethnicities
+- Ignore the group "Two or More Races, Not Hispanic"
+- Distribute the group "Two or More Races, Not Hispanic" evenly into the other groups
+
+Let us evaluate the different choices with some visualizations.
+
+Assume we have 3 main groups. with 5 in each, and an additional 3 people who have picked "Two or More Races, Not Hispanic". 
+
+```{r}
+diversity_plot(c(5, 5, 5, 3)) +
+  diversity_plot(c(5, 5, 5, rep(1, 3))) +
+  diversity_plot(c(5, 5, 5)) +
+  diversity_plot(c(6, 6, 6))
+```
+
+Option 3 and 4 both yield low diversity index considering that the choice of "Two or More Races, Not Hispanic" must indicate that they are different enough not to be put into one of the more precisely defined groups. The first option while appalling from a computational standpoint would treat a black-white mixture and an Asian-American Indian as members of the same group even though they had no racial identity in common. Thus We will work with the second option which in any case might overestimate the diversity of any given population as they oath to be some people "Two or More Races, Not Hispanic" with identical mixes (siblings would be a prime example).  
+
+After deciding we can create a `dplyr` friendly function to calculate the diversity index based on a collection of columns. Here we denote `y` as the column denoting "Two or More Races, Not Hispanic".
+
+```{r}
+diversity <- function(..., y) {
+ x <- sapply(list(...), cbind)
+ total <- cbind(x, y)
+ 1 - (rowSums(x ^ 2) - rowSums(x)) / (rowSums(total) ^ 2 - rowSums(total))
+}
+```
+
+## Bring back the data!
+
+We are finally able to calculate some diversity indexes!!! Using our recently made function within `mutate` gives us what we need.
+
+```{r}
+data_diversity <- small_data %>%
+  mutate(diversity = diversity(`1`, `2`, `3`, `4`, `5`, `6`, `7`, y = `9`))
+```
+
+Let us run a `summary` to see what ranges we get.
+ 
+```{r}
+summary(data_diversity$diversity)
+```
+
+Interesting. All the numbers are between 0 and 1 which is good! that means that the `diversity` worked as intended. However there are 88 schools have `NA` valued diversity, lets look at those schools:
+
+```{r}
+filter(data_diversity, is.na(diversity)) %>% head()
+```
+
+So it seems like some of the schools have such a low number of kids that the calculations break down. We will exclude these schools for now.
+
+```{r}
+data_diversity <- data_diversity %>%
+  filter(!is.na(diversity))
+```
+
+Next let us look at the distribution of diversity indexes.
+
+```{r}
+ggplot(data_diversity, aes(diversity)) +
+  geom_histogram(binwidth = 0.01)
+```
+
+We notice that most of the schools follow a nice shape, except a spike at 0 and 1. Lets look at the 0's first:
+
+```{r}
+data_diversity %>%
+  filter(diversity == 0) %>%
+  head(20)
+```
+
+These all appear to be schools with just one race in them, most appear to be of category 5 which is "Hispanic or Latino". Next lets take a look at the 1's:
+
+```{r}
+data_diversity %>%
+  filter(diversity == 1) %>%
+  head(20)
+```
+
+As we have seen before, a diversity index of 1 can only happen if the maximal number of students in each category is 1. These schools seem to be rather small.  Taking a look at the first school here
+
+```{r}
+data %>% filter(CDS_CODE == "17640220000001") %>% pull(SCHOOL)
+```
+
+and we get that it is a "Nonpublic, Nonsectarian Schools" which by further investigation shows that there are quite a few of those. Lets take a look at the total enrollment in each of the schools, we have seen a couple of instances with low enrollment and we wouldn't want those to distort our view.
+
+```{r}
+total_students <- data %>% 
+  select(CDS_CODE:SCHOOL, ENR_TOTAL) %>% 
+  group_by(CDS_CODE) %>%
+  summarise(ENR_TOTAL = sum(ENR_TOTAL)) %>% 
+  ungroup() 
+```
+
+We also create a `meta` data.frame which stores the `CDS_CODE` along with county, district, and school name.
+
+```{r}
+meta <- data %>%
+  select(CDS_CODE:SCHOOL) %>%
+  distinct() 
+```
+
+Looking at the distribution of total enrollment
+
+```{r}
+total_students %>% 
+  ggplot(aes(ENR_TOTAL)) +
+  geom_histogram(bins = 1000)
+```
+
+We see a big hump around the 600-700 mark, but also a big spike towards 0, lets take a closer look at the small values
+
+```{r}
+total_students %>% 
+  filter(ENR_TOTAL < 250) %>%
+  ggplot(aes(ENR_TOTAL)) +
+  geom_histogram(bins = 250)
+```
+
+Here we make another choice that will ultimately change the outcome of the analysis. But I will restrict the investigation to schools with a total enrollment of 50 or more.
+
+```{r}
+data_big <- total_students %>%
+  left_join(meta, by = "CDS_CODE") %>%
+  filter(ENR_TOTAL >= 50)
+```
+
+Then we join that back to our enrollment data such that we have meta and diversity information in the same data.frame.
+
+```{r}
+data_enrollment <- data_diversity %>%
+  right_join(data_big, by = "CDS_CODE")
+```
+
+We start by looking to see if there is some correlation between total enrollment (`ENR_TOTAL`) and the diversity index (`diversity`). We fit with a simple linear model, to begin with.
+
+```{r}
+data_enrollment %>%
+  ggplot(aes(ENR_TOTAL, diversity)) +
+  geom_point(alpha = 0.1) +
+  geom_smooth(method = "lm") +
+  theme_minimal() +
+  ylim(0, 1) +
+  labs(x = "Enrollment", 
+       y = "Diversity Index",
+       title = "Larger Californian schools tend to have a higher diversity index")
+```
+
+It is quite a small slope but still about a 5% increase in diversity per 2000 students. Let us verify the correlation by checking the null hypothesis.
+
+```{r}
+data_enrollment %>%
+  mutate(ENR_TOTAL = ENR_TOTAL / 1000) %>%
+  lm(diversity ~ ENR_TOTAL, data = .) %>%
+  summary()
+```
+
+We can't reject the null hypothesis of no correlation and we get a better estimate of the slope to 2.3%. Of cause, we can't extrapolate the results outside the range of the existing data since the response variable is bounded.
+
+## Where are we?
+
+Let's try to join the enrollment data to the geographical data so we can bring out some maps! The `longlat` dataset has quite an unfortunate number of missing values.
+
+```{r}
+longlat$Latitude %>% is.na() %>% mean()
+```
+
+But we will see if we can work with it anyways.
+
+```{r}
+miss_lat_div <- data_enrollment %>%
+  left_join(longlat, by = c("CDS_CODE" = "CDSCode")) %>% 
+  filter(is.na(Latitude)) %>%
+  pull(diversity)
+
+have_lat_div <- data_enrollment %>%
+  left_join(longlat, by = c("CDS_CODE" = "CDSCode")) %>% 
+  filter(!is.na(Latitude)) %>%
+  pull(diversity)
+```
+
+Sadly it turns out that the longitude and latitude are NOT missing at random as the distribution of the diversity index is not the same for missing and non-missing data.
+
+```{r}
+density(miss_lat_div) %>% plot()
+density(have_lat_div) %>% plot()
+```
+
+We will still venture on with the remaining data, but with a higher caution than before. Hopefully, we will still be able to see some clustering in the remaining data.
+
+```{r, fig.height=7, fig.width=7}
+map <- map_data("state") %>%
+  filter(region == "california")
+
+map_point <- data_enrollment %>%
+  left_join(longlat, by = c("CDS_CODE" = "CDSCode")) %>%
+  filter(!is.na(Latitude)) 
+
+map %>%
+  ggplot(aes(long, lat, group = group)) +
+  geom_polygon(fill = "grey80") +
+  coord_map() +
+  theme_minimal() +
+  geom_point(aes(Longitude, Latitude, color = diversity),
+             data = map_point,
+             inherit.aes = FALSE, alpha = 0.1) +
+  scale_color_viridis_c(option = "A") +
+  labs(title = "Diversity of schools across California")
+```
+
+We don't notice any major geographical trends. However, there are still some gold nuggets here. Dark grey points are overlapping low-diversity index points since the alpha is set to `0.1` therefore we see a couple of instances in mid-California where there are a couple of low-diversity index schools, with each point landing on a certain city.  
+
+The two major cities (Los Angeles and San Francisco) both have quite a few schools with high diversity, however, Los Angeles has some quite dark spots. Let us zoom in to the city level. Since we are getting more local, we will be using the `ggmap` package to quarry the Google Maps so we get a nice underlying map.
+
+```{r, message=FALSE, warning=FALSE, eval=FALSE}
+LA_map <- get_map(location = 'Los Angeles', zoom = 9)
+ggmap(LA_map) +
+  geom_point(data = map_point %>%
+                      filter(Longitude > -119, Longitude < -117,
+                             Latitude < 34.5, Latitude > 33.5), 
+             aes(Longitude, Latitude, color = diversity),
+             alpha = 0.2) +
+  scale_color_viridis_c(option = "A") +
+  labs(title = "Low diversity areas tends towards city centers \nin Greater Los Angeles Area")
+```
+
+```{r echo=FALSE, fig.align='center'}
+knitr::include_graphics("map.png")
+```
+
+This map shows much more interesting trends!! It appears that low diversity schools cluster together near city centers.
+
+## Where is the money?
+
+We will end this post by taking a look at if the median household income in the county in which the school is located correlates with the diversity index we have calculated for each school.  
+
+This is simply done by joining the two data.frames together and piping them into `ggplot`.
+
+```{r, message=FALSE, warning=FALSE}
+data_enrollment %>% 
+  left_join(income_data_clean, by = c("COUNTY" = "county")) %>%
+  ggplot(aes(median_household_income, diversity)) +
+  geom_jitter(alpha = 0.1, width = 500) +
+  geom_smooth(method = "lm") +
+  ylim(0, 1) +
+  theme_minimal() +
+  labs(x = "Median household income", y = "Diversity Index",
+       title = "Higher diversity index in CA counties with high Median household income")
+```
+
+and we do indeed see a positive correlation between median household income and ethnic diversity in schools in California.  
+
+This is the end of this analysis, I hope you enjoyed it! See you again next time.
+
+## Diversity plotting function
+
+```{r}
+diversity_plot <- function(makeup, fix = 0.45) {
+  df <- tibble(id = seq_len(sum(makeup)),
+               race = imap(makeup, ~ rep(.y, .x)) %>% unlist())
+  
+  cols <- structure(rainbow(length(makeup)), 
+            names = as.character(seq_len(length(makeup)))) %>%
+    c("diag" = "grey30",
+      "other" = "grey70")
+  
+  df1 <- crossing(df, df) %>%
+    mutate(fill = case_when(id == id1 ~ "diag",
+                            race == race1 ~ as.character(race),
+                            TRUE ~ "other")) 
+  
+  df1 %>%
+    ggplot(aes(xmin = id - fix, xmax = id + fix,
+               ymin = id1 - fix, ymax = id1 + fix)) +
+    geom_rect(aes(fill = fill)) +
+    theme(panel.background = element_blank(), 
+          panel.border = element_blank()) +
+    scale_y_continuous(breaks = df[["id"]], labels = df[["race"]]) +
+    scale_x_continuous(breaks = df[["id"]], labels = df[["race"]]) +
+    coord_fixed() +
+    scale_fill_manual(values = cols) +
+    guides(fill = "none") +
+    labs(title = paste0("The diversity score is ", 
+                        signif(mean(df1$fill %in% c("diag", "other")), digits = 3)))
+}
+```
+
+```{r details, echo=FALSE}
+library(details) 
+
+sessioninfo::session_info() %>%
+  details::details(summary = 'session information')
+```

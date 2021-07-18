@@ -1,0 +1,383 @@
+---
+title: Binary text classification with tidytext and caret
+date: '2018-03-31'
+categories:
+  - tidytext
+  - text classification
+tags:
+  - tidytext
+  - caret
+summary: One of my first attempts at text classification. This example uses tidytext and caret. There are mistakes here methodically and it should not be used as a guide.
+preview_only: true
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+opts_chunk$set(
+  echo = TRUE, 
+  cache = TRUE,
+  collapse = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
+
+the scope of this blog post is to show how to do binary text classification using standard tools such as `tidytext` and `caret` packages. One of if not the most common binary text classification tasks are spam detection (spam vs non-spam) that happens in most email services but has much other application such as language identification (English vs non-English).  
+
+In this post, I'll showcase 5 different classification methods to see how they compare with this data. The methods all land on the less complex side of the spectrum and thus do not include creating complex deep neural networks.  
+
+An expansion of this subject is multiclass text classification which I might write about in the future.
+
+## Packages
+
+We load the packages we need for this project. `tidyverse` for general data science work, `tidytext` for text manipulation, and `caret` for modeling.
+
+```{r packages, message=FALSE, eval=FALSE}
+library(tidyverse)
+library(tidytext)
+library(caret)
+```
+
+## Data
+
+The data we will be using for this demonstration will be some English^[[#benderrule](https://thegradient.pub/the-benderrule-on-naming-the-languages-we-study-and-why-it-matters/)] [social media disaster tweets](https://data.world/crowdflower/disasters-on-social-media) discussed in [this article](https://arxiv.org/pdf/1705.02009.pdf). 
+It consists of several tweets regarding accidents mixed in with selection control tweets (not about accidents). We start by loading the data.
+
+```{r data_import, message=FALSE, eval=FALSE} 
+data <- read_csv("https://raw.githubusercontent.com/EmilHvitfeldt/blog/750dc28aa8d514e2c0b8b418ade584df8f4a8c92/data/socialmedia-disaster-tweets-DFE.csv")
+```
+
+And for this exercise, we will only look at the body of the text. Furthermore, a handful of the tweets weren't classified, marked `"Can't Decide"` so we are removing those as well. Since we are working with tweet data we have the constraint that most tweets don't have that much information in them as they are limited in characters and some only contain a couple of words.  
+
+We will at this stage remove what appears to be URLs using some regex and `str_replace_all`, and we will select the columns `id`, `disaster`, and `text`.
+
+```{r data_cleaning, eval=FALSE}
+data_clean <- data %>%
+  filter(choose_one != "Can't Decide") %>%
+  mutate(id = `_unit_id`,
+         disaster = choose_one == "Relevant",
+         text = str_replace_all(text, " ?(f|ht)tp(s?)://(.*)[.][a-z]+", "")) %>%
+  select(id, disaster, text)
+```
+
+First, we take a quick look at the distribution of classes and we see if the classes are balanced
+
+```{r class_chart, eval=FALSE}
+data_clean %>%
+  ggplot(aes(disaster)) +
+  geom_bar()
+```
+
+And we see that is fairly balanced so we don't have to worry about sampling this time.  
+
+The representation we will be using in this post will be the [bag-of-words](https://en.wikipedia.org/wiki/Bag-of-words_model) representation in which we just count how many times each word appears in each tweet disregarding grammar and even word order (mostly).  
+
+We will construct a tf-idf vector model in which each unique word is represented as a column and each document (tweet in our case) is a row of the tf-idf values. This will create a very large matrix/data.frame (a column of each unique word in the total data set) which will overload a lot of the different models we can implement, furthermore will a lot of the words (or features in ML slang) not add considerable information. We have a trade-off between information and computational speed.  
+
+First, we will remove all the stop words, this will ensure that common words that usually don't carry meaning don't take up space (and time) in our model. Next will we only look at words that appear in 10 different tweets. Lastly, we will be looking at both [unigrams and bigrams](https://en.wikipedia.org/wiki/N-gram) to hopefully get a better information extraction.  
+
+```{r data_counts, eval=FALSE}
+data_counts <- map_df(1:2,
+                      ~ unnest_tokens(data_clean, word, text, 
+                                      token = "ngrams", n = .x)) %>%
+  anti_join(stop_words, by = "word") %>%
+  count(id, word, sort = TRUE)
+```
+
+We will only look at words appearing in at least 10 different tweets.
+
+```{r words_10, eval=FALSE}
+words_10 <- data_counts %>%
+  group_by(word) %>%
+  summarise(n = n()) %>% 
+  filter(n >= 10) %>%
+  select(word)
+```
+
+we will right-join this to our data.frame before we will calculate the tf_idf and cast it to a document term matrix.
+
+```{r data_dtm, message=FALSE, error=FALSE, eval=FALSE}
+data_dtm <- data_counts %>%
+  right_join(words_10, by = "word") %>%
+  bind_tf_idf(word, id, n) %>%
+  cast_dtm(id, word, tf_idf)
+```
+
+This leaves us with 2993 features. We create this metadata.frame which acts as an intermediate from our first data set since some tweets might have disappeared completely after the reduction.
+
+```{r meta, eval=FALSE}
+meta <- tibble(id = as.numeric(dimnames(data_dtm)[[1]])) %>%
+  left_join(data_clean[!duplicated(data_clean$id), ], by = "id")
+```
+
+We also create the index (based on the `meta` data.frame) to separate the data into a training and test set.
+
+```{r trainindex, eval=FALSE}
+set.seed(1234)
+trainIndex <- createDataPartition(meta$disaster, p = 0.8, list = FALSE, times = 1)
+```
+
+since a lot of the methods take data.frames as inputs we will take the time and create these here:
+
+```{r data_finish, eval=FALSE}
+data_df_train <- data_dtm[trainIndex, ] %>% as.matrix() %>% as.data.frame()
+data_df_test <- data_dtm[-trainIndex, ] %>% as.matrix() %>% as.data.frame()
+
+response_train <- meta$disaster[trainIndex]
+```
+
+Now each row in the data.frame is a document/tweet (yay tidy principles!!).  
+
+## Missing tweets
+
+In the feature selection earlier we decided to turn our focus towards certain words and word pairs, with that we also turned our focus AWAY from certain words. Since the tweets are fairly short in length it wouldn't be surprising if a handful of the tweets completely skipped out focus as we noted earlier. Let us take a look at those tweets here.
+
+```{r missing_tweets, eval=FALSE}
+data_clean %>%
+  anti_join(meta, by = "id") %>%
+  head(25) %>%
+  pull(text)
+```
+
+We see that a lot of them appear to be part of URLs that our regex didn't detect, furthermore it appears that in those tweets the sole text was the URL which wouldn't have helped us in this case anyway.
+
+## Modeling
+
+Now that we have the data all clean and tidy we will turn our heads towards modeling. We will be using the wonderful `caret` package which we will use to employ the following models
+
+- [Support vector machine](https://en.wikipedia.org/wiki/Support_vector_machine)
+- [Naive Bayes](https://en.wikipedia.org/wiki/Naive_Bayes_classifier)
+- [LogitBoost](https://en.wikipedia.org/wiki/LogitBoost)
+- [Random forest](https://en.wikipedia.org/wiki/Random_forest)
+- [feed-forward neural networks](https://en.wikipedia.org/wiki/Artificial_neural_network)
+
+These were chosen because of their frequent use ( [why SVM are good at text classification](http://www.cs.cornell.edu/people/tj/publications/joachims_98a.pdf) ) or because they are common in the classification field. They were also chosen because they were able to work with data with this number of variables in a reasonable time.
+
+The first time around we will not use a resampling method.
+
+```{r trctrl, eval=FALSE}
+trctrl <- trainControl(method = "none")
+```
+
+## SVM
+
+The first model will be the `svmLinearWeights2` model from the [LiblineaR](https://cran.r-project.org/web/packages/LiblineaR/index.html) package. Where we specify default parameters.
+
+```{r svm_mod, eval=FALSE}
+svm_mod <- train(x = data_df_train,
+                 y = as.factor(response_train),
+                 method = "svmLinearWeights2",
+                 trControl = trctrl,
+                 tuneGrid = data.frame(cost = 1, 
+                                       Loss = 0, 
+                                       weight = 1))
+```
+
+We predict on the test data set based on the fitted model.
+
+```{r svm_pred, eval=FALSE}
+svm_pred <- predict(svm_mod,
+                    newdata = data_df_test)
+```
+
+lastly we calculate the confusion matrix using the `confusionMatrix` function in the `caret` package. 
+
+```{r svm_cm, eval=FALSE}
+svm_cm <- confusionMatrix(svm_pred, meta[-trainIndex, ]$disaster)
+svm_cm
+```
+
+and we get an accuracy of 0.7461646.
+
+## Naive-Bayes
+
+The second model will be the `naive_bayes` model from the [naivebayes](https://cran.r-project.org/web/packages/naivebayes/index.html) package. Where we specify default parameters.
+
+```{r nb_mod, eval=FALSE}
+nb_mod <- train(x = data_df_train,
+                y = as.factor(response_train),
+                method = "naive_bayes",
+                trControl = trctrl,
+                tuneGrid = data.frame(laplace = 0,
+                                      usekernel = FALSE,
+                                      adjust = FALSE))
+```
+
+We predict on the test data set based on the fitted model.
+
+```{r nd_pred, eval=FALSE}
+nb_pred <- predict(nb_mod,
+                   newdata = data_df_test)
+```
+
+calculate the confusion matrix
+
+```{r nb_cm, eval=FALSE}
+nb_cm <- confusionMatrix(nb_pred, meta[-trainIndex, ]$disaster)
+nb_cm
+```
+
+and we get an accuracy of 0.5564854.
+
+## LogitBoost
+
+The third model will be the `LogitBoost` model from the [caTools](https://cran.r-project.org/web/packages/caTools/index.html) package. We don't have to specify any parameters.
+
+```{r logitboost_mod, eval=FALSE}
+logitboost_mod <- train(x = data_df_train,
+                        y = as.factor(response_train),
+                        method = "LogitBoost",
+                        trControl = trctrl)
+```
+
+We predict on the test data set based on the fitted model.
+
+```{r logitboost_pred, eval=FALSE}
+logitboost_pred <- predict(logitboost_mod,
+                           newdata = data_df_test)
+```
+
+calculate the confusion matrix
+
+```{r logitboost_cm, eval=FALSE}
+logitboost_cm <- confusionMatrix(logitboost_pred, meta[-trainIndex, ]$disaster)
+logitboost_cm
+```
+
+and we get an accuracy of 0.632729.
+
+## Random forest
+
+The fourth model will be the `ranger` model from the [caTools](https://cran.r-project.org/web/packages/ranger/index.html) package. Where we specify default parameters.
+
+```{r rf_mod, message=FALSE, warning=FALSE, results='hide', eval=FALSE}
+rf_mod <- train(x = data_df_train, 
+                y = as.factor(response_train), 
+                method = "ranger",
+                trControl = trctrl,
+                tuneGrid = data.frame(mtry = floor(sqrt(dim(data_df_train)[2])),
+                                      splitrule = "gini",
+                                      min.node.size = 1))
+```
+
+We predict on the test data set based on the fitted model.
+
+```{r rf_pred, eval=FALSE}
+rf_pred <- predict(rf_mod,
+                   newdata = data_df_test)
+```
+
+calculate the confusion matrix
+
+```{r rf_cm, eval=FALSE}
+rf_cm <- confusionMatrix(rf_pred, meta[-trainIndex, ]$disaster)
+rf_cm
+```
+
+and we get an accuracy of 0.7777778.
+
+## nnet
+
+The fifth and final model will be the `nnet` model from the [caTools](https://cran.r-project.org/web/packages/nnet/index.html) package. Where we specify default parameters. We will also specify `MaxNWts = 5000` such that it will work. It will need to be more than the number of columns multiplied by the size.
+
+```{r nnet_mod, message=FALSE, warning=FALSE, eval=FALSE}
+nnet_mod <- train(x = data_df_train,
+                    y = as.factor(response_train),
+                    method = "nnet",
+                    trControl = trctrl,
+                    tuneGrid = data.frame(size = 1,
+                                          decay = 5e-4),
+                    MaxNWts = 5000)
+```
+
+We predict on the test data set based on the fitted model.
+
+```{r nnet_pred, eval=FALSE}
+nnet_pred <- predict(nnet_mod,
+                     newdata = data_df_test)
+```
+
+calculate the confusion matrix
+
+```{r nnet_cm, eval=FALSE}
+nnet_cm <- confusionMatrix(nnet_pred, meta[-trainIndex, ]$disaster)
+nnet_cm
+```
+
+and we get an accuracy of 0.7173408.
+
+## Comparing models
+
+To see how the different models stack out we combine the metrics together in a `data.frame`.
+
+```{r mod_results, eval=FALSE}
+mod_results <- rbind(
+  svm_cm$overall, 
+  nb_cm$overall,
+  logitboost_cm$overall,
+  rf_cm$overall,
+  nnet_cm$overall
+  ) %>%
+  as.data.frame() %>%
+  mutate(model = c("SVM", "Naive-Bayes", "LogitBoost", "Random forest", "Neural network"))
+```
+
+visualizing the accuracy for the different models with the red line being the "No Information Rate" that is, having a model that just picks the model common class.
+
+```{r mod_results_chart, eval=FALSE}
+mod_results %>%
+  ggplot(aes(model, Accuracy)) +
+  geom_point() +
+  ylim(0, 1) +
+  geom_hline(yintercept = mod_results$AccuracyNull[1],
+             color = "red")
+```
+
+As you can see all but one approach does better than the "No Information Rate" on its first try before tuning the hyperparameters.
+
+## Tuning hyperparameters
+
+After trying out the different models we saw quite a spread in performance. But it important to remember that the results might be because of good/bad default hyperparameters. There are a few different ways to handle this problem. I'll show one of them here, grid search, on the SVM model so you get the idea. 
+
+We will be using 10-fold [cross-validation](https://en.wikipedia.org/wiki/Cross-validation_(statistics)) and 3 repeats, which will slow down the procedure but will try to limit and reduce overfitting. We will be using [grid search](https://en.wikipedia.org/wiki/Hyperparameter_optimization#Grid_search) approach to find optimal hyperparameters. For the sake of time have to fixed 2 of the hyperparameters and only let one vary. Remember that the time it takes to search through all combinations takes a long time when then the number of hyperparameters increases.
+
+```{r fitControl, eval=FALSE}
+fitControl <- trainControl(method = "repeatedcv",
+                           number = 3,
+                           repeats = 3,
+                           search = "grid")
+```
+
+We have decided to limit the search around the `weight` parameter's default value 1.
+
+```{r svm_mod_2, eval=FALSE}
+svm_mod <- train(x = data_df_train,
+                 y = as.factor(response_train),
+                 method = "svmLinearWeights2",
+                 trControl = fitControl,
+                 tuneGrid = data.frame(cost = 0.01, 
+                                       Loss = 0, 
+                                       weight = seq(0.5, 1.5, 0.1)))
+```
+
+and once it has finished running we can plot the train object to see which value is highest.
+
+```{r svm_mod_2_plot, eval=FALSE}
+plot(svm_mod)
+```
+
+And we see that it appears to be just around 1. It is important to search multiple parameters at the SAME TIME as it can not be assumed that the parameters are independent of each other. The only reason I didn't do that here was to same the time.  
+
+I will leave it to you the reader to find out which of the models have the highest accuracy after doing parameter tuning.  
+
+I hope you have enjoyed this overview of binary text classification. 
+
+```{r details, echo=FALSE}
+library(details) 
+
+sessioninfo::session_info() %>%
+  details::details(summary = 'session information')
+```

@@ -1,0 +1,266 @@
+---
+title: Custom Profiler in R
+date: '2019-05-25'
+categories:
+  - package development
+tags:
+  - package development
+summary: This blog post is going to describe how to write a customizable profiling function
+image:
+  preview_only: true
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+opts_chunk$set(
+  echo = TRUE, 
+  cache = TRUE,
+  collapse = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
+
+This blog post is going to describe how to write a customizable profiling function. If you are not familiar with profiling read the [Profiling](https://adv-r.hadley.nz/perf-measure.html#profiling) section of [Advanced R](https://adv-r.hadley.nz/) to familiarize yourself, I'll wait.
+
+...
+
+Welcome back!
+
+## Packages
+
+While these packages aren't strictly needed since most of what we are doing is happening in base R, am I still loading in `tidyverse` to do some easier string manipulations and plotting.
+
+```{r, message=FALSE}
+library(tidyverse)
+```
+
+## Profiling basics
+
+You have properly used the [profvis](https://rstudio.github.io/profvis/index.html) package. It is an amazing package and I use it on a daily basis. However, the amount of information you get can be overwhelming at times depending on your profiling goals.
+
+Let's propose in this scenario that we take in some data, scale and center it, apply [PCA](https://en.wikipedia.org/wiki/Principal_component_analysis) while only keeping the components that explain 90% of the variance and lastly apply [CLARA](https://www.datanovia.com/en/lessons/clara-in-r-clustering-large-applications/) clustering and return the classification.
+
+The code to do that is contained in the following chunk.
+
+```{r}
+pca_threshold <- function(x, threshold) {
+  data_pca <- prcomp(x, scale. = TRUE)
+  total_var <- sum(data_pca$sdev ^ 2)
+  num_comp <- which.max(cumsum(data_pca$sdev ^ 2 / total_var) >= threshold)
+  data_pca$x[, seq_len(num_comp)]
+}
+
+pca_kmeans <- function(x, threshold = 0.9, centers = 2) {
+  data_matrix <- as.matrix(x)
+  data_pca <- pca_threshold(data_matrix, threshold = threshold)
+  data_kmeans <- cluster::clara(data_pca, k = centers)
+  data_kmeans$cluster
+}
+```
+
+Now we create some data and run profvis on it
+
+```{r}
+large_data <- diamonds %>%
+  select_if(is.numeric) %>%
+  sample_n(100000, replace = TRUE)
+```
+
+
+```{r, eval=FALSE}
+profvis::profvis({
+  pca_kmeans(large_data)
+})
+```
+
+And we get the following information back.
+
+```{r echo=FALSE, fig.align='center'}
+knitr::include_graphics("profvis-flame.png")
+```
+
+```{r echo=FALSE, fig.align='center'}
+knitr::include_graphics("profvis-data.png")
+```
+
+## The Problem
+
+It is very informative, but it is also giving a LOT of information. Let's propose we want to know the percentage of the computation time is used to do the PCA calculations. In the `profvis` framework you would need to do the calculation manually. All while waiting for the HTML widget to load.
+
+## The Idea
+
+`profvis` uses the `Rprof` function internally to inspect what is happening. By using `Rprof` directly we can extract the profile and calculate our output/matrix.
+
+The base profiling steps are
+
+```{r, eval=FALSE}
+tmp <- tempfile()
+Rprof(tmp)
+##################
+# Code goes here #
+##################
+Rprof(NULL)
+profile <- readLines(tmp)
+```
+
+This chunk will set up a temporary file, start the profiler and set it to write to the temporary file, stop the profiler and read the result from the profiler.
+
+Trying it with our code we get
+
+```{r, eval=FALSE}
+tmp <- tempfile()
+Rprof(tmp)
+x <- pca_kmeans(large_data)
+Rprof(NULL)
+profile <- readLines(tmp)
+
+head(profile)
+```
+```{r echo=FALSE}
+c("sample.interval=20000", "\"aperm.default\" \"aperm\" \"apply\" \"scale.default\" \"scale\" \"prcomp.default\" \"prcomp\" \"pca_threshold\" \"pca_kmeans\" ", 
+"\"is.na\" \"FUN\" \"apply\" \"scale.default\" \"scale\" \"prcomp.default\" \"prcomp\" \"pca_threshold\" \"pca_kmeans\" ", 
+"\"is.na\" \"FUN\" \"apply\" \"scale.default\" \"scale\" \"prcomp.default\" \"prcomp\" \"pca_threshold\" \"pca_kmeans\" ", 
+"\"is.na\" \"FUN\" \"apply\" \"scale.default\" \"scale\" \"prcomp.default\" \"prcomp\" \"pca_threshold\" \"pca_kmeans\" ", 
+"\"is.na\" \"FUN\" \"apply\" \"scale.default\" \"scale\" \"prcomp.default\" \"prcomp\" \"pca_threshold\" \"pca_kmeans\" "
+)
+```
+
+Let's see what these lines mean. First, we notice that the first line is just denoting the sample interval, so we can ignore that for now. Let's look at the next line
+
+```{r echo=FALSE}
+"\"aperm.default\" \"aperm\" \"apply\" \"scale.default\" \"scale\" \"prcomp.default\" \"prcomp\" \"pca_threshold\" \"pca_kmeans\" "
+```
+
+This is a snapshot of the "call-stack", and it reads inside-out. So we have that `aperm.default` is called inside `aperm` which is called inside `apply` which is called inside `scale.default` and so on and so forth all the way up to `pca_kmeans`.
+
+Now that we know how `Rprof` works, we can write some code that checks whether "pca_threshold" appears in the call stack and then find the percentage.
+
+## The Solution
+
+We can now create a function that will calculate the percentage of the time is being spent in a certain function.
+
+```{r}
+prof_procentage <- function(expr, pattern) {
+  tmp <- tempfile()
+  Rprof(tmp)
+  expr
+  Rprof(NULL)
+  profile <- readLines(tmp)[-1]
+  
+  mean(grepl(pattern, profile))
+}
+```
+
+This function can now easily be used in our calculation.
+
+```{r}
+prof_procentage(
+  x <- pca_kmeans(large_data),
+  pattern = "pca_threshold"
+)
+```
+
+And this is how to create a custom profiler. Simply modify the last line in the skeleton function `prof_procentage` to change its behavior.
+
+## the Extensions
+
+The sky's the limit! you are only limited by your regex abilities. You can also change the output. In the last example, I returned a numeric of the percentage, But we can also have the output be a plot
+
+```{r}
+prof_procentage_plot <- function(expr, pattern) {
+  tmp <- tempfile()
+  Rprof(tmp)
+  expr
+  Rprof(NULL)
+  profile <- readLines(tmp)[-1]
+  
+  data.frame(x = grepl(pattern, profile)) %>%
+    ggplot(aes(x)) +
+    geom_bar()
+}
+
+prof_procentage_plot(
+  x <- pca_kmeans(large_data),
+  pattern = "pca_threshold"
+)
+```
+
+## The follow-up
+
+After my initial announcement of this post, I got a helpful tweet from [Hadley Wickham](https://twitter.com/hadleywickham/status/1132737794760237059) about the `profvis::parse_rprof()`. In essence, it will help you parse the file you write with `Rprof` to help you get to your answer faster and safer.
+
+So some output like
+
+```{r echo=FALSE}
+tmp <- c("sample.interval=20000", "\"aperm.default\" \"aperm\" \"apply\" \"scale.default\" \"scale\" \"prcomp.default\" \"prcomp\" \"pca_threshold\" \"pca_kmeans\" ", 
+"\"is.na\" \"FUN\" \"apply\" \"scale.default\" \"scale\" \"prcomp.default\" \"prcomp\" \"pca_threshold\" \"pca_kmeans\" ", 
+"\"is.na\" \"FUN\" \"apply\" \"scale.default\" \"scale\" \"prcomp.default\" \"prcomp\" \"pca_threshold\" \"pca_kmeans\" ", 
+"\"is.na\" \"FUN\" \"apply\" \"scale.default\" \"scale\" \"prcomp.default\" \"prcomp\" \"pca_threshold\" \"pca_kmeans\" ", 
+"\"is.na\" \"FUN\" \"apply\" \"scale.default\" \"scale\" \"prcomp.default\" \"prcomp\" \"pca_threshold\" \"pca_kmeans\" "
+)
+tmp
+```
+
+Will be transformed to a nice data.frame with `profvis::parse_rprof()`
+
+```{r echo=FALSE}
+list(prof = structure(list(time = c(1L, 1L, 1L, 1L, 1L, 1L, 1L, 
+1L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 3L, 3L, 3L, 3L, 3L, 
+3L, 3L, 3L, 3L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 5L, 5L, 5L, 
+5L, 5L, 5L, 5L, 5L, 5L), depth = c(9L, 8L, 7L, 6L, 5L, 4L, 3L, 
+2L, 1L, 9L, 8L, 7L, 6L, 5L, 4L, 3L, 2L, 1L, 9L, 8L, 7L, 6L, 5L, 
+4L, 3L, 2L, 1L, 9L, 8L, 7L, 6L, 5L, 4L, 3L, 2L, 1L, 9L, 8L, 7L, 
+6L, 5L, 4L, 3L, 2L, 1L), label = c("aperm.default", "aperm", 
+"apply", "scale.default", "scale", "prcomp.default", "prcomp", 
+"pca_threshold", "pca_kmeans", "is.na", "FUN", "apply", "scale.default", 
+"scale", "prcomp.default", "prcomp", "pca_threshold", "pca_kmeans", 
+"is.na", "FUN", "apply", "scale.default", "scale", "prcomp.default", 
+"prcomp", "pca_threshold", "pca_kmeans", "is.na", "FUN", "apply", 
+"scale.default", "scale", "prcomp.default", "prcomp", "pca_threshold", 
+"pca_kmeans", "is.na", "FUN", "apply", "scale.default", "scale", 
+"prcomp.default", "prcomp", "pca_threshold", "pca_kmeans"), filenum = c(NA_integer_, 
+NA_integer_, NA_integer_, NA_integer_, NA_integer_, NA_integer_, 
+NA_integer_, NA_integer_, NA_integer_, NA_integer_, NA_integer_, 
+NA_integer_, NA_integer_, NA_integer_, NA_integer_, NA_integer_, 
+NA_integer_, NA_integer_, NA_integer_, NA_integer_, NA_integer_, 
+NA_integer_, NA_integer_, NA_integer_, NA_integer_, NA_integer_, 
+NA_integer_, NA_integer_, NA_integer_, NA_integer_, NA_integer_, 
+NA_integer_, NA_integer_, NA_integer_, NA_integer_, NA_integer_, 
+NA_integer_, NA_integer_, NA_integer_, NA_integer_, NA_integer_, 
+NA_integer_, NA_integer_, NA_integer_, NA_integer_), linenum = c(NA_integer_, 
+NA_integer_, NA_integer_, NA_integer_, NA_integer_, NA_integer_, 
+NA_integer_, NA_integer_, NA_integer_, NA_integer_, NA_integer_, 
+NA_integer_, NA_integer_, NA_integer_, NA_integer_, NA_integer_, 
+NA_integer_, NA_integer_, NA_integer_, NA_integer_, NA_integer_, 
+NA_integer_, NA_integer_, NA_integer_, NA_integer_, NA_integer_, 
+NA_integer_, NA_integer_, NA_integer_, NA_integer_, NA_integer_, 
+NA_integer_, NA_integer_, NA_integer_, NA_integer_, NA_integer_, 
+NA_integer_, NA_integer_, NA_integer_, NA_integer_, NA_integer_, 
+NA_integer_, NA_integer_, NA_integer_, NA_integer_), memalloc = c(0, 
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+0, 0), meminc = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+0, 0, 0, 0, 0, 0, 0, 0, 0), filename = c(NA_character_, NA_character_, 
+NA_character_, NA_character_, NA_character_, NA_character_, NA_character_, 
+NA_character_, NA_character_, NA_character_, NA_character_, NA_character_, 
+NA_character_, NA_character_, NA_character_, NA_character_, NA_character_, 
+NA_character_, NA_character_, NA_character_, NA_character_, NA_character_, 
+NA_character_, NA_character_, NA_character_, NA_character_, NA_character_, 
+NA_character_, NA_character_, NA_character_, NA_character_, NA_character_, 
+NA_character_, NA_character_, NA_character_, NA_character_, NA_character_, 
+NA_character_, NA_character_, NA_character_, NA_character_, NA_character_, 
+NA_character_, NA_character_, NA_character_)), row.names = c(NA, 
+45L), class = "data.frame"), interval = 20, files = list())$prof
+```
+
+```{r details, echo=FALSE}
+library(details) 
+
+sessioninfo::session_info() %>%
+  details::details(summary = 'session information')
+```

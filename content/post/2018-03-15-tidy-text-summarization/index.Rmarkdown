@@ -1,0 +1,213 @@
+---
+title: Tidy Text Summarization using TextRank
+date: '2018-03-15'
+categories:
+  - text mining
+tags:
+  - ggplot2
+  - tidytext
+summary: I'm taking a look at text summarization using the TextRank package.
+image:
+  preview_only: true
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+opts_chunk$set(
+  echo = TRUE, 
+  cache = TRUE,
+  collapse = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
+
+:::note
+This code has been lightly revised to make sure it works as of 2018-12-19.
+:::
+
+## Text summarization
+
+In the realm of text summarization there two main paths:
+
+- extractive summarization
+- abstractive summarization
+
+Where extractive scoring words and sentences according to some metric and then using that information to summarize the text. Usually done by copy/pasting (extracting) the most informative parts of the text.  
+
+The abstractive methods aim to build a semantic representation of the text and then use natural language generation techniques to generate text describing the informative parts.  
+
+Extractive summarization is primarily the simpler task, with a handful of algorithms do will do the scoring. While with the advent of deep learning did NLP has a boost in abstractive summarization methods.  
+
+This post will focus on an example of an extractive summarization method called [TextRank](https://web.eecs.umich.edu/~mihalcea/papers/mihalcea.emnlp04.pdf) which is based on the [PageRank](https://en.wikipedia.org/wiki/PageRank) algorithm that is used by Google to rank websites by their importance.
+
+## TextRank Algorithm
+
+The TextRank algorithm is based on a graph-based ranking algorithm. Generally used in web searches at Google, but have many other applications. Graph-based ranking algorithms try to decide the importance of a vertex by taking into account information about the entire graph rather than the vertex-specific information. A typical piece of information would be the information between relationships (edges) between the vertices.  
+
+In the NLP case, we need to define what we want to use as vertices and edges. In our case will we be using sentences as the vertices and words as the connection edges. So sentences with words that appear in many other sentences are seen as more important.
+
+## Data preparation
+
+We start by loading the appropriate packages, which include `tidyverse` for general tasks, `tidytext` for text manipulations, `textrank` for the implementation of the TextRank algorithm, and finally `rvest` to scrape an article to use as an example. The GitHub for the `textrank` package can be found [here](https://github.com/bnosac/textrank).
+
+```{r, message=FALSE}
+library(tidyverse)
+library(tidytext)
+library(textrank)
+library(rvest)
+```
+
+To showcase this method I have randomly (EXTENSIVELY filtered political and controversial) selected an article as our guinea pig. The main body is selected using the `html_nodes`.
+
+```{r}
+url <- "http://time.com/5196761/fitbit-ace-kids-fitness-tracker/"
+article <- read_html(url) %>%
+  html_nodes('div[class="padded"]') %>%
+  html_text()
+```
+
+next, we load the article into a `tibble` (since tidytext required the input as a data.frame). We start by tokenizing according to sentences which are done by setting `token = "sentences"` in `unnest_tokens`. The tokenization is not always perfect using this tokenizer, but it has a low number of dependencies and is sufficient for this showcase. Lastly, we add a sentence number column and switch the order of the columns (`textrank_sentences` prefers the columns in a certain order).
+
+```{r}
+article_sentences <- tibble(text = article) %>%
+  unnest_tokens(sentence, text, token = "sentences") %>%
+  mutate(sentence_id = row_number()) %>%
+  select(sentence_id, sentence)
+```
+
+next, we will tokenize again but this time to get words. In doing this we will retain the `sentence_id` column in our data.
+
+```{r}
+article_words <- article_sentences %>%
+  unnest_tokens(word, sentence)
+```
+
+now we have all the sufficient input for the `textrank_sentences` function. However, we will go one step further and remove the stop words in `article_words` since they would appear in most of the sentences and don't really carry any information in themself.
+
+```{r}
+article_words <- article_words %>%
+  anti_join(stop_words, by = "word")
+```
+
+## Running TextRank
+
+Running the TextRank algorithm is easy, the `textrank_sentences` function only required 2 inputs. 
+
+- A data.frame with sentences
+- A data.frame with tokens (in our case words) which are part of each sentence
+
+So we are ready to run
+
+```{r}
+article_summary <- textrank_sentences(data = article_sentences, 
+                                      terminology = article_words)
+```
+
+The output has its own printing method that displays the top 5 sentences:
+
+```{r}
+article_summary
+```
+
+Which in itself is pretty good.
+
+## Digging deeper
+
+While the printing method is good, we can extract the information to good some further analysis. The information about the sentences is stored in `sentences`. It includes the information `article_sentences` plus the calculated textrank score.
+
+```{r, eval=FALSE}
+article_summary[["sentences"]]
+```
+
+Let's begging by extracting the top 3 and bottom 3 sentences to see how they differ.
+
+```{r}
+article_summary[["sentences"]] %>%
+  arrange(desc(textrank)) %>% 
+  slice(1:3) %>%
+  pull(sentence)
+```
+
+As expected these are the same sentences as we saw earlier. However, the button sentences don't include the word Fitbit (properly a rather important word) and focus more on "other" things, like the reference to another product in the second sentence.
+
+```{r}
+article_summary[["sentences"]] %>%
+  arrange(textrank) %>% 
+  slice(1:3) %>%
+  pull(sentence)
+```
+
+If we look at the article over time, it would be interesting to see where the important sentences appear.
+
+```{r}
+article_summary[["sentences"]] %>%
+  ggplot(aes(textrank_id, textrank, fill = textrank_id)) +
+  geom_col() +
+  theme_minimal() +
+  scale_fill_viridis_c() +
+  guides(fill = "none") +
+  labs(x = "Sentence",
+       y = "TextRank score",
+       title = "4 Most informative sentences appear within first half of sentences",
+       subtitle = 'In article "Fitbits Newest Fitness Tracker Is Just for Kids"',
+       caption = "Source: http://time.com/5196761/fitbit-ace-kids-fitness-tracker/")
+```
+
+## Working with books???
+
+Summaries help cut down the reading when used on articles. Would the same approach work on books? Let's see what happens when you exchange "sentence" in "article" with "chapter" in "book". I'll go to my old friend `emma` from the `janeaustenr` package. We will borrow some code from the [Text Mining with R](https://www.tidytextmining.com/tidytext.html) book to create the chapters. Remember that we want 1 chapter per row.
+
+```{r}
+emma_chapters <- janeaustenr::emma %>%
+  tibble(text = .) %>%
+  mutate(chapter_id = cumsum(str_detect(text, regex("^chapter [\\divxlc]",
+                                                 ignore_case = TRUE)))) %>%
+  filter(chapter_id > 0) %>%
+  group_by(chapter_id) %>%
+  summarise(text = paste(text, collapse = ' '))
+```
+
+and proceed as before to find the words and remove the stop words.
+
+```{r}
+emma_words <- emma_chapters %>%
+  unnest_tokens(word, text) %>%
+  anti_join(stop_words, by = "word")
+```
+
+We run the `textrank_sentences` function again. It should still be very quick, as the bottleneck of the algorithm is more with the number of vertices rather than their individual size.
+
+```{r}
+emma_summary <- textrank_sentences(data = emma_chapters, 
+                                   terminology = emma_words)
+```
+
+We will be careful not to use the standard printing method as it would print 5 whole chapters!!  
+
+Instead, we will look at the bar chart again to see if the important chapters appear in any particular order.
+
+```{r}
+emma_summary[["sentences"]] %>%
+  ggplot(aes(textrank_id, textrank, fill = textrank_id)) +
+  geom_col() +
+  theme_minimal() +
+  scale_fill_viridis_c(option = "inferno") +
+  guides(fill = "none") +
+  labs(x = "Chapter",
+       y = "TextRank score",
+       title = "Chapter importance in the novel Emma by Jane Austen") +
+  scale_x_continuous(breaks = seq(from = 0, to = 55, by = 5))
+```
+
+Which doesn't appear to be the case in this particular text (which is properly good since skipping a chapter would be discouraged in a book like Emma). however, it might prove helpful in non-chronological texts.
+
+```{r details, echo=FALSE}
+library(details) 
+
+sessioninfo::session_info() %>%
+  details::details(summary = 'session information')
+```

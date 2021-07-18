@@ -1,0 +1,428 @@
+---
+title: Manipulating colors with {prismatic}
+date: '2019-10-01'
+categories:
+  - data visualization
+  - color palettes
+tags:
+  - color palettes
+  - prismatic
+summary: Announcement of {prismatic} package that facilitates easy manipulation of colors.
+image:
+  preview_only: true
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+opts_chunk$set(
+  echo = TRUE,
+  cache = TRUE,
+  collapse = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
+
+I'm happy to announce my newest package [prismatic](https://github.com/EmilHvitfeldt/prismatic) which facilitates simple manipulations of colors. I had been working on this package online and offline for some time, but the [promise of easy manipulation of mapped data in ggplot2](https://github.com/tidyverse/ggplot2/pull/3534) forced me to get some work done to get this package out before ggplot2 version 3.3.0. (as of the time of writing.)
+
+This post will go over some of the finer details with lots of pretty pictures!
+
+## Loading Packages
+
+The prismatic package is a fairly low dependency with only 1 import being [farver](https://github.com/thomasp85/farver) for lightning-fast conversion between color spaces. I have also loaded the [colorspace](http://colorspace.r-forge.r-project.org/) package, from which some of the following functions have been inspired. I will use colorspace to enable the plotting of multiple color palettes side by side, but I will not showcase the code each time. Go to the end of the post for example code for comparison plots.
+
+```{r}
+library(prismatic)
+library(colorspace) # for plotting functions
+library(magrittr) # for the glorious pipe
+```
+
+## Let me see the colors!!
+
+If you have seen my work, you will properly know that I [like](https://github.com/EmilHvitfeldt/r-color-palettes) [colors](https://github.com/EmilHvitfeldt/paletteer) [alot](https://github.com/EmilHvitfeldt/quickpalette)! But being also to quickly inspect some colors have always been a little too much work. Now all you have to do it pass your colors to `color()` (or `colour()` for our friends across the pond) to get a <color> object which has a nice `plot()` method
+
+```{r}
+rainbow(10) %>% color() %>% plot()
+```
+
+```{r}
+hcl.colors(25) %>% color() %>% plot()
+```
+
+```{r}
+scico::scico(256, palette = "buda") %>% color() %>% plot()
+```
+
+Which I would like to think is one of the main features of the package. If you happen to have [crayon](https://github.com/r-lib/crayon) available you will see an approximation of the colors with a filled-in background (this is limited to 256 colors so your mileage might vary, when in doubt use `plot()`)
+
+```{r echo=FALSE, fig.align='center'}
+knitr::include_graphics("print.png")
+```
+
+This is the extent of what the color object can do.
+
+## Manipulations
+
+The second star of the package is the [collection of functions](https://emilhvitfeldt.github.io/prismatic/reference/index.html) to manipulate the colors. All these functions have a couple of things in common.
+
+- They all start with `clr_` for easy auto-completion in your favorite IDE.
+- They all take a vector of colors as the first argument and results in a colors object of the same length.
+
+these two facts make the function super pipe friendly.
+
+### Saturation
+
+The two functions `clr_saturate()` and `clr_desaturate()` both modifies the [saturation](https://en.wikipedia.org/wiki/HSL_and_HSV#Saturation) of a color. It takes a single additional argument to specify the degree to which the (de)saturation should occur. These values should be between 0(nothing happens) and 1(full on power!).
+
+notice how you don't have to call `color()` on the output of `clr_desaturate()` as it already returns a colors object.
+
+```{r}
+hcl.colors(10, "plasma") %>%
+  clr_desaturate(0.8) %>%
+  plot()
+```
+
+```{r echo=FALSE}
+cl <- hcl.colors(12, palette = "Plasma")
+swatchplot(
+  list(
+    saturate = rbind("0.2" = clr_saturate(cl,  0.2),
+                     "0.4" = clr_saturate(cl,  0.4),
+                     "0.6" = clr_saturate(cl,  0.6),
+                     "0.8" = clr_saturate(cl,  0.8),
+                     "1.0" = clr_saturate(cl,  1.0)),
+    desaturate = rbind("0.2" = clr_desaturate(cl,  0.2),
+                       "0.4" = clr_desaturate(cl,  0.4),
+                       "0.6" = clr_desaturate(cl,  0.6),
+                       "0.8" = clr_desaturate(cl,  0.8),
+                       "1.0" = clr_desaturate(cl,  1.0))
+  ),
+  nrow = 6, line = 2.5
+)
+```
+
+Examples are done with Mango palette from [LaCroixColoR](https://github.com/johannesbjork/LaCroixColoR) package.
+
+```{r echo=FALSE}
+cl <- LaCroixColoR::lacroix_palettes$Mango[1, ]
+swatchplot(
+  list(
+    saturate = rbind("0.2" = clr_saturate(cl,  0.2),
+                     "0.4" = clr_saturate(cl,  0.4),
+                     "0.6" = clr_saturate(cl,  0.6),
+                     "0.8" = clr_saturate(cl,  0.8),
+                     "1.0" = clr_saturate(cl,  1.0)),
+    desaturate = rbind("0.2" = clr_desaturate(cl,  0.2),
+                       "0.4" = clr_desaturate(cl,  0.4),
+                       "0.6" = clr_desaturate(cl,  0.6),
+                       "0.8" = clr_desaturate(cl,  0.8),
+                       "1.0" = clr_desaturate(cl,  1.0))
+  ),
+  nrow = 6, line = 2.5
+)
+```
+
+### Seeing life in black and white
+
+Turns out there is a [lot of different ways](https://www.tannerhelland.com/3643/grayscale-image-algorithm-vb6/) to turn colors into grayscale. Prismatic has implemented a handful of these. Notice how the viridis palette is still working once you have it transformed to black and white.
+
+```{r}
+hcl.colors(10) %>%
+  clr_greyscale() %>%
+  plot()
+```
+
+Be advised that not all of these methods are meant to be perceptually uniform.
+
+```{r echo=FALSE}
+swatchplot(
+  list(
+    viridis = rbind("luma"          = clr_greyscale(hcl.colors(10),  "luma"),
+                     "averaging"     = clr_greyscale(hcl.colors(10),  "averaging"),
+                     "min_decomp"    = clr_greyscale(hcl.colors(10),  "min_decomp"),
+                     "max_decomp"    = clr_greyscale(hcl.colors(10),  "max_decomp"),
+                     "red_channel"   = clr_greyscale(hcl.colors(10),  "red_channel"),
+                     "green_channel" = clr_greyscale(hcl.colors(10),  "green_channel"),
+                     "blue_channel"  = clr_greyscale(hcl.colors(10),  "blue_channel")),
+    rainbow = rbind("luma"           = clr_greyscale(rainbow(10),  "luma"),
+                     "averaging"     = clr_greyscale(rainbow(10),  "averaging"),
+                     "min_decomp"    = clr_greyscale(rainbow(10),  "min_decomp"),
+                     "max_decomp"    = clr_greyscale(rainbow(10),  "max_decomp"),
+                     "red_channel"   = clr_greyscale(rainbow(10),  "red_channel"),
+                     "green_channel" = clr_greyscale(rainbow(10),  "green_channel"),
+                     "blue_channel"  = clr_greyscale(rainbow(10),  "blue_channel"))
+  ),
+  nrow = 8, line = 2.5
+)
+```
+
+### Negate
+
+Negation of color is pretty simple. it will just pick the opposite color in [RGB space](https://en.wikipedia.org/wiki/RGB_color_space).
+
+```{r}
+terrain.colors(10) %>%
+  clr_negate() %>%
+  plot()
+```
+
+```{r echo=FALSE}
+swatchplot(
+  list(
+    Normal = rbind("viridis"          = hcl.colors(10),
+                     "rainbow"     = rainbow(10),
+                     "terrain"    = terrain.colors(10)),
+    Negated = rbind(" "           = clr_negate(hcl.colors(10)),
+                     " "     = clr_negate(rainbow(10)),
+                     " "    = clr_negate(terrain.colors(10)))
+  ),
+  nrow = 4, line = 2.5
+)
+```
+
+### Mixing
+
+Mixing is just adding colors together. Thus my mixing a color with red would make the color redder.
+
+```{r}
+rainbow(10) %>%
+  clr_mix("red") %>%
+  plot()
+```
+
+
+```{r echo=FALSE}
+cl <- hcl.colors(12, palette = "Plasma")
+swatchplot(
+  list(
+    `Mixing in green` = rbind(
+      "0.0" = clr_mix(cl, "darkgreen",  0.0),
+      "0.1" = clr_mix(cl, "darkgreen",  0.1),
+      "0.2" = clr_mix(cl, "darkgreen",  0.2),
+      "0.3" = clr_mix(cl, "darkgreen",  0.3),
+      "1.4" = clr_mix(cl, "darkgreen",  0.4),
+      "0.5" = clr_mix(cl, "darkgreen",  0.5),
+      "0.6" = clr_mix(cl, "darkgreen",  0.6),
+      "0.7" = clr_mix(cl, "darkgreen",  0.7),
+      "0.8" = clr_mix(cl, "darkgreen",  0.8),
+      "0.9" = clr_mix(cl, "darkgreen",  0.9),
+      "1.0" = clr_mix(cl, "darkgreen",  1.0)
+      )
+  ),
+  nrow = 6, line = 2.5
+)
+```
+
+
+```{r echo=FALSE}
+swatchplot(
+  list(
+    viridis = rbind("red"          = clr_mix(hcl.colors(10),  "red"),
+                     "green"     = clr_mix(hcl.colors(10),  "green"),
+                     "blue"    = clr_mix(hcl.colors(10),  "blue"),
+                     "yellow"    = clr_mix(hcl.colors(10),  "yellow"),
+                     "black"   = clr_mix(hcl.colors(10),  "black"),
+                     "white" = clr_mix(hcl.colors(10),  "white"),
+                     "pink"  = clr_mix(hcl.colors(10),  "pink")),
+    rainbow = rbind(" "           = clr_mix(rainbow(10),  "red"),
+                     " "     = clr_mix(rainbow(10),  "green"),
+                     " "    = clr_mix(rainbow(10),  "blue"),
+                     " "    = clr_mix(rainbow(10),  "yellow"),
+                     " "   = clr_mix(rainbow(10),  "black"),
+                     " " = clr_mix(rainbow(10),  "white"),
+                     " "  = clr_mix(rainbow(10),  "pink"))
+  ),
+  nrow = 8, line = 2.5
+)
+```
+
+### Rotation
+
+the `clr_rotate()` function will take a color and rotate its hue, which is a way to walk around the rainbow.
+
+```{r}
+terrain.colors(10) %>%
+  clr_rotate(90) %>%
+  plot()
+```
+
+```{r echo=FALSE}
+swatchplot(
+  list(
+    terrain = rbind("0" = clr_rotate(terrain.colors(10),  0),
+                     "60" = clr_rotate(terrain.colors(10),  60),
+                     "120" = clr_rotate(terrain.colors(10),  120),
+                     "180" = clr_rotate(terrain.colors(10),  180),
+                     "240" = clr_rotate(terrain.colors(10),  240),
+                     "300" = clr_rotate(terrain.colors(10),  300)),
+    viridis = rbind("0" = clr_rotate(hcl.colors(10),  0),
+                       "60" = clr_rotate(hcl.colors(10),  60),
+                       "120" = clr_rotate(hcl.colors(10),  120),
+                       "180" = clr_rotate(hcl.colors(10),  180),
+                       "240" = clr_rotate(hcl.colors(10),  240),
+                       "300" = clr_rotate(hcl.colors(10),  300))
+  ),
+  nrow = 7, line = 2.5
+)
+```
+
+
+### Colorblindness
+
+also includes 3 functions (`clr_protan()`, `clr_deutan()` and `clr_tritan()`) to simulate colorblindness. These functions has a `severity` argument to control the strength of the deficiency.
+
+```{r}
+hcl.colors(10) %>%
+  clr_deutan() %>%
+  plot()
+```
+
+```{r echo=FALSE}
+cl <- hcl.colors(12, palette = "Inferno")
+swatchplot(
+  list(
+    `Tritanopia` = rbind(
+      "0.0" = clr_tritan(cl,  0.0),
+      "0.1" = clr_tritan(cl,  0.1),
+      "0.2" = clr_tritan(cl,  0.2),
+      "0.3" = clr_tritan(cl,  0.3),
+      "1.4" = clr_tritan(cl,  0.4),
+      "0.5" = clr_tritan(cl,  0.5),
+      "0.6" = clr_tritan(cl,  0.6),
+      "0.7" = clr_tritan(cl,  0.7),
+      "0.8" = clr_tritan(cl,  0.8),
+      "0.9" = clr_tritan(cl,  0.9),
+      "1.0" = clr_tritan(cl,  1.0)
+      )
+  ),
+  nrow = 6, line = 2.5
+)
+```
+
+```{r echo=FALSE}
+cl <- hcl.colors(12, palette = "Inferno")
+swatchplot(
+  list(
+    `Protanopia` = rbind(
+      "0.0" = clr_protan(cl,  0.0),
+      "0.1" = clr_protan(cl,  0.1),
+      "0.2" = clr_protan(cl,  0.2),
+      "0.3" = clr_protan(cl,  0.3),
+      "1.4" = clr_protan(cl,  0.4),
+      "0.5" = clr_protan(cl,  0.5),
+      "0.6" = clr_protan(cl,  0.6),
+      "0.7" = clr_protan(cl,  0.7),
+      "0.8" = clr_protan(cl,  0.8),
+      "0.9" = clr_protan(cl,  0.9),
+      "1.0" = clr_protan(cl,  1.0)
+      )
+  ),
+  nrow = 6, line = 2.5
+)
+```
+
+```{r echo=FALSE}
+cl <- hcl.colors(12, palette = "Inferno")
+swatchplot(
+  list(
+    `Deuteranopia` = rbind(
+      "0.0" = clr_deutan(cl,  0.0),
+      "0.1" = clr_deutan(cl,  0.1),
+      "0.2" = clr_deutan(cl,  0.2),
+      "0.3" = clr_deutan(cl,  0.3),
+      "1.4" = clr_deutan(cl,  0.4),
+      "0.5" = clr_deutan(cl,  0.5),
+      "0.6" = clr_deutan(cl,  0.6),
+      "0.7" = clr_deutan(cl,  0.7),
+      "0.8" = clr_deutan(cl,  0.8),
+      "0.9" = clr_deutan(cl,  0.9),
+      "1.0" = clr_deutan(cl,  1.0)
+      )
+  ),
+  nrow = 6, line = 2.5
+)
+```
+
+### Light and darkness
+
+Lastly, we have functions to simulate lightness and darkness. This is surprisingly hard to do and no one way works great all the time. Please refer to the excellent [colorspace paper](https://arxiv.org/abs/1903.06490) for more information. These functions (`clr_lighten()` and `clr_darken()`) also include a `space` argument to determine the space in which to perform the transformation. Please try each of these to find the optimal method for your use case.
+
+```{r}
+rainbow(10) %>%
+  clr_darken() %>%
+  plot()
+```
+
+```{r echo=FALSE}
+cl <- hcl.colors(12, palette = "Plasma")
+swatchplot(
+  list(
+    HSL = rbind("0.2" = clr_lighten(cl,  0.2, "HSL"),
+                     "0.4" = clr_lighten(cl,  0.4, "HSL"),
+                     "0.6" = clr_lighten(cl,  0.6, "HSL"),
+                     "0.8" = clr_lighten(cl,  0.8, "HSL")),
+    HCL = rbind("0.2" = clr_lighten(cl,  0.2, "HCL"),
+                     "0.4" = clr_lighten(cl,  0.4, "HCL"),
+                     "0.6" = clr_lighten(cl,  0.6, "HCL"),
+                     "0.8" = clr_lighten(cl,  0.8, "HCL")),
+    combined = rbind("0.2" = clr_lighten(cl,  0.2, "combined"),
+                       "0.4" = clr_lighten(cl,  0.4, "combined"),
+                       "0.6" = clr_lighten(cl,  0.6, "combined"),
+                       "0.8" = clr_lighten(cl,  0.8, "combined"))
+  ),
+  nrow = 6, line = 2.5
+)
+```
+
+```{r echo=FALSE}
+cl <- rainbow(10)
+swatchplot(
+  list(
+    HSL = rbind("0.2" = clr_darken(cl,  0.2, "HSL"),
+                     "0.4" = clr_darken(cl,  0.4, "HSL"),
+                     "0.6" = clr_darken(cl,  0.6, "HSL"),
+                     "0.8" = clr_darken(cl,  0.8, "HSL")),
+    HCL = rbind("0.2" = clr_darken(cl,  0.2, "HCL"),
+                     "0.4" = clr_darken(cl,  0.4, "HCL"),
+                     "0.6" = clr_darken(cl,  0.6, "HCL"),
+                     "0.8" = clr_darken(cl,  0.8, "HCL")),
+    combined = rbind("0.2" = clr_darken(cl,  0.2, "combined"),
+                       "0.4" = clr_darken(cl,  0.4, "combined"),
+                       "0.6" = clr_darken(cl,  0.6, "combined"),
+                       "0.8" = clr_darken(cl,  0.8, "combined"))
+  ),
+  nrow = 6, line = 2.5
+)
+```
+
+## Comparison Code
+
+```{r, eval=FALSE}
+swatchplot(
+  list(
+    saturate = rbind("0" = clr_rotate(terrain.colors(10),  0),
+                     "60" = clr_rotate(terrain.colors(10),  60),
+                     "120" = clr_rotate(terrain.colors(10),  120),
+                     "180" = clr_rotate(terrain.colors(10),  180),
+                     "240" = clr_rotate(terrain.colors(10),  240),
+                     "300" = clr_rotate(terrain.colors(10),  300)),
+    desaturate = rbind("0" = clr_rotate(hcl.colors(10),  0),
+                       "60" = clr_rotate(hcl.colors(10),  60),
+                       "120" = clr_rotate(hcl.colors(10),  120),
+                       "180" = clr_rotate(hcl.colors(10),  180),
+                       "240" = clr_rotate(hcl.colors(10),  240),
+                       "300" = clr_rotate(hcl.colors(10),  300))
+  ),
+  nrow = 7, line = 2.5
+)
+```
+
+```{r details, echo=FALSE}
+library(details) 
+
+sessioninfo::session_info() %>%
+  details::details(summary = 'session information')
+```

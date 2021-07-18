@@ -1,0 +1,102 @@
+---
+title: Center continuous palettes in ggplot2
+date: '2019-05-21'
+categories:
+  - data visualization
+tags:
+  - ggplot2
+summary: This blog post will show you how to properly use a divergent color palette with a user-specified midpoint.
+image:
+  preview_only: true
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+opts_chunk$set(
+  echo = TRUE, 
+  cache = TRUE,
+  collapse = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
+
+Using a divergent color palette can be beneficial when you want to draw attention to some values compared to a fixed point. Like temperature around freezing, monetary values around zero, and so on. However, it can be hard to align 0 to the middle of a continuous color scale. This post will explain how to do this correctly for `scale_colour_distiller` and `scale_fill_distiller`, and this will also work for extension packages such as [scico](https://github.com/thomasp85/scico).
+
+# Packages and data
+
+```{r}
+library(ggplot2)
+library(scico)
+
+theme_set(theme_minimal())
+
+example_data <- data.frame(name = letters[1:10],
+                           value = -2:7 + 0.5)
+```
+
+# The problem
+
+First, let's construct a simple chart, we have a bar chart where some of the bars go up, and some of the bars go down.
+
+```{r}
+ggplot(example_data, aes(name, value)) +
+  geom_col()
+```
+
+Next, let's add some color by assigning the value to the fill aesthetic.
+
+```{r}
+ggplot(example_data, aes(name, value, fill = value)) +
+  geom_col()
+```
+
+Using a sequential palette for a chart like this doesn't give us much insight. Lets add a divergent scale with `scale_fill_gradient2()`. While it is doing its job, you still have to define the colors yourself.
+
+```{r}
+ggplot(example_data, aes(name, value, fill = value)) +
+  geom_col() +
+  scale_fill_gradient2()
+```
+
+Lets instead use the `scale_fill_distiller()` function to access the continuous versions of the [brewer scales](http://colorbrewer2.org).
+
+```{r}
+ggplot(example_data, aes(name, value, fill = value)) +
+  geom_col() +
+  scale_fill_distiller(type = "div")
+```
+
+But look! some of the upwards-facing bars are colored green instead of orange.
+
+# The solution
+
+The solution is to manually specify the limits of the color palette such that the center of the palette appears in the middle of the range. This is simply done by finding the absolute maximum of the range of the variable to are mapping to the color. We then set the limits to go from negative max to positive max, thus making zero appear in the middle.
+
+```{r}
+limit <- max(abs(example_data$value)) * c(-1, 1)
+
+ggplot(example_data, aes(name, value, fill = value)) +
+  geom_col() +
+  scale_fill_distiller(type = "div", limit = limit)
+```
+
+This approach also works with the `scico` package.
+
+```{r}
+limit <- max(abs(example_data$value)) * c(-1, 1)
+
+ggplot(example_data, aes(name, value, fill = value)) +
+  geom_col() +
+  scale_fill_scico(palette = "cork", limit = limit) 
+```
+
+```{r details, echo=FALSE}
+library(details) 
+
+sessioninfo::session_info() %>%
+  details::details(summary = 'session information')
+```

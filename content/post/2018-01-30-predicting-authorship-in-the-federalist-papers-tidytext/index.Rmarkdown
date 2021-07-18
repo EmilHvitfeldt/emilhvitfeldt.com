@@ -1,0 +1,250 @@
+---
+title: Predicting authorship in The Federalist Papers with tidytext
+date: '2018-01-30'
+categories:
+  - text mining
+tags:
+  - tidytext
+summary: My first attempt at performing supervised predictive modeling using text features.
+image:
+  preview_only: true
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+opts_chunk$set(
+  echo = TRUE, 
+  cache = TRUE,
+  collapse = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
+
+<div class = "note">
+This code has been lightly revised to make sure it works as of 2018-12-16.
+</div>
+
+<div class = "note">
+This post was early in my predictive modeling with text journey. For a more up to date version on this process see <a href="https://smltar.com/mlclassification.html">smltar.com - Classification</a>.
+</div>
+
+## Overview
+
+In this post, we will
+
+- talk about The Federalist Papers
+- access and tidy the text using the tidytext package
+- apply our model to the data to predict the author of the disputed papers
+
+## The Federalist Papers
+
+In the early days of The United States of America around the time when the Constitution was being signed did a series of articles were published in various newspapers. These papers were writing under the false name *Publius*. It was later revealed to have been the collected works of Alexander Hamilton, James Madison, and John Jay.  
+
+The Interesting thing in this was that the authorship of these papers was not consistent. This is where we come in, in this blog post will we try to see if we are able to classify the troublesome papers.  
+
+If you would like to read more about this story including past attempts to solve this problem please read [How Statistics Solved a 175-Year-Old Mystery About Alexander Hamilton](https://priceonomics.com/how-statistics-solved-a-175-year-old-mystery-about/) by Ben Christopher. 
+
+## Libraries
+
+We will start by loading the libraries which includes `glmnet` that will be used to construct the predictive model later.
+
+```{r old-library, message=FALSE}
+library(tidyverse)
+library(tidytext)
+library(gutenbergr)
+library(glmnet)
+```
+
+## Data
+
+We are lucky today because all of The Federalist Papers happens to be on Gutenberg, which is written in English^[[#benderrule](https://thegradient.pub/the-benderrule-on-naming-the-languages-we-study-and-why-it-matters/)]
+
+```{r old-paper, message=FALSE}
+papers <- gutenberg_download(1404)
+head(papers, n = 10)
+```
+
+For the predictive modeling we are going to do later, I would like to divide each paper up into sentences. This is a rather complicated affair, but I will take a rather ad hoc approach that will be good enough for the purpose of this post. We will do this by collapsing all the lines together and splitting them by ., ! and ?'s.
+
+```{r old-sentences}
+papers_sentences <- pull(papers, text) %>% 
+  str_c(collapse = " ") %>%
+  str_split(pattern = "\\.|\\?|\\!") %>%
+  unlist() %>%
+  tibble(text = .) %>%
+  mutate(sentence = row_number())
+```
+
+We would like to assign each of these sentences to the corresponding article number and author. Thus we will first assign each of the 85 papers to the 3 authors and a group for the papers of interest. 
+
+```{r old-namesid}
+hamilton <- c(1, 6:9, 11:13, 15:17, 21:36, 59:61, 65:85)
+madison <- c(10, 14, 18:20, 37:48)
+jay <- c(2:5, 64)
+unknown <- c(49:58, 62:63)
+```
+
+Next, we will simply look for lines that include "FEDERALIST No" as they would indicate the start of a paper and then label them accordingly.
+
+```{r old-papers-words}
+papers_words <- papers_sentences %>%
+  mutate(no = cumsum(str_detect(text, regex("FEDERALIST No",
+                                            ignore_case = TRUE)))) %>%
+  unnest_tokens(word, text) %>%
+  mutate(author = case_when(no %in% hamilton ~ "hamilton",
+                            no %in% madison ~ "madison",
+                            no %in% jay ~ "jay",
+                            no %in% unknown ~ "unknown"),
+         id = paste(no, sentence, sep = "-"))
+```
+
+let us take a quick count before we move on
+
+```{r old-papers-words-count}
+papers_words %>%
+  count(author)
+```
+
+We see that Jay didn't post as many articles as the other two gentlemen so we will exclude him from further analysis
+
+```{r old-papers-words-filter}
+papers_words <- papers_words %>%
+  filter(author != "jay")
+```
+
+## Predictive modeling
+
+To make this predictive model we will use the term-frequency matrix as our input and as the response will be an indicator that Hamilton wrote the paper. For this modeling we will use the `glmnet` package which fits a generalized linear model via penalized maximum likelihood. It is quite fast and works great with sparse matrix input, hence the term-frequency matrix.  
+
+The response is set to the binomial family because of the binary nature of the response (did Hamilton write the sentence).  
+
+First, we get the term-frequency matrix with the `cast_` family in tidytext.
+
+```{r old-papers-dtm}
+papers_dtm <- papers_words %>%
+  count(id, word, sort = TRUE) %>%
+  cast_sparse(id, word, n)
+```
+
+We will need to define a response variable, which we will do with a simple `mutate`, along with an indicator for our training set which will be the articles with known authors.
+
+```{r old-meta}
+meta <- data.frame(id = dimnames(papers_dtm)[[1]]) %>%
+  left_join(papers_words[!duplicated(papers_words$id), ], by = "id") %>%
+  mutate(y = as.numeric(author == "hamilton"),
+         train = author != "unknown")
+```
+
+We will use cross-validation to obtain the best value of the model tuning parameter. This part takes a couple of minutes.
+
+```{r old-model1}
+predictor <- papers_dtm[meta$train, ]
+response <- meta$y[meta$train]
+
+model <- cv.glmnet(predictor, response, family = "binomial", alpha = 0.9)
+```
+
+After running the model, we will add the predicted values to our `meta` data.frame.
+
+```{r old-predict1}
+meta <- meta %>%
+  mutate(pred = predict(model, newx = as.matrix(papers_dtm), type = "response",
+                        s = model$lambda.1se) %>% as.numeric())
+```
+
+It is now time to visualize the results. First, we will look at how the training set have been separated.
+
+```{r old-plot1}
+meta %>%
+  filter(train) %>%
+  ggplot(aes(factor(no), pred)) + 
+  geom_boxplot(aes(fill = author)) +
+  theme_minimal() +
+  labs(y = "predicted probability",
+       x = "Article number") +
+  theme(legend.position = "top") +
+  scale_fill_manual(values = c("#304890", "#6A7E50")) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+
+The box plot of predicted probabilities, one value for each sentence, for the 68 papers by
+Alexander Hamilton and James Madison. The probability represents the extent to which the
+model believes the sentence was written by Alexander Hamilton. 
+
+Let us see if this model can settle the dispute of the 12 papers. We will plot the predicted probabilities of the unknown papers alongside the training set.
+
+```{r old-plot1-pink}
+meta %>%
+  ggplot(aes(factor(no), pred)) + 
+  geom_boxplot(aes(fill = author)) +
+  theme_minimal() +
+  labs(y = "predicted probability",
+       x = "Article number") +
+  theme(legend.position = "top") +
+  scale_fill_manual(values = c("#304890", "#6A7E50", "#D6BBD0")) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+we notice that the predicted probabilities don't quite make up able to determine who the original author is. This can be due to a variety of different reasons. One of them could be that Madison wrote them and Hamilton edited them.
+
+Despite the unsuccessful attempt to predict the secret author we still managed to showcase the method which while being unsuccessful in this case could provide useful in other cases.
+
+## Working showcase
+
+Since the method proved unsuccessful in determining the secret author did I decide to add an example where the authorship is known. We will use the same data from earlier, only look at known Hamilton and Madison papers, train on some of them, and show that the algorithm is able to detect the authorship of the other.
+
+```{r old-papers-dtm2}
+papers_dtm <- papers_words %>%
+  filter(author != "unknown") %>%
+  count(id, word, sort = TRUE) %>% 
+  cast_dtm(id, word, n)
+```
+
+here we let the first 16 papers that they wrote be the test set and the rest be the training set.
+
+```{r old-meta2}
+meta <- data.frame(id = dimnames(papers_dtm)[[1]]) %>%
+  left_join(papers_words[!duplicated(papers_words$id), ], by = "id") %>%
+  mutate(y = as.numeric(author == "hamilton"),
+         train = no > 20)
+```
+
+```{r old-model2}
+predictor <- papers_dtm[meta$train, ] %>% as.matrix()
+response <- meta$y[meta$train]
+
+model <- cv.glmnet(predictor, response, family = "binomial", alpha = 0.9)
+```
+
+```{r old-predict2}
+meta <- meta %>%
+  mutate(pred = predict(model, newx = as.matrix(papers_dtm), type = "response",
+                        s = model$lambda.1se) %>% as.numeric())
+```
+
+```{r old-plot2}
+meta %>%
+  ggplot(aes(factor(no), pred)) + 
+  geom_boxplot(aes(fill = author)) +
+  theme_minimal() +
+  labs(y = "predicted probability",
+       x = "Article number") +
+  theme(legend.position = "top") +
+  scale_fill_manual(values = c("#304890", "#6A7E50")) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  geom_vline(aes(xintercept = 16.5), color = "red")
+```
+
+So we see that while it isn't as crystal clear what the test set predictions are giving us, they still give a pretty good indication.
+
+```{r details, echo=FALSE}
+library(details) 
+
+sessioninfo::session_info() %>%
+  details::details(summary = 'session information')
+```

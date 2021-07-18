@@ -1,0 +1,224 @@
+---
+title: Using PCA for word embedding in R
+date: '2018-05-22'
+categories:
+  - tidytext
+  - word embeddings
+tags:
+  - tidytext
+summary: A brief look at using PCA as a word embedding technique. 
+image:
+  preview_only: true
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+opts_chunk$set(
+  echo = TRUE, 
+  cache = TRUE,
+  collapse = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
+
+In my earlier post on [binary text classification](https://www.hvitfeldt.me/2018/03/binary-text-classification-with-tidytext-and-caret/) was one of the problems that occurred was the sheer size of the data when trying to fit a model. The bag of words method of having each column describe the occurrence of a specific word in each document (row) is appealing from a mathematical perspective but gives rise to large sparse matrices which aren't handled well by some models in R. This leads to slow running code at best and crashing at worst.  
+
+We will try to combat this problem by using something called [word embedding](https://en.wikipedia.org/wiki/Word_embedding) which is a general term for the process of mapping textural information to a lower-dimensional space. This is a special case of dimensionality reduction, and we will use the simple well-known method [Principal component analysis](https://en.wikipedia.org/wiki/Principal_component_analysis) for our word embedding today. We are essentially trying to squeeze as much information into as little space as possible such that our models can run in a reasonable time.  
+
+We will use the same data as in the earlier post, and the PCA procedure is very inspired by Julia Silge recent post [Understanding PCA using Stack Overflow data](https://juliasilge.com/blog/stack-overflow-pca/) which you should read if you haven't already!!
+
+## Data prepossessing
+
+We will use the standard `tidyverse` toolset for this post. We will use `randomForest` model as this approach should be much faster.
+
+```{r packages, message=FALSE}
+library(tidyverse)
+library(tidytext)
+library(broom)
+library(randomForest)
+```
+
+The data we will be using for this demonstration will be some English^[[#benderrule](https://thegradient.pub/the-benderrule-on-naming-the-languages-we-study-and-why-it-matters/)] [social media disaster tweets](https://data.world/crowdflower/disasters-on-social-media) discussed in [this article](https://arxiv.org/pdf/1705.02009.pdf). 
+It consists of several tweets regarding accidents mixed in with a selection of control tweets (not about accidents). We start by loading the data.
+
+```{r data_import, message=FALSE} 
+data <- read_csv("https://raw.githubusercontent.com/EmilHvitfeldt/blog/750dc28aa8d514e2c0b8b418ade584df8f4a8c92/data/socialmedia-disaster-tweets-DFE.csv")
+```
+
+And for this exercise, we will only look at the body of the text. Furthermore, a handful of the tweets weren't classified, marked `"Can't Decide"` so we are removing those as well. Since we are working with tweet data we have the constraint that most tweets don't have that much information in them as they are limited in characters and some only contain a couple of words.  
+
+We will at this stage remove what appears to be URLs using some regex and `str_replace_all`, and we will select the columns `id`, `disaster`, and `text`.
+
+```{r data_cleaning}
+data_clean <- data %>%
+  filter(choose_one != "Can't Decide") %>%
+  mutate(id = `_unit_id`,
+         disaster = choose_one == "Relevant",
+         text = str_replace_all(text, " ?(f|ht)tp(s?)://(.*)[.][a-z]+", "")) %>%
+  select(id, disaster, text)
+```
+
+We then extract all unigrams, bigrams and remove stopwords. 
+
+```{r}
+data_counts <- map_df(1:2,
+                      ~ unnest_tokens(data_clean, word, text, 
+                                      token = "ngrams", n = .x)) %>%
+  anti_join(stop_words, by = "word")
+```
+
+We will only focus on the top 10000 most used words for the remainder of the analysis.
+
+```{r}
+top10000 <- data_counts %>%
+  count(word, sort = TRUE) %>%
+  slice(1:10000) %>%
+  select(word)
+```
+
+we will then count the words again, but this time we will count the word occurrence within each document and remove the underused words.
+
+```{r}
+unnested_words <- data_counts %>%
+  count(id, word, sort = TRUE) %>%
+  inner_join(top10000, by = "word")
+```
+
+We then cast the data.frame to a sparse matrix.
+
+```{r}
+sparse_word_matrix <- unnested_words %>%
+  cast_sparse(id, word, n)
+```
+
+In the last post, we used this matrix for the modeling, but the size was quite an obstacle. 
+
+```{r}
+dim(sparse_word_matrix)
+```
+
+We have a row for each document and a row for each of the top 10000 words, but most of the elements are empty so each of the variables doesn't contain much information. We will do word embedding by applying PCA to the sparse word count matrix. Like Julia Silge we will use the wonderful [irlba](https://bwlewis.github.io/irlba/) package that facilities PCA on sparse matrices. First, we scale the matrix and then we apply PCA where we request 64 columns.  
+
+This stage will take some time, but that is the trade-off we will be making when using word embedding. We take some computation time upfront in exchange for quick computation later down the line.
+
+```{r}
+word_scaled <- scale(sparse_word_matrix)
+word_pca <- irlba::prcomp_irlba(word_scaled, n = 64)
+```
+
+Then we will create a meta data.frame to take care of tweets that disappeared when we cleaned them earlier.
+
+```{r}
+meta <- tibble(id = as.numeric(dimnames(sparse_word_matrix)[[1]])) %>%
+  left_join(data_clean[!duplicated(data_clean$id), ], by = "id")
+```
+
+Now we combine the PCA matrix with the proper response variable (disaster/non-disaster) with the addition of a training/testing split variable.
+
+```{r}
+class_df <- data.frame(word_pca$x) %>%
+  mutate(response = factor(meta$disaster),
+         split = sample(0:1, NROW(meta), replace = TRUE, prob = c(0.2, 0.8)))
+```
+
+We now have a data frame with 64 explanatory variables instead of the 10000 we started with. This a huge reduction which hopefully should pay off. For this demonstration will we try using two kinds of models. Standard logistic regression and a random forest model. Logistic regression is a good baseline which should be blazing fast now since the reduction has taken place and the random forest model which generally was quite slow should be more manageable this time around.
+
+```{r}
+model <- glm(response ~ ., 
+             data = filter(class_df, split == 1), 
+             family = binomial)
+
+y_pred <- predict(model, 
+                  type = "response",
+                  newdata = filter(class_df, split == 0) %>% select(-response))
+
+y_pred_logical <- if_else(y_pred > 0.5, 1, 0)
+(con <- table(y_pred_logical, filter(class_df, split == 0) %>% pull(response)))
+sum(diag(con)) / sum(con)
+```
+
+it work fairly quickly and we get a decent accuracy of `r round(sum(diag(con)) / sum(con) * 100)`%. Remember this method isn't meant to improve the accuracy but rather to improve the computational time. 
+
+```{r}
+model <- randomForest(response ~ ., 
+                      data = filter(class_df, split == 1))
+
+y_pred <- predict(model, 
+                  type = "class",
+                  newdata = filter(class_df, split == 0) %>% select(-response))
+
+(con <- table(y_pred, filter(class_df, split == 0) %>% pull(response)))
+sum(diag(con)) / sum(con)
+```
+This one takes slightly longer to run due to the number of trees, but it does give us the nifty `r round(sum(diag(con)) / sum(con) * 100)`% accuracy which is pretty good considering we only look at tweets.
+
+And this is all that there is to it! The dimensionality reduction method was able to reduce the number of variables while retaining most of the information within those variables such that we can run our procedures at a faster phase without much loss. There is still a lot of individual improvements to be done if this was to be used further, both in terms of hyper-parameter selection in the modeling choices but also the number of PCA variables that should be used in the final modeling. Remember that this is just one of the simpler methods, with more advanced word representation methods being [glove](https://nlp.stanford.edu/projects/glove/) and [word2vec](https://www.tensorflow.org/tutorials/word2vec).
+
+## Data viz
+
+Since Julia did most of the legwork for the visualizations so we will take a look at how each of the words contributes to the first four components. 
+
+```{r}
+tidied_pca <- bind_cols(Tag = colnames(word_scaled),
+                        word_pca$rotation) %>%
+    gather(PC, Contribution, PC1:PC4)
+
+tidied_pca %>% 
+    filter(PC %in% paste0("PC", 1:4)) %>%
+    ggplot(aes(Tag, Contribution, fill = Tag)) +
+    geom_col(show.legend = FALSE) +
+    theme(axis.text.x = element_blank(), 
+          axis.ticks.x = element_blank()) + 
+    labs(x = "Words",
+         y = "Relative importance in each principal component") +
+    facet_wrap(~ PC, ncol = 2)
+```
+
+What we see is quite different then what Julia found in her study. We have just a few words doing most of the contributions in each of component. Lets zoom in to take a look at the words with the most influence on the different components:
+
+```{r}
+map_df(c(-1, 1) * 20,
+    ~ tidied_pca %>%
+        filter(PC == "PC1") %>% 
+        top_n(.x, Contribution)) %>%
+    mutate(Tag = reorder(Tag, Contribution)) %>%
+    ggplot(aes(Tag, Contribution, fill = Tag)) +
+    geom_col(show.legend = FALSE, alpha = 0.8) +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5), 
+          axis.ticks.x = element_blank()) +
+    labs(x = "Words",
+         y = "Relative importance in principle component",
+         title = "PC1")
+```
+
+We would like to see some sensible separation between the positive words and the negative words (concerning contribution). However, I haven't been able to come up with a meaningful full grouping for the first 3 components. The fourth on the other hand have all the positive influencing words containing numbers in one way or another.
+
+```{r}
+map_df(c(-1, 1) * 20,
+    ~ tidied_pca %>%
+        filter(PC == "PC4") %>% 
+        top_n(.x, Contribution)) %>%
+    mutate(Tag = reorder(Tag, Contribution)) %>%
+    ggplot(aes(Tag, Contribution, fill = Tag)) +
+    geom_col(show.legend = FALSE, alpha = 0.8) +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5), 
+          axis.ticks.x = element_blank()) +
+    labs(x = "Words",
+         y = "Relative importance in principle component",
+         title = "PC4")
+```
+
+This is all I have for this time. Hope you enjoyed it!
+
+```{r details, echo=FALSE}
+library(details) 
+
+sessioninfo::session_info() %>%
+  details::details(summary = 'session information')
+```

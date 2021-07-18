@@ -1,0 +1,242 @@
+---
+title: 'Textrecipes series: lexicons'
+date: '2020-05-12'
+slug: textrecipes-series-lexicon
+categories:
+  - text classification
+  - tidymodels
+  - textrecipes
+  - tidytuesday
+  - textrecipes series
+tags:
+  - tidymodels
+  - textecipes
+  - tidytuesday
+summary: This is the second blog post in a series I am starting to go over the various text preprocessing workflows you can do with textrecipes. This post talks about how to use lexicons.
+image:
+  caption: 'Photo by [Moritz Schmidt](https://unsplash.com/@moroo) on [Unsplash](https://unsplash.com/)'
+  preview_only: false
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+opts_chunk$set(
+  echo = TRUE,
+  cache = TRUE,
+  collapse = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
+
+This is the second blog post in the [textrecipes](https://github.com/tidymodels/textrecipes) series where I go over the various text preprocessing workflows you can do with textrecipes. This post will be covering how to use lexicons to create features.
+This post will not cover end-to-end modeling but will only look at how to add lexicons information into your recipe.
+
+## Packages `r emo::ji("package")`
+
+We are going fairly light package wise this time only needing [tidymodels](https://www.tidymodels.org/), textrecipes, and lastly tidytext for EDA. We will also be using [textdata](https://github.com/EmilHvitfeldt/textdata) to provide lexicons.
+
+```{r, message=FALSE, warning=FALSE}
+library(tidymodels)
+library(textrecipes)
+library(tidytext)
+library(textdata)
+theme_set(theme_minimal())
+```
+
+## What is a lexicon?
+
+A lexicon is a list of words with one or more corresponding values for each word.
+You could imagine a sentiment lexicon having entries such as "awesome = 1", "terrible = -1" and "okay = 0".
+Having this information could be useful if you want to predict if some text is positively charged or negatively charged.
+
+One real-world lexicon is the [AFINN](http://www2.imm.dtu.dk/pubdb/pubs/6010-full.html) lexicon.
+It rates English words on a scale from -5 (negative) to 5 (positive).
+The words have been manually labeled by Finn Årup Nielsen in 2009-2011.
+It is available in textdata as the function `lexicon_afinn()`
+
+```{r}
+lexicon_afinn()
+```
+
+:::note
+The first time you use a function in textdata you are given a prompt to download. Please carefully read the prompt to make sure you are able to conform to the license and the demands of the authors.
+:::
+
+And we have plenty of words.
+Note that this list doesn't give every possible word-value pair, this is partly because words with no apparent sentiment such as (cat, house, government) haven't been encluded.
+Always make sure to manually inspect a premade lexicon before using it in your application.
+Make sure that the domain you are working in is similar to the domain the lexicon was created for. 
+An example of a domain-specific lexicon is the Loughran-McDonald sentiment lexicon (`lexicon_loughran()`) which was created for use with financial documents.
+
+## The data
+
+We will be using the data Animal Crossing data from the last post again.
+
+```{r, message=FALSE}
+user_reviews <- readr::read_tsv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-05-05/user_reviews.tsv')
+
+user_reviews <- user_reviews %>%
+  mutate(grade = factor(grade > 7, c(TRUE, FALSE), c("High", "Low")))
+
+set.seed(1234)
+review_split <- initial_split(user_reviews)
+
+review_training <- training(review_split)
+review_testing <- training(review_split)
+```
+
+We can use lexicons in our text mining with tidytext too.
+First, we will tokenize
+
+```{r}
+review_tokens <- review_training %>%
+  select(grade, user_name, text) %>%
+  unnest_tokens(tokens, text)
+
+review_tokens
+```
+
+then we can use a `left_join()` to add a sentiment variable
+```{r}
+review_tokens %>%
+  left_join(lexicon_afinn(), by = c("tokens" = "word"))
+```
+
+If we want to look at the overall document-wise sentiment level we can sum the values within each document
+
+```{r}
+review_tokens_sentiment <- review_tokens %>%
+  left_join(lexicon_afinn(), by = c("tokens" = "word")) %>%
+  group_by(user_name, grade) %>% 
+  summarise(sentiment = sum(value, na.rm = TRUE))
+
+review_tokens_sentiment
+```
+
+Since the AFINN lexicon is centered around 0 we can very generally say that positive scores tend to be more positive and a negative score will tend to accompany negative texts.
+
+:::note
+There are many oversimplifications going on here. We are not taking sentence length into account. There is no reason to believe a 100-word review with a score of 10 is any less positive than a 1000-word review with a score of 100. It is also not obvious that "a breathtaking(5) bastard(-5)" is a neutral statement.
+:::
+
+We can visualize the final distribution
+
+```{r}
+review_tokens_sentiment %>% 
+  ggplot(aes(sentiment)) +
+  geom_bar()
+```
+
+But it would be more informative if we include `grade` to see if there is a difference
+
+```{r}
+review_tokens_sentiment %>% 
+  ggplot(aes(sentiment, fill = grade)) +
+  geom_boxplot()
+```
+
+It appears that the lexicon is not entirely useless.
+The sentiments for highly-rated reviews are a little bit higher.
+
+## Reshaping a lexicon
+
+A lexicon needs to be in a specific format to be used in textrecipes. 
+We need a tibble with the first column containing tokens and any additional columns should contain the numerics.
+`lexicon_afinn()` already meets the demand and can be used directly.
+The `lexicon_loughran()` doesn't give us the information we want. 
+
+```{r}
+lexicon_loughran()
+```
+
+With the sentiment being a character denoting the sentiment of the word. 
+What might not be obvious at first glance of this lexicon is that a word can have multiple sentiments such as the word "encumber" which has 3
+
+```{r}
+lexicon_loughran() %>%
+  filter(word == "encumber")
+```
+
+We can use [tidyr](https://tidyr.tidyverse.org/) to turn this into a wide format.
+
+```{r}
+lexicon_loughran_wide <- lexicon_loughran() %>%
+  mutate(var = 1) %>% 
+  tidyr::pivot_wider(names_from = sentiment, 
+                     values_from = var, 
+                     values_fill = list(var = 0))
+
+lexicon_loughran_wide
+```
+
+This is now be used.
+Textrecipes are able to handle multi-axis lexicons with no problems.
+
+## Using textrecipes
+
+To use these lexicons in our modeling step will we use the `step_word_embeddings()` step.
+This is normally used for [word embeddings](https://ruder.io/word-embeddings-1/), but you can treat a lexicon (when transformed according to the last section) as a selection of word vector or in other words a word embedding.
+
+To see the effect lets create a minimal recipe that only sums along the lexicons using the AFINN lexicon
+
+```{r}
+recipe(~ text, data = review_training) %>%
+  step_tokenize(text) %>%
+  step_word_embeddings(text, embeddings = lexicon_afinn()) %>%
+  prep() %>%
+  juice()
+```
+
+This gives us 1 column of the sum of the values. 
+If we instead used the `lexicon_loughran_wide` lexicon the get back 6 variables.
+
+```{r}
+recipe(~ text, data = review_training) %>%
+  step_tokenize(text) %>%
+  step_word_embeddings(text, embeddings = lexicon_loughran_wide, prefix = "loughran") %>%
+  prep() %>%
+  juice()
+```
+
+To use the lexicon values along with side term frequencies can we use `step_mutate()` to create a separate variable to be used for lexicon calculations.
+
+```{r}
+rec_spec <- recipe(grade ~ text + date, review_training) %>%
+  # Days since release
+  step_mutate(date = as.numeric(date - as.Date("2020-03-20"))) %>%
+  # Tokenize to words
+  step_tokenize(text) %>%
+  
+  # Create copy of text variable
+  step_mutate(text_lexicon = text) %>%
+  # Apply lexicon counting
+  step_word_embeddings(text_lexicon, embeddings = lexicon_afinn(), prefix = "afinn") %>%
+  
+  # Remove stopwords
+  step_stopwords(text) %>%
+  # Remove less frequent words
+  step_tokenfilter(text, max_tokens = 100) %>%
+  # Calculate term frequencies
+  step_tf(text, weight_scheme = "binary")
+
+rec_spec
+```
+
+By inspectiong the results we get:
+
+```{r}
+rec_spec %>%
+  prep() %>%
+  juice()
+```
+
+```{r details, echo=FALSE}
+library(details) 
+
+sessioninfo::session_info() %>%
+  details::details(summary = 'session information')
+```
