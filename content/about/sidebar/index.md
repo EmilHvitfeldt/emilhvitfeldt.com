@@ -1,7 +1,7 @@
 ---
 ## Configure sidebar content in narrow column
 author: "Emil Hvitfeldt"
-role: "Clinical Data Analyst"
+role: "Software Engineer"
 avatar_shape: rounded # circle, square, rounded, leave blank to exclude
 show_social_links: true # specify social accounts in site config
 audio_link_label: "How to say my name, the h and d are silent" # leave blank to exclude
