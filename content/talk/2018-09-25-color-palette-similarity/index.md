@@ -1,5 +1,5 @@
 ---
-title: "Similarity measure in the space of color palettes"
+title: "Similarity Measure in the Space of Color Palettes"
 draft: false
 event: 'OC RUG'
 event_url: https://www.meetup.com/OC-RUG/events/253818054/
