@@ -1,0 +1,28 @@
+---
+title: 'Pimp My Slides: Colors and Fonts'
+date: '2022-08-16'
+slug: smltar-story
+categories:
+  - pimp my slides
+tags:
+  - pimp my slides
+summary: All about colors and fonts in slidecrafting
+image:
+  preview_only: true
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+opts_chunk$set(
+  echo = FALSE,
+  cache = TRUE,
+  collapse = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
+
+Hello! This will be a multiple part series about what I like to call slide crafting 
