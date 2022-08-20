@@ -66,7 +66,7 @@ When finding your colors you will mainly look for 3 different types of colors:
 
 - background colors,
 - text colors,
-- contract colors
+- contrast colors
 
 this is a simplistic model and it will do us just fine. In general, I think having 3-6 colors is about the right amount of colors. This doesn't mean that you couldn't have 10 colors in your theme, but that you should be very deliberate in your choices.
 
@@ -91,6 +91,10 @@ There are many color contrast checking websites out there, I like the [https://c
 ![](contrast.png)
 
 This contrast requirement means that both your background and text color will be quite dark and light, as it is quite hard for most highly saturated colors to have high contrasts to anything else.
+
+<div class = "warning">
+You should try to avoid pure black and pure white. These colors can be a bit much and can be unpleasant to look at for long periods of time.
+</div>
 
 This contrast is related to font size, the smaller and finer the text is, the more important it is that you have good contrast.
 
