@@ -1,6 +1,6 @@
 ---
 title: 'Slidecraft 101: Colors and Fonts'
-date: '2022-08-16'
+date: '2022-08-25'
 slug: smltar-story
 categories:
   - slidecraft 101
