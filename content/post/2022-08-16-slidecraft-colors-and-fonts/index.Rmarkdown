@@ -39,7 +39,7 @@ When I think of theming I think of all the different parts of the page I can cha
 
 A little can go a long way! We like to joke that styling slides are a never-ending task. And while that is accurate, especially if you are a perfectionist or a beginner in the CSS/JS landscape, it shouldn't be a reason why you don't do any styling at all. If I'm strapped for time, I will spend 20-30 minutes up front creating and applying a minimal theme. After reading this post you should be able to as well.
 
-In a quarto presentation, we can [customize the theme](https://quarto.org/docs/presentations/revealjs/themes.html#customizing-themes) beyond the basics by supplying a [Sass](https://sass-lang.com/) file.
+In a quarto presentation, we can [customize the theme](https://quarto.org/docs/presentations/revealjs/themes.html#customizing-themes) beyond the basics by supplying a [.scss](https://sass-lang.com/) file.
 
 We can set this up by using the `theme` argument to the `revealjs` format like so:
 
@@ -168,7 +168,7 @@ $link-color: #99D9DD;
 
 ````
 
-While the above configurations are perfectly fine, I find that using [sass variables](https://sass-lang.com/documentation/variables) to be clear, and it helps us tremendously if we start making more changes. So I create variables all with the prefix `theme-` and descriptive names so I know what is what.
+While the above configurations are perfectly fine, I find that using [sass](https://quarto.org/docs/presentations/revealjs/themes.html#creating-themes) [variables](https://sass-lang.com/documentation/variables) to be clear, and it helps us tremendously if we start making more changes. So I create variables all with the prefix `theme-` and descriptive names so I know what is what.
 
 ````scss
 /*-- scss:defaults --*/
