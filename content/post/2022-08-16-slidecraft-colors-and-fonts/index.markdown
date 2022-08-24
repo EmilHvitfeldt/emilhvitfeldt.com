@@ -1,31 +1,18 @@
 ---
-title: 'Pimp My Slides: Colors and Fonts'
+title: 'Slidecraft 101: Colors and Fonts'
 date: '2022-08-16'
 slug: smltar-story
 categories:
-  - pimp my slides
+  - slidecraft 101
 tags:
-  - pimp my slides
+  - slidecraft 101
   - quarto
 summary: All about colors and fonts in slidecrafting
 image:
   preview_only: true
 ---
 
-```{r setup}
-#| include: false
-library(knitr)
-opts_chunk$set(
-  echo = FALSE,
-  cache = TRUE,
-  collapse = TRUE,
-  fig.width = 7, 
-  fig.align = 'center',
-  fig.asp = 0.618, # 1 / phi
-  out.width = "700px")
-knit_hooks$set(optipng = hook_optipng)
-opts_chunk$set("optipng" = "-o5")
-```
+
 
 Hello! This will be a multi-part series about what I like to call **slidecrafting**; The art of putting together slides that are functional and aesthetically pleasing. I will be using [quarto presentations](https://quarto.org/) as my medium, but the advice should be fairly tool-agnostic. 
 
@@ -104,11 +91,7 @@ you generally want 1 to 3 of these colors. Having at least 1 is perfectly suffic
 
 These colors should be different enough from the background and text color that they stand out. If you are using multiple highlighting colors you should make sure that they are colorblind-friendly with each other. I like to use the `check_color_blindness()` function from the [prismatic](https://emilhvitfeldt.github.io/prismatic/) package.
 
-```{r}
-library(prismatic)
-
-check_color_blindness(c("red2", "blue3", "darkgreen", "yellow3"))
-```
+<img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-1-1.png" width="700px" style="display: block; margin: auto;" />
 
 As we see above, the green and red colors don't work well together because they are almost identical for people with Deuteranopia.
 
@@ -131,7 +114,8 @@ Let us try all of that in practice. I found this nice [blue and yellow](https://
 
 using a color picking tool, I love [ColorSlurp](https://colorslurp.com/) I can extract the colors to be
 
-```{r, eval=FALSE, echo=TRUE}
+
+```r
 *Orient*
 02577B
 

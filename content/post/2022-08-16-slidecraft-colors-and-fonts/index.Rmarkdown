@@ -1,18 +1,31 @@
 ---
-title: 'Pimp My Slides: Colors and Fonts'
+title: 'Slidecraft 101: Colors and Fonts'
 date: '2022-08-16'
 slug: smltar-story
 categories:
-  - pimp my slides
+  - slidecraft 101
 tags:
-  - pimp my slides
+  - slidecraft 101
   - quarto
 summary: All about colors and fonts in slidecrafting
 image:
   preview_only: true
 ---
 
-
+```{r setup}
+#| include: false
+library(knitr)
+opts_chunk$set(
+  echo = FALSE,
+  cache = TRUE,
+  collapse = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618, # 1 / phi
+  out.width = "700px")
+knit_hooks$set(optipng = hook_optipng)
+opts_chunk$set("optipng" = "-o5")
+```
 
 Hello! This will be a multi-part series about what I like to call **slidecrafting**; The art of putting together slides that are functional and aesthetically pleasing. I will be using [quarto presentations](https://quarto.org/) as my medium, but the advice should be fairly tool-agnostic. 
 
@@ -53,7 +66,7 @@ When finding your colors you will mainly look for 3 different types of colors:
 
 - background colors,
 - text colors,
-- contract colors
+- contrast colors
 
 this is a simplistic model and it will do us just fine. In general, I think having 3-6 colors is about the right amount of colors. This doesn't mean that you couldn't have 10 colors in your theme, but that you should be very deliberate in your choices.
 
@@ -79,6 +92,10 @@ There are many color contrast checking websites out there, I like the [https://c
 
 This contrast requirement means that both your background and text color will be quite dark and light, as it is quite hard for most highly saturated colors to have high contrasts to anything else.
 
+<div class = "warning">
+You should try to avoid pure black and pure white. These colors can be a bit much and can be unpleasant to look at for long periods of time.
+</div>
+
 This contrast is related to font size, the smaller and finer the text is, the more important it is that you have good contrast.
 
 Next, we take a look at **highlight** colors! This is my term for the colors you use to add some pop and to direct the viewers' eyes. These colors are used for anything from link colors, highlighting, buttons, and artistic elements. 
@@ -87,7 +104,11 @@ you generally want 1 to 3 of these colors. Having at least 1 is perfectly suffic
 
 These colors should be different enough from the background and text color that they stand out. If you are using multiple highlighting colors you should make sure that they are colorblind-friendly with each other. I like to use the `check_color_blindness()` function from the [prismatic](https://emilhvitfeldt.github.io/prismatic/) package.
 
-<img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-1-1.png" width="700px" style="display: block; margin: auto;" />
+```{r}
+library(prismatic)
+
+check_color_blindness(c("red2", "blue3", "darkgreen", "yellow3"))
+```
 
 As we see above, the green and red colors don't work well together because they are almost identical for people with Deuteranopia.
 
@@ -110,8 +131,7 @@ Let us try all of that in practice. I found this nice [blue and yellow](https://
 
 using a color picking tool, I love [ColorSlurp](https://colorslurp.com/) I can extract the colors to be
 
-
-```r
+```{r, eval=FALSE, echo=TRUE}
 *Orient*
 02577B
 
