@@ -15,7 +15,7 @@ links:
 - icon: play-circle
   icon_pack: fas
   name: video
-  url: https://www.rstudio.com/conference/2022/talks/tidyclust-expanding-tidymodels-to-clustering/
+  url: https://www.youtube.com/watch?v=vsXJBO6-nQk
 - icon: github
   icon_pack: fab
   name: materials
