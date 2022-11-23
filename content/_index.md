@@ -1,7 +1,7 @@
 ---
 title: "Emil Hvitfeldt"
 subtitle: "Software Engineer at Posit PBC"
-description: "I’m a Software Engineer at Posit PBC, teaching adjunct professor at American University, and co-author of [Supervised Machine Learning for Text Analysis in R](https://smltar.com/) with [Julia Silge](https://juliasilge.com/). My interests include developing tools for natural language processing, machine learning using tidymodels, education, and the use of colors in data visualizations."
+description: "I’m a Software Engineer at Posit PBC. Proud co-author of [Supervised Machine Learning for Text Analysis in R](https://smltar.com/) with [Julia Silge](https://juliasilge.com/). My interests include developing tools for natural language processing, machine learning using tidymodels, education, and the use of colors in data visualizations."
 images:
   - img/home.png
 image_left: false
