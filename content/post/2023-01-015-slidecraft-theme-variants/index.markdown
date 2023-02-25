@@ -1,0 +1,27 @@
+---
+title: 'Slidecraft 101: Code and Output'
+date: '2022-09-06'
+slug: slidecraft-code-output
+categories:
+  - slidecraft 101
+tags:
+  - slidecraft 101
+  - quarto
+summary: All about styling code and output in slidecrafting
+image:
+  preview_only: true
+---
+
+
+
+Hello and welcome back to my multi-part series about what I like to call **slidecrafting**; The art of putting together slides that are functional and aesthetically pleasing. I will be using [quarto presentations](https://quarto.org/) as my medium, but the advice should be fairly tool-agnostic. This is the third post, you can find the previous post under the category [slidecraft 101](https://www.emilhvitfeldt.com/categories/slidecraft-101/).
+
+Today we will be looking at how we can create a theme with multiple variants. This was you can have a black/white variants, white/red/blue or any number of different styles. If you are familiar with [xaringan](https://slides.yihui.org/xaringan/) you have seen a `inverse` theme variant already.
+
+## What is a variant?
+
+https://sass-lang.com/documentation/style-rules#nesting
+
+## The SCSS basics
+
+## Roundup
