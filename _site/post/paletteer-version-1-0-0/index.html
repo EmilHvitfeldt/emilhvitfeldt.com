@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2019-12-18">
+<meta name="description" content="Announcement of version 1.0.0 of the {paletteer} package that.">
+
+<title>Paletteer version 1.0.0</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html" rel="" target="">
+ <span class="menu-text">home</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog.html" rel="" target="">
+ <span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../projects.html" rel="" target="">
+ <span class="menu-text">Projects</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../talks.html" rel="" target="">
+ <span class="menu-text">Talks</span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Paletteer version 1.0.0</h1>
+                  <div>
+        <div class="description">
+          <p>Announcement of version 1.0.0 of the {paletteer} package that.</p>
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">ggplot2</div>
+                <div class="quarto-category">color palettes</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">December 18, 2019</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#breaking-changes" id="toc-breaking-changes" class="nav-link active" data-scroll-target="#breaking-changes">Breaking Changes 💥</a></li>
+  <li><a href="#autocomplete" id="toc-autocomplete" class="nav-link" data-scroll-target="#autocomplete">Autocomplete 🎉</a></li>
+  <li><a href="#prismatic-integration" id="toc-prismatic-integration" class="nav-link" data-scroll-target="#prismatic-integration">Prismatic integration 💎</a></li>
+  <li><a href="#more-color-palettes" id="toc-more-color-palettes" class="nav-link" data-scroll-target="#more-color-palettes">More color palettes 🌈</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<p>I’m over-the-moon excited to announce the release of version 1.0.0 of <a href="https://github.com/EmilHvitfeldt/paletteer">paletteer</a>. This version comes with breaking changes and major quality of life improvements. I will unironically name this the “first useable version” for reasons that will be obvious later in this post.</p>
+<section id="breaking-changes" class="level2">
+<h2 class="anchored" data-anchor-id="breaking-changes">Breaking Changes 💥</h2>
+<p>There has been a significant change in syntax for this version. For versions &lt;= 0.2.1 the way to specify a palette was done using the arguments <code>package</code> and <code>palette</code>. Both could be taken as both strings or unquoted strings.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># versions &lt;= 0.2.1</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">paletteer_c</span>(<span class="st">"gameofthrones"</span>, <span class="st">"baratheon"</span>, <span class="dv">10</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">paletteer_d</span>(nord, halifax_harbor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>While convinient and cool to use <a href="https://edwinth.github.io/blog/nse/">NSE</a>, tt was not very useful and I had <a href="https://github.com/EmilHvitfeldt/paletteer/issues/17">several</a> <a href="https://github.com/EmilHvitfeldt/paletteer/issues/13">people</a> <a href="https://github.com/EmilHvitfeldt/paletteer/issues/53">complaining</a>. I realized that using NSE wasn’t a good fit at all for this package. This means that from version 1.0.0 and moving forward only strings will be used to specify palettes.</p>
+<p>Secondly, I have eliminated the <code>package</code> argument and from now on all specification is done on the form <code>package::palette</code></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># versions &gt;= 1.0.0</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">paletteer_c</span>(<span class="st">"gameofthrones::baratheon"</span>, <span class="dv">10</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">paletteer_d</span>(<span class="st">"nord::halifax_harbor"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The above change is the most likely to break your earlier code.</p>
+</section>
+<section id="autocomplete" class="level2">
+<h2 class="anchored" data-anchor-id="autocomplete">Autocomplete 🎉</h2>
+<p>The biggest downside to the original version of <strong>paletteer</strong> and the later version was the lack of discoverability. Unless you knew the palette you wanted and the EXACT spelling you couldn’t use <strong>paletteer</strong>. Sure you could browse <code>palettes_c_names</code> and <code>palettes_d_names</code> like some caveman, but to be honest the package felt more like a novelty project than a useful tool.</p>
+<p>All of this changes with version 1.0.0 🎉! Simply starting by typing <code>paletteer_d()</code> or any of the other related functions and simply hit tab. This will prompt all the names of available palettes which you then can search through using fuzzy search.</p>
+<p><img src="complete1.gif" width="700px" style="display: block; margin: auto;"></p>
+<p>This change is the single biggest improvement to this package.</p>
+<ul>
+<li>Discoverability ✅</li>
+<li>No more missspellings ✅</li>
+<li>Total awesomeness ✅</li>
+</ul>
+<p>And yes, it also work with the <code>scale_*_paletteer()</code> functions 🙌</p>
+<p><img src="complete2.gif" width="700px" style="display: block; margin: auto;"></p>
+</section>
+<section id="prismatic-integration" class="level2">
+<h2 class="anchored" data-anchor-id="prismatic-integration">Prismatic integration 💎</h2>
+<p>You can see from the first gif that the output is a little more colorful then what you are used to. This all comes from the <a href="https://github.com/EmilHvitfeldt/prismatic">prismatic</a> package I released earlier this year. The <strong>prismatic</strong> colors objects that are returned from all <strong>paletteer</strong> functions will be printed with colorful backgrounds provided that the <a href="https://github.com/r-lib/crayon">crayon</a> package is available, otherwise, it will just print normally. This is great for when you want to take a quick look at the colors you are about to use. Please note that the background can only take <a href="https://github.com/r-lib/crayon#256-colors">256</a> different colors. Some palettes will fit nicely inside these 256 values and will display nicely (viridis::magma) below, while other palettes with a lot of value will show weird jumps in colors (gameofthrones::greyjoy)</p>
+<p><img src="prismatic1.png" width="700px" style="display: block; margin: auto;"></p>
+<p>If you want more accurate color depictions you can simply <code>plot()</code> the output to see the real colors</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">paletteer_c</span>(<span class="st">"viridis::magma"</span>, <span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><img src="index_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid"></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">paletteer_c</span>(<span class="st">"gameofthrones::greyjoy"</span>, <span class="dv">100</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><img src="index_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid"></p>
+</section>
+<section id="more-color-palettes" class="level2">
+<h2 class="anchored" data-anchor-id="more-color-palettes">More color palettes 🌈</h2>
+<p>It wouldn’t be a <strong>paletteer</strong> release without more palettes. And this release is no different! This update brings us 654 new palettes!!! from 19 different packages bringing out a total of 1759. I did a little live-tweeting while implementing these packages so you can take a look at the newly included palettes here:</p>
+<blockquote class="twitter-tweet blockquote">
+<p lang="en" dir="ltr">
+I'll be adding a whole bunch of new palettes to {paletteer} tonight! 🌈<br><br>Read this thread if you want to see the new colorful goodies coming your way!<br><br>❤️💙💚🧡💛💜<a href="https://twitter.com/hashtag/rstats?src=hash&amp;ref_src=twsrc%5Etfw">#rstats</a> <a href="https://t.co/c0qK27nc4N">pic.twitter.com/c0qK27nc4N</a>
+</p>
+— Emil Hvitfeldt (<span class="citation" data-cites="Emil_Hvitfeldt">@Emil_Hvitfeldt</span>) <a href="https://twitter.com/Emil_Hvitfeldt/status/1203508809269800962?ref_src=twsrc%5Etfw">December 8, 2019</a>
+</blockquote>
+<script async="" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p>That is all I have for you this time around if you create or find more palette packages please go over and file <a href="https://github.com/EmilHvitfeldt/paletteer/issues">an issue</a> so they can be included as well. Thank you!</p>
+<details closed="">
+<summary>
+<span title="Click to Expand"> session information </span>
+</summary>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>─ Session info ───────────────────────────────────────────────────────────────</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a> setting  value                       </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a> version  R version <span class="dv">4</span>.<span class="fl">1.0</span> (<span class="dv">2021-05-18</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a> os       macOS Big Sur <span class="fl">10.16</span>         </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a> system   x86_64, darwin17<span class="fl">.0</span>          </span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a> ui       X11                         </span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a> <span class="fu">language</span> (EN)                        </span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a> collate  en_US.UTF<span class="dv">-8</span>                 </span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a> ctype    en_US.UTF<span class="dv">-8</span>                 </span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a> tz       America<span class="sc">/</span>Los_Angeles         </span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a> date     <span class="dv">2021-07-16</span>                  </span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>─ Packages ───────────────────────────────────────────────────────────────────</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a> package       <span class="sc">*</span> version    date       lib source                           </span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a> assertthat      <span class="dv">0</span>.<span class="fl">2.1</span>      <span class="dv">2019-03-21</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a> blogdown        <span class="dv">1</span>.<span class="fl">3.2</span>      <span class="dv">2021-06-09</span> [<span class="dv">1</span>] <span class="fu">Github</span> (rstudio<span class="sc">/</span>blogdown<span class="sc">@</span>00a2090)</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a> bookdown        <span class="fl">0.22</span>       <span class="dv">2021-04-22</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a> bslib           <span class="dv">0</span>.<span class="dv">2</span>.<span class="fl">5.1</span>    <span class="dv">2021-05-18</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a> cli             <span class="dv">3</span>.<span class="fl">0.0</span>      <span class="dv">2021-06-30</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a> clipr           <span class="dv">0</span>.<span class="fl">7.1</span>      <span class="dv">2020-10-08</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a> codetools       <span class="fl">0.2</span><span class="dv">-18</span>     <span class="dv">2020-11-04</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a> colorspace      <span class="fl">2.0</span><span class="dv">-2</span>      <span class="dv">2021-06-24</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a> crayon          <span class="dv">1</span>.<span class="fl">4.1</span>      <span class="dv">2021-02-08</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a> DBI             <span class="dv">1</span>.<span class="fl">1.1</span>      <span class="dv">2021-01-15</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a> desc            <span class="dv">1</span>.<span class="fl">3.0</span>      <span class="dv">2021-03-05</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a> details       <span class="sc">*</span> <span class="dv">0</span>.<span class="fl">2.1</span>      <span class="dv">2020-01-12</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a> digest          <span class="dv">0</span>.<span class="fl">6.27</span>     <span class="dv">2020-10-24</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a> dplyr           <span class="dv">1</span>.<span class="fl">0.7</span>      <span class="dv">2021-06-18</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a> ellipsis        <span class="dv">0</span>.<span class="fl">3.2</span>      <span class="dv">2021-04-29</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a> emo             <span class="dv">0</span>.<span class="dv">0</span>.<span class="fl">0.9000</span> <span class="dv">2021-07-17</span> [<span class="dv">1</span>] <span class="fu">Github</span> (hadley<span class="sc">/</span>emo<span class="sc">@</span>3f03b11)      </span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a> evaluate        <span class="fl">0.14</span>       <span class="dv">2019-05-28</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a> fansi           <span class="dv">0</span>.<span class="fl">5.0</span>      <span class="dv">2021-05-25</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a> farver          <span class="dv">2</span>.<span class="fl">1.0</span>      <span class="dv">2021-02-28</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a> gameofthrones   <span class="dv">1</span>.<span class="fl">0.2</span>      <span class="dv">2020-02-23</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a> generics        <span class="dv">0</span>.<span class="fl">1.0</span>      <span class="dv">2020-10-31</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a> ggplot2         <span class="dv">3</span>.<span class="fl">3.5</span>      <span class="dv">2021-06-25</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a> glue            <span class="dv">1</span>.<span class="fl">4.2</span>      <span class="dv">2020-08-27</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a> gridExtra       <span class="fl">2.3</span>        <span class="dv">2017-09-09</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a> gtable          <span class="dv">0</span>.<span class="fl">3.0</span>      <span class="dv">2019-03-25</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a> highr           <span class="fl">0.9</span>        <span class="dv">2021-04-16</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a> htmltools       <span class="dv">0</span>.<span class="dv">5</span>.<span class="fl">1.1</span>    <span class="dv">2021-01-22</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a> httr            <span class="dv">1</span>.<span class="fl">4.2</span>      <span class="dv">2020-07-20</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a> jquerylib       <span class="dv">0</span>.<span class="fl">1.4</span>      <span class="dv">2021-04-26</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a> jsonlite        <span class="dv">1</span>.<span class="fl">7.2</span>      <span class="dv">2020-12-09</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a> knitr         <span class="sc">*</span> <span class="fl">1.33</span>       <span class="dv">2021-04-24</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a> lifecycle       <span class="dv">1</span>.<span class="fl">0.0</span>      <span class="dv">2021-02-15</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a> lubridate       <span class="dv">1</span>.<span class="fl">7.10</span>     <span class="dv">2021-02-26</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a> magrittr        <span class="dv">2</span>.<span class="fl">0.1</span>      <span class="dv">2020-11-17</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a> MASS            <span class="fl">7.3</span><span class="dv">-54</span>     <span class="dv">2021-05-03</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a> munsell         <span class="dv">0</span>.<span class="fl">5.0</span>      <span class="dv">2018-06-12</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a> paletteer     <span class="sc">*</span> <span class="dv">1</span>.<span class="fl">3.0</span>      <span class="dv">2021-01-06</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a> pillar          <span class="dv">1</span>.<span class="fl">6.1</span>      <span class="dv">2021-05-16</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a> pkgconfig       <span class="dv">2</span>.<span class="fl">0.3</span>      <span class="dv">2019-09-22</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a> png             <span class="fl">0.1</span><span class="dv">-7</span>      <span class="dv">2013-12-03</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a> prismatic       <span class="dv">1</span>.<span class="fl">0.0</span>      <span class="dv">2021-01-05</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a> purrr           <span class="dv">0</span>.<span class="fl">3.4</span>      <span class="dv">2020-04-17</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a> R6              <span class="dv">2</span>.<span class="fl">5.0</span>      <span class="dv">2020-10-28</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a> Rcpp            <span class="dv">1</span>.<span class="fl">0.7</span>      <span class="dv">2021-07-07</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a> rematch2        <span class="dv">2</span>.<span class="fl">1.2</span>      <span class="dv">2020-05-01</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a> rlang           <span class="dv">0</span>.<span class="fl">4.11</span>     <span class="dv">2021-04-30</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a> rmarkdown       <span class="fl">2.9</span>        <span class="dv">2021-06-15</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a> rprojroot       <span class="dv">2</span>.<span class="fl">0.2</span>      <span class="dv">2020-11-15</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a> sass            <span class="dv">0</span>.<span class="fl">4.0</span>      <span class="dv">2021-05-12</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a> scales          <span class="dv">1</span>.<span class="fl">1.1</span>      <span class="dv">2020-05-11</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a> sessioninfo     <span class="dv">1</span>.<span class="fl">1.1</span>      <span class="dv">2018-11-05</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a> stringi         <span class="dv">1</span>.<span class="fl">6.2</span>      <span class="dv">2021-05-17</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a> stringr         <span class="dv">1</span>.<span class="fl">4.0</span>      <span class="dv">2019-02-10</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a> tibble          <span class="dv">3</span>.<span class="fl">1.2</span>      <span class="dv">2021-05-16</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a> tidyselect      <span class="dv">1</span>.<span class="fl">1.1</span>      <span class="dv">2021-04-30</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a> utf8            <span class="dv">1</span>.<span class="fl">2.1</span>      <span class="dv">2021-03-12</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a> vctrs           <span class="dv">0</span>.<span class="fl">3.8</span>      <span class="dv">2021-04-29</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a> withr           <span class="dv">2</span>.<span class="fl">4.2</span>      <span class="dv">2021-04-18</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a> xfun            <span class="fl">0.24</span>       <span class="dv">2021-06-15</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a> xml2            <span class="dv">1</span>.<span class="fl">3.2</span>      <span class="dv">2020-04-23</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-76"><a href="#cb5-76" aria-hidden="true" tabindex="-1"></a> yaml            <span class="dv">2</span>.<span class="fl">2.1</span>      <span class="dv">2020-02-01</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb5-77"><a href="#cb5-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-78"><a href="#cb5-78" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="sc">/</span>Library<span class="sc">/</span>Frameworks<span class="sc">/</span>R.framework<span class="sc">/</span>Versions<span class="sc">/</span><span class="fl">4.1</span><span class="sc">/</span>Resources<span class="sc">/</span>library</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<p><br></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2020-01-02">
+
+<title>Real Emojis in ggplot2</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html" rel="" target="">
+ <span class="menu-text">home</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog.html" rel="" target="">
+ <span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../projects.html" rel="" target="">
+ <span class="menu-text">Projects</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../talks.html" rel="" target="">
+ <span class="menu-text">Talks</span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Real Emojis in ggplot2</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">ggplot2</div>
+                <div class="quarto-category">emoji</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">January 2, 2020</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#packages" id="toc-packages" class="nav-link active" data-scroll-target="#packages">Packages 📦</a></li>
+  <li><a href="#getting-the-tweets" id="toc-getting-the-tweets" class="nav-link" data-scroll-target="#getting-the-tweets">Getting the tweets 🐦</a></li>
+  <li><a href="#emoji-scatter-plot" id="toc-emoji-scatter-plot" class="nav-link" data-scroll-target="#emoji-scatter-plot">emoji-scatter plot 📈</a></li>
+  <li><a href="#emojis-in-labels-and-text" id="toc-emojis-in-labels-and-text" class="nav-link" data-scroll-target="#emojis-in-labels-and-text">Emojis in labels and text 📊</a></li>
+  <li><a href="#adding-a-splash-of-color" id="toc-adding-a-splash-of-color" class="nav-link" data-scroll-target="#adding-a-splash-of-color">Adding a splash of color 🌈</a></li>
+  <li><a href="#final-note" id="toc-final-note" class="nav-link" data-scroll-target="#final-note">Final note 🗒</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Emojis are now fully supported in {ggplot2} thanks to the {ragg} package. Read more about it here: <a href="https://www.tidyverse.org/blog/2021/02/modern-text-features/">Modern Text Features in R</a>.</p>
+</div>
+</div>
+<p>I have been trying to use <a href="https://en.wikipedia.org/wiki/Emoji">Emojis</a> for a long time. It was part of my very first <a href="https://www.hvitfeldt.me/blog/2017-world-press-freedom-index-with-emojis/">post</a> on this blog. Others have made progress such as with <a href="https://cran.r-project.org/web/packages/emojifont/vignettes/emojifont.html">emojifont</a>, but it is not using the classical <a href="https://en.wikipedia.org/wiki/Apple_Color_Emoji">Apple Color Emoji</a> font which is the most commonly recognized. I made a breakthrough when I was writing the <a href="https://www.hvitfeldt.me/packagecalendar/2019/">packagecalander</a> entry on <a href="https://github.com/clauswilke/ggtext">ggtext</a>. While the method is the best I have found it does have some cons.</p>
+<p>Pros:</p>
+<ul>
+<li>Works</li>
+<li>Doesn’t require the use of SVG</li>
+<li>Previews nicely</li>
+</ul>
+<p>Cons:</p>
+<ul>
+<li>Relies on experimental package <strong>ggtext</strong></li>
+<li>Needs web scraping</li>
+<li>Required access to the internet to render</li>
+<li>Size can’t be adjusted using the size aesthetic</li>
+</ul>
+<p>All in all, it is a fair trade for my needs.</p>
+<section id="packages" class="level2">
+<h2 class="anchored" data-anchor-id="packages">Packages 📦</h2>
+<p>We load the essential packages to wrangle, collect data (we will use tweets), scrape websites, and handle emojis.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rtweet)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rvest)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># devtools::install_github("clauswilke/ggtext")</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggtext)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="getting-the-tweets" class="level2">
+<h2 class="anchored" data-anchor-id="getting-the-tweets">Getting the tweets 🐦</h2>
+<p>For a simple dataset where we find emojis I’m going to get some tweets with the word “happy”.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>happy <span class="ot">&lt;-</span> <span class="fu">search_tweets</span>(<span class="st">"happy"</span>, <span class="at">include_rts =</span> <span class="cn">FALSE</span>, <span class="at">n =</span> <span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>we can use the <code>ji_extract_all()</code> function from the <a href="https://github.com/hadley/emo">emo</a> package. This will give us a list of emojis so we can use the <code>unnest()</code> function to get back to a tidy format. I’m going to do a simple <code>count()</code> of the emojis for the following visualizations.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>happy_emojis <span class="ot">&lt;-</span> happy <span class="sc">%&gt;%</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">emoji =</span> emo<span class="sc">::</span><span class="fu">ji_extract_all</span>(text)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(<span class="at">cols =</span> <span class="fu">c</span>(emoji)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(emoji, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Next is where the magic happens. We don’t have a way to displays emojis in <strong>ggplot2</strong>, but we can use <strong>ggtext</strong> to embed images into the text using HTML. Now we just need to get an image of each emoji. The following function will accept an emoji as a string and return the URL to a .png of that emoji.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>emoji_to_link <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste0</span>(<span class="st">"https://emojipedia.org/emoji/"</span>,x) <span class="sc">%&gt;%</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">read_html</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_nodes</span>(<span class="st">"tr td a"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    .[<span class="dv">1</span>] <span class="sc">%&gt;%</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_attr</span>(<span class="st">"href"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste0</span>(<span class="st">"https://emojipedia.org/"</span>, .) <span class="sc">%&gt;%</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">read_html</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_node</span>(<span class="st">'div[class="vendor-image"] img'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_attr</span>(<span class="st">"src"</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Then this function will take that URL and construct the necessary HTML code to show the emoji PNGs.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>link_to_img <span class="ot">&lt;-</span> <span class="cf">function</span>(x, <span class="at">size =</span> <span class="dv">25</span>) {</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste0</span>(<span class="st">"&lt;img src='"</span>, x, <span class="st">"' width='"</span>, size, <span class="st">"'/&gt;"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>To be courteous we are only going to scrape the emojis we are going to use. So we will <code>slice()</code> the 10 most frequent emojis. We will also be adding a 5 second delay using <code>slowly()</code> and <code>rate_delay()</code> from <strong>purrr</strong>.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>top_happy <span class="ot">&lt;-</span> happy_emojis <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">url =</span> <span class="fu">map_chr</span>(emoji, <span class="fu">slowly</span>(<span class="sc">~</span><span class="fu">emoji_to_link</span>(.x), <span class="fu">rate_delay</span>(<span class="dv">1</span>))),</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">label =</span> <span class="fu">link_to_img</span>(url))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="emoji-scatter-plot" class="level2">
+<h2 class="anchored" data-anchor-id="emoji-scatter-plot">emoji-scatter plot 📈</h2>
+<p>Now we can use the <code>geom_richtext()</code> function from <strong>ggtext</strong> to create a emoji scatter chart.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>top_happy <span class="sc">%&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(emoji, n, <span class="at">label =</span> label)) <span class="sc">+</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_richtext</span>(<span class="fu">aes</span>(<span class="at">y =</span> n), <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">label.color =</span> <span class="cn">NA</span>, <span class="co"># remove background and outline</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">label.padding =</span> grid<span class="sc">::</span><span class="fu">unit</span>(<span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">4</span>), <span class="st">"pt"</span>) <span class="co"># remove padding</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><img src="index_files/figure-html/plot1-1.png" class="img-fluid"></p>
+<p>This is a little off, so let’s other these by counts and put them over a bar chart. I’m also going to the x-axis ticks and text.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>offset <span class="ot">&lt;-</span> <span class="fu">max</span>(top_happy<span class="sc">$</span>n) <span class="sc">/</span> <span class="dv">20</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>top_happy <span class="sc">%&gt;%</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="fu">fct_reorder</span>(emoji, n, <span class="at">.desc =</span> <span class="cn">TRUE</span>), n, <span class="at">label =</span> label)) <span class="sc">+</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_richtext</span>(<span class="fu">aes</span>(<span class="at">y =</span> n <span class="sc">+</span> offset), <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">label.color =</span> <span class="cn">NA</span>,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">label.padding =</span> grid<span class="sc">::</span><span class="fu">unit</span>(<span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">4</span>), <span class="st">"pt"</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.ticks.x =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><img src="index_files/figure-html/plot2-1.png" class="img-fluid"></p>
+</section>
+<section id="emojis-in-labels-and-text" class="level2">
+<h2 class="anchored" data-anchor-id="emojis-in-labels-and-text">Emojis in labels and text 📊</h2>
+<p>We are not only limited to using emojis in the geoms. We can set the text element using emojis to <code>element_markdown()</code>. Below we have the same bar chart as above but with the emoji as labels below instead of on top.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>top_happy <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="fu">fct_reorder</span>(label, n, <span class="at">.desc =</span> <span class="cn">TRUE</span>), n)) <span class="sc">+</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_markdown</span>()) <span class="sc">+</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><img src="index_files/figure-html/plot3-1.png" class="img-fluid"></p>
+</section>
+<section id="adding-a-splash-of-color" class="level2">
+<h2 class="anchored" data-anchor-id="adding-a-splash-of-color">Adding a splash of color 🌈</h2>
+<p>We can employ a little more scraping and color calculations to had colors to the bars according to the colors of the emoji. The following function takes a URL to a .png file and returns the most common color that isn’t purely black or pure white.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>mean_emoji_color <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">&lt;-</span> png<span class="sc">::</span><span class="fu">readPNG</span>(RCurl<span class="sc">::</span><span class="fu">getURLContent</span>(x))</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  color_freq <span class="ot">&lt;-</span> <span class="fu">names</span>(<span class="fu">sort</span>(<span class="fu">table</span>(<span class="fu">rgb</span>(data[,,<span class="dv">1</span>], data[,,<span class="dv">2</span>], data[,,<span class="dv">3</span>])), </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">decreasing =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">setdiff</span>(color_freq, <span class="fu">c</span>(<span class="st">"#FFFFFF"</span>, <span class="st">"#000000"</span>))[<span class="dv">1</span>]</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>We apply this to all the emoji URLs and color the bars accordingly.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>plot_data <span class="ot">&lt;-</span> top_happy <span class="sc">%&gt;%</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">color =</span> <span class="fu">map_chr</span>(url, <span class="fu">slowly</span>(<span class="sc">~</span><span class="fu">mean_emoji_color</span>(.x), <span class="fu">rate_delay</span>(<span class="dv">1</span>))))</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>plot_data <span class="sc">%&gt;%</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="fu">fct_reorder</span>(label, n, <span class="at">.desc =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> color, </span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">fill =</span> <span class="fu">unclass</span>(prismatic<span class="sc">::</span><span class="fu">clr_lighten</span>(color, <span class="fl">0.4</span>)), n)) <span class="sc">+</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_identity</span>() <span class="sc">+</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_identity</span>() <span class="sc">+</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_markdown</span>()) <span class="sc">+</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Count"</span>,</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Emojis used in (small sample) of 'happy' tweets"</span>,</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Displayed in ggplot2!!!"</span>,</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">caption =</span> <span class="st">"@Emil_Hvitfeldt"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><img src="index_files/figure-html/plotdata-1.png" class="img-fluid"></p>
+</section>
+<section id="final-note" class="level2">
+<h2 class="anchored" data-anchor-id="final-note">Final note 🗒</h2>
+<p>If you want to use emojis in the text you need to call <code>theme_*()</code> before <code>theme()</code> such that <code>element_markdown()</code> isn’t being overwritten.</p>
+<details closed="">
+<summary>
+<span title="Click to Expand"> current session info </span>
+</summary>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>─ Session info ───────────────────────────────────────────────────────────────</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a> setting  value                       </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a> version  R version <span class="dv">4</span>.<span class="fl">1.0</span> (<span class="dv">2021-05-18</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a> os       macOS Big Sur <span class="fl">10.16</span>         </span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a> system   x86_64, darwin17<span class="fl">.0</span>          </span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a> ui       X11                         </span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a> <span class="fu">language</span> (EN)                        </span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a> collate  en_US.UTF<span class="dv">-8</span>                 </span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a> ctype    en_US.UTF<span class="dv">-8</span>                 </span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a> tz       America<span class="sc">/</span>Los_Angeles         </span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a> date     <span class="dv">2021-07-16</span>                  </span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>─ Packages ───────────────────────────────────────────────────────────────────</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a> package     <span class="sc">*</span> version    date       lib source                           </span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a> askpass       <span class="fl">1.1</span>        <span class="dv">2019-01-13</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a> assertthat    <span class="dv">0</span>.<span class="fl">2.1</span>      <span class="dv">2019-03-21</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a> backports     <span class="dv">1</span>.<span class="fl">2.1</span>      <span class="dv">2020-12-09</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a> bitops        <span class="fl">1.0</span><span class="dv">-7</span>      <span class="dv">2021-04-24</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a> blogdown      <span class="dv">1</span>.<span class="fl">3.2</span>      <span class="dv">2021-06-09</span> [<span class="dv">1</span>] <span class="fu">Github</span> (rstudio<span class="sc">/</span>blogdown<span class="sc">@</span>00a2090)</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a> bookdown      <span class="fl">0.22</span>       <span class="dv">2021-04-22</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a> broom         <span class="dv">0</span>.<span class="fl">7.8</span>      <span class="dv">2021-06-24</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a> bslib         <span class="dv">0</span>.<span class="dv">2</span>.<span class="fl">5.1</span>    <span class="dv">2021-05-18</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a> cellranger    <span class="dv">1</span>.<span class="fl">1.0</span>      <span class="dv">2016-07-27</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a> cli           <span class="dv">3</span>.<span class="fl">0.0</span>      <span class="dv">2021-06-30</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a> clipr         <span class="dv">0</span>.<span class="fl">7.1</span>      <span class="dv">2020-10-08</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a> codetools     <span class="fl">0.2</span><span class="dv">-18</span>     <span class="dv">2020-11-04</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a> colorspace    <span class="fl">2.0</span><span class="dv">-2</span>      <span class="dv">2021-06-24</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a> crayon        <span class="dv">1</span>.<span class="fl">4.1</span>      <span class="dv">2021-02-08</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a> curl          <span class="dv">4</span>.<span class="fl">3.2</span>      <span class="dv">2021-06-23</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a> DBI           <span class="dv">1</span>.<span class="fl">1.1</span>      <span class="dv">2021-01-15</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a> dbplyr        <span class="dv">2</span>.<span class="fl">1.1</span>      <span class="dv">2021-04-06</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a> desc          <span class="dv">1</span>.<span class="fl">3.0</span>      <span class="dv">2021-03-05</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a> details     <span class="sc">*</span> <span class="dv">0</span>.<span class="fl">2.1</span>      <span class="dv">2020-01-12</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a> digest        <span class="dv">0</span>.<span class="fl">6.27</span>     <span class="dv">2020-10-24</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a> dplyr       <span class="sc">*</span> <span class="dv">1</span>.<span class="fl">0.7</span>      <span class="dv">2021-06-18</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a> ellipsis      <span class="dv">0</span>.<span class="fl">3.2</span>      <span class="dv">2021-04-29</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a> emo         <span class="sc">*</span> <span class="dv">0</span>.<span class="dv">0</span>.<span class="fl">0.9000</span> <span class="dv">2021-07-17</span> [<span class="dv">1</span>] <span class="fu">Github</span> (hadley<span class="sc">/</span>emo<span class="sc">@</span>3f03b11)      </span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a> evaluate      <span class="fl">0.14</span>       <span class="dv">2019-05-28</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a> fansi         <span class="dv">0</span>.<span class="fl">5.0</span>      <span class="dv">2021-05-25</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a> farver        <span class="dv">2</span>.<span class="fl">1.0</span>      <span class="dv">2021-02-28</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a> forcats     <span class="sc">*</span> <span class="dv">0</span>.<span class="fl">5.1</span>      <span class="dv">2021-01-27</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a> fs            <span class="dv">1</span>.<span class="fl">5.0</span>      <span class="dv">2020-07-31</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a> generics      <span class="dv">0</span>.<span class="fl">1.0</span>      <span class="dv">2020-10-31</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a> ggplot2     <span class="sc">*</span> <span class="dv">3</span>.<span class="fl">3.5</span>      <span class="dv">2021-06-25</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a> ggtext      <span class="sc">*</span> <span class="dv">0</span>.<span class="fl">1.1</span>      <span class="dv">2020-12-17</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a> glue          <span class="dv">1</span>.<span class="fl">4.2</span>      <span class="dv">2020-08-27</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a> gridtext      <span class="dv">0</span>.<span class="fl">1.4</span>      <span class="dv">2020-12-10</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-49"><a href="#cb12-49" aria-hidden="true" tabindex="-1"></a> gtable        <span class="dv">0</span>.<span class="fl">3.0</span>      <span class="dv">2019-03-25</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a> haven         <span class="dv">2</span>.<span class="fl">4.1</span>      <span class="dv">2021-04-23</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-51"><a href="#cb12-51" aria-hidden="true" tabindex="-1"></a> highr         <span class="fl">0.9</span>        <span class="dv">2021-04-16</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-52"><a href="#cb12-52" aria-hidden="true" tabindex="-1"></a> hms           <span class="dv">1</span>.<span class="fl">1.0</span>      <span class="dv">2021-05-17</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-53"><a href="#cb12-53" aria-hidden="true" tabindex="-1"></a> htmltools     <span class="dv">0</span>.<span class="dv">5</span>.<span class="fl">1.1</span>    <span class="dv">2021-01-22</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-54"><a href="#cb12-54" aria-hidden="true" tabindex="-1"></a> httr          <span class="dv">1</span>.<span class="fl">4.2</span>      <span class="dv">2020-07-20</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-55"><a href="#cb12-55" aria-hidden="true" tabindex="-1"></a> jquerylib     <span class="dv">0</span>.<span class="fl">1.4</span>      <span class="dv">2021-04-26</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-56"><a href="#cb12-56" aria-hidden="true" tabindex="-1"></a> jsonlite      <span class="dv">1</span>.<span class="fl">7.2</span>      <span class="dv">2020-12-09</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-57"><a href="#cb12-57" aria-hidden="true" tabindex="-1"></a> knitr       <span class="sc">*</span> <span class="fl">1.33</span>       <span class="dv">2021-04-24</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-58"><a href="#cb12-58" aria-hidden="true" tabindex="-1"></a> labeling      <span class="dv">0</span>.<span class="fl">4.2</span>      <span class="dv">2020-10-20</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-59"><a href="#cb12-59" aria-hidden="true" tabindex="-1"></a> lifecycle     <span class="dv">1</span>.<span class="fl">0.0</span>      <span class="dv">2021-02-15</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-60"><a href="#cb12-60" aria-hidden="true" tabindex="-1"></a> lubridate     <span class="dv">1</span>.<span class="fl">7.10</span>     <span class="dv">2021-02-26</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-61"><a href="#cb12-61" aria-hidden="true" tabindex="-1"></a> magrittr      <span class="dv">2</span>.<span class="fl">0.1</span>      <span class="dv">2020-11-17</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-62"><a href="#cb12-62" aria-hidden="true" tabindex="-1"></a> markdown      <span class="fl">1.1</span>        <span class="dv">2019-08-07</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-63"><a href="#cb12-63" aria-hidden="true" tabindex="-1"></a> modelr        <span class="dv">0</span>.<span class="fl">1.8</span>      <span class="dv">2020-05-19</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-64"><a href="#cb12-64" aria-hidden="true" tabindex="-1"></a> munsell       <span class="dv">0</span>.<span class="fl">5.0</span>      <span class="dv">2018-06-12</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-65"><a href="#cb12-65" aria-hidden="true" tabindex="-1"></a> openssl       <span class="dv">1</span>.<span class="fl">4.4</span>      <span class="dv">2021-04-30</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-66"><a href="#cb12-66" aria-hidden="true" tabindex="-1"></a> pillar        <span class="dv">1</span>.<span class="fl">6.1</span>      <span class="dv">2021-05-16</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-67"><a href="#cb12-67" aria-hidden="true" tabindex="-1"></a> pkgconfig     <span class="dv">2</span>.<span class="fl">0.3</span>      <span class="dv">2019-09-22</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-68"><a href="#cb12-68" aria-hidden="true" tabindex="-1"></a> png           <span class="fl">0.1</span><span class="dv">-7</span>      <span class="dv">2013-12-03</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-69"><a href="#cb12-69" aria-hidden="true" tabindex="-1"></a> prettyunits   <span class="dv">1</span>.<span class="fl">1.1</span>      <span class="dv">2020-01-24</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-70"><a href="#cb12-70" aria-hidden="true" tabindex="-1"></a> prismatic     <span class="dv">1</span>.<span class="fl">0.0</span>      <span class="dv">2021-01-05</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-71"><a href="#cb12-71" aria-hidden="true" tabindex="-1"></a> progress      <span class="dv">1</span>.<span class="fl">2.2</span>      <span class="dv">2019-05-16</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-72"><a href="#cb12-72" aria-hidden="true" tabindex="-1"></a> purrr       <span class="sc">*</span> <span class="dv">0</span>.<span class="fl">3.4</span>      <span class="dv">2020-04-17</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-73"><a href="#cb12-73" aria-hidden="true" tabindex="-1"></a> R6            <span class="dv">2</span>.<span class="fl">5.0</span>      <span class="dv">2020-10-28</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-74"><a href="#cb12-74" aria-hidden="true" tabindex="-1"></a> Rcpp          <span class="dv">1</span>.<span class="fl">0.7</span>      <span class="dv">2021-07-07</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-75"><a href="#cb12-75" aria-hidden="true" tabindex="-1"></a> RCurl         <span class="fl">1.98-1.3</span>   <span class="dv">2021-03-16</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-76"><a href="#cb12-76" aria-hidden="true" tabindex="-1"></a> readr       <span class="sc">*</span> <span class="dv">1</span>.<span class="fl">4.0</span>      <span class="dv">2020-10-05</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-77"><a href="#cb12-77" aria-hidden="true" tabindex="-1"></a> readxl        <span class="dv">1</span>.<span class="fl">3.1</span>      <span class="dv">2019-03-13</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-78"><a href="#cb12-78" aria-hidden="true" tabindex="-1"></a> reprex        <span class="dv">2</span>.<span class="fl">0.0</span>      <span class="dv">2021-04-02</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-79"><a href="#cb12-79" aria-hidden="true" tabindex="-1"></a> rlang         <span class="dv">0</span>.<span class="fl">4.11</span>     <span class="dv">2021-04-30</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-80"><a href="#cb12-80" aria-hidden="true" tabindex="-1"></a> rmarkdown     <span class="fl">2.9</span>        <span class="dv">2021-06-15</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-81"><a href="#cb12-81" aria-hidden="true" tabindex="-1"></a> rprojroot     <span class="dv">2</span>.<span class="fl">0.2</span>      <span class="dv">2020-11-15</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-82"><a href="#cb12-82" aria-hidden="true" tabindex="-1"></a> rstudioapi    <span class="fl">0.13</span>       <span class="dv">2020-11-12</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-83"><a href="#cb12-83" aria-hidden="true" tabindex="-1"></a> rtweet      <span class="sc">*</span> <span class="dv">0</span>.<span class="fl">7.0</span>      <span class="dv">2020-01-08</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-84"><a href="#cb12-84" aria-hidden="true" tabindex="-1"></a> rvest       <span class="sc">*</span> <span class="dv">1</span>.<span class="fl">0.0</span>      <span class="dv">2021-03-09</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-85"><a href="#cb12-85" aria-hidden="true" tabindex="-1"></a> sass          <span class="dv">0</span>.<span class="fl">4.0</span>      <span class="dv">2021-05-12</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-86"><a href="#cb12-86" aria-hidden="true" tabindex="-1"></a> scales        <span class="dv">1</span>.<span class="fl">1.1</span>      <span class="dv">2020-05-11</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-87"><a href="#cb12-87" aria-hidden="true" tabindex="-1"></a> selectr       <span class="fl">0.4</span><span class="dv">-2</span>      <span class="dv">2019-11-20</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-88"><a href="#cb12-88" aria-hidden="true" tabindex="-1"></a> sessioninfo   <span class="dv">1</span>.<span class="fl">1.1</span>      <span class="dv">2018-11-05</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-89"><a href="#cb12-89" aria-hidden="true" tabindex="-1"></a> stringi       <span class="dv">1</span>.<span class="fl">6.2</span>      <span class="dv">2021-05-17</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-90"><a href="#cb12-90" aria-hidden="true" tabindex="-1"></a> stringr     <span class="sc">*</span> <span class="dv">1</span>.<span class="fl">4.0</span>      <span class="dv">2019-02-10</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-91"><a href="#cb12-91" aria-hidden="true" tabindex="-1"></a> tibble      <span class="sc">*</span> <span class="dv">3</span>.<span class="fl">1.2</span>      <span class="dv">2021-05-16</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-92"><a href="#cb12-92" aria-hidden="true" tabindex="-1"></a> tidyr       <span class="sc">*</span> <span class="dv">1</span>.<span class="fl">1.3</span>      <span class="dv">2021-03-03</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-93"><a href="#cb12-93" aria-hidden="true" tabindex="-1"></a> tidyselect    <span class="dv">1</span>.<span class="fl">1.1</span>      <span class="dv">2021-04-30</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-94"><a href="#cb12-94" aria-hidden="true" tabindex="-1"></a> tidyverse   <span class="sc">*</span> <span class="dv">1</span>.<span class="fl">3.1</span>      <span class="dv">2021-04-15</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-95"><a href="#cb12-95" aria-hidden="true" tabindex="-1"></a> utf8          <span class="dv">1</span>.<span class="fl">2.1</span>      <span class="dv">2021-03-12</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-96"><a href="#cb12-96" aria-hidden="true" tabindex="-1"></a> vctrs         <span class="dv">0</span>.<span class="fl">3.8</span>      <span class="dv">2021-04-29</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-97"><a href="#cb12-97" aria-hidden="true" tabindex="-1"></a> withr         <span class="dv">2</span>.<span class="fl">4.2</span>      <span class="dv">2021-04-18</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-98"><a href="#cb12-98" aria-hidden="true" tabindex="-1"></a> xfun          <span class="fl">0.24</span>       <span class="dv">2021-06-15</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-99"><a href="#cb12-99" aria-hidden="true" tabindex="-1"></a> xml2          <span class="dv">1</span>.<span class="fl">3.2</span>      <span class="dv">2020-04-23</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-100"><a href="#cb12-100" aria-hidden="true" tabindex="-1"></a> yaml          <span class="dv">2</span>.<span class="fl">2.1</span>      <span class="dv">2020-02-01</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">1.0</span>)                   </span>
+<span id="cb12-101"><a href="#cb12-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-102"><a href="#cb12-102" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="sc">/</span>Library<span class="sc">/</span>Frameworks<span class="sc">/</span>R.framework<span class="sc">/</span>Versions<span class="sc">/</span><span class="fl">4.1</span><span class="sc">/</span>Resources<span class="sc">/</span>library</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<p><br></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

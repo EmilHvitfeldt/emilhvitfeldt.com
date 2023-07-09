@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2017-04-26">
+<meta name="description" content="A first (now outclassed) attempt at using emojis in ggplot2. This post combines the hadley/emo package and data from the 2017 World Press Freedom Index.">
+
+<title>2017 World Press Freedom Index with emojis</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html" rel="" target="">
+ <span class="menu-text">home</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog.html" rel="" target="">
+ <span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../projects.html" rel="" target="">
+ <span class="menu-text">Projects</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../talks.html" rel="" target="">
+ <span class="menu-text">Talks</span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">2017 World Press Freedom Index with emojis</h1>
+                  <div>
+        <div class="description">
+          <p>A first (now outclassed) attempt at using emojis in ggplot2. This post combines the hadley/emo package and data from the 2017 World Press Freedom Index.</p>
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">ggplot2</div>
+                <div class="quarto-category">emoji</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">April 26, 2017</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#loading-packages" id="toc-loading-packages" class="nav-link active" data-scroll-target="#loading-packages">Loading packages</a></li>
+  <li><a href="#gathering-data" id="toc-gathering-data" class="nav-link" data-scroll-target="#gathering-data">Gathering data</a></li>
+  <li><a href="#plotting-it-all-with-ggplot2" id="toc-plotting-it-all-with-ggplot2" class="nav-link" data-scroll-target="#plotting-it-all-with-ggplot2">Plotting it all with ggplot2</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Emojis are now fully supported in {ggplot2} thanks to the {ragg} package. Read more about it here: <a href="https://www.tidyverse.org/blog/2021/02/modern-text-features/">Modern Text Features in R</a>.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This code has been lightly revised to make sure it works as of 2018-12-16.</p>
+</div>
+</div>
+<p>With <a href="https://rsf.org/en">Reporters Without Borders</a> coming out with its <a href="https://rsf.org/en/ranking/2017">2017 World Press Freedom Index</a> in the same week as Hadley Wickham coming out with the <a href="https://github.com/hadley/emo">emo(ji)</a> package, I had no choice but to explore both of them at the same time.</p>
+<p>Disclaimer! This post is not an exercise in statistical inference but rather a proof of concept of how to use the emo(ji) package with ggplot2.</p>
+<section id="loading-packages" class="level3">
+<h3 class="anchored" data-anchor-id="loading-packages">Loading packages</h3>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(hrbrthemes)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># remotes::install_github('hadley/emo')</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The <a href="https://github.com/hrbrmstr/hrbrthemes">hrbrthemes</a> is not necessary for this project but it is one of my personal favorite ggplot2 themes.</p>
+</section>
+<section id="gathering-data" class="level3">
+<h3 class="anchored" data-anchor-id="gathering-data">Gathering data</h3>
+<p>Here we collect the data from Reporters Without Borders, emoji flags, and The World Bank (so we have something to plot against).</p>
+<section id="world-press-freedom-index" class="level4">
+<h4 class="anchored" data-anchor-id="world-press-freedom-index">2017 World Press Freedom Index</h4>
+<p>We have the <a href="https://rsf.org/en/ranking/2017">2017 World Press Freedom Index</a> <a href="https://rsf.org/sites/default/files/index_format_upload_2017-v2_1_0.csv">(direct download link)</a> data which we load in as normal.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(freedom_index <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://rsf.org/sites/default/files/index_format_upload_2017-v2_1_0.csv"</span>))</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 180 x 12</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="do">##    ISO    Rank FR_Country EN_country  ES_country   `Underlying situation score …</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;       &lt;chr&gt;                                &lt;dbl&gt;</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  1 NOR       1 Norvège    Norway      Noruega                                760</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="do">##  2 SWE       2 Suede      Sweden      Suecia                                 759</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="do">##  3 FIN       3 Finlande   Finland     Finlandia                              892</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="do">##  4 DNK       4 Danemark   Denmark     Dinamarca                             1036</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="do">##  5 NLD       5 Pays-Bas   Netherlands Países Bajos                           963</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="do">##  6 CRI       6 Costa Rica Costa Rica  Costa Rica                            1193</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  7 CHE       7 Suisse     Switzerland Suiza                                 1213</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  8 JAM       8 Jamaïque   Jamaica     Jamaica                               1273</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="do">##  9 BEL       9 Belgique   Belgium     Bélgica                               1247</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 10 ISL      10 Islande    Iceland     Islandia                              1303</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 170 more rows, and 6 more variables: Abuse score 2016 &lt;chr&gt;,</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="do">## #   Overall Score 2016 &lt;dbl&gt;, Progression RANK &lt;dbl&gt;, Rank 2015 &lt;dbl&gt;,</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="do">## #   Score 2015 &lt;dbl&gt;, Zone &lt;chr&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>and we see that a total of 180 countries have a score (Overall Score 2016).</p>
+</section>
+<section id="gdp-per-capita" class="level4">
+<h4 class="anchored" data-anchor-id="gdp-per-capita">GDP per capita</h4>
+<p>To have something somehow meaningful to compare the freedom index to. I’ve found some data about GDP per capita, mostly because I figured it would have data for quite a lot of the countries covered by the freedom index. So from <a href="http://data.worldbank.org/indicator/NY.GDP.PCAP.CD">The World Bank</a> <a href="http://api.worldbank.org/v2/en/indicator/NY.GDP.PCAP.CD?downloadformat=csv">(direct download link)</a> which we load in as normal.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(gdp_pcap <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"API_NY.GDP.PCAP.CD_DS2_en_csv_v2.csv"</span>, <span class="at">skip =</span> <span class="dv">3</span>))</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 264 x 62</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="do">##    `Country Name` `Country Code` `Indicator Name` `Indicator Code` `1960` `1961`</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;chr&gt;          &lt;chr&gt;          &lt;chr&gt;            &lt;chr&gt;             &lt;dbl&gt;  &lt;dbl&gt;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  1 Aruba          ABW            GDP per capita … NY.GDP.PCAP.CD     NA     NA  </span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="do">##  2 Afghanistan    AFG            GDP per capita … NY.GDP.PCAP.CD     59.8   59.9</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="do">##  3 Angola         AGO            GDP per capita … NY.GDP.PCAP.CD     NA     NA  </span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="do">##  4 Albania        ALB            GDP per capita … NY.GDP.PCAP.CD     NA     NA  </span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="do">##  5 Andorra        AND            GDP per capita … NY.GDP.PCAP.CD     NA     NA  </span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="do">##  6 Arab World     ARB            GDP per capita … NY.GDP.PCAP.CD     NA     NA  </span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  7 United Arab E… ARE            GDP per capita … NY.GDP.PCAP.CD     NA     NA  </span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  8 Argentina      ARG            GDP per capita … NY.GDP.PCAP.CD     NA     NA  </span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="do">##  9 Armenia        ARM            GDP per capita … NY.GDP.PCAP.CD     NA     NA  </span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 10 American Samoa ASM            GDP per capita … NY.GDP.PCAP.CD     NA     NA  </span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 254 more rows, and 56 more variables: 1962 &lt;dbl&gt;, 1963 &lt;dbl&gt;,</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="do">## #   1964 &lt;dbl&gt;, 1965 &lt;dbl&gt;, 1966 &lt;dbl&gt;, 1967 &lt;dbl&gt;, 1968 &lt;dbl&gt;, 1969 &lt;dbl&gt;,</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="do">## #   1970 &lt;dbl&gt;, 1971 &lt;dbl&gt;, 1972 &lt;dbl&gt;, 1973 &lt;dbl&gt;, 1974 &lt;dbl&gt;, 1975 &lt;dbl&gt;,</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="do">## #   1976 &lt;dbl&gt;, 1977 &lt;dbl&gt;, 1978 &lt;dbl&gt;, 1979 &lt;dbl&gt;, 1980 &lt;dbl&gt;, 1981 &lt;dbl&gt;,</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="do">## #   1982 &lt;dbl&gt;, 1983 &lt;dbl&gt;, 1984 &lt;dbl&gt;, 1985 &lt;dbl&gt;, 1986 &lt;dbl&gt;, 1987 &lt;dbl&gt;,</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="do">## #   1988 &lt;dbl&gt;, 1989 &lt;dbl&gt;, 1990 &lt;dbl&gt;, 1991 &lt;dbl&gt;, 1992 &lt;dbl&gt;, 1993 &lt;dbl&gt;,</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="do">## #   1994 &lt;dbl&gt;, 1995 &lt;dbl&gt;, 1996 &lt;dbl&gt;, 1997 &lt;dbl&gt;, 1998 &lt;dbl&gt;, 1999 &lt;dbl&gt;,</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="do">## #   2000 &lt;dbl&gt;, 2001 &lt;dbl&gt;, 2002 &lt;dbl&gt;, 2003 &lt;dbl&gt;, 2004 &lt;dbl&gt;, 2005 &lt;dbl&gt;,</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="do">## #   2006 &lt;dbl&gt;, 2007 &lt;dbl&gt;, 2008 &lt;dbl&gt;, 2009 &lt;dbl&gt;, 2010 &lt;dbl&gt;, 2011 &lt;dbl&gt;,</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="do">## #   2012 &lt;dbl&gt;, 2013 &lt;dbl&gt;, 2014 &lt;dbl&gt;, 2015 &lt;dbl&gt;, 2016 &lt;dbl&gt;, X62 &lt;lgl&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>which have quite a few variables but for now we will just focus on the 2015 variable as the 2016 appears empty. Now that we have two data sets that we would like to combine, a general question would be if the gdp_pcap data have information matching our 180 countries. So with the following bit of code, we join the two datasets together by the ICO ALPHA-3 Code available in both datasets and select the countries that don’t have a value for the year 2015.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">left_join</span>(freedom_index, gdp_pcap, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"ISO"</span> <span class="ot">=</span> <span class="st">"Country Code"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">is.na</span>(<span class="st">`</span><span class="at">2015</span><span class="st">`</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(EN_country)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 12 x 1</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="do">##    EN_country                           </span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;chr&gt;                                </span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="do">##  1 Liechtenstein                        </span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="do">##  2 Andorra                              </span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="do">##  3 OECS                                 </span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="do">##  4 Taiwan                               </span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  5 Papua New Guinea                     </span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  6 Cyprus North                         </span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="do">##  7 Kosovo                               </span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="do">##  8 Venezuela                            </span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="do">##  9 Libya                                </span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="do">## 10 Syrian Arab Republic                 </span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="do">## 11 Eritrea                              </span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="do">## 12 Democratic People's Republic of Korea</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>which leaves us with 166 countries. I could have looked for the data for these countries, but that is outside the reach of this post.</p>
+</section>
+<section id="flag-emoji" class="level4">
+<h4 class="anchored" data-anchor-id="flag-emoji">Flag emoji</h4>
+<p>I would like to use the different flag emojis</p>
+<pre><code>## 🇦🇨🇦🇩🇦🇪🇦🇫🇦🇬🇦🇮🇦🇱🇦🇲🇦🇴🇦🇶🇦🇷🇦🇸🇦🇹🇦🇺🇦🇼🇦🇽🇦🇿🇧🇦🇧🇧🇧🇩🇧🇪🇧🇫🇧🇬🇧🇭🇧🇮🇧🇯🇧🇱🇧🇲🇧🇳🇧🇴🇧🇶🇧🇷🇧🇸🇧🇹🇧🇻🇧🇼🇧🇾🇧🇿🇨🇦🇨🇨🇨🇩🇨🇫🇨🇬🇨🇭🇨🇮🇨🇰🇨🇱🇨🇲🇨🇳🇨🇴🇨🇵🇨🇷🇨🇺🇨🇻🇨🇼🇨🇽🇨🇾🇨🇿🇩🇪🇩🇪🇩🇬🇩🇯🇩🇰🇩🇲🇩🇴🇩🇿🇪🇦🇪🇨🇪🇪🇪🇬🇪🇭🇪🇷🇪🇸🇪🇹🇪🇺🇫🇮🇫🇯🇫🇰🇫🇲🇫🇴🇫🇷🇬🇦🇬🇧🇬🇧🇬🇩🇬🇪🇬🇫🇬🇬🇬🇭🇬🇮🇬🇱🇬🇲🇬🇳🇬🇵🇬🇶🇬🇷🇬🇸🇬🇹🇬🇺🇬🇼🇬🇾🇭🇰🇭🇲🇭🇳🇭🇷🇭🇹🇭🇺🇮🇨🇮🇩🇮🇪🇮🇱🇮🇲🇮🇳🇮🇴🇮🇶🇮🇷🇮🇸🇮🇹🇯🇪🇯🇲🇯🇴🇯🇵🇰🇪🇰🇬🇰🇭🇰🇮🇰🇲🇰🇳🇰🇵🇰🇷🇰🇼🇰🇾🇰🇿🇱🇦🇱🇧🇱🇨🇱🇮🇱🇰🇱🇷🇱🇸🇱🇹🇱🇺🇱🇻🇱🇾🇲🇦🇲🇨🇲🇩🇲🇪🇲🇫🇲🇬🇲🇭🇲🇰🇲🇱🇲🇲🇲🇳🇲🇴🇲🇵🇲🇶🇲🇷🇲🇸🇲🇹🇲🇺🇲🇻🇲🇼🇲🇽🇲🇾🇲🇿🇳🇦🇳🇨🇳🇪🇳🇫🇳🇬🇳🇮🇳🇱🇳🇴🇳🇵🇳🇷🇳🇺🇳🇿🇴🇲🇵🇦🇵🇪🇵🇫🇵🇬🇵🇭🇵🇰🇵🇱🇵🇲🇵🇳🇵🇷🇵🇸🇵🇹🇵🇼🇵🇾🇶🇦🇷🇪🇷🇴🇷🇸🇷🇺🇷🇼🇸🇦🇸🇧🇸🇨🇸🇩🇸🇪🇸🇬🇸🇭🇸🇮🇸🇯🇸🇰🇸🇱🇸🇲🇸🇳🇸🇴🇸🇷🇸🇸🇸🇹🇸🇻🇸🇽🇸🇾🇸🇿🇹🇦🇹🇨🇹🇩🇹🇫🇹🇬🇹🇭🇹🇯🇹🇰🇹🇱🇹🇲🇹🇳🇹🇴🇹🇷🇹🇹🇹🇻🇹🇼🇹🇿🇺🇦🇺🇬🇺🇲🇺🇳🇺🇸🇺🇸🇺🇾🇺🇿🇻🇦🇻🇨🇻🇪🇻🇬🇻🇮🇻🇳🇻🇺🇼🇫🇼🇸🇽🇰🇾🇪🇾🇹🇿🇦🇿🇲🇿🇼🏴󠁧󠁢󠁥󠁮󠁧󠁿🏴󠁧󠁢󠁳󠁣󠁴󠁿🏴󠁧󠁢󠁷󠁬󠁳󠁿</code></pre>
+<p>which all can be found with the new emo(ji) package</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>emo<span class="sc">::</span><span class="fu">ji_find</span>(<span class="st">"flag"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 264 x 2</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="do">##    name                 emoji</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;chr&gt;                &lt;chr&gt;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  1 Ascension_Island     🇦🇨   </span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="do">##  2 andorra              🇦🇩   </span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="do">##  3 united_arab_emirates 🇦🇪   </span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="do">##  4 afghanistan          🇦🇫   </span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="do">##  5 antigua_barbuda      🇦🇬   </span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="do">##  6 anguilla             🇦🇮   </span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  7 albania              🇦🇱   </span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  8 armenia              🇦🇲   </span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="do">##  9 angola               🇦🇴   </span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 10 antarctica           🇦🇶   </span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 254 more rows</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>we first notice that the first two emojis are not country flags and that the name of the countries are not in the same format as what we have from earlier, so we replace the underscores with spaces and translate everything to lowercase before joining. This time by country name. Again we check for missed joints.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">left_join</span>(freedom_index, gdp_pcap, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"ISO"</span> <span class="ot">=</span> <span class="st">"Country Code"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">EN_country =</span> <span class="fu">tolower</span>(EN_country)) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(emo<span class="sc">::</span><span class="fu">ji_find</span>(<span class="st">"flag"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>              <span class="fu">mutate</span>(<span class="at">name =</span> <span class="fu">str_replace_all</span>(name, <span class="st">"_"</span>, <span class="st">" "</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>              <span class="fu">filter</span>(name <span class="sc">!=</span> <span class="st">"japan"</span>, name <span class="sc">!=</span> <span class="st">"crossed flags"</span>), </span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"EN_country"</span> <span class="ot">=</span> <span class="st">"name"</span>))  <span class="sc">%&gt;%</span> </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(<span class="st">`</span><span class="at">2015</span><span class="st">`</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">is.na</span>(emoji)) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(EN_country)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 22 x 1</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="do">##    EN_country            </span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;chr&gt;                 </span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="do">##  1 germany               </span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="do">##  2 spain                 </span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="do">##  3 trinidad and tobago   </span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="do">##  4 france                </span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="do">##  5 united kingdom        </span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="do">##  6 united states         </span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="do">##  7 italy                 </span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="do">##  8 south korea           </span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="do">##  9 bosnia and herzegovina</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="do">## 10 japan                 </span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 12 more rows</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Which is quite a few. It turns out that the naming convention for the emoji names has not been that consistent, “de” used instead of “germany” etc. To clear up code later on we make a new emoji tibble with all the changes.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>newemoji <span class="ot">&lt;-</span> emo<span class="sc">::</span><span class="fu">ji_find</span>(<span class="st">"flag"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>              <span class="fu">mutate</span>(<span class="at">name =</span> <span class="fu">str_replace_all</span>(<span class="at">string =</span> name,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">pattern =</span> <span class="st">"_"</span>,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">replacement =</span>  <span class="st">" "</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(name <span class="sc">!=</span> <span class="st">"japan"</span>, name <span class="sc">!=</span> <span class="st">"crossed flags"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">name =</span> <span class="fu">str_replace</span>(name, <span class="st">"^de$"</span>, <span class="st">"germany"</span>),</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">name =</span> <span class="fu">str_replace</span>(name, <span class="st">"^es$"</span>, <span class="st">"spain"</span>),</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">name =</span> <span class="fu">str_replace</span>(name, <span class="st">"^trinidad tobago$"</span>, <span class="st">"trinidad and tobago"</span>),</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">name =</span> <span class="fu">str_replace</span>(name, <span class="st">"^fr$"</span>, <span class="st">"france"</span>),</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">name =</span> <span class="fu">str_replace</span>(name, <span class="st">"^uk$"</span>, <span class="st">"united kingdom"</span>),</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">name =</span> <span class="fu">str_replace</span>(name, <span class="st">"^us$"</span>, <span class="st">"united states"</span>),</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">name =</span> <span class="fu">str_replace</span>(name, <span class="st">"^it$"</span>, <span class="st">"italy"</span>),</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">name =</span> <span class="fu">str_replace</span>(name, <span class="st">"^kr$"</span>, <span class="st">"south korea"</span>),</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>         <span class="at">name =</span> <span class="fu">str_replace</span>(name, <span class="st">"^bosnia herzegovina$"</span>, <span class="st">"bosnia and herzegovina"</span>),</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>         <span class="at">name =</span> <span class="fu">str_replace</span>(name, <span class="st">"^guinea bissau$"</span>, <span class="st">"guinea-bissau"</span>),</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>         <span class="at">name =</span> <span class="fu">str_replace</span>(name, <span class="st">"^cote divoire$"</span>, <span class="st">"ivory coast"</span>),</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>         <span class="at">name =</span> <span class="fu">str_replace</span>(name, <span class="st">"^timor leste$"</span>, <span class="st">"east timor"</span>),</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>         <span class="at">name =</span> <span class="fu">str_replace</span>(name, <span class="st">"^congo brazzaville$"</span>, <span class="st">"congo"</span>),</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>         <span class="at">name =</span> <span class="fu">str_replace</span>(name, <span class="st">"^palestinian territories$"</span>, <span class="st">"palestine"</span>),</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>         <span class="at">name =</span> <span class="fu">str_replace</span>(name, <span class="st">"^ru$"</span>, <span class="st">"russian federation"</span>),</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>         <span class="at">name =</span> <span class="fu">str_replace</span>(name, <span class="st">"^congo kinshasa$"</span>, <span class="st">"the democratic republic of the congo"</span>),</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>         <span class="at">name =</span> <span class="fu">str_replace</span>(name, <span class="st">"^tr$"</span>, <span class="st">"turkey"</span>),</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>         <span class="at">name =</span> <span class="fu">str_replace</span>(name, <span class="st">"^brunei$"</span>, <span class="st">"brunei darussalam"</span>),</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>         <span class="at">name =</span> <span class="fu">str_replace</span>(name, <span class="st">"^laos$"</span>, <span class="st">"lao people's democratic republic"</span>),</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>         <span class="at">name =</span> <span class="fu">str_replace</span>(name, <span class="st">"^cn$"</span>, <span class="st">"china"</span>),</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>         <span class="at">name =</span> <span class="fu">str_replace</span>(name, <span class="st">"^jp$"</span>, <span class="st">"japan"</span>))</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>newemoji</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 264 x 2</span></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a><span class="do">##    name                 emoji</span></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;chr&gt;                &lt;chr&gt;</span></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a><span class="do">##  1 Ascension Island     🇦🇨   </span></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a><span class="do">##  2 andorra              🇦🇩   </span></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a><span class="do">##  3 united arab emirates 🇦🇪   </span></span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a><span class="do">##  4 afghanistan          🇦🇫   </span></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a><span class="do">##  5 antigua barbuda      🇦🇬   </span></span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a><span class="do">##  6 anguilla             🇦🇮   </span></span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a><span class="do">##  7 albania              🇦🇱   </span></span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a><span class="do">##  8 armenia              🇦🇲   </span></span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a><span class="do">##  9 angola               🇦🇴   </span></span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a><span class="do">## 10 antarctica           🇦🇶   </span></span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 254 more rows</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+<section id="plotting-it-all-with-ggplot2" class="level3">
+<h3 class="anchored" data-anchor-id="plotting-it-all-with-ggplot2">Plotting it all with ggplot2</h3>
+<p>Now with all the preparation done we do a naive first plot.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">left_join</span>(freedom_index, gdp_pcap, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"ISO"</span> <span class="ot">=</span> <span class="st">"Country Code"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">EN_country =</span> <span class="fu">tolower</span>(EN_country)) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(newemoji, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"EN_country"</span> <span class="ot">=</span> <span class="st">"name"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="st">`</span><span class="at">2015</span><span class="st">`</span>, <span class="at">y =</span> <span class="st">`</span><span class="at">Overall Score 2016</span><span class="st">`</span>)) <span class="sc">+</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> emoji))</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Removed 14 rows containing missing values (geom_text).</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><img src="index_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid"></p>
+<p>But wait, we have a couple of problems:</p>
+<ul>
+<li>The emojis don’t show up.</li>
+<li>The freedom score is 100 times too much as the actual.</li>
+<li>The gdp_pcap is quite skewed.</li>
+</ul>
+<p>But these are not problems too great for us. It turns out that R’s graphical devices don’t support AppleColorEmoji font. We can alleviate that problem by saving the plot as a svg file. And we will do a simple log transformation of the gdp_pcap.</p>
+<p>Our final plot is thus the following:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">left_join</span>(freedom_index, gdp_pcap, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"ISO"</span> <span class="ot">=</span> <span class="st">"Country Code"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">EN_country =</span> <span class="fu">tolower</span>(EN_country),</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Overall Score 2016</span><span class="st">`</span> <span class="ot">=</span> <span class="st">`</span><span class="at">Overall Score 2016</span><span class="st">`</span> <span class="sc">/</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(newemoji, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"EN_country"</span> <span class="ot">=</span> <span class="st">"name"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="st">`</span><span class="at">2015</span><span class="st">`</span>, <span class="at">y =</span> <span class="st">`</span><span class="at">Overall Score 2016</span><span class="st">`</span>)) <span class="sc">+</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">color =</span> <span class="st">"grey"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> emoji)) <span class="sc">+</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_log10</span>() <span class="sc">+</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotation_logticks</span>(<span class="at">sides =</span> <span class="st">"b"</span>)  <span class="sc">+</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_ipsum</span>() <span class="sc">+</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"GDP per capita (current US$)"</span>, <span class="at">y =</span> <span class="st">"2017 World Press Freedom Index"</span>,</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Countries with high GDP per capita</span><span class="sc">\n</span><span class="st">tend to have low Freedom Index"</span>,</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Visualized with emojis"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><img src="final.svg" width="700px" style="display: block; margin: auto;"></p>
+<details closed="">
+<summary>
+<span title="Click to Expand"> session information </span>
+</summary>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>─ Session info ───────────────────────────────────────────────────────────────</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a> setting  value                       </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a> version  R version <span class="dv">4</span>.<span class="fl">0.5</span> (<span class="dv">2021-03-31</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a> os       macOS Big Sur <span class="fl">10.16</span>         </span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a> system   x86_64, darwin17<span class="fl">.0</span>          </span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a> ui       X11                         </span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a> <span class="fu">language</span> (EN)                        </span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a> collate  en_US.UTF<span class="dv">-8</span>                 </span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a> ctype    en_US.UTF<span class="dv">-8</span>                 </span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a> tz       Pacific<span class="sc">/</span>Honolulu            </span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a> date     <span class="dv">2021-07-02</span>                  </span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>─ Packages ───────────────────────────────────────────────────────────────────</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a> package     <span class="sc">*</span> version    date       lib source                            </span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a> assertthat    <span class="dv">0</span>.<span class="fl">2.1</span>      <span class="dv">2019-03-21</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.0</span>)                    </span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a> backports     <span class="dv">1</span>.<span class="fl">2.1</span>      <span class="dv">2020-12-09</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a> blogdown      <span class="dv">1</span>.<span class="fl">3.2</span>      <span class="dv">2021-06-06</span> [<span class="dv">1</span>] <span class="fu">Github</span> (rstudio<span class="sc">/</span>blogdown<span class="sc">@</span>00a2090) </span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a> bookdown      <span class="fl">0.22</span>       <span class="dv">2021-04-22</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a> broom         <span class="dv">0</span>.<span class="fl">7.6</span>      <span class="dv">2021-04-05</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a> bslib         <span class="dv">0</span>.<span class="dv">2</span>.<span class="fl">4.9003</span> <span class="dv">2021-05-05</span> [<span class="dv">1</span>] <span class="fu">Github</span> (rstudio<span class="sc">/</span>bslib<span class="sc">@</span>ba6a80d)    </span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a> cellranger    <span class="dv">1</span>.<span class="fl">1.0</span>      <span class="dv">2016-07-27</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.0</span>)                    </span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a> cli           <span class="dv">2</span>.<span class="fl">5.0</span>      <span class="dv">2021-04-26</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a> clipr         <span class="dv">0</span>.<span class="fl">7.1</span>      <span class="dv">2020-10-08</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a> codetools     <span class="fl">0.2</span><span class="dv">-18</span>     <span class="dv">2020-11-04</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.5</span>)                    </span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a> colorspace    <span class="fl">2.0</span><span class="dv">-1</span>      <span class="dv">2021-05-04</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a> crayon        <span class="dv">1</span>.<span class="fl">4.1</span>      <span class="dv">2021-02-08</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a> DBI           <span class="dv">1</span>.<span class="fl">1.1</span>      <span class="dv">2021-01-15</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a> dbplyr        <span class="dv">2</span>.<span class="fl">1.1</span>      <span class="dv">2021-04-06</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a> desc          <span class="dv">1</span>.<span class="fl">3.0</span>      <span class="dv">2021-03-05</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a> details     <span class="sc">*</span> <span class="dv">0</span>.<span class="fl">2.1</span>      <span class="dv">2020-01-12</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.0</span>)                    </span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a> digest        <span class="dv">0</span>.<span class="fl">6.27</span>     <span class="dv">2020-10-24</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a> dplyr       <span class="sc">*</span> <span class="dv">1</span>.<span class="fl">0.7</span>      <span class="dv">2021-06-18</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a> ellipsis      <span class="dv">0</span>.<span class="fl">3.2</span>      <span class="dv">2021-04-29</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a> emo         <span class="sc">*</span> <span class="dv">0</span>.<span class="dv">0</span>.<span class="fl">0.9000</span> <span class="dv">2020-05-12</span> [<span class="dv">1</span>] <span class="fu">Github</span> (hadley<span class="sc">/</span>emo<span class="sc">@</span>3f03b11)       </span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a> evaluate      <span class="fl">0.14</span>       <span class="dv">2019-05-28</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.0</span>)                    </span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a> extrafont     <span class="fl">0.17</span>       <span class="dv">2014-12-08</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.0</span>)                    </span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a> extrafontdb   <span class="fl">1.0</span>        <span class="dv">2012-06-11</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.0</span>)                    </span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a> fansi         <span class="dv">0</span>.<span class="fl">5.0</span>      <span class="dv">2021-05-25</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a> farver        <span class="dv">2</span>.<span class="fl">1.0</span>      <span class="dv">2021-02-28</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a> forcats     <span class="sc">*</span> <span class="dv">0</span>.<span class="fl">5.1</span>      <span class="dv">2021-01-27</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a> fs            <span class="dv">1</span>.<span class="fl">5.0</span>      <span class="dv">2020-07-31</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a> gdtools       <span class="dv">0</span>.<span class="fl">2.3</span>      <span class="dv">2021-01-06</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a> generics      <span class="dv">0</span>.<span class="fl">1.0</span>      <span class="dv">2020-10-31</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-45"><a href="#cb11-45" aria-hidden="true" tabindex="-1"></a> ggplot2     <span class="sc">*</span> <span class="dv">3</span>.<span class="fl">3.3</span>      <span class="dv">2020-12-30</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-46"><a href="#cb11-46" aria-hidden="true" tabindex="-1"></a> glue          <span class="dv">1</span>.<span class="fl">4.2</span>      <span class="dv">2020-08-27</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-47"><a href="#cb11-47" aria-hidden="true" tabindex="-1"></a> gtable        <span class="dv">0</span>.<span class="fl">3.0</span>      <span class="dv">2019-03-25</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.0</span>)                    </span>
+<span id="cb11-48"><a href="#cb11-48" aria-hidden="true" tabindex="-1"></a> haven         <span class="dv">2</span>.<span class="fl">4.1</span>      <span class="dv">2021-04-23</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-49"><a href="#cb11-49" aria-hidden="true" tabindex="-1"></a> highr         <span class="fl">0.9</span>        <span class="dv">2021-04-16</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-50"><a href="#cb11-50" aria-hidden="true" tabindex="-1"></a> hms           <span class="dv">1</span>.<span class="fl">1.0</span>      <span class="dv">2021-05-17</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-51"><a href="#cb11-51" aria-hidden="true" tabindex="-1"></a> hrbrthemes  <span class="sc">*</span> <span class="dv">0</span>.<span class="fl">8.0</span>      <span class="dv">2020-03-06</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-52"><a href="#cb11-52" aria-hidden="true" tabindex="-1"></a> htmltools     <span class="dv">0</span>.<span class="dv">5</span>.<span class="fl">1.1</span>    <span class="dv">2021-01-22</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-53"><a href="#cb11-53" aria-hidden="true" tabindex="-1"></a> httr          <span class="dv">1</span>.<span class="fl">4.2</span>      <span class="dv">2020-07-20</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-54"><a href="#cb11-54" aria-hidden="true" tabindex="-1"></a> jquerylib     <span class="dv">0</span>.<span class="fl">1.4</span>      <span class="dv">2021-04-26</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-55"><a href="#cb11-55" aria-hidden="true" tabindex="-1"></a> jsonlite      <span class="dv">1</span>.<span class="fl">7.2</span>      <span class="dv">2020-12-09</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-56"><a href="#cb11-56" aria-hidden="true" tabindex="-1"></a> knitr       <span class="sc">*</span> <span class="fl">1.33</span>       <span class="dv">2021-04-24</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-57"><a href="#cb11-57" aria-hidden="true" tabindex="-1"></a> labeling      <span class="dv">0</span>.<span class="fl">4.2</span>      <span class="dv">2020-10-20</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-58"><a href="#cb11-58" aria-hidden="true" tabindex="-1"></a> lifecycle     <span class="dv">1</span>.<span class="fl">0.0</span>      <span class="dv">2021-02-15</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-59"><a href="#cb11-59" aria-hidden="true" tabindex="-1"></a> lubridate     <span class="dv">1</span>.<span class="fl">7.10</span>     <span class="dv">2021-02-26</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-60"><a href="#cb11-60" aria-hidden="true" tabindex="-1"></a> magrittr      <span class="dv">2</span>.<span class="fl">0.1</span>      <span class="dv">2020-11-17</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-61"><a href="#cb11-61" aria-hidden="true" tabindex="-1"></a> modelr        <span class="dv">0</span>.<span class="fl">1.8</span>      <span class="dv">2020-05-19</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.0</span>)                    </span>
+<span id="cb11-62"><a href="#cb11-62" aria-hidden="true" tabindex="-1"></a> munsell       <span class="dv">0</span>.<span class="fl">5.0</span>      <span class="dv">2018-06-12</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.0</span>)                    </span>
+<span id="cb11-63"><a href="#cb11-63" aria-hidden="true" tabindex="-1"></a> pillar        <span class="dv">1</span>.<span class="fl">6.1</span>      <span class="dv">2021-05-16</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-64"><a href="#cb11-64" aria-hidden="true" tabindex="-1"></a> pkgconfig     <span class="dv">2</span>.<span class="fl">0.3</span>      <span class="dv">2019-09-22</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.0</span>)                    </span>
+<span id="cb11-65"><a href="#cb11-65" aria-hidden="true" tabindex="-1"></a> png           <span class="fl">0.1</span><span class="dv">-7</span>      <span class="dv">2013-12-03</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.0</span>)                    </span>
+<span id="cb11-66"><a href="#cb11-66" aria-hidden="true" tabindex="-1"></a> purrr       <span class="sc">*</span> <span class="dv">0</span>.<span class="fl">3.4</span>      <span class="dv">2020-04-17</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.0</span>)                    </span>
+<span id="cb11-67"><a href="#cb11-67" aria-hidden="true" tabindex="-1"></a> R6            <span class="dv">2</span>.<span class="fl">5.0</span>      <span class="dv">2020-10-28</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-68"><a href="#cb11-68" aria-hidden="true" tabindex="-1"></a> Rcpp          <span class="dv">1</span>.<span class="fl">0.6</span>      <span class="dv">2021-01-15</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-69"><a href="#cb11-69" aria-hidden="true" tabindex="-1"></a> readr       <span class="sc">*</span> <span class="dv">1</span>.<span class="fl">4.0</span>      <span class="dv">2020-10-05</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-70"><a href="#cb11-70" aria-hidden="true" tabindex="-1"></a> readxl        <span class="dv">1</span>.<span class="fl">3.1</span>      <span class="dv">2019-03-13</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-71"><a href="#cb11-71" aria-hidden="true" tabindex="-1"></a> reprex        <span class="dv">2</span>.<span class="fl">0.0</span>      <span class="dv">2021-04-02</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-72"><a href="#cb11-72" aria-hidden="true" tabindex="-1"></a> rlang         <span class="dv">0</span>.<span class="fl">4.11</span>     <span class="dv">2021-04-30</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-73"><a href="#cb11-73" aria-hidden="true" tabindex="-1"></a> rmarkdown     <span class="dv">2</span>.<span class="fl">8.6</span>      <span class="dv">2021-06-06</span> [<span class="dv">1</span>] <span class="fu">Github</span> (rstudio<span class="sc">/</span>rmarkdown<span class="sc">@</span>9dc5d97)</span>
+<span id="cb11-74"><a href="#cb11-74" aria-hidden="true" tabindex="-1"></a> rprojroot     <span class="dv">2</span>.<span class="fl">0.2</span>      <span class="dv">2020-11-15</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-75"><a href="#cb11-75" aria-hidden="true" tabindex="-1"></a> rstudioapi    <span class="fl">0.13</span>       <span class="dv">2020-11-12</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-76"><a href="#cb11-76" aria-hidden="true" tabindex="-1"></a> Rttf2pt1      <span class="dv">1</span>.<span class="fl">3.8</span>      <span class="dv">2020-01-10</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.0</span>)                    </span>
+<span id="cb11-77"><a href="#cb11-77" aria-hidden="true" tabindex="-1"></a> rvest         <span class="dv">1</span>.<span class="fl">0.0</span>      <span class="dv">2021-03-09</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-78"><a href="#cb11-78" aria-hidden="true" tabindex="-1"></a> sass          <span class="dv">0</span>.<span class="dv">3</span>.<span class="fl">1.9003</span> <span class="dv">2021-05-05</span> [<span class="dv">1</span>] <span class="fu">Github</span> (rstudio<span class="sc">/</span>sass<span class="sc">@</span><span class="dv">6166162</span>)     </span>
+<span id="cb11-79"><a href="#cb11-79" aria-hidden="true" tabindex="-1"></a> scales        <span class="dv">1</span>.<span class="fl">1.1</span>      <span class="dv">2020-05-11</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.0</span>)                    </span>
+<span id="cb11-80"><a href="#cb11-80" aria-hidden="true" tabindex="-1"></a> sessioninfo   <span class="dv">1</span>.<span class="fl">1.1</span>      <span class="dv">2018-11-05</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.0</span>)                    </span>
+<span id="cb11-81"><a href="#cb11-81" aria-hidden="true" tabindex="-1"></a> stringi       <span class="dv">1</span>.<span class="fl">6.2</span>      <span class="dv">2021-05-17</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-82"><a href="#cb11-82" aria-hidden="true" tabindex="-1"></a> stringr     <span class="sc">*</span> <span class="dv">1</span>.<span class="fl">4.0</span>      <span class="dv">2019-02-10</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.0</span>)                    </span>
+<span id="cb11-83"><a href="#cb11-83" aria-hidden="true" tabindex="-1"></a> systemfonts   <span class="dv">1</span>.<span class="fl">0.1</span>      <span class="dv">2021-02-09</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-84"><a href="#cb11-84" aria-hidden="true" tabindex="-1"></a> tibble      <span class="sc">*</span> <span class="dv">3</span>.<span class="fl">1.2</span>      <span class="dv">2021-05-16</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-85"><a href="#cb11-85" aria-hidden="true" tabindex="-1"></a> tidyr       <span class="sc">*</span> <span class="dv">1</span>.<span class="fl">1.3</span>      <span class="dv">2021-03-03</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-86"><a href="#cb11-86" aria-hidden="true" tabindex="-1"></a> tidyselect    <span class="dv">1</span>.<span class="fl">1.1</span>      <span class="dv">2021-04-30</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-87"><a href="#cb11-87" aria-hidden="true" tabindex="-1"></a> tidyverse   <span class="sc">*</span> <span class="dv">1</span>.<span class="fl">3.1</span>      <span class="dv">2021-04-15</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-88"><a href="#cb11-88" aria-hidden="true" tabindex="-1"></a> utf8          <span class="dv">1</span>.<span class="fl">2.1</span>      <span class="dv">2021-03-12</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-89"><a href="#cb11-89" aria-hidden="true" tabindex="-1"></a> vctrs         <span class="dv">0</span>.<span class="fl">3.8</span>      <span class="dv">2021-04-29</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-90"><a href="#cb11-90" aria-hidden="true" tabindex="-1"></a> withr         <span class="dv">2</span>.<span class="fl">4.2</span>      <span class="dv">2021-04-18</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-91"><a href="#cb11-91" aria-hidden="true" tabindex="-1"></a> xfun          <span class="fl">0.23</span>       <span class="dv">2021-05-15</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.2</span>)                    </span>
+<span id="cb11-92"><a href="#cb11-92" aria-hidden="true" tabindex="-1"></a> xml2          <span class="dv">1</span>.<span class="fl">3.2</span>      <span class="dv">2020-04-23</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.0</span>)                    </span>
+<span id="cb11-93"><a href="#cb11-93" aria-hidden="true" tabindex="-1"></a> yaml          <span class="dv">2</span>.<span class="fl">2.1</span>      <span class="dv">2020-02-01</span> [<span class="dv">1</span>] <span class="fu">CRAN</span> (R <span class="dv">4</span>.<span class="fl">0.0</span>)                    </span>
+<span id="cb11-94"><a href="#cb11-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-95"><a href="#cb11-95" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="sc">/</span>Library<span class="sc">/</span>Frameworks<span class="sc">/</span>R.framework<span class="sc">/</span>Versions<span class="sc">/</span><span class="fl">4.0</span><span class="sc">/</span>Resources<span class="sc">/</span>library</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<p><br></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

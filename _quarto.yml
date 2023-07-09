@@ -1,0 +1,28 @@
+project:
+  type: website
+  resources:
+    - "my-name.m4a"
+
+website:
+  navbar:
+    left:
+      - text: "home"
+        href: index.qmd
+    right:
+      - text: "About"
+        href: about.qmd
+      - text: "Blog"
+        href: blog.qmd
+      - text: "Projects"
+        href: projects.qmd
+      - text: "Talks"
+        href: talks.qmd
+
+format:
+  html:
+    toc: true
+    theme:
+      - cosmo
+      - styles.scss
+    grid:
+      body-width: 840px

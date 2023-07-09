@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2020-11-13">
+
+<title>Textrecipes Version 0.4.0</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html" rel="" target="">
+ <span class="menu-text">home</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog.html" rel="" target="">
+ <span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../projects.html" rel="" target="">
+ <span class="menu-text">Projects</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../talks.html" rel="" target="">
+ <span class="menu-text">Talks</span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Textrecipes Version 0.4.0</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">tidymodels</div>
+                <div class="quarto-category">textrecipes</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">November 13, 2020</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#breaking-changes" id="toc-breaking-changes" class="nav-link active" data-scroll-target="#breaking-changes">Breaking changes 💣</a></li>
+  <li><a href="#cleaning" id="toc-cleaning" class="nav-link" data-scroll-target="#cleaning">Cleaning 🧼</a></li>
+  <li><a href="#new-tokenizers" id="toc-new-tokenizers" class="nav-link" data-scroll-target="#new-tokenizers">New tokenizers</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<p>I’m happy to announce that version 0.4.0 of <a href="https://textrecipes.tidymodels.org/">textrecipes</a> got on CRAN a couple of days ago. This will be a brief post going over the major additions and changes.</p>
+<section id="breaking-changes" class="level2">
+<h2 class="anchored" data-anchor-id="breaking-changes">Breaking changes 💣</h2>
+<p>I put this change at the top of this post to make sure it gets enough coverage. The <code>step_lda()</code> function will no longer accepts character variables and instead takes <a href="https://textrecipes.tidymodels.org/reference/tokenlist.html">tokenlist</a> variables. I don’t expect this to affect too many people since it appears that the use of this step is fairly limited.</p>
+<p>For a recipe where <code>step_lda()</code> is used on a variable <code>text_var</code></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">recipe</span>(<span class="sc">~</span> text_var, <span class="at">data =</span> data) <span class="sc">%&gt;%</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_lda</span>(text_var)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>can be made to work the same as before by including this <code>step_tokenize()</code> step before it. It includes a custom tokenizer which was used inside the old version of <code>step_lda()</code></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">recipe</span>(<span class="sc">~</span> text_var, <span class="at">data =</span> data) <span class="sc">%&gt;%</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_tokenize</span>(text_var, </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">custom_token =</span> <span class="cf">function</span>(x) text2vec<span class="sc">::</span><span class="fu">word_tokenizer</span>(<span class="fu">tolower</span>(x))) <span class="sc">%&gt;%</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_lda</span>(text_var)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This change was long overdue since it didn’t follow the rest of the steps since it was doing tokenization internally. This change provides more flexability when using <code>step_lda()</code> in its current state and allows me to consider <a href="https://github.com/tidymodels/textrecipes/issues/112">adding more engine to <code>step_lda()</code></a>.</p>
+</section>
+<section id="cleaning" class="level2">
+<h2 class="anchored" data-anchor-id="cleaning">Cleaning 🧼</h2>
+<p>If your data has weird characters and spaces in them messing up your model then the following steps will make you very happy. <code>step_clean_levels()</code> and <code>step_clean_names()</code> works much like <a href="https://garthtarr.github.io/meatR/janitor.html">janitor</a>’s <code>clean_names()</code> function. Character variables and column names are changes such that they only contain alphanumeric characters and underscores.</p>
+<p>Consider the <code>Smithsonian</code> data.frame. The <code>name</code> variable contains entries with many character, cases, spaces, and punctuations.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(recipes)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(textrecipes)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modeldata)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Smithsonian)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>Smithsonian</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 20 x 3</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="do">##    name                                                    latitude longitude</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;chr&gt;                                                      &lt;dbl&gt;     &lt;dbl&gt;</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="do">##  1 Anacostia Community Museum                                  38.9     -77.0</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  2 Arthur M. Sackler Gallery                                   38.9     -77.0</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  3 Arts and Industries Building                                38.9     -77.0</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="do">##  4 Cooper Hewitt, Smithsonian Design Museum                    40.8     -74.0</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="do">##  5 Freer Gallery of Art                                        38.9     -77.0</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="do">##  6 Hirshhorn Museum and Sculpture Garden                       38.9     -77.0</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="do">##  7 National Air and Space Museum                               38.9     -77.0</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="do">##  8 Steven F. Udvar-Hazy Center                                 38.9     -77.4</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="do">##  9 National Museum of African American History and Culture     38.9     -77.0</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="do">## 10 National Museum of African Art                              38.9     -77.0</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="do">## 11 National Museum of American History                         38.9     -77.0</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="do">## 12 National Museum of the American Indian                      38.9     -77.0</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="do">## 13 George Gustav Heye Center                                   40.7     -74.0</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="do">## 14 National Museum of Natural History                          38.9     -77.0</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="do">## 15 National Portrait Gallery                                   38.9     -77.0</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="do">## 16 National Postal Museum                                      38.9     -77.0</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="do">## 17 Renwick Gallery                                             38.9     -77.0</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="do">## 18 Smithsonian American Art Museum                             38.9     -77.0</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="do">## 19 Smithsonian Institution Building                            38.9     -77.0</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="do">## 20 National Zoological Park                                    38.9     -77.1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>When using <code>step_clean_levels()</code></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">recipe</span>(<span class="sc">~</span> name, <span class="at">data =</span> Smithsonian) <span class="sc">%&gt;%</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_clean_levels</span>(name) <span class="sc">%&gt;%</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">prep</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bake</span>(<span class="at">new_data =</span> <span class="cn">NULL</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 20 x 1</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="do">##    name                                                   </span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;fct&gt;                                                  </span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="do">##  1 anacostia_community_museum                             </span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="do">##  2 arthur_m_sackler_gallery                               </span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="do">##  3 arts_and_industries_building                           </span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  4 cooper_hewitt_smithsonian_design_museum                </span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  5 freer_gallery_of_art                                   </span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="do">##  6 hirshhorn_museum_and_sculpture_garden                  </span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="do">##  7 national_air_and_space_museum                          </span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="do">##  8 steven_f_udvar_hazy_center                             </span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="do">##  9 national_museum_of_african_american_history_and_culture</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="do">## 10 national_museum_of_african_art                         </span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="do">## 11 national_museum_of_american_history                    </span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="do">## 12 national_museum_of_the_american_indian                 </span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="do">## 13 george_gustav_heye_center                              </span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="do">## 14 national_museum_of_natural_history                     </span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="do">## 15 national_portrait_gallery                              </span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="do">## 16 national_postal_museum                                 </span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="do">## 17 renwick_gallery                                        </span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="do">## 18 smithsonian_american_art_museum                        </span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="do">## 19 smithsonian_institution_building                       </span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="do">## 20 national_zoological_park</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>We see that everything has been cleaned to avoid potential confusion and errors.</p>
+<p>the almost more important step is <code>step_clean_names()</code> as it allows you to clean the variables names that could trip up various modeling packages</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>ugly_names <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">        Some      spaces     </span><span class="st">`</span> <span class="ot">=</span> <span class="dv">1</span>,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">BIGG and small case</span><span class="st">`</span> <span class="ot">=</span> <span class="dv">2</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">.period</span><span class="st">`</span> <span class="ot">=</span> <span class="dv">3</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">recipe</span>(<span class="sc">~</span> ., <span class="at">data =</span> ugly_names) <span class="sc">%&gt;%</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_clean_names</span>(<span class="fu">all_predictors</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">prep</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bake</span>(<span class="at">new_data =</span> <span class="cn">NULL</span>)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 1 x 3</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="do">##   some_spaces bigg_and_small_case period</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;dbl&gt;               &lt;dbl&gt;  &lt;dbl&gt;</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 1           1                   2      3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="new-tokenizers" class="level2">
+<h2 class="anchored" data-anchor-id="new-tokenizers">New tokenizers</h2>
+<p>There is two new <code>engine</code>s available in <code>step_tokenize()</code>. the <a href="https://github.com/bnosac/tokenizers.bpe">tokenizers.bpe</a> engine lets you perform <a href="https://en.wikipedia.org/wiki/Byte_pair_encoding">Byte Pair Encoding</a> on you text as a mean of tokenization.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"okc_text"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">recipe</span>(<span class="sc">~</span> essay6, <span class="at">data =</span> okc_text) <span class="sc">%&gt;%</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_tokenize</span>(essay6, <span class="at">engine =</span> <span class="st">"tokenizers.bpe"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_tokenfilter</span>(essay6, <span class="at">max_times =</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_tf</span>(essay6) <span class="sc">%&gt;%</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">prep</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bake</span>(<span class="at">new_data =</span> <span class="cn">NULL</span>)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 750 x 100</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="do">##    `tf_essay6_:` `tf_essay6_!` `tf_essay6_?` `tf_essay6_?&lt;br` tf_essay6_...</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="do">##            &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;            &lt;dbl&gt;         &lt;dbl&gt;</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  1             1             0             0                0             0</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="do">##  2             0             0             0                0             0</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="do">##  3             0             0             0                0             0</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="do">##  4             0             0             0                0             0</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="do">##  5             0             0             0                0             0</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="do">##  6             0             0             0                0             0</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="do">##  7             0             0             0                1             0</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="do">##  8             0             0             0                0             0</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a><span class="do">##  9             0             0             0                0             0</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="do">## 10             0             0             0                0             0</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 740 more rows, and 95 more variables: `tf_essay6_'s` &lt;dbl&gt;,</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_"` &lt;dbl&gt;, `tf_essay6_"&gt;` &lt;dbl&gt;, `tf_essay6_)` &lt;dbl&gt;,</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_▁-` &lt;dbl&gt;, `tf_essay6_▁(` &lt;dbl&gt;, `tf_essay6_▁&lt;a` &lt;dbl&gt;,</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_▁all` &lt;dbl&gt;, `tf_essay6_▁also` &lt;dbl&gt;, `tf_essay6_▁always` &lt;dbl&gt;,</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_▁am` &lt;dbl&gt;, `tf_essay6_▁an` &lt;dbl&gt;, `tf_essay6_▁as` &lt;dbl&gt;,</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_▁at` &lt;dbl&gt;, `tf_essay6_▁being` &lt;dbl&gt;, `tf_essay6_▁better` &lt;dbl&gt;,</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_▁but` &lt;dbl&gt;, `tf_essay6_▁class="ilink"` &lt;dbl&gt;,</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_▁d` &lt;dbl&gt;, `tf_essay6_▁doing` &lt;dbl&gt;, `tf_essay6_▁friends` &lt;dbl&gt;,</span></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_▁from` &lt;dbl&gt;, `tf_essay6_▁future` &lt;dbl&gt;, `tf_essay6_▁get` &lt;dbl&gt;,</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_▁go` &lt;dbl&gt;, `tf_essay6_▁going` &lt;dbl&gt;, `tf_essay6_▁good` &lt;dbl&gt;,</span></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_▁have` &lt;dbl&gt;, `tf_essay6_▁href=` &lt;dbl&gt;, `tf_essay6_▁i've` &lt;dbl&gt;,</span></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_▁if` &lt;dbl&gt;, `tf_essay6_▁into` &lt;dbl&gt;, `tf_essay6_▁it's` &lt;dbl&gt;,</span></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_▁just` &lt;dbl&gt;, `tf_essay6_▁know` &lt;dbl&gt;, `tf_essay6_▁life` &lt;dbl&gt;,</span></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_▁life,` &lt;dbl&gt;, `tf_essay6_▁life.` &lt;dbl&gt;, `tf_essay6_▁lot` &lt;dbl&gt;,</span></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_▁love` &lt;dbl&gt;, `tf_essay6_▁m` &lt;dbl&gt;, `tf_essay6_▁make` &lt;dbl&gt;,</span></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_▁me` &lt;dbl&gt;, `tf_essay6_▁more` &lt;dbl&gt;, `tf_essay6_▁much` &lt;dbl&gt;,</span></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_▁myself` &lt;dbl&gt;, `tf_essay6_▁new` &lt;dbl&gt;, `tf_essay6_▁not` &lt;dbl&gt;,</span></span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_▁one` &lt;dbl&gt;, `tf_essay6_▁other` &lt;dbl&gt;, `tf_essay6_▁our` &lt;dbl&gt;,</span></span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_▁out` &lt;dbl&gt;, `tf_essay6_▁p` &lt;dbl&gt;, `tf_essay6_▁people` &lt;dbl&gt;,</span></span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_▁really` &lt;dbl&gt;, `tf_essay6_▁right` &lt;dbl&gt;,</span></span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_▁should` &lt;dbl&gt;, `tf_essay6_▁so` &lt;dbl&gt;, `tf_essay6_▁some` &lt;dbl&gt;,</span></span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_▁spend` &lt;dbl&gt;, `tf_essay6_▁take` &lt;dbl&gt;, `tf_essay6_▁than` &lt;dbl&gt;,</span></span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_▁there` &lt;dbl&gt;, `tf_essay6_▁they` &lt;dbl&gt;,</span></span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_▁things` &lt;dbl&gt;, `tf_essay6_▁thinking` &lt;dbl&gt;,</span></span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_▁this` &lt;dbl&gt;, `tf_essay6_▁time` &lt;dbl&gt;,</span></span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_▁travel` &lt;dbl&gt;, `tf_essay6_▁up` &lt;dbl&gt;, `tf_essay6_▁want` &lt;dbl&gt;,</span></span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_▁way` &lt;dbl&gt;, `tf_essay6_▁we` &lt;dbl&gt;, `tf_essay6_▁what's` &lt;dbl&gt;,</span></span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_▁when` &lt;dbl&gt;, `tf_essay6_▁where` &lt;dbl&gt;,</span></span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_▁whether` &lt;dbl&gt;, `tf_essay6_▁who` &lt;dbl&gt;, `tf_essay6_▁why` &lt;dbl&gt;,</span></span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_▁will` &lt;dbl&gt;, `tf_essay6_▁work` &lt;dbl&gt;, `tf_essay6_▁world` &lt;dbl&gt;,</span></span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_▁would` &lt;dbl&gt;, `tf_essay6_▁you` &lt;dbl&gt;, tf_essay6_a &lt;dbl&gt;,</span></span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_al &lt;dbl&gt;, tf_essay6_ed &lt;dbl&gt;, tf_essay6_er &lt;dbl&gt;,</span></span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_es &lt;dbl&gt;, tf_essay6_ing &lt;dbl&gt;, `tf_essay6_ing,` &lt;dbl&gt;,</span></span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_ly &lt;dbl&gt;, `tf_essay6_s,` &lt;dbl&gt;, tf_essay6_s. &lt;dbl&gt;,</span></span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_y &lt;dbl&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>additional arguments can be passed to <code>tokenizers.bpe::bpe()</code> via the <code>training_options</code> argument.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">recipe</span>(<span class="sc">~</span> essay6, <span class="at">data =</span> okc_text) <span class="sc">%&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_tokenize</span>(essay6, </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">engine =</span> <span class="st">"tokenizers.bpe"</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">training_options =</span> <span class="fu">list</span>(<span class="at">vocab_size =</span> <span class="dv">100</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_tf</span>(essay6) <span class="sc">%&gt;%</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">prep</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bake</span>(<span class="at">new_data =</span> <span class="cn">NULL</span>)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 750 x 100</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="do">##    `tf_essay6_-` `tf_essay6_,` `tf_essay6_;` `tf_essay6_:` `tf_essay6_!`</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="do">##            &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  1             0             1             1             2             0</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  2             0            13             1             0             0</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="do">##  3             0             1             0             0             1</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="do">##  4             0             0             0             0             0</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="do">##  5             0             0             0             0             1</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="do">##  6             0             1             0             0             0</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="do">##  7             0             4             0             1             0</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="do">##  8             2             0             0             0             0</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="do">##  9             0             0             0             0             0</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="do">## 10             0            10             0             0             0</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 740 more rows, and 95 more variables: `tf_essay6_?` &lt;dbl&gt;,</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_. &lt;dbl&gt;, `tf_essay6_'` &lt;dbl&gt;, `tf_essay6_"` &lt;dbl&gt;,</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_(` &lt;dbl&gt;, `tf_essay6_)` &lt;dbl&gt;, `tf_essay6_[` &lt;dbl&gt;,</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_]` &lt;dbl&gt;, `tf_essay6_*` &lt;dbl&gt;, `tf_essay6_/` &lt;dbl&gt;,</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_&amp;` &lt;dbl&gt;, `tf_essay6_+` &lt;dbl&gt;, `tf_essay6_&lt;` &lt;dbl&gt;,</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_&lt;BOS&gt;` &lt;dbl&gt;, `tf_essay6_&lt;br` &lt;dbl&gt;, `tf_essay6_&lt;EOS&gt;` &lt;dbl&gt;,</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_&lt;PAD&gt;` &lt;dbl&gt;, `tf_essay6_&lt;UNK&gt;` &lt;dbl&gt;, `tf_essay6_=` &lt;dbl&gt;,</span></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_&gt;` &lt;dbl&gt;, `tf_essay6_~` &lt;dbl&gt;, `tf_essay6_▁` &lt;dbl&gt;,</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_▁/` &lt;dbl&gt;, `tf_essay6_▁/&gt;` &lt;dbl&gt;, `tf_essay6_▁a` &lt;dbl&gt;,</span></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_▁and` &lt;dbl&gt;, `tf_essay6_▁b` &lt;dbl&gt;, `tf_essay6_▁c` &lt;dbl&gt;,</span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_▁d` &lt;dbl&gt;, `tf_essay6_▁f` &lt;dbl&gt;, `tf_essay6_▁g` &lt;dbl&gt;,</span></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_▁h` &lt;dbl&gt;, `tf_essay6_▁i` &lt;dbl&gt;, `tf_essay6_▁l` &lt;dbl&gt;,</span></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_▁m` &lt;dbl&gt;, `tf_essay6_▁o` &lt;dbl&gt;, `tf_essay6_▁p` &lt;dbl&gt;,</span></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_▁s` &lt;dbl&gt;, `tf_essay6_▁t` &lt;dbl&gt;, `tf_essay6_▁th` &lt;dbl&gt;,</span></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_▁the` &lt;dbl&gt;, `tf_essay6_▁to` &lt;dbl&gt;, `tf_essay6_▁w` &lt;dbl&gt;,</span></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_▁wh` &lt;dbl&gt;, tf_essay6_0 &lt;dbl&gt;, tf_essay6_1 &lt;dbl&gt;,</span></span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_2 &lt;dbl&gt;, tf_essay6_3 &lt;dbl&gt;, tf_essay6_4 &lt;dbl&gt;, tf_essay6_5 &lt;dbl&gt;,</span></span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_6 &lt;dbl&gt;, tf_essay6_8 &lt;dbl&gt;, tf_essay6_9 &lt;dbl&gt;, tf_essay6_a &lt;dbl&gt;,</span></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_al &lt;dbl&gt;, tf_essay6_an &lt;dbl&gt;, tf_essay6_at &lt;dbl&gt;,</span></span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_b &lt;dbl&gt;, tf_essay6_br &lt;dbl&gt;, tf_essay6_c &lt;dbl&gt;,</span></span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_d &lt;dbl&gt;, tf_essay6_e &lt;dbl&gt;, tf_essay6_en &lt;dbl&gt;,</span></span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_er &lt;dbl&gt;, tf_essay6_es &lt;dbl&gt;, tf_essay6_f &lt;dbl&gt;,</span></span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_g &lt;dbl&gt;, tf_essay6_h &lt;dbl&gt;, tf_essay6_i &lt;dbl&gt;,</span></span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_in &lt;dbl&gt;, tf_essay6_ing &lt;dbl&gt;, tf_essay6_it &lt;dbl&gt;,</span></span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_j &lt;dbl&gt;, tf_essay6_k &lt;dbl&gt;, tf_essay6_l &lt;dbl&gt;, tf_essay6_m &lt;dbl&gt;,</span></span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_n &lt;dbl&gt;, tf_essay6_nd &lt;dbl&gt;, tf_essay6_o &lt;dbl&gt;,</span></span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_on &lt;dbl&gt;, tf_essay6_or &lt;dbl&gt;, tf_essay6_ou &lt;dbl&gt;,</span></span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_ow &lt;dbl&gt;, tf_essay6_p &lt;dbl&gt;, tf_essay6_q &lt;dbl&gt;,</span></span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_r &lt;dbl&gt;, tf_essay6_re &lt;dbl&gt;, tf_essay6_s &lt;dbl&gt;,</span></span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_t &lt;dbl&gt;, tf_essay6_u &lt;dbl&gt;, tf_essay6_v &lt;dbl&gt;, tf_essay6_w &lt;dbl&gt;,</span></span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_x &lt;dbl&gt;, tf_essay6_y &lt;dbl&gt;, tf_essay6_z &lt;dbl&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The second engine is access to <a href="https://github.com/bnosac/udpipe">udpipe</a>. To use this engine you must first download a udpipe model</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(udpipe)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>udmodel <span class="ot">&lt;-</span> <span class="fu">udpipe_download_model</span>(<span class="at">language =</span> <span class="st">"english"</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>udmodel</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="do">##      language</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 english-ewt</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="do">##                                                                                                                          file_model</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 /Users/emilhvitfeldthansen/Github/hvitfeldt.me/content/post/2020-11-13-textrecipes-0.4.0-release/english-ewt-ud-2.5-191206.udpipe</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="do">##                                                                                                                                  url</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 https://raw.githubusercontent.com/jwijffels/udpipe.models.ud.2.5/master/inst/udpipe-ud-2.5-191206/english-ewt-ud-2.5-191206.udpipe</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="do">##   download_failed download_message</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 1           FALSE               OK</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>And then you need to pass it into <code>training_options</code> under the name <code>model</code>. This will then use the tokenizer</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">recipe</span>(<span class="sc">~</span> essay6, <span class="at">data =</span> okc_text) <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_tokenize</span>(essay6, <span class="at">engine =</span> <span class="st">"udpipe"</span>, </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">training_options =</span> <span class="fu">list</span>(<span class="at">model =</span> udmodel)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_tf</span>(essay6) <span class="sc">%&gt;%</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">prep</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bake</span>(<span class="at">new_data =</span> <span class="cn">NULL</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 750 x 4,044</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="do">##    `tf_essay6_-` `tf_essay6_--` `tf_essay6_---` `tf_essay6_---&lt;` `tf_essay6_--&amp;`</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="do">##            &lt;dbl&gt;          &lt;dbl&gt;           &lt;dbl&gt;            &lt;dbl&gt;           &lt;dbl&gt;</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="do">##  1             0              0               0                0               0</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  2             0              0               0                0               0</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  3             0              0               0                0               0</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="do">##  4             0              0               0                0               0</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="do">##  5             0              0               0                0               0</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="do">##  6             0              0               0                0               0</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="do">##  7             0              0               0                0               0</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="do">##  8             2              0               0                0               0</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="do">##  9             0              0               0                0               0</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="do">## 10             0              0               0                0               0</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 740 more rows, and 4,039 more variables: `tf_essay6_--ernesto` &lt;dbl&gt;,</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_-apocalypse.&lt;` &lt;dbl&gt;, `tf_essay6_-dominated` &lt;dbl&gt;,</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_-friendly` &lt;dbl&gt;, `tf_essay6_-insane` &lt;dbl&gt;,</span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_-languages` &lt;dbl&gt;, `tf_essay6_-linear` &lt;dbl&gt;,</span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_-my` &lt;dbl&gt;, `tf_essay6_-numbingly` &lt;dbl&gt;,</span></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_-voyeurism` &lt;dbl&gt;, `tf_essay6_,` &lt;dbl&gt;, `tf_essay6_,&lt;` &lt;dbl&gt;,</span></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_;` &lt;dbl&gt;, `tf_essay6_;-)` &lt;dbl&gt;, `tf_essay6_;)` &lt;dbl&gt;,</span></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_:` &lt;dbl&gt;, `tf_essay6_:-)` &lt;dbl&gt;, `tf_essay6_:-d` &lt;dbl&gt;,</span></span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_:)` &lt;dbl&gt;, `tf_essay6_:&lt;` &lt;dbl&gt;, `tf_essay6_:d` &lt;dbl&gt;,</span></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_:p` &lt;dbl&gt;, `tf_essay6_!` &lt;dbl&gt;, `tf_essay6_!!` &lt;dbl&gt;,</span></span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_!!!` &lt;dbl&gt;, `tf_essay6_!)` &lt;dbl&gt;, `tf_essay6_!&lt;` &lt;dbl&gt;,</span></span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_?` &lt;dbl&gt;, `tf_essay6_?!` &lt;dbl&gt;, `tf_essay6_?!?!` &lt;dbl&gt;,</span></span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_?!&lt;` &lt;dbl&gt;, `tf_essay6_??` &lt;dbl&gt;, `tf_essay6_????` &lt;dbl&gt;,</span></span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_??&lt;` &lt;dbl&gt;, `tf_essay6_?"` &lt;dbl&gt;, `tf_essay6_?&lt;` &lt;dbl&gt;,</span></span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_. &lt;dbl&gt;, tf_essay6_.. &lt;dbl&gt;, tf_essay6_... &lt;dbl&gt;,</span></span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_.... &lt;dbl&gt;, `tf_essay6_....?` &lt;dbl&gt;, tf_essay6_..... &lt;dbl&gt;,</span></span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_...... &lt;dbl&gt;, tf_essay6_....... &lt;dbl&gt;, tf_essay6_........ &lt;dbl&gt;,</span></span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_.......... &lt;dbl&gt;, tf_essay6_........... &lt;dbl&gt;,</span></span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_....fishing &lt;dbl&gt;, tf_essay6_...jk &lt;dbl&gt;,</span></span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_...zombies &lt;dbl&gt;, `tf_essay6_.)` &lt;dbl&gt;, `tf_essay6_.&lt;` &lt;dbl&gt;,</span></span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_.erykah &lt;dbl&gt;, tf_essay6_.sex &lt;dbl&gt;, `tf_essay6_'` &lt;dbl&gt;,</span></span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_'.` &lt;dbl&gt;, `tf_essay6_'&lt;` &lt;dbl&gt;, `tf_essay6_'d` &lt;dbl&gt;,</span></span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_'em` &lt;dbl&gt;, `tf_essay6_'ll` &lt;dbl&gt;, `tf_essay6_'m` &lt;dbl&gt;,</span></span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_'re` &lt;dbl&gt;, `tf_essay6_'s` &lt;dbl&gt;, `tf_essay6_'ve` &lt;dbl&gt;,</span></span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_"` &lt;dbl&gt;, `tf_essay6_"&gt;` &lt;dbl&gt;, `tf_essay6_"&gt;modest` &lt;dbl&gt;,</span></span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_(` &lt;dbl&gt;, `tf_essay6_(:` &lt;dbl&gt;, `tf_essay6_)` &lt;dbl&gt;,</span></span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_[` &lt;dbl&gt;, `tf_essay6_]` &lt;dbl&gt;, `tf_essay6_*` &lt;dbl&gt;,</span></span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/` &lt;dbl&gt;, `tf_essay6_/&gt;` &lt;dbl&gt;, `tf_essay6_/a` &lt;dbl&gt;,</span></span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=actuary` &lt;dbl&gt;,</span></span>
+<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=anything+frivolous` &lt;dbl&gt;,</span></span>
+<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=art` &lt;dbl&gt;, `tf_essay6_/interests?i=bdsm` &lt;dbl&gt;,</span></span>
+<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=bigender"&gt;` &lt;dbl&gt;,</span></span>
+<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=brunch` &lt;dbl&gt;,</span></span>
+<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=comfortable` &lt;dbl&gt;,</span></span>
+<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=communication` &lt;dbl&gt;,</span></span>
+<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=community` &lt;dbl&gt;,</span></span>
+<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=documentary` &lt;dbl&gt;,</span></span>
+<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=entp` &lt;dbl&gt;, `tf_essay6_/interests?i=field` &lt;dbl&gt;,</span></span>
+<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=film` &lt;dbl&gt;,</span></span>
+<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=filmmaking` &lt;dbl&gt;,</span></span>
+<span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=gender-identity` &lt;dbl&gt;,</span></span>
+<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=gender"&gt;` &lt;dbl&gt;,</span></span>
+<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=honey%0abees` &lt;dbl&gt;,</span></span>
+<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=integrity` &lt;dbl&gt;,</span></span>
+<span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=legos` &lt;dbl&gt;, `tf_essay6_/interests?i=life` &lt;dbl&gt;,</span></span>
+<span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=love` &lt;dbl&gt;,</span></span>
+<span id="cb9-66"><a href="#cb9-66" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=masturbatory` &lt;dbl&gt;,</span></span>
+<span id="cb9-67"><a href="#cb9-67" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=modest+running+shorts+in+neutral+tones` &lt;dbl&gt;,</span></span>
+<span id="cb9-68"><a href="#cb9-68" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=muzak` &lt;dbl&gt;, …</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>But where it gets really interesting is that we are able to extract the lemmas</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">recipe</span>(<span class="sc">~</span> essay6, <span class="at">data =</span> okc_text) <span class="sc">%&gt;%</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_tokenize</span>(essay6, <span class="at">engine =</span> <span class="st">"udpipe"</span>, </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">training_options =</span> <span class="fu">list</span>(<span class="at">model =</span> udmodel)) <span class="sc">%&gt;%</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_lemma</span>(essay6) <span class="sc">%&gt;%</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_tf</span>(essay6) <span class="sc">%&gt;%</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">prep</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bake</span>(<span class="at">new_data =</span> <span class="cn">NULL</span>)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 750 x 3,546</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="do">##    `tf_essay6_-` `tf_essay6_--` `tf_essay6_---` `tf_essay6_---&lt;` `tf_essay6_--&amp;`</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="do">##            &lt;dbl&gt;          &lt;dbl&gt;           &lt;dbl&gt;            &lt;dbl&gt;           &lt;dbl&gt;</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  1             0              0               0                0               0</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  2             0              0               0                0               0</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="do">##  3             0              0               0                0               0</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="do">##  4             0              0               0                0               0</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="do">##  5             0              0               0                0               0</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="do">##  6             0              0               0                0               0</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="do">##  7             0              0               0                0               0</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="do">##  8             2              0               0                0               0</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="do">##  9             0              0               0                0               0</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="do">## 10             0              0               0                0               0</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 740 more rows, and 3,541 more variables: `tf_essay6_--ernesto` &lt;dbl&gt;,</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_-apocalypse.&lt;` &lt;dbl&gt;, `tf_essay6_-dominated` &lt;dbl&gt;,</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_-friendly` &lt;dbl&gt;, `tf_essay6_-insane` &lt;dbl&gt;,</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_-language` &lt;dbl&gt;, `tf_essay6_-linear` &lt;dbl&gt;,</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_-my` &lt;dbl&gt;, `tf_essay6_-numbingly` &lt;dbl&gt;,</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_-voyeurism` &lt;dbl&gt;, `tf_essay6_,` &lt;dbl&gt;, `tf_essay6_,&lt;` &lt;dbl&gt;,</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_;` &lt;dbl&gt;, `tf_essay6_;-)` &lt;dbl&gt;, `tf_essay6_;)` &lt;dbl&gt;,</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_:` &lt;dbl&gt;, `tf_essay6_:-)` &lt;dbl&gt;, `tf_essay6_:-d` &lt;dbl&gt;,</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_:)` &lt;dbl&gt;, `tf_essay6_:&lt;` &lt;dbl&gt;, `tf_essay6_:d` &lt;dbl&gt;,</span></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_:p` &lt;dbl&gt;, `tf_essay6_!` &lt;dbl&gt;, `tf_essay6_!!` &lt;dbl&gt;,</span></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_!!!` &lt;dbl&gt;, `tf_essay6_!)` &lt;dbl&gt;, `tf_essay6_!&lt;` &lt;dbl&gt;,</span></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_?` &lt;dbl&gt;, `tf_essay6_?!` &lt;dbl&gt;, `tf_essay6_?!?!` &lt;dbl&gt;,</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_?!&lt;` &lt;dbl&gt;, `tf_essay6_??` &lt;dbl&gt;, `tf_essay6_????` &lt;dbl&gt;,</span></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_??&lt;` &lt;dbl&gt;, `tf_essay6_?"` &lt;dbl&gt;, `tf_essay6_?&lt;` &lt;dbl&gt;,</span></span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_. &lt;dbl&gt;, tf_essay6_.. &lt;dbl&gt;, tf_essay6_... &lt;dbl&gt;,</span></span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_.... &lt;dbl&gt;, `tf_essay6_....?` &lt;dbl&gt;, tf_essay6_..... &lt;dbl&gt;,</span></span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_...... &lt;dbl&gt;, tf_essay6_....... &lt;dbl&gt;, tf_essay6_........ &lt;dbl&gt;,</span></span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_.......... &lt;dbl&gt;, tf_essay6_........... &lt;dbl&gt;,</span></span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_....fish &lt;dbl&gt;, tf_essay6_...jk &lt;dbl&gt;, tf_essay6_...zomby &lt;dbl&gt;,</span></span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_.)` &lt;dbl&gt;, `tf_essay6_.&lt;` &lt;dbl&gt;, tf_essay6_.erykah &lt;dbl&gt;,</span></span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_.sex &lt;dbl&gt;, `tf_essay6_'` &lt;dbl&gt;, `tf_essay6_'.` &lt;dbl&gt;,</span></span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_'&lt;` &lt;dbl&gt;, `tf_essay6_'s` &lt;dbl&gt;, `tf_essay6_"` &lt;dbl&gt;,</span></span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_"&gt;` &lt;dbl&gt;, `tf_essay6_"&gt;modest` &lt;dbl&gt;, `tf_essay6_(` &lt;dbl&gt;,</span></span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_(:` &lt;dbl&gt;, `tf_essay6_)` &lt;dbl&gt;, `tf_essay6_[` &lt;dbl&gt;,</span></span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_]` &lt;dbl&gt;, `tf_essay6_*` &lt;dbl&gt;, `tf_essay6_/` &lt;dbl&gt;,</span></span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/&gt;` &lt;dbl&gt;, `tf_essay6_/a` &lt;dbl&gt;,</span></span>
+<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=actuary` &lt;dbl&gt;,</span></span>
+<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=anything+frivolous` &lt;dbl&gt;,</span></span>
+<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=art` &lt;dbl&gt;, `tf_essay6_/interests?i=bdsm` &lt;dbl&gt;,</span></span>
+<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=bigender"&gt;` &lt;dbl&gt;,</span></span>
+<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=brunch` &lt;dbl&gt;,</span></span>
+<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=comfortable` &lt;dbl&gt;,</span></span>
+<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=communication` &lt;dbl&gt;,</span></span>
+<span id="cb10-54"><a href="#cb10-54" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=community` &lt;dbl&gt;,</span></span>
+<span id="cb10-55"><a href="#cb10-55" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=documentary` &lt;dbl&gt;,</span></span>
+<span id="cb10-56"><a href="#cb10-56" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=entp` &lt;dbl&gt;, `tf_essay6_/interests?i=field` &lt;dbl&gt;,</span></span>
+<span id="cb10-57"><a href="#cb10-57" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=film` &lt;dbl&gt;,</span></span>
+<span id="cb10-58"><a href="#cb10-58" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=filmmaking` &lt;dbl&gt;,</span></span>
+<span id="cb10-59"><a href="#cb10-59" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=gender-identity` &lt;dbl&gt;,</span></span>
+<span id="cb10-60"><a href="#cb10-60" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=gender"&gt;` &lt;dbl&gt;,</span></span>
+<span id="cb10-61"><a href="#cb10-61" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=honey%0abee` &lt;dbl&gt;,</span></span>
+<span id="cb10-62"><a href="#cb10-62" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=integrity` &lt;dbl&gt;,</span></span>
+<span id="cb10-63"><a href="#cb10-63" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=lego` &lt;dbl&gt;, `tf_essay6_/interests?i=life` &lt;dbl&gt;,</span></span>
+<span id="cb10-64"><a href="#cb10-64" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=love` &lt;dbl&gt;,</span></span>
+<span id="cb10-65"><a href="#cb10-65" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=masturbatory` &lt;dbl&gt;,</span></span>
+<span id="cb10-66"><a href="#cb10-66" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=modest+running+shorts+in+neutral+tone` &lt;dbl&gt;,</span></span>
+<span id="cb10-67"><a href="#cb10-67" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=muzak` &lt;dbl&gt;, `tf_essay6_/interests?i=my` &lt;dbl&gt;,</span></span>
+<span id="cb10-68"><a href="#cb10-68" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=non-profit"&gt;non-profit&lt;/a` &lt;dbl&gt;,</span></span>
+<span id="cb10-69"><a href="#cb10-69" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=nvc"&gt;nvc&lt;/a` &lt;dbl&gt;,</span></span>
+<span id="cb10-70"><a href="#cb10-70" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=organize` &lt;dbl&gt;,</span></span>
+<span id="cb10-71"><a href="#cb10-71" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=politic` &lt;dbl&gt;,</span></span>
+<span id="cb10-72"><a href="#cb10-72" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=polyamory` &lt;dbl&gt;, …</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>or use the <a href="https://en.wikipedia.org/wiki/Part_of_speech">part of speech tags</a> in later steps, such as below where we are filtering to only keep nouns.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">recipe</span>(<span class="sc">~</span> essay6, <span class="at">data =</span> okc_text) <span class="sc">%&gt;%</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_tokenize</span>(essay6, <span class="at">engine =</span> <span class="st">"udpipe"</span>, </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">training_options =</span> <span class="fu">list</span>(<span class="at">model =</span> udmodel)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_pos_filter</span>(essay6, <span class="at">keep_tags =</span> <span class="st">"NOUN"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_tf</span>(essay6) <span class="sc">%&gt;%</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">prep</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bake</span>(<span class="at">new_data =</span> <span class="cn">NULL</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 750 x 1,970</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="do">##    `tf_essay6_--er… `tf_essay6_-lan… `tf_essay6_-voy… `tf_essay6_:d`</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="do">##               &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;          &lt;dbl&gt;</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  1                0                0                0              0</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  2                0                0                0              0</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="do">##  3                0                0                0              0</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="do">##  4                0                0                0              0</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="do">##  5                0                0                0              0</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="do">##  6                0                0                0              0</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="do">##  7                0                0                0              0</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="do">##  8                0                0                0              0</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a><span class="do">##  9                0                0                0              0</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a><span class="do">## 10                0                0                0              0</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 740 more rows, and 1,966 more variables: `tf_essay6_:p` &lt;dbl&gt;,</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_...jk &lt;dbl&gt;, tf_essay6_...zombies &lt;dbl&gt;, `tf_essay6_'` &lt;dbl&gt;,</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/a` &lt;dbl&gt;, `tf_essay6_/interests?i=anything+frivolous` &lt;dbl&gt;,</span></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=art` &lt;dbl&gt;, `tf_essay6_/interests?i=bdsm` &lt;dbl&gt;,</span></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=brunch` &lt;dbl&gt;,</span></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=communication` &lt;dbl&gt;,</span></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=community` &lt;dbl&gt;,</span></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=documentary` &lt;dbl&gt;,</span></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=entp` &lt;dbl&gt;, `tf_essay6_/interests?i=film` &lt;dbl&gt;,</span></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=filmmaking` &lt;dbl&gt;,</span></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=gender-identity` &lt;dbl&gt;,</span></span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=honey%0abees` &lt;dbl&gt;,</span></span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=integrity` &lt;dbl&gt;,</span></span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=legos` &lt;dbl&gt;, `tf_essay6_/interests?i=life` &lt;dbl&gt;,</span></span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=love` &lt;dbl&gt;,</span></span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=masturbatory` &lt;dbl&gt;,</span></span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=modest+running+shorts+in+neutral+tones` &lt;dbl&gt;,</span></span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=muzak` &lt;dbl&gt;, `tf_essay6_/interests?i=my` &lt;dbl&gt;,</span></span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=politics` &lt;dbl&gt;,</span></span>
+<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=polyamory` &lt;dbl&gt;,</span></span>
+<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=production` &lt;dbl&gt;,</span></span>
+<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=science"` &lt;dbl&gt;,</span></span>
+<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=synesthesia` &lt;dbl&gt;,</span></span>
+<span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=technology` &lt;dbl&gt;,</span></span>
+<span id="cb11-45"><a href="#cb11-45" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=tennis` &lt;dbl&gt;,</span></span>
+<span id="cb11-46"><a href="#cb11-46" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_/interests?i=truisms` &lt;dbl&gt;, `tf_essay6_+theory` &lt;dbl&gt;,</span></span>
+<span id="cb11-47"><a href="#cb11-47" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_&lt;a` &lt;dbl&gt;, `tf_essay6_=p` &lt;dbl&gt;, `tf_essay6_&gt;.` &lt;dbl&gt;,</span></span>
+<span id="cb11-48"><a href="#cb11-48" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_&gt;communication` &lt;dbl&gt;, `tf_essay6_&gt;my` &lt;dbl&gt;,</span></span>
+<span id="cb11-49"><a href="#cb11-49" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_&gt;science&lt;/a` &lt;dbl&gt;, `tf_essay6_&gt;truisms` &lt;dbl&gt;,</span></span>
+<span id="cb11-50"><a href="#cb11-50" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `tf_essay6_&gt;urban` &lt;dbl&gt;, tf_essay6_1st &lt;dbl&gt;, tf_essay6_a &lt;dbl&gt;,</span></span>
+<span id="cb11-51"><a href="#cb11-51" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_abba &lt;dbl&gt;, tf_essay6_ability &lt;dbl&gt;, tf_essay6_absence &lt;dbl&gt;,</span></span>
+<span id="cb11-52"><a href="#cb11-52" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_abstract &lt;dbl&gt;, tf_essay6_abundance &lt;dbl&gt;,</span></span>
+<span id="cb11-53"><a href="#cb11-53" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_accents &lt;dbl&gt;, tf_essay6_acceptance &lt;dbl&gt;,</span></span>
+<span id="cb11-54"><a href="#cb11-54" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_accident &lt;dbl&gt;, tf_essay6_action &lt;dbl&gt;, tf_essay6_actions &lt;dbl&gt;,</span></span>
+<span id="cb11-55"><a href="#cb11-55" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_activities &lt;dbl&gt;, tf_essay6_activity &lt;dbl&gt;,</span></span>
+<span id="cb11-56"><a href="#cb11-56" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_actors &lt;dbl&gt;, tf_essay6_acts &lt;dbl&gt;,</span></span>
+<span id="cb11-57"><a href="#cb11-57" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_actualization &lt;dbl&gt;, tf_essay6_addition &lt;dbl&gt;,</span></span>
+<span id="cb11-58"><a href="#cb11-58" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_adult &lt;dbl&gt;, tf_essay6_adventure &lt;dbl&gt;,</span></span>
+<span id="cb11-59"><a href="#cb11-59" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_adventures &lt;dbl&gt;, tf_essay6_adversity &lt;dbl&gt;,</span></span>
+<span id="cb11-60"><a href="#cb11-60" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_advocate &lt;dbl&gt;, tf_essay6_aeropress &lt;dbl&gt;,</span></span>
+<span id="cb11-61"><a href="#cb11-61" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_affairs &lt;dbl&gt;, tf_essay6_afterlife &lt;dbl&gt;,</span></span>
+<span id="cb11-62"><a href="#cb11-62" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_afternoon &lt;dbl&gt;, tf_essay6_age &lt;dbl&gt;, tf_essay6_agenda &lt;dbl&gt;,</span></span>
+<span id="cb11-63"><a href="#cb11-63" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_agent &lt;dbl&gt;, tf_essay6_ages &lt;dbl&gt;, tf_essay6_aggregate &lt;dbl&gt;,</span></span>
+<span id="cb11-64"><a href="#cb11-64" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_agriculture &lt;dbl&gt;, tf_essay6_ai &lt;dbl&gt;, tf_essay6_air &lt;dbl&gt;,</span></span>
+<span id="cb11-65"><a href="#cb11-65" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_aka &lt;dbl&gt;, tf_essay6_alarm &lt;dbl&gt;, tf_essay6_alert &lt;dbl&gt;,</span></span>
+<span id="cb11-66"><a href="#cb11-66" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_algorithms &lt;dbl&gt;, tf_essay6_alibi &lt;dbl&gt;, tf_essay6_aliens &lt;dbl&gt;,</span></span>
+<span id="cb11-67"><a href="#cb11-67" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_aloha &lt;dbl&gt;, tf_essay6_alps &lt;dbl&gt;, tf_essay6_am &lt;dbl&gt;,</span></span>
+<span id="cb11-68"><a href="#cb11-68" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_amnesia &lt;dbl&gt;, tf_essay6_amount &lt;dbl&gt;, tf_essay6_amp &lt;dbl&gt;,</span></span>
+<span id="cb11-69"><a href="#cb11-69" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_anagrams &lt;dbl&gt;, tf_essay6_analyzing &lt;dbl&gt;,</span></span>
+<span id="cb11-70"><a href="#cb11-70" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_anarchism &lt;dbl&gt;, tf_essay6_anarchists &lt;dbl&gt;,</span></span>
+<span id="cb11-71"><a href="#cb11-71" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_anaximander &lt;dbl&gt;, tf_essay6_android &lt;dbl&gt;,</span></span>
+<span id="cb11-72"><a href="#cb11-72" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_animal &lt;dbl&gt;, tf_essay6_animals &lt;dbl&gt;, tf_essay6_answer &lt;dbl&gt;,</span></span>
+<span id="cb11-73"><a href="#cb11-73" aria-hidden="true" tabindex="-1"></a><span class="do">## #   tf_essay6_answers &lt;dbl&gt;, tf_essay6_anxiety &lt;dbl&gt;, …</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This is all for this release. I hope you found some of it useful. I would love to hear what you are using <code>textrecipes</code> with!</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
