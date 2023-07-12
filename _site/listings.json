@@ -1,56 +1,5 @@
 [
   {
-    "listing": "/projects.html",
-    "items": [
-      "/project/islr-tidymodels/index.html",
-      "/project/smltar/index.html",
-      "/project/genderify/index.html",
-      "/project/themis/index.html",
-      "/project/prismatic/index.html",
-      "/project/textdata/index.html",
-      "/project/scotus/index.html",
-      "/project/tidygutenbergr/index.html",
-      "/project/ggpage/index.html",
-      "/project/hcandersenr/index.html",
-      "/project/textrecipes/index.html",
-      "/project/r-text-data/index.html",
-      "/project/paletteer/index.html",
-      "/project/r-color-palettes/index.html"
-    ]
-  },
-  {
-    "listing": "/talks.html",
-    "items": [
-      "/talk/2023-06-07-astrazeneca-recipes/index.html",
-      "/talk/2023-04-22-ocrug-hackathon/index.html",
-      "/talk/2023-02-21-ocrug-purrr/index.html",
-      "/talk/2022-07-27-rstudioconf-tidyclust/index.html",
-      "/talk/2022-06-23-user-textrecipes/index.html",
-      "/talk/2022-06-20-user-tidymodels/index.html",
-      "/talk/2022-06-09-nyr-adventofcode/index.html",
-      "/talk/2021-11-23-barcelona/index.html",
-      "/talk/2021-08-27-rmedicine-pptxtemplate/index.html",
-      "/talk/2021-06-15-nyhackr-text-preprocessing/index.html",
-      "/talk/2021-06-03-aalborg-tidymodels/index.html",
-      "/talk/2020-10-09-predictive-modeling-with-text/index.html",
-      "/talk/2020-12-01-slcrug-stopwords/index.html",
-      "/talk/2020-09-26-palette2vec/index.html",
-      "/talk/2020-07-09-themis/index.html",
-      "/talk/2020-07-07-predictive-modeling-with-text/index.html",
-      "/talk/2020-04-27-happyscientist-recipes/index.html",
-      "/talk/2020-01-23-happyscientist-git-and-github/index.html",
-      "/talk/2019-11-19-textrecipes-ecosystem/index.html",
-      "/talk/2019-11-09-hackathon-dataviz/index.html",
-      "/talk/2019-03-28-happyscientist-building-r-packages/index.html",
-      "/talk/2019-02-19-happyscientist-debugging-and-profiling/index.html",
-      "/talk/2019-01-29-working-with-tidymodels/index.html",
-      "/talk/2019-01-22-happyscientist-rstudio-and-r/index.html",
-      "/talk/2018-10-29-laerug-text-mining/index.html",
-      "/talk/2018-10-29-best-practices-in-r/index.html",
-      "/talk/2018-09-25-color-palette-similarity/index.html"
-    ]
-  },
-  {
     "listing": "/blog.html",
     "items": [
       "/post/slidecraft-theme-variants/index.html",
@@ -101,6 +50,58 @@
       "/post/2017-07-20-analysing-user-2017-schedule-data/index.html",
       "/post/2017-06-05-repetition-in-musicals-with-tidytext/index.html",
       "/post/2017-04-26-2017-world-press-freedom-index-with-emojis/index.html"
+    ]
+  },
+  {
+    "listing": "/talks.html",
+    "items": [
+      "/talk/2023-07-13-nyr-slidecraft/index.html",
+      "/talk/2023-06-07-astrazeneca-recipes/index.html",
+      "/talk/2023-04-22-ocrug-hackathon/index.html",
+      "/talk/2023-02-21-ocrug-purrr/index.html",
+      "/talk/2022-07-27-rstudioconf-tidyclust/index.html",
+      "/talk/2022-06-23-user-textrecipes/index.html",
+      "/talk/2022-06-20-user-tidymodels/index.html",
+      "/talk/2022-06-09-nyr-adventofcode/index.html",
+      "/talk/2021-11-23-barcelona/index.html",
+      "/talk/2021-08-27-rmedicine-pptxtemplate/index.html",
+      "/talk/2021-06-15-nyhackr-text-preprocessing/index.html",
+      "/talk/2021-06-03-aalborg-tidymodels/index.html",
+      "/talk/2020-10-09-predictive-modeling-with-text/index.html",
+      "/talk/2020-12-01-slcrug-stopwords/index.html",
+      "/talk/2020-09-26-palette2vec/index.html",
+      "/talk/2020-07-09-themis/index.html",
+      "/talk/2020-07-07-predictive-modeling-with-text/index.html",
+      "/talk/2020-04-27-happyscientist-recipes/index.html",
+      "/talk/2020-01-23-happyscientist-git-and-github/index.html",
+      "/talk/2019-11-19-textrecipes-ecosystem/index.html",
+      "/talk/2019-11-09-hackathon-dataviz/index.html",
+      "/talk/2019-03-28-happyscientist-building-r-packages/index.html",
+      "/talk/2019-02-19-happyscientist-debugging-and-profiling/index.html",
+      "/talk/2019-01-29-working-with-tidymodels/index.html",
+      "/talk/2019-01-22-happyscientist-rstudio-and-r/index.html",
+      "/talk/2018-10-29-laerug-text-mining/index.html",
+      "/talk/2018-10-29-best-practices-in-r/index.html",
+      "/talk/2018-09-25-color-palette-similarity/index.html"
+    ]
+  },
+  {
+    "listing": "/projects.html",
+    "items": [
+      "/project/islr-tidymodels/index.html",
+      "/project/smltar/index.html",
+      "/project/genderify/index.html",
+      "/project/themis/index.html",
+      "/project/prismatic/index.html",
+      "/project/textdata/index.html",
+      "/project/scotus/index.html",
+      "/project/tidygutenbergr/index.html",
+      "/project/ggpage/index.html",
+      "/project/hcandersenr/index.html",
+      "/project/textrecipes/index.html",
+      "/project/r-text-data/index.html",
+      "/project/paletteer/index.html",
+      "/project/r-color-palettes/index.html"
     ]
   }
 ]
