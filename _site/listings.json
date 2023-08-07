@@ -55,6 +55,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/post/slidecraft-scss-themes/index.html",
       "/post/slidecraft-theme-variants/index.html",
       "/post/slidecraft-code-output/index.html",
       "/post/slidecraft-colors-fonts/index.html",

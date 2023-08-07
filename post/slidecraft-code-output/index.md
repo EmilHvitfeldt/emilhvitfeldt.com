@@ -9,7 +9,7 @@ categories:
 image: "featured.png"
 ---
 
-Hello and welcome back to my multi-part series about what I like to call **slidecrafting**; The art of putting together slides that are functional and aesthetically pleasing. I will be using [quarto presentations](https://quarto.org/) as my medium, but the advice should be fairly tool-agnostic. This is the second post, you can find the previous post under the category [slidecraft 101](https://www.emilhvitfeldt.com/categories/slidecraft-101/).
+Hello and welcome back to my multi-part series about what I like to call **slidecrafting**; The art of putting together slides that are functional and aesthetically pleasing. I will be using [quarto presentations](https://quarto.org/) as my medium, but the advice should be fairly tool-agnostic. This is the second post, you can find the previous post under the category [slidecraft 101](https://www.emilhvitfeldt.com/blog#category=slidecraft%20101).
 
 Today we will be looking at how we can style the code and the resulting output from our code chunks using the different options that quarto provides, as well as how we can use CSS to jazz it up even further.
 
