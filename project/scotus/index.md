@@ -5,6 +5,7 @@ description: |
   Dataset of Supreme Court of the United States opinions
 categories:
   - R package
+  - data set
 image: "featured.png"
 ---
 
