@@ -1,0 +1,4 @@
+- source: project
+  netlify:
+    - id: 62a82283-9b01-4a03-9208-90b956652202
+      url: 'https://emilhvitfeldt.com'
