@@ -3,6 +3,10 @@ project:
   resources:
     - "my-name.m4a"
 
+execute:
+  freeze: true
+  keep-md: true
+
 website:
   navbar:
     left:

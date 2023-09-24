@@ -1,0 +1,28 @@
+{
+  "listing": "/projects.html",
+  "items": [
+    "/project/roundabouts/index.html",
+    "/project/palmtrees/index.html",
+    "/project/ferriswheels/index.html",
+    "/project/elevators/index.html",
+    "/project/trafficsigns/index.html",
+    "/project/emoji/index.html",
+    "/project/sherlock/index.html",
+    "/project/islr-tidymodels/index.html",
+    "/project/animals/index.html",
+    "/project/friends/index.html",
+    "/project/smltar/index.html",
+    "/project/genderify/index.html",
+    "/project/themis/index.html",
+    "/project/prismatic/index.html",
+    "/project/textdata/index.html",
+    "/project/scotus/index.html",
+    "/project/tidygutenbergr/index.html",
+    "/project/ggpage/index.html",
+    "/project/hcandersenr/index.html",
+    "/project/textrecipes/index.html",
+    "/project/r-text-data/index.html",
+    "/project/paletteer/index.html",
+    "/project/r-color-palettes/index.html"
+  ]
+}
