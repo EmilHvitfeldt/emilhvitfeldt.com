@@ -1,0 +1,9 @@
+---
+format:
+  revealjs:
+    self-contained: true
+    theme:
+      [default, _tip-2.scss]
+---
+
+# A place like home 

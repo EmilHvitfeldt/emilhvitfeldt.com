@@ -1,0 +1,15 @@
+---
+format:
+  revealjs:
+    self-contained: true
+---
+
+## How to write Quarto
+
+```` markdown
+This is **Quarto** code
+
+```{{python}}
+1 + 1
+```
+````

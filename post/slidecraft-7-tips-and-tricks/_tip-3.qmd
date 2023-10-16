@@ -1,0 +1,17 @@
+---
+format:
+  revealjs:
+    self-contained: true
+---
+
+## slide 1
+
+Welcome all!
+
+## slide 2 {visibility="hidden"}
+
+Stuff that we sometimes need
+
+## slide 3
+
+Outline!
