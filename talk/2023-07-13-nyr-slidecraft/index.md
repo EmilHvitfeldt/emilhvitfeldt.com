@@ -18,4 +18,4 @@ image: "featured.png"
 <iframe class="slide-deck" src="https://emilhvitfeldt.github.io/talk-nyr-slidecraft/"></iframe>
         
 
-This was an invited talk given at [R User Group at the Harvard Data Science Initiative](https://rug-at-hdsi.org/)
+This was an invited talk given at [New York R Conference](https://rstats.ai/nyr.html)

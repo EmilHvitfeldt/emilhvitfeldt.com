@@ -1,6 +1,7 @@
 {
   "listing": "/talks.html",
   "items": [
+    "/talk/2023-11-27-slc-slidecraft/index.html",
     "/talk/2023-10-27-harvard-tidymodels/index.html",
     "/talk/2023-09-19-quarto-theming-positconf/index.html",
     "/talk/2023-07-13-nyr-slidecraft/index.html",
