@@ -1,0 +1,19 @@
+
+.stars {
+  position:relative;
+  flex: 1;
+  padding: 1rem;
+  white-space: nowrap;
+  width: 50%;
+}
+
+.cover {
+  background: white;
+  height: 100%;
+  overflow: hidden;
+  mix-blend-mode: color;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+}
