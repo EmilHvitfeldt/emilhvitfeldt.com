@@ -2,6 +2,8 @@ project:
   type: website
   resources:
     - "my-name.m4a"
+    - "post/slidecraft-layout/_*.qmd"
+    - "post/slidecraft-layout/_*.html"
 
 execute:
   freeze: true
