@@ -6,7 +6,7 @@ date: '2024-10-16'
 categories:
   - slidecraft 101
   - quarto
-image: "featured.png"
+image: "featured.jpg"
 ---
 
 Hello and welcome back to my multi-part series about what I like to call **slidecrafting**; The art of putting together slides that are functional and aesthetically pleasing. I will be using [quarto presentations](https://quarto.org/). This is the fifth post, you can find the previous post under the category [slidecraft 101](https://www.emilhvitfeldt.com/blog#category=slidecraft%20101).
