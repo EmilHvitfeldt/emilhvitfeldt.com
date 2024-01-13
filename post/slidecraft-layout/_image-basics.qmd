@@ -1,0 +1,13 @@
+---
+format:
+  revealjs:
+    self-contained: true
+---
+
+## Normal image
+
+![](holly-mandarich.jpg)
+
+## using `fig-align="left"` option
+
+![](holly-mandarich.jpg){fig-align="right"}
