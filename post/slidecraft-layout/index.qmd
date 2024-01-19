@@ -2,7 +2,7 @@
 title: 'Slidecraft 101: Layout'
 description: |
   Placement of the different elements on a slide can change everything
-date: '2024-10-16'
+date: '2024-01-16'
 categories:
   - slidecraft 101
   - quarto
