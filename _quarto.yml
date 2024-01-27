@@ -10,6 +10,7 @@ execute:
   keep-md: true
 
 website:
+  open-graph: true
   navbar:
     left:
       - text: "home"
