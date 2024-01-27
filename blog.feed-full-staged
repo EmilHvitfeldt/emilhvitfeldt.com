@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss  xmlns:atom="http://www.w3.org/2005/Atom" 
+      xmlns:media="http://search.yahoo.com/mrss/" 
+      xmlns:content="http://purl.org/rss/1.0/modules/content/" 
+      xmlns:dc="http://purl.org/dc/elements/1.1/" 
+      version="2.0">
+<channel>
+<title>Emil Hvitfeldt blog</title>
+<link>https://emilhvitfeldt.com/blog.html</link>
+<atom:link href="https://emilhvitfeldt.com/blog.xml" rel="self" type="application/rss+xml"/>
+<description>Emil Hvitfeldt blog about R, slides and modeling</description>
+<generator>quarto-1.4.104</generator>
+<lastBuildDate>Tue, 16 Jan 2024 08:00:00 GMT</lastBuildDate>
+<item>
+  <title>{B4F502887207:/post/slidecraft-layout/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/slidecraft-layout/index.html</link>
+  <description>{B4F502887207:/post/slidecraft-layout/index.html}</description>
+  <category>slidecraft 101</category>
+  <category>quarto</category>
+  <guid>https://emilhvitfeldt.com/post/slidecraft-layout/index.html</guid>
+  <pubDate>Tue, 16 Jan 2024 08:00:00 GMT</pubDate>
+  <media:content url="https://emilhvitfeldt.com/post/slidecraft-layout/featured.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>{B4F502887207:/post/sharing-code-pictures/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/sharing-code-pictures/index.html</link>
+  <description>{B4F502887207:/post/sharing-code-pictures/index.html}</description>
+  <guid>https://emilhvitfeldt.com/post/sharing-code-pictures/index.html</guid>
+  <pubDate>Wed, 06 Dec 2023 08:00:00 GMT</pubDate>
+  <media:content url="https://emilhvitfeldt.com/post/sharing-code-pictures/featured.png" medium="image" type="image/png" height="91" width="144"/>
+</item>
+<item>
+  <title>{B4F502887207:/post/slidecraft-7-tips-and-tricks/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/slidecraft-7-tips-and-tricks/index.html</link>
+  <description>{B4F502887207:/post/slidecraft-7-tips-and-tricks/index.html}</description>
+  <category>slidecraft 101</category>
+  <category>quarto</category>
+  <guid>https://emilhvitfeldt.com/post/slidecraft-7-tips-and-tricks/index.html</guid>
+  <pubDate>Sat, 14 Oct 2023 07:00:00 GMT</pubDate>
+  <media:content url="https://emilhvitfeldt.com/post/slidecraft-7-tips-and-tricks/featured.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>{B4F502887207:/post/slidecraft-scss-themes/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/slidecraft-scss-themes/index.html</link>
+  <description>{B4F502887207:/post/slidecraft-scss-themes/index.html}</description>
+  <category>slidecraft 101</category>
+  <category>quarto</category>
+  <guid>https://emilhvitfeldt.com/post/slidecraft-scss-themes/index.html</guid>
+  <pubDate>Mon, 07 Aug 2023 07:00:00 GMT</pubDate>
+  <media:content url="https://emilhvitfeldt.com/post/slidecraft-scss-themes/featured.png" medium="image" type="image/png" height="89" width="144"/>
+</item>
+<item>
+  <title>{B4F502887207:/post/slidecraft-theme-variants/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/slidecraft-theme-variants/index.html</link>
+  <description>{B4F502887207:/post/slidecraft-theme-variants/index.html}</description>
+  <category>slidecraft 101</category>
+  <category>quarto</category>
+  <guid>https://emilhvitfeldt.com/post/slidecraft-theme-variants/index.html</guid>
+  <pubDate>Fri, 26 May 2023 07:00:00 GMT</pubDate>
+  <media:content url="https://emilhvitfeldt.com/post/slidecraft-theme-variants/featured.png" medium="image" type="image/png" height="83" width="144"/>
+</item>
+<item>
+  <title>{B4F502887207:/post/slidecraft-code-output/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/slidecraft-code-output/index.html</link>
+  <description>{B4F502887207:/post/slidecraft-code-output/index.html}</description>
+  <category>slidecraft 101</category>
+  <category>quarto</category>
+  <guid>https://emilhvitfeldt.com/post/slidecraft-code-output/index.html</guid>
+  <pubDate>Tue, 06 Sep 2022 07:00:00 GMT</pubDate>
+  <media:content url="https://emilhvitfeldt.com/post/slidecraft-code-output/featured.png" medium="image" type="image/png" height="94" width="144"/>
+</item>
+<item>
+  <title>{B4F502887207:/post/slidecraft-colors-fonts/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/slidecraft-colors-fonts/index.html</link>
+  <description>{B4F502887207:/post/slidecraft-colors-fonts/index.html}</description>
+  <category>slidecraft 101</category>
+  <category>quarto</category>
+  <guid>https://emilhvitfeldt.com/post/slidecraft-colors-fonts/index.html</guid>
+  <pubDate>Wed, 24 Aug 2022 07:00:00 GMT</pubDate>
+  <media:content url="https://emilhvitfeldt.com/post/slidecraft-colors-fonts/featured.png" medium="image" type="image/png" height="93" width="144"/>
+</item>
+<item>
+  <title>{B4F502887207:/post/smltar-story/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/smltar-story/index.html</link>
+  <description>{B4F502887207:/post/smltar-story/index.html}</description>
+  <category>smltar</category>
+  <category>book</category>
+  <guid>https://emilhvitfeldt.com/post/smltar-story/index.html</guid>
+  <pubDate>Wed, 04 Aug 2021 07:00:00 GMT</pubDate>
+  <media:content url="https://emilhvitfeldt.com/post/smltar-story/featured.png" medium="image" type="image/png" height="144" width="144"/>
+</item>
+<item>
+  <title>{B4F502887207:/post/xaringan-first-letter/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/xaringan-first-letter/index.html</link>
+  <description>{B4F502887207:/post/xaringan-first-letter/index.html}</description>
+  <category>xaringan</category>
+  <guid>https://emilhvitfeldt.com/post/xaringan-first-letter/index.html</guid>
+  <pubDate>Mon, 22 Mar 2021 07:00:00 GMT</pubDate>
+  <media:content url="https://emilhvitfeldt.com/post/xaringan-first-letter/featured.png" medium="image" type="image/png" height="125" width="144"/>
+</item>
+<item>
+  <title>{B4F502887207:/post/xaringancolor-announcement/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/xaringancolor-announcement/index.html</link>
+  <description>{B4F502887207:/post/xaringancolor-announcement/index.html}</description>
+  <category>xaringan</category>
+  <guid>https://emilhvitfeldt.com/post/xaringancolor-announcement/index.html</guid>
+  <pubDate>Thu, 04 Feb 2021 08:00:00 GMT</pubDate>
+  <media:content url="https://emilhvitfeldt.com/post/xaringancolor-announcement/featured.png" medium="image" type="image/png" height="167" width="144"/>
+</item>
+<item>
+  <title>{B4F502887207:/post/textrecipes-version-0-4-0/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/textrecipes-version-0-4-0/index.html</link>
+  <description>{B4F502887207:/post/textrecipes-version-0-4-0/index.html}</description>
+  <category>tidymodels</category>
+  <category>textrecipes</category>
+  <guid>https://emilhvitfeldt.com/post/textrecipes-version-0-4-0/index.html</guid>
+  <pubDate>Fri, 13 Nov 2020 08:00:00 GMT</pubDate>
+  <media:content url="https://emilhvitfeldt.com/post/textrecipes-version-0-4-0/featured.png" medium="image" type="image/png" height="167" width="144"/>
+</item>
+<item>
+  <title>{B4F502887207:/post/textrecipes-series-pretrained-word-embeddings/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/textrecipes-series-pretrained-word-embeddings/index.html</link>
+  <description>{B4F502887207:/post/textrecipes-series-pretrained-word-embeddings/index.html}</description>
+  <category>tidymodels</category>
+  <category>textrecipes</category>
+  <category>textrecipes series</category>
+  <guid>https://emilhvitfeldt.com/post/textrecipes-series-pretrained-word-embeddings/index.html</guid>
+  <pubDate>Fri, 07 Aug 2020 07:00:00 GMT</pubDate>
+  <media:content url="https://emilhvitfeldt.com/post/textrecipes-series-pretrained-word-embeddings/featured.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>{B4F502887207:/post/smltar-announcement/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/smltar-announcement/index.html</link>
+  <description>{B4F502887207:/post/smltar-announcement/index.html}</description>
+  <category>smltar</category>
+  <category>book</category>
+  <guid>https://emilhvitfeldt.com/post/smltar-announcement/index.html</guid>
+  <pubDate>Mon, 27 Jul 2020 07:00:00 GMT</pubDate>
+  <media:content url="https://emilhvitfeldt.com/post/smltar-announcement/featured.png" medium="image" type="image/png" height="81" width="144"/>
+</item>
+<item>
+  <title>{B4F502887207:/post/textrecipes-series-featurehashing/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/textrecipes-series-featurehashing/index.html</link>
+  <description>{B4F502887207:/post/textrecipes-series-featurehashing/index.html}</description>
+  <category>tidymodels</category>
+  <category>textrecipes</category>
+  <category>textrecipes series</category>
+  <guid>https://emilhvitfeldt.com/post/textrecipes-series-featurehashing/index.html</guid>
+  <pubDate>Thu, 28 May 2020 07:00:00 GMT</pubDate>
+  <media:content url="https://emilhvitfeldt.com/post/textrecipes-series-featurehashing/featured.png" medium="image" type="image/png" height="89" width="144"/>
+</item>
+<item>
+  <title>{B4F502887207:/post/textrecipes-series-tfidf/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/textrecipes-series-tfidf/index.html</link>
+  <description>{B4F502887207:/post/textrecipes-series-tfidf/index.html}</description>
+  <category>tidymodels</category>
+  <category>textrecipes</category>
+  <category>tidytuesday</category>
+  <category>textrecipes series</category>
+  <guid>https://emilhvitfeldt.com/post/textrecipes-series-tfidf/index.html</guid>
+  <pubDate>Fri, 22 May 2020 07:00:00 GMT</pubDate>
+  <media:content url="https://emilhvitfeldt.com/post/textrecipes-series-tfidf/featured.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>{B4F502887207:/post/textrecipes-series-lexicon/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/textrecipes-series-lexicon/index.html</link>
+  <description>{B4F502887207:/post/textrecipes-series-lexicon/index.html}</description>
+  <category>tidymodels</category>
+  <category>textrecipes</category>
+  <category>tidytuesday</category>
+  <category>textrecipes series</category>
+  <guid>https://emilhvitfeldt.com/post/textrecipes-series-lexicon/index.html</guid>
+  <pubDate>Tue, 12 May 2020 07:00:00 GMT</pubDate>
+  <media:content url="https://emilhvitfeldt.com/post/textrecipes-series-lexicon/featured.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>{B4F502887207:/post/textrecipes-series-tf/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/textrecipes-series-tf/index.html</link>
+  <description>{B4F502887207:/post/textrecipes-series-tf/index.html}</description>
+  <category>tidymodels</category>
+  <category>textrecipes</category>
+  <category>tidytuesday</category>
+  <category>textrecipes series</category>
+  <guid>https://emilhvitfeldt.com/post/textrecipes-series-tf/index.html</guid>
+  <pubDate>Tue, 05 May 2020 07:00:00 GMT</pubDate>
+  <media:content url="https://emilhvitfeldt.com/post/textrecipes-series-tf/featured.jpeg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>{B4F502887207:/post/tidytuesday-pos-textrecipes-the-office/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/tidytuesday-pos-textrecipes-the-office/index.html</link>
+  <description>{B4F502887207:/post/tidytuesday-pos-textrecipes-the-office/index.html}</description>
+  <category>tidymodels</category>
+  <category>textrecipes</category>
+  <category>tidytuesday</category>
+  <guid>https://emilhvitfeldt.com/post/tidytuesday-pos-textrecipes-the-office/index.html</guid>
+  <pubDate>Thu, 19 Mar 2020 07:00:00 GMT</pubDate>
+  <media:content url="https://emilhvitfeldt.com/post/tidytuesday-pos-textrecipes-the-office/featured.png" medium="image" type="image/png" height="89" width="144"/>
+</item>
+<item>
+  <title>{B4F502887207:/post/2020-03-17-word-rank-slope-charts/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/2020-03-17-word-rank-slope-charts/index.html</link>
+  <description>{B4F502887207:/post/2020-03-17-word-rank-slope-charts/index.html}</description>
+  <category>tidytext</category>
+  <guid>https://emilhvitfeldt.com/post/2020-03-17-word-rank-slope-charts/index.html</guid>
+  <pubDate>Tue, 17 Mar 2020 07:00:00 GMT</pubDate>
+  <media:content url="https://emilhvitfeldt.com/post/2020-03-17-word-rank-slope-charts/featured.png" medium="image" type="image/png" height="86" width="144"/>
+</item>
+<item>
+  <title>{B4F502887207:/post/stm-stemming/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/stm-stemming/index.html</link>
+  <description>{B4F502887207:/post/stm-stemming/index.html}</description>
+  <category>tidytext</category>
+  <guid>https://emilhvitfeldt.com/post/stm-stemming/index.html</guid>
+  <pubDate>Mon, 16 Mar 2020 07:00:00 GMT</pubDate>
+  <media:content url="https://emilhvitfeldt.com/post/stm-stemming/featured.jpg" medium="image" type="image/jpeg"/>
+</item>
+</channel>
+</rss>
