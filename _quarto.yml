@@ -10,7 +10,6 @@ execute:
   keep-md: true
 
 website:
-  title: "Emil Hvitfeldt blog"
   site-url: "https://emilhvitfeldt.com/"
   description: "Emil Hvitfeldt blog about R, slides and modeling"
 
@@ -29,8 +28,6 @@ website:
         href: projects.qmd
       - text: "Talks"
         href: talks.qmd
-      - icon: rss
-        href: index.xml
 
 format:
   html:
