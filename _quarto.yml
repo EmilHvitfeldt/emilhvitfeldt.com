@@ -11,7 +11,7 @@ execute:
 
 website:
   title: "Emil Hvitfeldt blog"
-  site-url: https://emilhvitfeldt.com/
+  site-url: "https://emilhvitfeldt.com/"
   description: "Emil Hvitfeldt blog about R, slides and modeling"
 
   favicon: logo.png
