@@ -11,6 +11,7 @@ execute:
 
 website:
   open-graph: true
+  favicon: logo.png
   navbar:
     left:
       - text: "home"
