@@ -20,7 +20,7 @@ image: "featured.jpg"
 </div>
 <br>
 
-Full online version is available at https://smltar.com/
+Full online version is available at <https://smltar.com/>
 
 At online booksellers:
 
