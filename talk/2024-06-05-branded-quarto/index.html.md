@@ -17,4 +17,4 @@ image: "featured.png"
       
 <iframe class="slide-deck" src="https://emilhvitfeldt.github.io/talk-branded-quarto/"></iframe>
         
-This was given as a posit customer Webinar
+This was given as a posit small group webinar
