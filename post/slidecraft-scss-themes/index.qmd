@@ -171,6 +171,10 @@ Lastly, if you are using images the way I'm using them, you will need to change 
 
 I hope you can see that with this style of slidecrafting, the skies the limit. The style sheet for the above example can be [found here](https://github.com/EmilHvitfeldt/quarto-revealjs-earth/blob/main/_extensions/earth/earth.scss).
 
+::: {.callout-tip}
+I suggest that you read [slidecraft 101: Better SCSS files](../slidecraft-scss-uses/index.qmd) if you find this helpful, as it simplifies the amount of code you need to write.
+:::
+
 ## More Examples
 
 Below is another theme, following very closely the construction of the previous 

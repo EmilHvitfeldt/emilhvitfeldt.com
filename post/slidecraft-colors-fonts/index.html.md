@@ -151,6 +151,10 @@ $link-color: #99D9DD;
 
 While the above configurations are perfectly fine, I find that using [sass](https://quarto.org/docs/presentations/revealjs/themes.html#creating-themes) [variables](https://sass-lang.com/documentation/variables) to be clear, and it helps us tremendously if we start making more changes. So I create variables all with the prefix `theme-` and descriptive names so I know what is what.
 
+::: {.callout-tip}
+I suggest that you read [slidecraft 101: Better SCSS files](../slidecraft-scss-uses/index.qmd) if you find this helpful, as it takes these ideas to the next level.
+:::
+
 ````scss
 /*-- scss:defaults --*/
 $theme-darkblue: #01364C;
