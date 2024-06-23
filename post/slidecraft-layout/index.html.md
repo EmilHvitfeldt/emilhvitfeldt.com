@@ -11,7 +11,7 @@ image: "featured.jpg"
 
 
 
-Hello and welcome back to my multi-part series about what I like to call **slidecrafting**; The art of putting together slides that are functional and aesthetically pleasing. I will be using [quarto presentations](https://quarto.org/). This is the fifth post, you can find the previous post under the category [slidecraft 101](https://www.emilhvitfeldt.com/blog#category=slidecraft%20101).
+Hello and welcome back to my multi-part series about what I like to call **slidecrafting**; The art of putting together slides that are functional and aesthetically pleasing. I will be using [quarto presentations](https://quarto.org/). This is the fifth post, you can find all other posts in the [slidecraft 101](../../project/slidecraft-101/index.qmd#blog-posts) project.
 
 This post will go over the **layout** of your slides. Placing things in different places on a slide is a great way to elevate a slide deck and keep the focus of your viewers.
 

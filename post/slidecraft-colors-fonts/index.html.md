@@ -15,7 +15,7 @@ Hello! This will be a multi-part series about what I like to call **slidecraftin
 
 I think of slidecrafting as an art because of the inexact nature of many of the decisions you will be making. After all many slide decks can be distilled down into a series of still images, each of which should be carefully crafted.
 
-This series will not be able to teach you everything you need, but it will cover the parts of the process that stay constant from deck to deck, so you can focus on the content and develop your brand/style.
+This series will not be able to teach you everything you need, but it will cover the parts of the process that stay constant from deck to deck, so you can focus on the content and develop your brand/style. You can find all other posts in the [slidecraft 101](../../project/slidecraft-101/index.qmd#blog-posts) project.
 
 ## Theming
 
