@@ -1,0 +1,214 @@
+---
+title: 'Slidecraft 101: Better SCSS files'
+description: |
+  Using sass interpolation, functions and mixin for the most in your style sheets
+date: '2024-06-24'
+categories:
+  - slidecraft 101
+  - quarto
+image: "featured.jpg"
+---
+
+
+
+Hello and welcome back to my multi-part series about what I like to call **slidecrafting**; The art of putting together slides that are functional and aesthetically pleasing. I will be using [quarto presentations](https://quarto.org/). This is the seventh post, you can find all other posts in the [slidecraft 101](../../project/slidecraft-101/index.qmd#blog-posts) project.
+
+Last time I was working on a set of slides I realized that I wasn't using SASS to its fullest potential. I loved the changes so much that I incorporated them into my [revealjs starter template](https://github.com/EmilHvitfeldt/quarto-revealjs-template). This post goes over what I learned and how you can use it too!
+
+## Using `Maps` to store theme colors
+
+in [Slidecraft 101: Colors and Fonts](../slidecraft-colors-fonts/index.md#applying-colors) I talked about how I always lay out my colors at the start of a style sheet, using the prefix `$theme-`. I stand by the decision, but I have found a better solution! I now think that using [Maps](https://sass-lang.com/documentation/values/maps/) is a superior option. A map is essentially a named list of values.
+
+Before I would have specified a color palette theme as
+
+```scss
+$theme-red: #FA5F5C;
+$theme-blue: #394D85;
+$theme-darkblue: #13234B;
+$theme-yellow: #FFF7C7;
+$theme-white: #FEFEFE;
+```
+
+But using a map it turns into the following
+
+```scss
+$colors: (
+  "red": #FA5F5C,
+  "blue": #394D85,
+  "darkblue": #13234B,
+  "yellow": #FFF7C7,
+  "white": #FEFEFE
+);
+```
+
+::: {.callout-note}
+There is a difference between `(key: value)` and `("key": value)` in SASS. For consistency, I also use quoted strings as the keys in a map.
+:::
+
+Instead of having multiple values representing our colors we now just have one `$colors`. By themselves, maps aren't valid CSS and don't do anything once the SASS compiles. The next sections will show how we can use these maps more efficiently than my previous approach.
+
+## Using `Functions` to pull out theme colors
+
+We where using these colors to change a lot of things, including the major [Sass Variables](https://quarto.org/docs/presentations/revealjs/themes.html#sass-variables) revealjs sass variables. Before we used a map, it would look something like this:
+
+```scss
+$body-bg: $theme-yellow;
+$link-color: $theme-blue;
+$code-color: $theme-blue;
+$body-color: $theme-darkblue;
+```
+
+but we can't do that directly with a map. There are built-in functions to extract values from a map, namely the function [map-get()](https://sass-lang.com/documentation/values/maps/#look-up-a-value). Using that we can rewrite the above as
+
+```scss
+$body-bg: map-get($colors, "yellow");
+$link-color: map-get($colors, "blue");
+$code-color: map-get($colors, "blue");
+$body-color: map-get($colors, "darkblue");
+```
+
+And while that is all good, I find it a little nicer to have a helper [function](https://sass-lang.com/documentation/at-rules/function/) to do this.
+
+Functions in SASS are written as below. You can use as many arguments as you want.
+
+```scss
+@function name($arg1, $arg2) {
+  @return $arg1 + $arg2;
+}
+```
+
+The helper function I wrote is a light wrapper around `map-get()` to avoid having to write `$colors`.
+
+```scss
+@function theme-color($color) {
+  @return map-get($colors, $color);
+}
+```
+
+And we now have the final rewrite.
+
+```scss
+$body-bg: theme-color("yellow");
+$link-color: theme-color("blue");
+$code-color: theme-color("blue");
+$body-color: theme-color("darkblue");
+```
+
+::: {.callout-note}
+Note that we are using `theme-color("yellow")` instead of `theme-color(yellow)` because we used quoted strings in the map. Using unquoted strings all around gave me false positives in my IDE as it interpreted `yellow` inside `theme-color()` as `#FFFF00` instead of my theme value.
+:::
+
+## Using `@each` to automatically create classes
+
+To add a splash of color, or as used in highlighting, I would create a lot of CSS classes like so:
+
+```scss
+.text-red {
+  color: $theme-red;
+}
+.text-yellow {
+  color: $theme-yellow;
+}
+.text-blue {
+  color: $theme-blue;
+}
+
+.bg-red {
+  background-color: $theme-red;
+}
+.bg-yellow {
+  background-color: $theme-yellow;
+}
+.bg-blue {
+  background-color: $theme-blue;
+}
+```
+
+Which is all fine and dandy until you also want a class for underlining. It becomes a lot of copy-pasting and changing a couple of names. And that is not to mention the trouble you run into when you decide to add a new color into the mix halfway through your slides.
+
+This is when I discovered [interpolation](https://sass-lang.com/documentation/interpolation/) and the moment I realized maps were worth it. Interpolation is done by using `#{}` in some code, meaning that if `$favorite-color: "blue"` then `.text-#{$favorite-color} {}` turns into `.text-blue {}`. SASS provides the action [@each](https://sass-lang.com/documentation/at-rules/control/each/) to loop over all the key and value pairs of our map. So we can rewrite the creation of the above classes as this:
+
+```scss
+@each $name, $color in $colors {
+  .text-#{$name} {
+    color: $color;
+  }
+
+  .bg-#{$name} {
+    background-color: $color;
+  }
+}
+```
+
+And this is the beauty of maps. If I want to add a new color to my slides, I just have to add it to the `$colors` map. If I want to add a new set of classes, I just have to write it once inside the `@each` statement.
+
+## Using `@mixin` to avoid repeating code
+
+In [Slidecraft 101: Advanced slide themes](../slidecraft-scss-themes/index.qmd#how-to-create-your-own) I showed how I use SASS to create several images into background images, using CSS classes. The final result looks like this:
+
+```scss
+@mixin background-full {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.theme-slide1 {
+  &:is(.slide-background) {
+    background-image: url('../../../../../assets/slide1.svg');
+    @include background-full;
+  }
+}
+.theme-slide2 {
+  &:is(.slide-background) {
+    background-image: url('../../../../../assets/slide2.svg');
+    @include background-full;
+  }
+}
+.theme-slide3 {
+  &:is(.slide-background) {
+    background-image: url('../../../../../assets/slide3.svg');
+    @include background-full;
+  }
+}
+```
+
+Copy-pasting this around when you have 10-15 images is such a pain. But as you properly have noticed, interpolation would be a perfect solution to this problem, and you would be correct! We use a [@mixin](https://sass-lang.com/documentation/at-rules/mixin/) to create to create a way to create many classes:
+
+```scss
+@mixin theme-slide($number) {
+  .theme-slide#{$number} {
+    &:is(.slide-background) {
+      background-image: url('../../../../../assets/slide#{$number}.svg');
+      @include background-full;
+    }
+  }
+}
+
+@include theme-slide(1);
+@include theme-slide(2);
+@include theme-slide(3);
+```
+
+It becomes quite a bit tighter! But we can do better because SASS also has [@for](https://sass-lang.com/documentation/at-rules/control/for/) loops.
+
+```scss
+@mixin theme-slide($number) {
+  .theme-slide#{$number} {
+    &:is(.slide-background) {
+      background-image: url('../../../../../assets/slide#{$number}.svg');
+      @include background-full;
+    }
+  }
+}
+
+@for $i from 1 through 3 {
+  @include theme-slide($i);
+}
+```
+
+you can now add more background images with ease as long as you are careful when naming them.
+
+## Roundup
+
+I hope you learned a lot, I sure have!

@@ -19,6 +19,7 @@ Change the appearance of your slides. Colors, fonts and sizes
 
 - [Colors and fonts](../../post/slidecraft-colors-fonts/index.md)
 - [Code and Output](../../post/slidecraft-code-output/index.md)
+- [Better SCSS files](../../post/slidecraft-scss-uses/index.qmd)
 - [Theme Varients](../../post/slidecraft-theme-variants/index.md)
 - [Advanced Slide themes](../../post/slidecraft-scss-themes/index.qmd)
 
