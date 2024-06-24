@@ -46,6 +46,26 @@ Interesting things to add to your slides
 - [designmode](https://github.com/EmilHvitfeldt/quarto-designmode)
 - [snow](https://github.com/EmilHvitfeldt/quarto-snow)
 
+## Talks about slidecrafting / quarto theming
+
+Here is a selection of talks where I talk about slidecrafting or quarto theming in general. It doesn't include ALL talks as there is some overlap between the talks I have given. See [talks page](../../talks.qmd) for all my past talks.
+
+[Branded Quarto](../../talk/2024-06-05-branded-quarto/index.md)
+
+<iframe class="slide-deck" src="https://emilhvitfeldt.github.io/talk-branded-quarto/"></iframe>
+
+[Slidecraft with quarto](../../talk/2023-11-27-slc-slidecraft/index.md)
+
+<iframe class="slide-deck" src="https://emilhvitfeldt.github.io/talk-slc-slidecraft/"></iframe>
+
+[Styling and Templating Quarto Documents](../../talk/2023-09-19-quarto-theming-positconf/index.md)
+
+<iframe class="slide-deck" src="https://emilhvitfeldt.github.io/talk-quarto-theming-positconf/"></iframe>
+
+[Slidecraft - the art of creating pretty presentations](../../talk/2023-07-13-nyr-slidecraft/index.md)
+
+<iframe class="slide-deck" src="https://emilhvitfeldt.github.io/talk-nyr-slidecraft/"></iframe>
+
 ## Other
 
 - [iFrame Examples](https://github.com/EmilHvitfeldt/quarto-iframe-examples)
