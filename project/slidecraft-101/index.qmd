@@ -25,6 +25,7 @@ Interesting things to add to your slides
 
 - [7 Tips and Tricks](../../post/slidecraft-7-tips-and-tricks/index.qmd)
 - [Layout](../../post/slidecraft-layout/index.qmd)
+- [asciicast](../../post/slidecraft-asciicast/index.qmd)
 
 ## Quarto Themes
 
