@@ -28,6 +28,8 @@ website:
         href: projects.qmd
       - text: "Talks"
         href: talks.qmd
+      - icon: rss
+        href: blog.xml
 
 format:
   html:
