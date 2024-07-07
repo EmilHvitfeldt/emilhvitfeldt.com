@@ -1,6 +1,7 @@
 {
   "listing": "/blog.html",
   "items": [
+    "/post/slidecraft-scss-loops/index.html",
     "/post/slidecraft-asciicast/index.html",
     "/post/slidecraft-scss-uses/index.html",
     "/post/pyenv-for-r-packages/index.html",
