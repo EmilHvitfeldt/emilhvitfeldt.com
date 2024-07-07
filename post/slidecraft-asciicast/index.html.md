@@ -1,5 +1,5 @@
 ---
-title: 'Slidecraft 101: Better SCSS files'
+title: 'Slidecraft 101: Using asciicast'
 description: |
   Using sass interpolation, functions and mixin for the most in your style sheets
 date: '2024-07-01'
