@@ -1,0 +1,17 @@
+{
+  "hash": "c6d6ff172523cfaeee780e31dfb280a4",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: 'Slidecraft 101: plot backgrounds'\ndescription: |\n  Plots and charts are useful in slides. Changing the background makes them fit in.\ndate: '2024-07-08'\ncategories:\n  - slidecraft 101\n  - quarto\nimage: \"featured.jpg\"\n---\n\n\nHello and welcome back to my multi-part series about what I like to call **slidecrafting**; The art of putting together slides that are functional and aesthetically pleasing. I will be using [quarto presentations](https://quarto.org/). This is the tenth post, you can find all other posts in the [slidecraft 101](../../project/slidecraft-101/index.qmd#blog-posts) project.\n\nPlots and charts are useful in slides. Changing the background makes them fit in. This post will go over how to change the background of your plots to better match the slide background, in a handful of different libraries.\n\n## Why are we doing this?\n\nIf you are styling your slides to change the background color, you will find that most plotting libraries default to using a white background color. If your background is non-white it will stick out like a sore thumb. I find that changing the background color to something transparent `#FFFFFF00` is the easiest course of action.\n\n> Why make the background transparent instead of making it match the background?\n\nIt is simply easier that way. There is only one color we need to set and it is `#FFFFFF00`. This works even if the slide background color is different from slide to slide, or if the background is a non-solid color.\n\n## base R\n\nwe don't have to make any changes to the R code, we can supply the chunk options `dev` and `dev.args` for the chunk to `\"png\"` and `list(bg=\"transparent\")` respectively and you are good.\n\n````md\n::: {.cell}\n\n```{.r .cell-code}\nplot(mpg ~ disp, data = mtcars, col = factor(am), pch = 16, bty = \"n\")\n```\n\n::: {.cell-output-display}\n![](index_files/figure-html/unnamed-chunk-1-1.png){width=672}\n:::\n:::\n````\n\n```yaml\nknitr:\n  opts_chunk:\n    dev: png\n    dev.args: { bg: \"transparent\" }\n```\n\n\n::: {layout-ncol=2}\n![](figures/base-before.png)\n\n![](figures/base-after.png)\n:::\n\n## ggplot2\n\n::: {layout-ncol=2}\n![](figures/ggplot2-before.png)\n\n![](figures/ggplot2-after.png)\n:::\n\n## matplotlib\n\n::: {layout-ncol=2}\n![](figures/matplotlib-before.png)\n\n![](figures/matplotlib-after.png)\n:::\n\n## seaborn\n\n::: {layout-ncol=2}\n![](figures/seaborn-before.png)\n\n![](figures/seaborn-after.png)\n:::\n\n## Source Document\n\nThe above was generated with this document.\n\n<a href=\"_examples.qmd\" target=\"_blank\" class=\"listing-slides btn-links\">{{< fa file >}}source document<a>\n\n## Roundup\n\nI just recently learned about {asciicast} and I love it. If you know of any other cool tools or packages, please reach out and share them with me!\n\n",
+    "supporting": [
+      "index_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

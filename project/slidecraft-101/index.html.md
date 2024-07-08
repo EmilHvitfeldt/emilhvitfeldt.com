@@ -30,6 +30,10 @@ Interesting things to add to your slides
 - [Layout](../../post/slidecraft-layout/index.qmd)
 - [asciicast](../../post/slidecraft-asciicast/index.qmd)
 
+Modifying content on slides
+
+- [Transparent plot backgrounds](../../post/slidecraft-plot-backgrounds/index.qmd)
+
 ## Quarto Themes
 
 - [Cinco de Mayo](https://github.com/EmilHvitfeldt/quarto-revealjs-cinco-de-mayo)

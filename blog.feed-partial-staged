@@ -10,7 +10,17 @@
 <atom:link href="https://emilhvitfeldt.com/blog.xml" rel="self" type="application/rss+xml"/>
 <description>Emil Hvitfeldt blog about R, slides and modeling</description>
 <generator>quarto-1.4.554</generator>
-<lastBuildDate>Sun, 07 Jul 2024 07:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 08 Jul 2024 07:00:00 GMT</lastBuildDate>
+<item>
+  <title>{B4F502887207:/post/slidecraft-plot-backgrounds/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/slidecraft-plot-backgrounds/</link>
+  <description>{B4F502887207:/post/slidecraft-plot-backgrounds/index.html}</description>
+  <category>slidecraft 101</category>
+  <category>quarto</category>
+  <guid>https://emilhvitfeldt.com/post/slidecraft-plot-backgrounds/</guid>
+  <pubDate>Mon, 08 Jul 2024 07:00:00 GMT</pubDate>
+  <media:content url="https://emilhvitfeldt.com/post/slidecraft-plot-backgrounds/figures/base-after.png" medium="image" type="image/png" height="87" width="144"/>
+</item>
 <item>
   <title>{B4F502887207:/post/slidecraft-scss-loops/index.html}</title>
   <link>https://emilhvitfeldt.com/post/slidecraft-scss-loops/</link>
@@ -200,17 +210,9 @@
   <pubDate>Fri, 22 May 2020 07:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/textrecipes-series-tfidf/featured.jpg" medium="image" type="image/jpeg"/>
 </item>
-<item>
-  <title>{B4F502887207:/post/textrecipes-series-lexicon/index.html}</title>
-  <link>https://emilhvitfeldt.com/post/textrecipes-series-lexicon/</link>
-  <description>{B4F502887207:/post/textrecipes-series-lexicon/index.html}</description>
-  <category>tidymodels</category>
-  <category>textrecipes</category>
-  <category>tidytuesday</category>
-  <category>textrecipes series</category>
-  <guid>https://emilhvitfeldt.com/post/textrecipes-series-lexicon/</guid>
-  <pubDate>Tue, 12 May 2020 07:00:00 GMT</pubDate>
-  <media:content url="https://emilhvitfeldt.com/post/textrecipes-series-lexicon/featured.jpg" medium="image" type="image/jpeg"/>
+</channel>
+</rss>
+image/jpeg"/>
 </item>
 </channel>
 </rss>
