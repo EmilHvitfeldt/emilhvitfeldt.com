@@ -1,6 +1,6 @@
 ---
 title: Better Branded Quarto Documents
-date: "2024-06-05"
+date: "2024-07-17"
 description: |
   Making corporate branded quarto documents
 slides: https://emilhvitfeldt.github.io/talk-branded-quarto-abuja/
