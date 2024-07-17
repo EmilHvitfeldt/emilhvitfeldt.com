@@ -1,4 +1,5 @@
 ---
+pagetitle: Emil Hvitfeldt - Projects
 listing:
   contents: project
   sort: "date desc"

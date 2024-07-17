@@ -1,5 +1,6 @@
 ---
 title: "Hello, my name is Emil Hvitfeldt. Thanks for stopping by!"
+pagetitle: Emil Hvitfeldt - About
 image: home.png
 about:
   template: jolla

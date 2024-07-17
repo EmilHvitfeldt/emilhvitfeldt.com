@@ -1,4 +1,5 @@
 ---
+pagetitle: Emil Hvitfeldt - Blog
 listing:
   contents: post
   sort: "date desc"
