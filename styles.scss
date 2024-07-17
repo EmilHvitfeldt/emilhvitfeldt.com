@@ -1,3 +1,17 @@
+/*-- scss:mixins --*/
+
+@mixin btn-inverse {
+  transition-delay: 0s;
+  transition-duration: 0.15s;
+  transition-property: color;
+  transition-timing-function: ease-in;
+
+  &:hover {
+    background-color: $theme-green;
+    color: rgb(250, 249, 240);
+  }
+}
+
 /*-- scss:defaults --*/
 
 $theme-lightgreen: #F0F3EE;
@@ -122,38 +136,17 @@ h2 {
 
 // blog ------------------------------------------------------------------------
 
-div.quarto-post .listing-categories .listing-category {
+div.quarto-post .listing-categories .listing-category, 
+.quarto-title .quarto-categories .quarto-category {
   color: $theme-green;
   border: solid 1px $theme-green;
 
-  &:hover {
-    background-color: rgba($theme-green, 0.2);
-  }
-}
+  @include btn-inverse;
 
-.quarto-grid-item .listing-categories .listing-category {
-  color: $theme-green;
-  border: solid 1px $theme-green;
-
-  &:hover {
-    background-color: rgba($theme-green, 0.2);
-  }
 }
 
 .quarto-listing-category-title {
   color: $theme-green;
-}
-
-.quarto-listing-category .category {
-  padding-bottom: 5px;
-
-  &:hover {
-    color: rgba($theme-green, 0.8);
-  }
-
-  &.active {
-    color: rgba($theme-green, 1);
-  }
 }
 
 div.quarto-post .body h3.listing-title {
@@ -259,17 +252,9 @@ article {
   font-family: Commissioner;
   text-transform: uppercase;
   text-decoration-line: none;
-  letter-spacing: 1.4px;
-  transition-delay: 0s;
-  transition-duration: 0.15s;
-  transition-property: color;
-  transition-timing-function: ease-in;
   display: inline-block;
 
-  &:hover {
-    background-color: $theme-green;
-    color: rgb(250, 249, 240);
-  }
+  @include btn-inverse;
 
   i {
     margin-right: 8px;
