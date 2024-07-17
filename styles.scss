@@ -158,6 +158,15 @@ div.quarto-post .body h3.listing-title {
   color: $theme-darkgreen;
 }
 
+#title-block-header.quarto-title-block.default .quarto-title-meta-heading,
+.quarto-title-banner .page-columns .page-full,
+.quarto-title-banner {
+  margin-top: unset;
+  margin-bottom: unset;
+}
+
+
+
 // project ---------------------------------------------------------------------
 
 .project-buttons>p>a {
