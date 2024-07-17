@@ -5,6 +5,8 @@ project:
     - "post/slidecraft-layout/_*.qmd"
     - "post/slidecraft-layout/_*.html"
 
+author: Emil Hvitfeldt
+
 execute:
   freeze: true
   keep-md: true
