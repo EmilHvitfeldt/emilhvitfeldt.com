@@ -282,7 +282,7 @@ Photo by <a href="https://unsplash.com/@galen_crout?utm_content=creditCopyText&u
 
 As we see here, the text positioning can change how the slides are perceived. Both in style and emotion, try to think about how you can incorporate text positioning to maximize engagement.
 
-## Overlayed Text Boxes https://alison.netlify.app/ares-kind-tools/#8
+## Overlayed Text Boxes
 
 When using background images, it can be hard to place text on top of it, in a way that that keeps the text readable. This is often an issue with images that are more busy or have colors that match. A simple fix is to overlay a box, and we then add text on you. If we take the first slide here as an example.
 
