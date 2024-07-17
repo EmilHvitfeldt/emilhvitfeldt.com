@@ -19,19 +19,17 @@
   </h1>
   </header>
   <p> <%- item.description %></p>
+  <p> Date: <%- item.date %></p>
   <footer>
-  <p><%- item.date %></p>
-  <p>
   <% if (item.slides != undefined) { %>
-  <a href="<%- item.slides %>" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
+  <a href="<%- item.slides %>" class="listing-slides btn-links">{{< fa door-open >}}Slides</a>
   <% } %>
   <% if (item.video != undefined) { %>
-  <a href="<%- item.video %>" class="listing-video btn-links">{{< fa play-circle >}}Video<a>
+  <a href="<%- item.video %>" class="listing-video btn-links">{{< fa play-circle >}}Video</a>
   <% } %>
   <% if (item.github != undefined) { %>
-  <a href="<%- item.github %>" class="listing-github btn-links">{{< fa brands github >}}Github<a>
+  <a href="<%- item.github %>" class="listing-github btn-links">{{< fa brands github >}}Github</a>
   <% } %>
-  </p>
   </footer>
 </div>
 </div>
