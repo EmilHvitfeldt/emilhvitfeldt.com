@@ -9,6 +9,7 @@ $theme-green: #4a7862;
 $body-bg: $theme-lightgreen;
 $body-color: $theme-darkgreen;
 $link-color: $theme-green;
+$link-hover-color: darken(saturate($link-color, 50%), 15%);
 
 $code-color: #4758AB;
 
