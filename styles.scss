@@ -241,10 +241,10 @@ article {
   }
 }
 
-/* .about-link Social buttons used in about.qmd */
+/* div.quarto-about-jolla .about-link Social buttons used in about.qmd */
 /* .btn-links Buttons used talk posts */
 /* .project-buttons>p>a Buttons used in post/slidecraft-scss-themes */
-.about-link,
+div.quarto-about-jolla .about-link,
 .btn-links,
 .project-buttons>p>a {
   border-style: solid;
