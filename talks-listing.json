@@ -1,6 +1,7 @@
 {
   "listing": "/talks.html",
   "items": [
+    "/talk/2024-07-18-positron/index.html",
     "/talk/2024-07-17-branded-quarto-abuja/index.html",
     "/talk/2024-07-03-user-cli-tidymodels/index.html",
     "/talk/2024-06-05-branded-quarto/index.html",
