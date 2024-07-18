@@ -179,6 +179,13 @@ div.quarto-post .body h3.listing-title {
   }
 }
 
+.quarto-grid-item .listing-categories .listing-category {
+  color: $theme-green;
+  border-color: $theme-green;
+
+  @include btn-inverse;
+}
+
 // talk ------------------------------------------------------------------------
 
 
@@ -237,7 +244,6 @@ article {
 /* .btn-links Buttons used talk posts */
 /* .project-buttons>p>a Buttons used in post/slidecraft-scss-themes */
 .btn-links,
-.listing-category,
 .project-buttons>p>a {
   border-style: solid;
   padding-bottom: 8px;
