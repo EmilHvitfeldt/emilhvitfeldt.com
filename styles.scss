@@ -128,7 +128,6 @@ h2 {
   }
 }
 
-
 .page-item.active .page-link {
   background-color: $theme-green;
   border-color: $theme-green;
@@ -153,10 +152,6 @@ div.quarto-post .body h3.listing-title {
   color: $theme-darkgreen;
 }
 
-.quarto-grid-item .card-title {
-  color: $theme-darkgreen;
-}
-
 #title-block-header.quarto-title-block.default .quarto-title-meta-heading,
 .quarto-title-banner .page-columns .page-full,
 .quarto-title-banner {
@@ -166,11 +161,26 @@ div.quarto-post .body h3.listing-title {
 
 // project ---------------------------------------------------------------------
 
-.figure-img {
-  width: 100%;
+.quarto-listing-container-grid:has(.quarto-grid-item:hover) .quarto-grid-item:not(:hover) {
+  filter: brightness(95%);
+}
+
+.quarto-grid-item {
+  transition: all 0.25s;
+
+  &:hover {
+    border-color: $theme-green;
+    box-shadow: 0 12px 16px rgba($theme-green, 0.2);
+  }
+
+  p.card-img-top>img {
+    object-fit: contain;
+    background-color: lighten($theme-green, 50%);
+  }
 }
 
 // talk ------------------------------------------------------------------------
+
 
 article {
   margin-bottom: 2em;
@@ -187,6 +197,10 @@ article {
     width: 100%;
     display: block;
     margin: 0;
+
+    a .figure-img {
+      width: 100%;
+    }
 
     @media screen and (min-width: 40em) {
       width: 30%;
@@ -223,6 +237,7 @@ article {
 /* .btn-links Buttons used talk posts */
 /* .project-buttons>p>a Buttons used in post/slidecraft-scss-themes */
 .btn-links,
+.listing-category,
 .project-buttons>p>a {
   border-style: solid;
   padding-bottom: 8px;
