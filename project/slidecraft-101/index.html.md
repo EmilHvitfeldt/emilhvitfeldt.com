@@ -33,6 +33,7 @@ Interesting things to add to your slides
 Modifying content on slides
 
 - [Transparent plot backgrounds](../../post/slidecraft-plot-backgrounds/index.qmd)
+- [Modifying plot sizes](../../post/slidecraft-plot-sizing/index.qmd)
 
 ## Quarto Themes
 

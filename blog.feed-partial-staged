@@ -10,7 +10,17 @@
 <atom:link href="https://emilhvitfeldt.com/blog.xml" rel="self" type="application/rss+xml"/>
 <description>Emil Hvitfeldt blog about R, slides and modeling</description>
 <generator>quarto-1.4.554</generator>
-<lastBuildDate>Mon, 08 Jul 2024 07:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 01 Aug 2024 07:00:00 GMT</lastBuildDate>
+<item>
+  <title>{B4F502887207:/post/slidecraft-plot-sizing/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/slidecraft-plot-sizing/</link>
+  <description>{B4F502887207:/post/slidecraft-plot-sizing/index.html}</description>
+  <category>slidecraft 101</category>
+  <category>quarto</category>
+  <guid>https://emilhvitfeldt.com/post/slidecraft-plot-sizing/</guid>
+  <pubDate>Thu, 01 Aug 2024 07:00:00 GMT</pubDate>
+  <media:content url="https://emilhvitfeldt.com/post/slidecraft-plot-sizing/figures/9.png" medium="image" type="image/png" height="86" width="144"/>
+</item>
 <item>
   <title>{B4F502887207:/post/slidecraft-plot-backgrounds/index.html}</title>
   <link>https://emilhvitfeldt.com/post/slidecraft-plot-backgrounds/</link>
@@ -198,17 +208,9 @@
   <pubDate>Thu, 28 May 2020 07:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/textrecipes-series-featurehashing/featured.png" medium="image" type="image/png" height="89" width="144"/>
 </item>
-<item>
-  <title>{B4F502887207:/post/textrecipes-series-tfidf/index.html}</title>
-  <link>https://emilhvitfeldt.com/post/textrecipes-series-tfidf/</link>
-  <description>{B4F502887207:/post/textrecipes-series-tfidf/index.html}</description>
-  <category>tidymodels</category>
-  <category>textrecipes</category>
-  <category>tidytuesday</category>
-  <category>textrecipes series</category>
-  <guid>https://emilhvitfeldt.com/post/textrecipes-series-tfidf/</guid>
-  <pubDate>Fri, 22 May 2020 07:00:00 GMT</pubDate>
-  <media:content url="https://emilhvitfeldt.com/post/textrecipes-series-tfidf/featured.jpg" medium="image" type="image/jpeg"/>
+</channel>
+</rss>
+g" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
