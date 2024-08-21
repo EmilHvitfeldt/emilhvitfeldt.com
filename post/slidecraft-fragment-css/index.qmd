@@ -1,7 +1,7 @@
 ---
 title: 'Slidecraft 101: Fragments - CSS'
 description: |
-  Fragments are powerful tools in revealjs to allow for changes within slides
+ Fragments are powerful tools in revealjs to allow for changes within slides
 date: '2024-08-21'
 categories:
   - slidecraft 101
@@ -11,7 +11,7 @@ image: "featured.jpg"
 
 Hello and welcome back to my multi-part series about what I like to call **slidecrafting**; The art of putting together slides that are functional and aesthetically pleasing. I will be using [quarto presentations](https://quarto.org/). This is the twelfth post, you can find all other posts in the [slidecraft 101](../../project/slidecraft-101/index.qmd#blog-posts) project.
 
-This is the first of two blog posts talking about [fragments](https://quarto.org/docs/presentations/revealjs/advanced.html#fragments). They are used to incrementally make things appear on your slides, or as a way to do highlighting. If you are not already familar with fragments, i recommend that you follow the link and read the section about them before moving on with this blog post.
+This is the first of two blog posts talking about [fragments](https://quarto.org/docs/presentations/revealjs/advanced.html#fragments). They are used to incrementally make things appear on your slides, or as a way to do highlighting. If you are not already familiar with fragments, I recommend that you follow the link and read the section about them before moving on with this blog post.
 
 ## Fragments 101
 
@@ -21,9 +21,9 @@ At the most fundamental level, a fragment can be split into 3 stages
 - current
 - after
 
-determining which stage is handled completely by revealjs using the `fragment-index` attribute. The way we can make things happen, is to apply a different style to each of the 3 stages.
+determining which stage is handled completely by revealjs using the `fragment-index` attribute. The way we can make things happen is to apply a different style to each of the 3 stages.
 
-the maximal fragment signature is as follows, with `fragment-name` being the name of the fragment in question. For them to work properly you have to list them in the following order. Which corresponds to `before`, `after` and `current`.
+the maximal fragment signature is as follows, with `fragment-name` being the name of the fragment in question. For them to work properly you have to list them in the following order. Which corresponds to `before`, `after`, and `current`.
 
 ```css
 .reveal .slides section .fragment.fragment-name {
@@ -37,19 +37,19 @@ the maximal fragment signature is as follows, with `fragment-name` being the nam
 ```
 
 :::: {.callout-important}
-The reason why this ordering is important, is because `.visible` and `.current-fragment` are triggered at the same time. And because I simplified a little too much order. There isn't `before`, `current`, and `after`. Instead we have `always`, `current`, and `not-before-current`. In essense they do the same, as long as you order them in this order to make sure they cascade properly.
+The reason why this ordering is important is because `.visible` and `.current-fragment` are triggered at the same time. And because I simplified the order a little too much. There isn't `before`, `current`, and `after`. Instead, we have `always`, `current`, and `not-before-current`. In essence, they do the same, as long as you order them in this order to make sure they cascade properly.
 :::
 
-Before we try to implement a fragment by ourselves, we need to note one thing real quick. Each of these stages are styled a [spcific way by default](https://github.com/quarto-dev/quarto-cli/blob/39dc173c4869ebaf4d6bb087a972acb87533b64e/src/resources/formats/revealjs/reveal/css/reveal.scss#L51-L65). In practice, what this means is that the `before` style has the following attributes set to make the text invisible:
+Before we try to implement a fragment by ourselves, we need to note one thing real quick. Each of these stages is styled a [specific way by default](https://github.com/quarto-dev/quarto-cli/blob/39dc173c4869ebaf4d6bb087a972acb87533b64e/src/resources/formats/revealjs/reveal/css/reveal.scss#L51-L65). In practice, what this means is that the `before` style has the following attributes set to make the text invisible:
 
 ```css
 opacity: 0;
 visibility: hidden;
 ```
 
-If you want the text to be visible before the fragment tirggers, in simply set these two attributes to `unset`.
+If you want the text to be visible before the fragment triggers, simply set these two attributes to `unset`.
 
-Another note I would like to add, is that while you are able to modify anything in a fragment, as it is just triggering of CSS, you should be careful about position and sizes. While you might be able to make it work, it is likely to cause a lot of shifting and jittering as elements resize.
+Another note I would like to add is that while you are able to modify anything in a fragment, as it is just triggering CSS, you should be careful about position and size. While you might be able to make it work, it is likely to cause a lot of shifting and jittering as elements resize.
 
 :::: {.callout-tip}
 Looking at the [source code](https://github.com/quarto-dev/quarto-cli/blob/39dc173c4869ebaf4d6bb087a972acb87533b64e/src/resources/formats/revealjs/reveal/css/reveal.scss#L67-L207) for the default fragments gives us a good idea for how different styles of fragments work.
@@ -57,7 +57,7 @@ Looking at the [source code](https://github.com/quarto-dev/quarto-cli/blob/39dc1
 
 ## Example 1
 
-This first example illustrates how the different phases work in a fragment. We have thus created a `rgb` fragment that assigns a different color to each of the 3 phases. We `unset` both `opacity` and `visibility` to have the text appear beforehand. This leaves us with the following fragment:
+This first example illustrates how the different phases work in a fragment. We have thus created an `rgb` fragment that assigns a different color to each of the 3 phases. We `unset` both `opacity` and `visibility` to have the text appear beforehand. This leaves us with the following fragment:
 
 ```scss
 .reveal .slides section .fragment.rgb {
@@ -75,7 +75,7 @@ This first example illustrates how the different phases work in a fragment. We h
 }
 ```
 
-Advancing and de-advancing(?) the slides showcases how the different classes are applied for fragments.
+Advancing and de-advancing(?) the slides showcase how the different classes are applied for fragments.
 
 <iframe class="slide-deck" src="_fragment-rgb.html">
 </iframe>
@@ -103,9 +103,9 @@ Worth noting that this single fragment could be rewritten as the following using
 
 ## Example 2
 
-One custom fragment I use from time to time is the background highlighted style. And it is very simple, instead of changing the color fo the text, it changes the background color. I find that it is a much stronger indication than changing the text itself.
+One custom fragment I use from time to time is the background highlighted style. And it is very simple, instead of changing the color of the text, it changes the background color. I find that it is a much stronger indication than changing the text itself.
 
-This fragment gives us two things. I leaves the text visible beforehand. Then it turns the background orange, and after it lighten the background color a little bit.
+This fragment gives us two things. I leave the text visible beforehand. Then it turns the background orange, and after it lightens the background color a little bit.
 
 ```scss
 $theme-orange: #FFB81A;
@@ -225,9 +225,9 @@ $theme-orange: #FFB81A;
 }
 ```
 
-This fragment works more or less the same way as before, but doesn't change color once it is applied. It will be a more appropiate fragment many times.
+This fragment works more or less the same way as before but doesn't change color once it is applied. It will be a more appropriate fragment many times.
 
-This leads us to our final piece of knowlegde in this blog post. We don't have to fully specify a fragment. We just have to declare how we want it to behave differently that then the default "stay hidden, then appear" fragment.
+This leads us to our final piece of knowledge in this blog post. We don't have to fully specify a fragment. We just have to declare how we want it to behave differently, and then the default "stay hidden, then appear" fragment.
 
 ## Roundup
 
