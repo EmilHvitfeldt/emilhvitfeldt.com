@@ -1,6 +1,7 @@
 {
   "listing": "/blog.html",
   "items": [
+    "/post/slidecraft-fragment-css/index.html",
     "/post/slidecraft-plot-sizing/index.html",
     "/post/slidecraft-plot-backgrounds/index.html",
     "/post/slidecraft-scss-loops/index.html",

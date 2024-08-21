@@ -12,6 +12,8 @@ image: "featured.jpg"
 
 
 
+
+
 <a href="https://slcrug-stopwords.netlify.app/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
 <a href="https://www.youtube.com/watch?v=Q2ilhRqp1Vo" class="listing-video btn-links">{{< fa play-circle >}}Video<a>
 

@@ -10,6 +10,7 @@ image: "featured.png"
 
 
 
+
 ::: {.callout-warning}
 This code does no longer works as the genius website has changed its format and the scraper described in this post no longer works. If you interesting in scraping song lyric I recommend the <a href="https://github.com/JosiahParry/genius">genius</a> package by <a href="https://twitter.com/JosiahParry">JosiahParry</a>.
 :::

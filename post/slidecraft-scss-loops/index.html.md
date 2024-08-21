@@ -11,6 +11,7 @@ image: "featured.jpg"
 
 
 
+
 Hello and welcome back to my multi-part series about what I like to call **slidecrafting**; The art of putting together slides that are functional and aesthetically pleasing. I will be using [quarto presentations](https://quarto.org/). This is the ninth post, you can find all other posts in the [slidecraft 101](../../project/slidecraft-101/index.qmd#blog-posts) project.
 
 In [Slidecraft 101: Better SCSS files](../slidecraft-scss-uses/index.qmd) I first started using SASS to its fullest, and this blog post will explore one additional use-case I left out from that blog post.

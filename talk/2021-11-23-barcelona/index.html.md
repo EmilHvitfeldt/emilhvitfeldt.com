@@ -12,6 +12,8 @@ image: "featured.png"
 
 
 
+
+
 <a href="https://barcelona-rstudio-work-harder-2021.netlify.app/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
 <a href="https://github.com/EmilHvitfeldt/talks/blob/master/barcelona-rstudio-work-smart-not-hard" class="listing-github btn-links">{{< fa brands github >}}Github<a>
       

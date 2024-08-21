@@ -13,6 +13,7 @@ image: "featured.jpeg"
 
 
 
+
 This is the first blog post in a series I am starting to go over the various text preprocessing workflows you can do with [textrecipes](https://github.com/tidymodels/textrecipes). This post will we start simple with [term frequencies](https://en.wikipedia.org/wiki/Tf%E2%80%93idf#Term_frequency_2).
 
 Today we are lucky with timing to be able to use the current [#tidytuesday](https://github.com/rfordatascience/tidytuesday) dataset about [Animal Crossing - New Horizons](https://github.com/rfordatascience/tidytuesday/tree/master/data/2020/2020-05-05).

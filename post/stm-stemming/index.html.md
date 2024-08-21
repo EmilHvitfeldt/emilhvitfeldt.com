@@ -10,6 +10,7 @@ image: "featured.jpg"
 
 
 
+
 It is known that topic modeling does not benefit from stemming [ref](https://mimno.infosci.cornell.edu/papers/schofield_tacl_2016.pdf).
 I propose a workflow to investigate if stemming is appropriate as a method for data reduction. 
 

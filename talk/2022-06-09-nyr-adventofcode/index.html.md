@@ -13,6 +13,8 @@ image: "featured.png"
 
 
 
+
+
 <a href="https://emilhvitfeldt.github.io/talk-aoc/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
 <a href="https://www.youtube.com/watch?v=HnHAIdqULd0" class="listing-video btn-links">{{< fa play-circle >}}Video<a>
 <a href="https://github.com/EmilHvitfeldt/talk-aoc" class="listing-github btn-links">{{< fa brands github >}}Github<a>

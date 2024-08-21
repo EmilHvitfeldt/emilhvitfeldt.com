@@ -13,6 +13,8 @@ image: "featured.png"
 
 
 
+
+
 <a href="https://emilhvitfeldt.github.io/talk-slc-slidecraft/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
 <a href="https://www.youtube.com/watch?v=1eMv1EEDUqk" class="listing-video btn-links">{{< fa play-circle >}}Video<a>
 <a href="https://github.com/EmilHvitfeldt/talk-slc-slidecraft" class="listing-github btn-links">{{< fa brands github >}}Github<a>

@@ -13,6 +13,8 @@ image: "featured.png"
 
 
 
+
+
 <a href="https://emilhvitfeldt.github.io/talk-quarto-theming-positconf/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
 <a href="https://www.youtube.com/watch?v=CblUFMoC9yg" class="listing-video btn-links">{{< fa play-circle >}}Video<a>
 <a href="https://github.com/EmilHvitfeldt/talk-quarto-theming-positconf" class="listing-github btn-links">{{< fa brands github >}}Github<a>

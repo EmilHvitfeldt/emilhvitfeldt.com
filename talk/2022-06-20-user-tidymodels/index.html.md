@@ -12,6 +12,8 @@ image: "featured.png"
 
 
 
+
+
 <a href="https://emilhvitfeldt.github.io/workshop-useR2022-tidymodels/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
 <a href="https://github.com/EmilHvitfeldt/workshop-useR2022-tidymodels" class="listing-github btn-links">{{< fa brands github >}}Github<a>
 

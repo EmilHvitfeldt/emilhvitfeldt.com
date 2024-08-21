@@ -12,6 +12,8 @@ image: "featured.png"
 
 
 
+
+
 <a href="https://happyscientist-debugging-and-profiling.netlify.app/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
 <a href="https://github.com/EmilHvitfeldt/talks/tree/master/happy-scientist_debugging-and-profiling" class="listing-github btn-links">{{< fa brands github >}}Github<a>
       

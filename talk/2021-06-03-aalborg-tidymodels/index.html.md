@@ -12,6 +12,8 @@ image: "featured.png"
 
 
 
+
+
 <a href="https://allborg-tidymodels-2021.netlify.app/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
 <a href="https://github.com/EmilHvitfeldt/talks/aalborg-tidymodels" class="listing-github btn-links">{{< fa brands github >}}Github<a>
       

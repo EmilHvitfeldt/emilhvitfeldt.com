@@ -10,6 +10,7 @@ image: "featured.jpg"
 
 
 
+
 My day-to-day job involved working with R packages. Some of these packages use Python code in various ways. For example, [parsnip uses Tensorflow](https://parsnip.tidymodels.org/reference/details_linear_reg_keras.html) as one of its engines. A good Python installation is required to properly develop these packages.
 
 This is the background for the work described below. I have been dealing with this for a couple of years now, and my latest attempt at dealing with this felt good enough to blog about.

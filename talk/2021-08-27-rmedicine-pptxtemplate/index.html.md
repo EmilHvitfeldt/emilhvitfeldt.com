@@ -12,6 +12,8 @@ image: "featured.png"
 
 
 
+
+
 <a href="https://rmedicine2021-pptxtemplate.netlify.app/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
 <a href="https://github.com/EmilHvitfeldt/talks/tree/master/Rmedicine2021-pptxtemplate" class="listing-github btn-links">{{< fa brands github >}}Github<a>
       

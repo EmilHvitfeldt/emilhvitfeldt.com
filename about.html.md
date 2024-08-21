@@ -16,6 +16,8 @@ about:
 
 
 
+
+
 I’m a Software Engineer at [Posit PBC](https://posit.co/) working on the tidymodels team. My educational material started right here on this blog but has grown over the years to include talks, university courses, books, and workshops at the conferences like satRday, R in Pharma, useR, rstudio::conf and upcoming posit::conf.
 
 My non-work interests include: [Jigsaw Puzzles](https://oddpieces.com/), [True Crime Podcasts](https://audioboom.com/channels/5013847), [Reading](https://bookshop.org/books/the-color-of-law-a-forgotten-history-of-how-our-government-segregated-america/9781631494536), [Nintendo Switch](https://www.zelda.com/tears-of-the-kingdom/).

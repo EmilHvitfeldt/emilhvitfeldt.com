@@ -11,6 +11,7 @@ image: "featured.png"
 
 
 
+
 I'm happy to announce that version 0.4.0 of [textrecipes](https://textrecipes.tidymodels.org/) got on CRAN a couple of days ago.
 This will be a brief post going over the major additions and changes.
 

@@ -9,6 +9,8 @@ image: "featured.png"
 
 
 
+
+
 I find slidecrafting an entertaining endeavour, and have thus created a number of projects and material to further it in the world. This is a round overview of the material I have created.
 
 I use [Quarto](https://quarto.org/) to create slides using the [revealjs](https://revealjs.com/) framework.
@@ -34,6 +36,7 @@ Modifying content on slides
 
 - [Transparent plot backgrounds](../../post/slidecraft-plot-backgrounds/index.qmd)
 - [Modifying plot sizes](../../post/slidecraft-plot-sizing/index.qmd)
+- [Fragments - CSS](../../post/slidecraft-fragment-css/index.qmd)
 
 ## Quarto Themes
 

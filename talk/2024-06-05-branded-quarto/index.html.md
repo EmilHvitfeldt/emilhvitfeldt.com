@@ -12,6 +12,8 @@ image: "featured.png"
 
 
 
+
+
 <a href="https://emilhvitfeldt.github.io/talk-branded-quarto/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
 <a href="https://github.com/EmilHvitfeldt/talk-branded-quarto" class="listing-github btn-links">{{< fa brands github >}}Github<a>
       

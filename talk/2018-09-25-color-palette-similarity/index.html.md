@@ -13,6 +13,8 @@ image: "featured.png"
 
 
 
+
+
 <a href="https://ocrug-color-talk.netlify.app/assets/player/keynotedhtmlplayer" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
 <a href="https://www.youtube.com/watch?v=xZ0-Sm4MSjM" class="listing-video btn-links">{{< fa play-circle >}}Video<a>
 <a href="https://github.com/EmilHvitfeldt/talks/tree/master/OCRUG-color-talk" class="listing-github btn-links">{{< fa brands github >}}Github<a>

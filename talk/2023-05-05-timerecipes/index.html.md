@@ -12,6 +12,8 @@ image: "featured.png"
 
 
 
+
+
 <a href="https://emilhvitfeldt.github.io/talk-time-aware-recipes/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
 <a href="https://github.com/EmilHvitfeldt/talk-time-aware-recipes" class="listing-github btn-links">{{< fa brands github >}}Github<a>
 

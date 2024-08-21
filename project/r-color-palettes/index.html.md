@@ -10,6 +10,8 @@ image: "featured.png"
 
 
 
+
+
 <div class="project-buttons">
 <a href="https://github.com/EmilHvitfeldt/r-color-palettes">
   {{< fa brands github >}} github

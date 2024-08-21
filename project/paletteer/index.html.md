@@ -10,6 +10,8 @@ image: "featured-hex.png"
 
 
 
+
+
 <div class="project-buttons">
 <a href="https://github.com/EmilHvitfeldt/paletteer">
   {{< fa brands github >}} github

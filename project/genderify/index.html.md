@@ -10,6 +10,8 @@ image: "featured.png"
 
 
 
+
+
 <div class="project-buttons">
 <a href="https://emilhvitfeldt.github.io/genderify/">
   {{< fa door-open >}} Website

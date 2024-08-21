@@ -13,6 +13,8 @@ image: "featured.png"
 
 
 
+
+
 <a href="https://emilhvitfeldt.github.io/useR2020-text-modeling-tutorial/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
 <a href="https://www.youtube.com/watch?v=Sz8RB_fPYOk" class="listing-video btn-links">{{< fa play-circle >}}Video<a>
 <a href="https://github.com/EmilHvitfeldt/useR2020-text-modeling-tutorial" class="listing-github btn-links">{{< fa brands github >}}Github<a>

@@ -10,6 +10,7 @@ image: "featured.png"
 
 
 
+
 We all know the saying 
 
 > When you’ve written the same code 3 times, write a function

@@ -13,6 +13,8 @@ image: "featured.png"
 
 
 
+
+
 <a href="https://emilhvitfeldt.github.io/talk-harvard-tidymodels/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
 <a href="https://www.youtube.com/watch?v=0B20YtjtT1U" class="listing-video btn-links">{{< fa play-circle >}}Video<a>
 <a href="https://github.com/EmilHvitfeldt/talk-harvard-tidymodels" class="listing-github btn-links">{{< fa brands github >}}Github<a>

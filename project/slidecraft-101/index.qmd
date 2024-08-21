@@ -32,6 +32,7 @@ Modifying content on slides
 
 - [Transparent plot backgrounds](../../post/slidecraft-plot-backgrounds/index.qmd)
 - [Modifying plot sizes](../../post/slidecraft-plot-sizing/index.qmd)
+- [Fragments - CSS](../../post/slidecraft-fragment-css/index.qmd)
 
 ## Quarto Themes
 

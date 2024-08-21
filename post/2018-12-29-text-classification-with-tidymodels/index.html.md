@@ -10,6 +10,7 @@ image: "featured.png"
 
 
 
+
 ::: {.callout-caution}
 This post was written with early versions of tidymodels packages. And in some ways have not aged perfectly. The general idea about this post is still valid, but if you want more up-to-date code please refer to <https://www.tidymodels.org/>.
 :::

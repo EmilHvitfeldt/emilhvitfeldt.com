@@ -13,6 +13,8 @@ image: "featured.png"
 
 
 
+
+
 <a href="https://emilhvitfeldt.github.io/talk-useR2022-textrecipes/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
 <a href="https://youtu.be/e2bE9o9DaNE?t=1368" class="listing-video btn-links">{{< fa play-circle >}}Video<a>
 <a href="https://github.com/EmilHvitfeldt/talk-useR2022-textrecipes" class="listing-github btn-links">{{< fa brands github >}}Github<a>

@@ -9,8 +9,18 @@
 <link>https://emilhvitfeldt.com/blog.html</link>
 <atom:link href="https://emilhvitfeldt.com/blog.xml" rel="self" type="application/rss+xml"/>
 <description>Emil Hvitfeldt blog about R, slides and modeling</description>
-<generator>quarto-1.4.554</generator>
-<lastBuildDate>Thu, 01 Aug 2024 07:00:00 GMT</lastBuildDate>
+<generator>quarto-1.5.56</generator>
+<lastBuildDate>Wed, 21 Aug 2024 07:00:00 GMT</lastBuildDate>
+<item>
+  <title>{B4F502887207:/post/slidecraft-fragment-css/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/slidecraft-fragment-css/</link>
+  <description>{B4F502887207:/post/slidecraft-fragment-css/index.html}</description>
+  <category>slidecraft 101</category>
+  <category>quarto</category>
+  <guid>https://emilhvitfeldt.com/post/slidecraft-fragment-css/</guid>
+  <pubDate>Wed, 21 Aug 2024 07:00:00 GMT</pubDate>
+  <media:content url="https://emilhvitfeldt.com/post/slidecraft-fragment-css/featured.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>{B4F502887207:/post/slidecraft-plot-sizing/index.html}</title>
   <link>https://emilhvitfeldt.com/post/slidecraft-plot-sizing/</link>
@@ -197,16 +207,9 @@
   <pubDate>Mon, 27 Jul 2020 07:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/smltar-announcement/featured.png" medium="image" type="image/png" height="81" width="144"/>
 </item>
-<item>
-  <title>{B4F502887207:/post/textrecipes-series-featurehashing/index.html}</title>
-  <link>https://emilhvitfeldt.com/post/textrecipes-series-featurehashing/</link>
-  <description>{B4F502887207:/post/textrecipes-series-featurehashing/index.html}</description>
-  <category>tidymodels</category>
-  <category>textrecipes</category>
-  <category>textrecipes series</category>
-  <guid>https://emilhvitfeldt.com/post/textrecipes-series-featurehashing/</guid>
-  <pubDate>Thu, 28 May 2020 07:00:00 GMT</pubDate>
-  <media:content url="https://emilhvitfeldt.com/post/textrecipes-series-featurehashing/featured.png" medium="image" type="image/png" height="89" width="144"/>
+</channel>
+</rss>
+ies-featurehashing/featured.png" medium="image" type="image/png" height="89" width="144"/>
 </item>
 </channel>
 </rss>

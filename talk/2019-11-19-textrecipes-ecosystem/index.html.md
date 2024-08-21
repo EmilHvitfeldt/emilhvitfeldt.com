@@ -12,6 +12,8 @@ image: "featured.png"
 
 
 
+
+
 <a href="https://ecosystem-ocrug2019.netlify.app/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
 <a href="https://github.com/EmilHvitfeldt/talks/tree/master/textrecipes-ecosystem" class="listing-github btn-links">{{< fa brands github >}}Github<a>
       

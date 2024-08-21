@@ -12,6 +12,7 @@ image: "featured.png"
 
 
 
+
 In my earlier post on [binary text classification](https://www.hvitfeldt.me/2018/03/binary-text-classification-with-tidytext-and-caret/) was one of the problems that occurred was the sheer size of the data when trying to fit a model. The bag of words method of having each column describe the occurrence of a specific word in each document (row) is appealing from a mathematical perspective but gives rise to large sparse matrices which aren't handled well by some models in R. This leads to slow running code at best and crashing at worst.  
 
 We will try to combat this problem by using something called [word embedding](https://en.wikipedia.org/wiki/Word_embedding) which is a general term for the process of mapping textural information to a lower-dimensional space. This is a special case of dimensionality reduction, and we will use the simple well-known method [Principal component analysis](https://en.wikipedia.org/wiki/Principal_component_analysis) for our word embedding today. We are essentially trying to squeeze as much information into as little space as possible such that our models can run in a reasonable time.  

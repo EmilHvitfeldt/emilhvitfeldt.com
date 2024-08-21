@@ -12,6 +12,8 @@ image: "featured.png"
 
 
 
+
+
 <a href="https://laerug-text-mining-2018.netlify.app/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
 <a href="https://github.com/EmilHvitfeldt/talks/tree/master/laerug-text-mining-2018" class="listing-github btn-links">{{< fa brands github >}}Github<a>
       

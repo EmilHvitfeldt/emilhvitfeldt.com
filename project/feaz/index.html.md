@@ -10,6 +10,8 @@ image: "featured.jpg"
 
 
 
+
+
 <div class="project-buttons">
 <a href="https://feaz-book.com/">
   {{< fa door-open >}} Website

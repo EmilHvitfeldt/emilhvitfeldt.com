@@ -12,6 +12,8 @@ image: "featured.jpg"
 
 
 
+
+
 <a href="https://happyscientist-recipes.netlify.app/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
 <a href="https://github.com/EmilHvitfeldt/talks/tree/master/happy-scientist_recipes" class="listing-github btn-links">{{< fa brands github >}}Github<a>
       

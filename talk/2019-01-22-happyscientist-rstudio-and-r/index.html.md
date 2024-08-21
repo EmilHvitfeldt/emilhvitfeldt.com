@@ -12,6 +12,8 @@ image: "featured.png"
 
 
 
+
+
 <a href="https://happyscientist-rstudio-and-r.netlify.app/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
 <a href="https://github.com/EmilHvitfeldt/talks/tree/master/happy-scientist_rstudio-and-r" class="listing-github btn-links">{{< fa brands github >}}Github<a>
       

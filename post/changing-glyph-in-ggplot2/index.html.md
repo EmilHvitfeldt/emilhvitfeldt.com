@@ -10,6 +10,7 @@ image: "featured.png"
 
 
 
+
 # Introduction
 
 The newest version of [ggplot2 3.2.0](https://www.tidyverse.org/articles/2019/06/ggplot2-3-2-0/) gave us the ability to change the glyph in the legend like so

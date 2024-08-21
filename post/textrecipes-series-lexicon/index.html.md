@@ -13,6 +13,7 @@ image: "featured.jpg"
 
 
 
+
 This is the second blog post in the [textrecipes](https://github.com/tidymodels/textrecipes) series where I go over the various text preprocessing workflows you can do with textrecipes. This post will be covering how to use lexicons to create features.
 This post will not cover end-to-end modeling but will only look at how to add lexicons information into your recipe.
 

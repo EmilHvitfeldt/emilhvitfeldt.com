@@ -12,6 +12,8 @@ image: "featured.png"
 
 
 
+
+
 <a href="https://emilhvitfeldt.github.io/talk-socal-positron/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
 <a href="https://github.com/EmilHvitfeldt/talk-socal-positron" class="listing-github btn-links">{{< fa brands github >}}Github<a>
       

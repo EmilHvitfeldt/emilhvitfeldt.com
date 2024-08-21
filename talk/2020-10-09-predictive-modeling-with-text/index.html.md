@@ -11,6 +11,8 @@ image: "featured.png"
 
 
 
+
+
 <a href="https://textmodels4pharma.netlify.app/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
       
 Invited workshop for [R/Pharma Conference](https://rinpharma.com/)

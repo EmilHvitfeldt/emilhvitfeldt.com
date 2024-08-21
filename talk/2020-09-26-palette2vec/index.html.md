@@ -12,6 +12,8 @@ image: "featured.jpg"
 
 
 
+
+
 <a href="https://palette2vec-whyr2020.netlify.app/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
 <a href="https://www.youtube.com/watch?v=ebHtp5nhn7w" class="listing-video btn-links">{{< fa play-circle >}}Video<a>
 
