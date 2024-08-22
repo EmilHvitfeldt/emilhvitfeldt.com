@@ -10,7 +10,17 @@
 <atom:link href="https://emilhvitfeldt.com/blog.xml" rel="self" type="application/rss+xml"/>
 <description>Emil Hvitfeldt blog about R, slides and modeling</description>
 <generator>quarto-1.5.56</generator>
-<lastBuildDate>Wed, 21 Aug 2024 07:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 22 Aug 2024 07:00:00 GMT</lastBuildDate>
+<item>
+  <title>{B4F502887207:/post/slidecraft-fragment-js/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/slidecraft-fragment-js/</link>
+  <description>{B4F502887207:/post/slidecraft-fragment-js/index.html}</description>
+  <category>slidecraft 101</category>
+  <category>quarto</category>
+  <guid>https://emilhvitfeldt.com/post/slidecraft-fragment-js/</guid>
+  <pubDate>Thu, 22 Aug 2024 07:00:00 GMT</pubDate>
+  <media:content url="https://emilhvitfeldt.com/post/slidecraft-fragment-js/featured.png" medium="image" type="image/png" height="95" width="144"/>
+</item>
 <item>
   <title>{B4F502887207:/post/slidecraft-fragment-css/index.html}</title>
   <link>https://emilhvitfeldt.com/post/slidecraft-fragment-css/</link>
@@ -197,19 +207,9 @@
   <pubDate>Fri, 07 Aug 2020 07:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/textrecipes-series-pretrained-word-embeddings/featured.jpg" medium="image" type="image/jpeg"/>
 </item>
-<item>
-  <title>{B4F502887207:/post/smltar-announcement/index.html}</title>
-  <link>https://emilhvitfeldt.com/post/smltar-announcement/</link>
-  <description>{B4F502887207:/post/smltar-announcement/index.html}</description>
-  <category>smltar</category>
-  <category>book</category>
-  <guid>https://emilhvitfeldt.com/post/smltar-announcement/</guid>
-  <pubDate>Mon, 27 Jul 2020 07:00:00 GMT</pubDate>
-  <media:content url="https://emilhvitfeldt.com/post/smltar-announcement/featured.png" medium="image" type="image/png" height="81" width="144"/>
-</item>
 </channel>
 </rss>
-ies-featurehashing/featured.png" medium="image" type="image/png" height="89" width="144"/>
+ed.png" medium="image" type="image/png" height="89" width="144"/>
 </item>
 </channel>
 </rss>

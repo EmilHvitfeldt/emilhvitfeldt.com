@@ -1,0 +1,18 @@
+---
+format:
+  revealjs:
+    self-contained: true
+    include-after-body: 
+      - "_scroll.html"
+---
+
+## Scrolling Text
+
+Press → and ← to scroll up and down
+
+```{r}
+mtcars
+```
+
+:::: {.fragment .scroll}
+:::
