@@ -1,8 +1,8 @@
 ---
-title: Creating Stunning Presentations with Quarto
+title: tidypredict with recipes, turning workflow to SQL, spark, duckdb and beyond
 date: "2024-08-13"
 description: |
-  tidypredict with recipes, turning workflow to SQL, spark, duckdb and beyond
+  Introduction of the orbital package. Showing how we can turn fitted workflows into SQL
 slides: https://emilhvitfeldt.github.io/talk-orbital-positconf/
 github: https://github.com/EmilHvitfeldt/talk-orbital-positconf
 categories:
