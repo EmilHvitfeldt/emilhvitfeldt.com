@@ -5,6 +5,8 @@ image: home.png
 about:
   template: jolla
   links:
+    - text: "{{< fa brands bluesky >}} BlueSky"
+      href: https://bsky.app/profile/emilhvitfeldt.bsky.social
     - icon: linkedin
       text: LinkedIn
       href: https://www.linkedin.com/in/emilhvitfeldt/
