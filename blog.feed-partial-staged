@@ -209,28 +209,3 @@
 </item>
 </channel>
 </rss>
-ed.png" medium="image" type="image/png" height="89" width="144"/>
-</item>
-</channel>
-</rss>
-g" medium="image" type="image/jpeg"/>
-</item>
-</channel>
-</rss>
-emilhvitfeldt.com/post/textrecipes-series-featurehashing/featured.png" medium="image" type="image/png" height="89" width="144"/>
-</item>
-<item>
-  <title>{B4F502887207:/post/textrecipes-series-tfidf/index.html}</title>
-  <dc:creator>Emil Hvitfeldt</dc:creator>
-  <link>https://emilhvitfeldt.com/post/textrecipes-series-tfidf/</link>
-  <description>{B4F502887207:/post/textrecipes-series-tfidf/index.html}</description>
-  <category>tidymodels</category>
-  <category>textrecipes</category>
-  <category>tidytuesday</category>
-  <category>textrecipes series</category>
-  <guid>https://emilhvitfeldt.com/post/textrecipes-series-tfidf/</guid>
-  <pubDate>Fri, 22 May 2020 07:00:00 GMT</pubDate>
-  <media:content url="https://emilhvitfeldt.com/post/textrecipes-series-tfidf/featured.jpg" medium="image" type="image/jpeg"/>
-</item>
-</channel>
-</rss>
