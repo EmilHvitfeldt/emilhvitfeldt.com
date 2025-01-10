@@ -11,6 +11,10 @@ image: "featured.png"
 
 
 
+
+
+
+
 If you haven't already guessed,
 this blog post is about [Positron](https://positron.posit.co/),
 the new data science IDE from [Posit PBC](https://posit.co/).
@@ -148,10 +152,15 @@ which will make them work like [RStudio Addins](https://rstudio.github.io/rstudi
   "args": {
     "langId": "r",
     "code": "reprex::reprex_selection()",
-    "focus": true
+    "focus": false
   }
 }
 ```
+
+Above is the base form.
+You can set `focus` to `true` if you want the focus to be transfered to the console.
+You can use the command `workbench.action.executeCode.silently` if you don't want printing in the console.
+
 
 I was initially not fond of this solution as I like a large number of addins,
 but using chords makes this less of an issue.
@@ -301,12 +310,12 @@ The down0sides to adding addins like this is that there is no validation that th
 ```json
 {
   "key": "cmd+. cmd+1",
-  "command": "workbench.action.executeCode.console",
+  "command": "workbench.action.executeCode.silently",
   "when": "editorTextFocus",
   "args": {
     "langId": "r",
     "code": "reprex::reprex_selection()",
-    "focus": true
+    "focus": false
   }
 }
 ```
@@ -321,7 +330,7 @@ The down0sides to adding addins like this is that there is no validation that th
   "args": {
     "langId": "r",
     "code": "eval(parse(text = paste0('bench::mark(', reprex:::rstudio_selection(), ')')))",
-    "focus": true
+    "focus": false
   }
 }
 ```
@@ -340,12 +349,12 @@ The following keybindings only work if consistantly name the test files in accor
 ```json
 {
   "key": "cmd+. cmd+r",
-  "command": "workbench.action.executeCode.console",
+  "command": "workbench.action.executeCode.silently",
   "when": "editorTextFocus",
   "args": {
     "langId": "r",
     "code": "usethis::use_r()",
-    "focus": true
+    "focus": false
   }
 }
 ```
@@ -355,12 +364,12 @@ The following keybindings only work if consistantly name the test files in accor
 ```json
 {
   "key": "cmd+. cmd+t",
-  "command": "workbench.action.executeCode.console",
+  "command": "workbench.action.executeCode.silently",
   "when": "editorTextFocus",
   "args": {
     "langId": "r",
     "code": "usethis::use_test()",
-    "focus": true
+    "focus": false
   }
 }
 ```
@@ -370,12 +379,12 @@ The following keybindings only work if consistantly name the test files in accor
 ```json
 {
   "key": "cmd+. cmd+shift+t",
-  "command": "workbench.action.executeCode.console",
+  "command": "workbench.action.executeCode.silently",
   "when": "editorTextFocus",
   "args": {
     "langId": "r",
     "code": "devtools::test_active_file()",
-    "focus": true
+    "focus": false
   }
 }
 ```
@@ -447,12 +456,12 @@ don't treat this as a static document.
   // Addins
   {
     "key": "cmd+. cmd+1",
-    "command": "workbench.action.executeCode.console",
+    "command": "workbench.action.executeCode.silently",
     "when": "editorTextFocus",
     "args": {
       "langId": "r",
       "code": "reprex::reprex_selection()",
-      "focus": true
+      "focus": false
     }
   },
   {
@@ -462,38 +471,38 @@ don't treat this as a static document.
     "args": {
       "langId": "r",
       "code": "eval(parse(text = paste0('bench::mark(', reprex:::rstudio_selection(), ')')))",
-      "focus": true
+      "focus": false
     }
   },
   // Package Development
   {
     "key": "cmd+. cmd+r",
-    "command": "workbench.action.executeCode.console",
+    "command": "workbench.action.executeCode.silently",
     "when": "editorTextFocus",
     "args": {
       "langId": "r",
       "code": "usethis::use_r()",
-      "focus": true
+      "focus": false
     }
   },
   {
     "key": "cmd+. cmd+t",
-    "command": "workbench.action.executeCode.console",
+    "command": "workbench.action.executeCode.silently",
     "when": "editorTextFocus",
     "args": {
       "langId": "r",
       "code": "usethis::use_test()",
-      "focus": true
+      "focus": false
     }
   },
   {
     "key": "cmd+. cmd+shift+t",
-    "command": "workbench.action.executeCode.console",
+    "command": "workbench.action.executeCode.silently",
     "when": "editorTextFocus",
     "args": {
       "langId": "r",
       "code": "devtools::test_active_file()",
-      "focus": true
+      "focus": false
     }
   }
 ]
