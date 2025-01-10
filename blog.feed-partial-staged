@@ -9,8 +9,17 @@
 <link>https://emilhvitfeldt.com/blog.html</link>
 <atom:link href="https://emilhvitfeldt.com/blog.xml" rel="self" type="application/rss+xml"/>
 <description>Emil Hvitfeldt blog about R, slides and modeling</description>
-<generator>quarto-1.5.56</generator>
-<lastBuildDate>Thu, 22 Aug 2024 07:00:00 GMT</lastBuildDate>
+<generator>quarto-1.5.55</generator>
+<lastBuildDate>Fri, 10 Jan 2025 08:00:00 GMT</lastBuildDate>
+<item>
+  <title>{B4F502887207:/post/positron-key-bindings/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/positron-key-bindings/</link>
+  <description>{B4F502887207:/post/positron-key-bindings/index.html}</description>
+  <category>positron</category>
+  <guid>https://emilhvitfeldt.com/post/positron-key-bindings/</guid>
+  <pubDate>Fri, 10 Jan 2025 08:00:00 GMT</pubDate>
+  <media:content url="https://emilhvitfeldt.com/post/positron-key-bindings/featured.png" medium="image" type="image/png" height="114" width="144"/>
+</item>
 <item>
   <title>{B4F502887207:/post/slidecraft-fragment-js/index.html}</title>
   <link>https://emilhvitfeldt.com/post/slidecraft-fragment-js/</link>
@@ -196,15 +205,9 @@
   <pubDate>Fri, 13 Nov 2020 08:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/textrecipes-version-0-4-0/featured.png" medium="image" type="image/png" height="167" width="144"/>
 </item>
-<item>
-  <title>{B4F502887207:/post/textrecipes-series-pretrained-word-embeddings/index.html}</title>
-  <link>https://emilhvitfeldt.com/post/textrecipes-series-pretrained-word-embeddings/</link>
-  <description>{B4F502887207:/post/textrecipes-series-pretrained-word-embeddings/index.html}</description>
-  <category>tidymodels</category>
-  <category>textrecipes</category>
-  <category>textrecipes series</category>
-  <guid>https://emilhvitfeldt.com/post/textrecipes-series-pretrained-word-embeddings/</guid>
-  <pubDate>Fri, 07 Aug 2020 07:00:00 GMT</pubDate>
+</channel>
+</rss>
+
   <media:content url="https://emilhvitfeldt.com/post/textrecipes-series-pretrained-word-embeddings/featured.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>

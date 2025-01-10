@@ -1,6 +1,7 @@
 {
   "listing": "/blog.html",
   "items": [
+    "/post/positron-key-bindings/index.html",
     "/post/slidecraft-fragment-js/index.html",
     "/post/slidecraft-fragment-css/index.html",
     "/post/slidecraft-plot-sizing/index.html",
