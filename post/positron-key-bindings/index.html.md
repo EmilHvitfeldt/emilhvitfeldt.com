@@ -379,7 +379,7 @@ The following keybindings only work if consistantly name the test files in accor
 ```json
 {
   "key": "cmd+. cmd+shift+t",
-  "command": "workbench.action.executeCode.silently",
+  "command": "workbench.action.executeCode.console",
   "when": "editorTextFocus",
   "args": {
     "langId": "r",
@@ -497,7 +497,7 @@ don't treat this as a static document.
   },
   {
     "key": "cmd+. cmd+shift+t",
-    "command": "workbench.action.executeCode.silently",
+    "command": "workbench.action.executeCode.console",
     "when": "editorTextFocus",
     "args": {
       "langId": "r",
