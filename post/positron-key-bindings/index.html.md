@@ -457,7 +457,6 @@ don't treat this as a static document.
   {
     "key": "cmd+. cmd+1",
     "command": "workbench.action.executeCode.silently",
-    "when": "editorTextFocus",
     "args": {
       "langId": "r",
       "code": "reprex::reprex_selection()",
@@ -467,7 +466,6 @@ don't treat this as a static document.
   {
     "key": "cmd+. cmd+2",
     "command": "workbench.action.executeCode.console",
-    "when": "editorTextFocus",
     "args": {
       "langId": "r",
       "code": "eval(parse(text = paste0('bench::mark(', reprex:::rstudio_selection(), ')')))",
@@ -478,7 +476,6 @@ don't treat this as a static document.
   {
     "key": "cmd+. cmd+r",
     "command": "workbench.action.executeCode.silently",
-    "when": "editorTextFocus",
     "args": {
       "langId": "r",
       "code": "usethis::use_r()",
@@ -488,7 +485,6 @@ don't treat this as a static document.
   {
     "key": "cmd+. cmd+t",
     "command": "workbench.action.executeCode.silently",
-    "when": "editorTextFocus",
     "args": {
       "langId": "r",
       "code": "usethis::use_test()",
@@ -498,7 +494,6 @@ don't treat this as a static document.
   {
     "key": "cmd+. cmd+shift+t",
     "command": "workbench.action.executeCode.console",
-    "when": "editorTextFocus",
     "args": {
       "langId": "r",
       "code": "devtools::test_active_file()",
