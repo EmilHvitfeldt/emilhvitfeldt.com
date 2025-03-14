@@ -11,10 +11,6 @@ image: "featured.png"
 
 
 
-
-
-
-
 If you haven't already guessed,
 this blog post is about [Positron](https://positron.posit.co/),
 the new data science IDE from [Posit PBC](https://posit.co/).
