@@ -15,9 +15,6 @@ image: "featured.png"
 
 
 
-
-
-
 <a href="https://emilhvitfeldt.github.io/talk-orbital-positconf/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
 <a href="https://youtu.be/Qnm1y0KPxVM?si=8RHJOEQfdNx1io6R" class="listing-video btn-links">{{< fa play-circle >}}Video<a>
 <a href="https://github.com/EmilHvitfeldt/talk-orbital-positconf" class="listing-github btn-links">{{< fa brands github >}}Github<a>

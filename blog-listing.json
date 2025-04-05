@@ -1,6 +1,7 @@
 {
   "listing": "/blog.html",
   "items": [
+    "/post/fun-feature-engineering-pokemon/index.html",
     "/post/positron-key-bindings/index.html",
     "/post/slidecraft-fragment-js/index.html",
     "/post/slidecraft-fragment-css/index.html",

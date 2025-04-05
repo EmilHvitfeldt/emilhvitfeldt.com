@@ -10,7 +10,17 @@
 <atom:link href="https://emilhvitfeldt.com/blog.xml" rel="self" type="application/rss+xml"/>
 <description>Emil Hvitfeldt blog about R, slides and modeling</description>
 <generator>quarto-1.6.42</generator>
-<lastBuildDate>Fri, 10 Jan 2025 08:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sat, 05 Apr 2025 07:00:00 GMT</lastBuildDate>
+<item>
+  <title>{B4F502887207:/post/fun-feature-engineering-pokemon/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/fun-feature-engineering-pokemon/</link>
+  <description>{B4F502887207:/post/fun-feature-engineering-pokemon/index.html}</description>
+  <category>Feature Engineering</category>
+  <category>tidy Tuesday</category>
+  <guid>https://emilhvitfeldt.com/post/fun-feature-engineering-pokemon/</guid>
+  <pubDate>Sat, 05 Apr 2025 07:00:00 GMT</pubDate>
+  <media:content url="https://emilhvitfeldt.com/post/fun-feature-engineering-pokemon/featured.png" medium="image" type="image/png" height="98" width="144"/>
+</item>
 <item>
   <title>{B4F502887207:/post/positron-key-bindings/index.html}</title>
   <link>https://emilhvitfeldt.com/post/positron-key-bindings/</link>
@@ -195,20 +205,9 @@
   <pubDate>Thu, 04 Feb 2021 08:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/xaringancolor-announcement/featured.png" medium="image" type="image/png" height="167" width="144"/>
 </item>
-<item>
-  <title>{B4F502887207:/post/textrecipes-version-0-4-0/index.html}</title>
-  <link>https://emilhvitfeldt.com/post/textrecipes-version-0-4-0/</link>
-  <description>{B4F502887207:/post/textrecipes-version-0-4-0/index.html}</description>
-  <category>tidymodels</category>
-  <category>textrecipes</category>
-  <guid>https://emilhvitfeldt.com/post/textrecipes-version-0-4-0/</guid>
-  <pubDate>Fri, 13 Nov 2020 08:00:00 GMT</pubDate>
-  <media:content url="https://emilhvitfeldt.com/post/textrecipes-version-0-4-0/featured.png" medium="image" type="image/png" height="167" width="144"/>
-</item>
 </channel>
 </rss>
-
-  <media:content url="https://emilhvitfeldt.com/post/textrecipes-series-pretrained-word-embeddings/featured.jpg" medium="image" type="image/jpeg"/>
+feldt.com/post/textrecipes-series-pretrained-word-embeddings/featured.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
