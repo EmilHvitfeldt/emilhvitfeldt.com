@@ -10,7 +10,16 @@
 <atom:link href="https://emilhvitfeldt.com/blog.xml" rel="self" type="application/rss+xml"/>
 <description>Emil Hvitfeldt blog about R, slides and modeling</description>
 <generator>quarto-1.6.42</generator>
-<lastBuildDate>Sat, 05 Apr 2025 07:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 28 Apr 2025 07:00:00 GMT</lastBuildDate>
+<item>
+  <title>{B4F502887207:/post/sparse-vs-dense-dummies/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/sparse-vs-dense-dummies/</link>
+  <description>{B4F502887207:/post/sparse-vs-dense-dummies/index.html}</description>
+  <category>tidymodels</category>
+  <guid>https://emilhvitfeldt.com/post/sparse-vs-dense-dummies/</guid>
+  <pubDate>Mon, 28 Apr 2025 07:00:00 GMT</pubDate>
+  <media:content url="https://emilhvitfeldt.com/post/sparse-vs-dense-dummies/index_files/figure-html/fig-length-v-runtime-1.png" medium="image" type="image/png" height="103" width="144"/>
+</item>
 <item>
   <title>{B4F502887207:/post/fun-feature-engineering-pokemon/index.html}</title>
   <link>https://emilhvitfeldt.com/post/fun-feature-engineering-pokemon/</link>
@@ -196,18 +205,9 @@
   <pubDate>Mon, 22 Mar 2021 07:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/xaringan-first-letter/featured.png" medium="image" type="image/png" height="125" width="144"/>
 </item>
-<item>
-  <title>{B4F502887207:/post/xaringancolor-announcement/index.html}</title>
-  <link>https://emilhvitfeldt.com/post/xaringancolor-announcement/</link>
-  <description>{B4F502887207:/post/xaringancolor-announcement/index.html}</description>
-  <category>xaringan</category>
-  <guid>https://emilhvitfeldt.com/post/xaringancolor-announcement/</guid>
-  <pubDate>Thu, 04 Feb 2021 08:00:00 GMT</pubDate>
-  <media:content url="https://emilhvitfeldt.com/post/xaringancolor-announcement/featured.png" medium="image" type="image/png" height="167" width="144"/>
-</item>
 </channel>
 </rss>
-feldt.com/post/textrecipes-series-pretrained-word-embeddings/featured.jpg" medium="image" type="image/jpeg"/>
+s-series-pretrained-word-embeddings/featured.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
