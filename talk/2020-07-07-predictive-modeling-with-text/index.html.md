@@ -8,7 +8,7 @@ video: https://www.youtube.com/watch?v=Sz8RB_fPYOk
 github: https://github.com/EmilHvitfeldt/useR2020-text-modeling-tutorial
 categories:
   - workshop
-image: "featured.png"
+image: "featured.webp"
 ---
 
 

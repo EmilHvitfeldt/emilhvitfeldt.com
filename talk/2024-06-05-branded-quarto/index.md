@@ -7,7 +7,7 @@ slides: https://emilhvitfeldt.github.io/talk-branded-quarto/
 github: https://github.com/EmilHvitfeldt/talk-branded-quarto
 categories:
   - talk
-image: "featured.png"
+image: "featured.webp"
 ---
 
 <a href="https://emilhvitfeldt.github.io/talk-branded-quarto/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>

@@ -8,7 +8,7 @@ github: https://github.com/EmilHvitfeldt/talk-nyr-slidecraft
 video: https://www.youtube.com/watch?v=SAi8-P49F2Y
 categories:
   - talk
-image: "featured.png"
+image: "featured.webp"
 ---
 
 <a href="https://emilhvitfeldt.github.io/talk-nyr-slidecraft/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>

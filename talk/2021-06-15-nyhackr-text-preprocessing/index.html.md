@@ -7,7 +7,7 @@ slides: https://nyhackr-text-preprocessing-2021.netlify.app/
 video: https://www.youtube.com/watch?v=kjA7LwaYYfM
 categories:
   - talk
-image: "featured.jpg"
+image: "featured.webp"
 ---
 
 

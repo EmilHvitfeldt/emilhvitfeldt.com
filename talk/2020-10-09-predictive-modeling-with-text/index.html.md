@@ -6,7 +6,7 @@ description: |
 slides: https://textmodels4pharma.netlify.app/
 categories:
   - workshop
-image: "featured.png"
+image: "featured.webp"
 ---
 
 

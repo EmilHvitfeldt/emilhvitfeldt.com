@@ -8,7 +8,7 @@ video: https://www.youtube.com/watch?v=kL5qWitjvNg
 github: https://github.com/EmilHvitfeldt/talks/tree/master/user2020-themis
 categories:
   - talk
-image: "featured.png"
+image: "featured.webp"
 ---
 
 

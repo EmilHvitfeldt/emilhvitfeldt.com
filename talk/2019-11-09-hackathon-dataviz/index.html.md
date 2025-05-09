@@ -7,7 +7,7 @@ slides: https://ocrug-hackathon-dataviz.netlify.app/
 github: https://github.com/EmilHvitfeldt/talks/tree/master/ocrug-hackathon-dataviz
 categories:
   - talk
-image: "featured.png"
+image: "featured.webp"
 ---
 
 

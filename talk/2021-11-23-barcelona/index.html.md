@@ -7,7 +7,7 @@ slides: https://barcelona-rstudio-work-harder-2021.netlify.app/
 github: https://github.com/EmilHvitfeldt/talks/blob/master/barcelona-rstudio-work-smart-not-hard
 categories:
   - talk
-image: "featured.png"
+image: "featured.webp"
 ---
 
 

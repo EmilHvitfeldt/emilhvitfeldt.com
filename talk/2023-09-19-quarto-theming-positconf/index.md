@@ -8,7 +8,7 @@ github: https://github.com/EmilHvitfeldt/talk-quarto-theming-positconf
 video: https://www.youtube.com/watch?v=CblUFMoC9yg
 categories:
   - talk
-image: "featured.png"
+image: "featured.webp"
 ---
 
 <a href="https://emilhvitfeldt.github.io/talk-quarto-theming-positconf/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>

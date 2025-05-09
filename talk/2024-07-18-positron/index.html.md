@@ -7,7 +7,7 @@ slides: https://emilhvitfeldt.github.io/talk-socal-positron/
 github: https://github.com/EmilHvitfeldt/talk-socal-positron
 categories:
   - talk
-image: "featured.png"
+image: "featured.webp"
 ---
 
 

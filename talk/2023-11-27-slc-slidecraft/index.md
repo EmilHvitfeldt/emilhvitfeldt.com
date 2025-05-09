@@ -8,7 +8,7 @@ github: https://github.com/EmilHvitfeldt/talk-slc-slidecraft
 video: https://www.youtube.com/watch?v=1eMv1EEDUqk
 categories:
   - talk
-image: "featured.png"
+image: "featured.webp"
 ---
 
 <a href="https://emilhvitfeldt.github.io/talk-slc-slidecraft/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>

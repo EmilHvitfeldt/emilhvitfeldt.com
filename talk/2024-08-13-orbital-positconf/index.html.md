@@ -8,7 +8,7 @@ github: https://github.com/EmilHvitfeldt/talk-orbital-positconf
 video: https://youtu.be/Qnm1y0KPxVM?si=8RHJOEQfdNx1io6R
 categories:
   - talk
-image: "featured.png"
+image: "featured.webp"
 ---
 
 

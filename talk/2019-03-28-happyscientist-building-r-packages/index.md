@@ -7,7 +7,7 @@ slides: https://happyscientist-building-r-packages.netlify.app/
 github: https://github.com/EmilHvitfeldt/talks/tree/master/happy-scientist_building-r-packages
 categories:
   - talk
-image: "featured.png"
+image: "featured.webp"
 ---
 
 <a href="https://happyscientist-building-r-packages.netlify.app/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>

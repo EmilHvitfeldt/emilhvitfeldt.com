@@ -7,7 +7,7 @@ slides: https://emilhvitfeldt.github.io/talk-AstraZeneca-recipes/
 github: https://github.com/EmilHvitfeldt/talk-AstraZeneca-recipes/
 categories:
   - talk
-image: "featured.png"
+image: "featured.webp"
 ---
 
 <a href="https://emilhvitfeldt.github.io/talk-AstraZeneca-recipes/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>

@@ -6,7 +6,7 @@ description: |
 slides: https://textmodels4pharma.netlify.app/
 categories:
   - workshop
-image: "featured.png"
+image: "featured.webp"
 ---
 
 <a href="https://textmodels4pharma.netlify.app/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>

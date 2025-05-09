@@ -7,7 +7,7 @@ slides: https://happyscientist-recipes.netlify.app/
 github: https://github.com/EmilHvitfeldt/talks/tree/master/happy-scientist_recipes
 categories:
   - talk
-image: "featured.jpg"
+image: "featured.webp"
 ---
 
 <a href="https://happyscientist-recipes.netlify.app/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>

@@ -7,7 +7,7 @@ slides: https://emilhvitfeldt.github.io/talk-socalrug-hackathon-feature-engineer
 github: https://github.com/EmilHvitfeldt/talk-socalrug-hackathon-feature-engineering
 categories:
   - talk
-image: "featured.png"
+image: "featured.webp"
 ---
 
 <a href="https://emilhvitfeldt.github.io/talk-socalrug-hackathon-feature-engineering/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>

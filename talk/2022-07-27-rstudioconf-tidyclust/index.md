@@ -8,7 +8,7 @@ video: https://www.youtube.com/watch?v=vsXJBO6-nQk
 github: https://github.com/EmilHvitfeldt/talk-rstudioconf2022-tidyclust
 categories:
   - talk
-image: "featured.png"
+image: "featured.webp"
 ---
 
 <a href="https://emilhvitfeldt.github.io/talk-rstudioconf2022-tidyclust/#/section" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>

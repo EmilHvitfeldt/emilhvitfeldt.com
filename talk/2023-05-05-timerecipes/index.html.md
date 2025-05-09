@@ -7,7 +7,7 @@ slides: https://emilhvitfeldt.github.io/talk-time-aware-recipes/
 github: https://github.com/EmilHvitfeldt/talk-time-aware-recipes
 categories:
   - talk
-image: "featured.png"
+image: "featured.webp"
 ---
 
 

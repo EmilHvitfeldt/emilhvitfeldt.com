@@ -7,7 +7,7 @@ slides: https://happyscientist-recipes.netlify.app/
 github: https://github.com/EmilHvitfeldt/talks/tree/master/happy-scientist_recipes
 categories:
   - talk
-image: "featured.jpg"
+image: "featured.webp"
 ---
 
 

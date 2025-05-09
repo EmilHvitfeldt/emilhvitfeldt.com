@@ -8,7 +8,7 @@ video: https://www.youtube.com/watch?v=HnHAIdqULd0
 github: https://github.com/EmilHvitfeldt/talk-aoc
 categories:
   - talk
-image: "featured.png"
+image: "featured.webp"
 ---
 
 <a href="https://emilhvitfeldt.github.io/talk-aoc/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>

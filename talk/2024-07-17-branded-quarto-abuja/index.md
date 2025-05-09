@@ -8,7 +8,7 @@ github: https://github.com/EmilHvitfeldt/talk-branded-quarto-abuja
 video: https://www.youtube.com/watch?v=qw1OqIhr8EU
 categories:
   - talk
-image: "featured.png"
+image: "featured.webp"
 ---
 
 <a href="https://emilhvitfeldt.github.io/talk-branded-quarto-abuja/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>

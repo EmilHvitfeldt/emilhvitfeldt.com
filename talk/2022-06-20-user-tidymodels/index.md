@@ -7,7 +7,7 @@ slides: https://emilhvitfeldt.github.io/workshop-useR2022-tidymodels/
 github: https://github.com/EmilHvitfeldt/workshop-useR2022-tidymodels
 categories:
   - workshop
-image: "featured.png"
+image: "featured.webp"
 ---
 
 <a href="https://emilhvitfeldt.github.io/workshop-useR2022-tidymodels/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>

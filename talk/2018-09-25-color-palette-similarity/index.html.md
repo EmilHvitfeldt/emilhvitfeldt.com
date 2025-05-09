@@ -8,7 +8,7 @@ video: https://www.youtube.com/watch?v=xZ0-Sm4MSjM
 github: https://github.com/EmilHvitfeldt/talks/tree/master/OCRUG-color-talk
 categories:
   - talk
-image: "featured.png"
+image: "featured.webp"
 ---
 
 

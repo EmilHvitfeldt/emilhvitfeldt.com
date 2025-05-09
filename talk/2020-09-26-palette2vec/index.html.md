@@ -7,7 +7,7 @@ slides: https://palette2vec-whyr2020.netlify.app/
 video: https://www.youtube.com/watch?v=ebHtp5nhn7w
 categories:
   - talk
-image: "featured.jpg"
+image: "featured.webp"
 ---
 
 

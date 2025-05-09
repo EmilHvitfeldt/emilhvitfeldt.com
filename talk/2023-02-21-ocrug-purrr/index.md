@@ -8,7 +8,7 @@ video: https://www.youtube.com/watch?v=xZ0-Sm4MSjM
 github: https://github.com/EmilHvitfeldt/talk-purrr-ocrug-2023
 categories:
   - talk
-image: "featured.png"
+image: "featured.webp"
 ---
 
 <a href="https://emilhvitfeldt.github.io/talk-purrr-ocrug-2023/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>

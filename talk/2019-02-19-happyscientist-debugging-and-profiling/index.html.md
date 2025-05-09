@@ -7,7 +7,7 @@ slides: https://happyscientist-debugging-and-profiling.netlify.app/
 github: https://github.com/EmilHvitfeldt/talks/tree/master/happy-scientist_debugging-and-profiling
 categories:
   - talk
-image: "featured.png"
+image: "featured.webp"
 ---
 
 

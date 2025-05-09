@@ -8,7 +8,7 @@ video: https://youtu.be/e2bE9o9DaNE?t=1368
 github: https://github.com/EmilHvitfeldt/talk-useR2022-textrecipes
 categories:
   - talk
-image: "featured.png"
+image: "featured.webp"
 ---
 
 <a href="https://emilhvitfeldt.github.io/talk-useR2022-textrecipes/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>

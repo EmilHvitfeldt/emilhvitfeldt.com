@@ -7,7 +7,7 @@ slides: https://allborg-tidymodels-2021.netlify.app/
 github: https://github.com/EmilHvitfeldt/talks/aalborg-tidymodels
 categories:
   - talk
-image: "featured.png"
+image: "featured.webp"
 ---
 
 <a href="https://allborg-tidymodels-2021.netlify.app/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>

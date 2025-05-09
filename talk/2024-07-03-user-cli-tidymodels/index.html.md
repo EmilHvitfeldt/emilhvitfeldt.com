@@ -8,7 +8,7 @@ github: https://github.com/EmilHvitfeldt/talk-user2024-cli-tidymodels
 video: https://www.youtube.com/watch?v=uu8KHXgagug
 categories:
   - talk
-image: "featured.png"
+image: "featured.webp"
 ---
 
 

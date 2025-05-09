@@ -7,7 +7,7 @@ slides: https://rmedicine2021-pptxtemplate.netlify.app/
 github: https://github.com/EmilHvitfeldt/talks/tree/master/Rmedicine2021-pptxtemplate
 categories:
   - talk
-image: "featured.png"
+image: "featured.webp"
 ---
 
 

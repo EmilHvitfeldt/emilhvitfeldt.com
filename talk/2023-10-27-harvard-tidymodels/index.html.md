@@ -8,7 +8,7 @@ github: https://github.com/EmilHvitfeldt/talk-harvard-tidymodels
 video: https://www.youtube.com/watch?v=0B20YtjtT1U
 categories:
   - talk
-image: "featured.png"
+image: "featured.webp"
 ---
 
 

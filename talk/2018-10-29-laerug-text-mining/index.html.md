@@ -7,7 +7,7 @@ slides: https://laerug-text-mining-2018.netlify.app/
 github: https://github.com/EmilHvitfeldt/talks/tree/master/laerug-text-mining-2018
 categories:
   - talk
-image: "featured.png"
+image: "featured.webp"
 ---
 
 

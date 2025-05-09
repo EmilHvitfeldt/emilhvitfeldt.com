@@ -7,7 +7,7 @@ slides: https://slcrug-stopwords.netlify.app/
 video: https://www.youtube.com/watch?v=Q2ilhRqp1Vo
 categories:
   - talk
-image: "featured.jpg"
+image: "featured.webp"
 ---
 
 

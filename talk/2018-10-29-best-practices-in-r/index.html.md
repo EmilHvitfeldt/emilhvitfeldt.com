@@ -7,7 +7,7 @@ slides: https://happy-scientist-organized.netlify.app/
 github: https://github.com/EmilHvitfeldt/talks/tree/master/oRganized
 categories:
   - talk
-image: "featured.png"
+image: "featured.webp"
 ---
 
 

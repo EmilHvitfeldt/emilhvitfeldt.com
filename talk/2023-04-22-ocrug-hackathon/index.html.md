@@ -7,7 +7,7 @@ slides: https://emilhvitfeldt.github.io/workshop-ocrug-hackathon-nlp/
 github: https://github.com/EmilHvitfeldt/workshop-ocrug-hackathon-nlp
 categories:
   - talk
-image: "featured.png"
+image: "featured.webp"
 ---
 
 

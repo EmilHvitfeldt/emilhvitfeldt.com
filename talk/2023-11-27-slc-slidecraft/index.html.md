@@ -8,7 +8,7 @@ github: https://github.com/EmilHvitfeldt/talk-slc-slidecraft
 video: https://www.youtube.com/watch?v=1eMv1EEDUqk
 categories:
   - talk
-image: "featured.png"
+image: "featured.webp"
 ---
 
 

@@ -7,7 +7,7 @@ slides: https://ecosystem-ocrug2019.netlify.app/
 github: https://github.com/EmilHvitfeldt/talks/tree/master/textrecipes-ecosystem
 categories:
   - talk
-image: "featured.png"
+image: "featured.webp"
 ---
 
 <a href="https://ecosystem-ocrug2019.netlify.app/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
