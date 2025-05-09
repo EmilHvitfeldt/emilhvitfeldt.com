@@ -6,7 +6,7 @@ date: '2019-12-18'
 categories:
   - ggplot2
   - color palettes
-image: "paletteer.png"
+image: "featured.webp"
 ---
 
 

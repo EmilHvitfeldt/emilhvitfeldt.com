@@ -6,7 +6,7 @@ date: '2018-08-17'
 categories:
   - ggplot2
   - tidytext
-image: "featured.png"
+image: "featured.webp"
 ---
 
 

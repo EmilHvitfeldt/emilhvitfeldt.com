@@ -5,7 +5,7 @@ description: |
 date: '2019-05-08'
 categories:
   - generative art
-image: "featured.png"
+image: "featured.webp"
 ---
 
 # Why are we here?

@@ -6,7 +6,7 @@ date: '2021-08-04'
 categories: 
   - smltar
   - book
-image: "featured.png"
+image: "featured.webp"
 ---
 
 The last couple of years of my life have been quite a journey. I'm standing here now with a book in production, available for preorder, and I couldn't be more proud of the work [Julia Silge](https://twitter.com/juliasilge) and I have done. If you had told me 3 years ago that I would be here now I wouldn't have believed in you.

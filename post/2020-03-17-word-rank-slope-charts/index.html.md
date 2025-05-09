@@ -4,7 +4,7 @@ summary: Going through the process of creating a word rank slope chart, which is
 date: '2020-03-17'
 categories:
   - tidytext
-image: "featured.png"
+image: "featured.webp"
 ---
 
 

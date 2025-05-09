@@ -6,7 +6,7 @@ date: '2020-11-13'
 categories:
   - tidymodels
   - textrecipes
-image: "featured.png"
+image: "featured.webp"
 ---
 
 I'm happy to announce that version 0.4.0 of [textrecipes](https://textrecipes.tidymodels.org/) got on CRAN a couple of days ago.

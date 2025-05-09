@@ -5,7 +5,7 @@ description: |
 date: '2019-05-21'
 categories:
   - ggplot2
-image: "featured.png"
+image: "featured.webp"
 ---
 
 Using a divergent color palette can be beneficial when you want to draw attention to some values compared to a fixed point. Like temperature around freezing, monetary values around zero, and so on. However, it can be hard to align 0 to the middle of a continuous color scale. This post will explain how to do this correctly for `scale_colour_distiller` and `scale_fill_distiller`, and this will also work for extension packages such as [scico](https://github.com/thomasp85/scico).

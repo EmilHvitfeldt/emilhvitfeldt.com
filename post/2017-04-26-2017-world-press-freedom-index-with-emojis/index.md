@@ -6,7 +6,7 @@ date: '2017-04-26'
 categories:
   - ggplot2
   - emoji
-image: "featured.png"
+image: "featured.webp"
 ---
 
 ::: {.callout-note}

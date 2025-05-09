@@ -5,7 +5,7 @@ description: |
 date: '2018-09-02'
 categories:
   - package development
-image: "featured.png"
+image: "featured.webp"
 ---
 
 

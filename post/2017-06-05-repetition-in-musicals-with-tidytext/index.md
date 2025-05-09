@@ -5,7 +5,7 @@ description: |
 date: '2017-06-05'
 categories:
   - tidytext
-image: "featured.png"
+image: "featured.webp"
 ---
 
 ::: {.callout-warning}

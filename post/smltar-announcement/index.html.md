@@ -6,7 +6,7 @@ date: '2020-07-27'
 categories:
   - smltar
   - book
-image: "featured.png"
+image: "featured.webp"
 ---
 
 

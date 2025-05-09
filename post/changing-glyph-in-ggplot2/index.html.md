@@ -5,7 +5,7 @@ summary: |
 date: '2019-06-17'
 categories:
   - ggplot2
-image: "featured.png"
+image: "featured.webp"
 ---
 
 

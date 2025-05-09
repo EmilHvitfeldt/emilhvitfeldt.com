@@ -4,7 +4,7 @@ description: |
   Creating addins to be used in RStudio.
 date: '2019-07-30'
 categories:
-image: "featured.png"
+image: "featured.webp"
 ---
 
 # The problem

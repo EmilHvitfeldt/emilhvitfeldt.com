@@ -6,7 +6,7 @@ date: '2021-08-04'
 categories: 
   - smltar
   - book
-image: "featured.png"
+image: "featured.webp"
 ---
 
 

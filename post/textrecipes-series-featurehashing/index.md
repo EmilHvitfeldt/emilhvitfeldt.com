@@ -7,7 +7,7 @@ categories:
   - tidymodels
   - textrecipes
   - textrecipes series
-image: "featured.png"
+image: "featured.webp"
 ---
 
 This is the fourth blog post in the [textrecipes](https://github.com/tidymodels/textrecipes) series where I go over the various text preprocessing workflows you can do with textrecipes. This post will be showcasing how to perform [feature hashing](https://en.wikipedia.org/wiki/Feature_hashing)) (also known as the hashing trick). 

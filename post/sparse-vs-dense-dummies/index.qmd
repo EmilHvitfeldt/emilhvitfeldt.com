@@ -5,7 +5,7 @@ summary: |
 date: '2025-04-28'
 categories:
  - tidymodels
-image: "index_files/figure-html/fig-length-v-runtime-1.png"
+image: "featured.webp"
 ---
 
 Over the last year, I have worked on [improving sparsity support in tidymodels](https://www.tidyverse.org/blog/2025/03/tidymodels-sparsity/).

@@ -6,7 +6,7 @@ date: '2019-10-01'
 categories:
   - ggplot2
   - color palettes
-image: "featured.png"
+image: "featured.webp"
 ---
 
 

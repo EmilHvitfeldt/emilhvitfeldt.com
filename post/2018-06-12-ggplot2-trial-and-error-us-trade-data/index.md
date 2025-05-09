@@ -5,7 +5,7 @@ description: |
 date: '2018-06-12'
 categories:
   - ggplot2
-image: "featured.png"
+image: "featured.webp"
 ---
 
 ::: {.callout-note}

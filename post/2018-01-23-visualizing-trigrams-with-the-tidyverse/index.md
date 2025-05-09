@@ -6,7 +6,7 @@ date: '2018-01-23'
 categories:
   - tidytext
   - ggplot2
-image: "featured.png"
+image: "featured.webp"
 ---
 
 <script src="index_files/twitter-widget/widgets.js"></script>

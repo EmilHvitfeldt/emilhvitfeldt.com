@@ -5,7 +5,7 @@ description: |
 date: '2025-01-10'
 categories:
  - positron
-image: "featured.png"
+image: "featured.webp"
 ---
 
 

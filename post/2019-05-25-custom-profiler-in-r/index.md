@@ -5,7 +5,7 @@ description: |
 date: '2019-05-25'
 categories:
   - package development
-image: "featured.png"
+image: "featured.webp"
 ---
 
 This blog post is going to describe how to write a customizable profiling function. If you are not familiar with profiling read the [Profiling](https://adv-r.hadley.nz/perf-measure.html#profiling) section of [Advanced R](https://adv-r.hadley.nz/) to familiarize yourself, I'll wait.

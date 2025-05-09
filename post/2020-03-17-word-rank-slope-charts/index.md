@@ -4,7 +4,7 @@ summary: Going through the process of creating a word rank slope chart, which is
 date: '2020-03-17'
 categories:
   - tidytext
-image: "featured.png"
+image: "featured.webp"
 ---
 
 I have been working on visualizing how different kinds of words are used in texts and I finally found a good visualization style with the [slope chart](https://datavizproject.com/data-type/slope-chart/).

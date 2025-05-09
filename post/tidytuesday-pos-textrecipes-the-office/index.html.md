@@ -7,7 +7,7 @@ categories:
   - tidymodels
   - textrecipes
   - tidytuesday
-image: "featured.png"
+image: "featured.webp"
 ---
 
 

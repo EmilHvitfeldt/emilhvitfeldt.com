@@ -5,7 +5,7 @@ descriptin: |
 date: '2021-03-22'
 categories:
   - xaringan
-image: "featured.png"
+image: "featured.webp"
 ---
 
 I recently saw the use of the  [::first-letter](https://css-tricks.com/almanac/selectors/f/first-letter/) pseudo selector and I was hooked! and I was hooked! This selector allows you to style the first letter in a block, sometimes called a [drop cap](https://en.wikipedia.org/wiki/Initial), and can be used to add a little flair to your [xaringan](https://github.com/yihui/xaringan) slides. These selectors can just as well be used in any other Html output, they are not limited to xaringan.

@@ -6,7 +6,7 @@ date: '2020-02-25'
 categories:
   - color palettes
   - ggplot2
-image: "featured.png"
+image: "featured.webp"
 ---
 
 With the release of version 3.3.0 of ggplot2 came the ability to have more control over the aesthetic evaluation.

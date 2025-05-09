@@ -5,7 +5,7 @@ description: |
 date: '2024-02-19'
 categories:
   - package development
-image: "featured.jpg"
+image: "featured.webp"
 ---
 
 

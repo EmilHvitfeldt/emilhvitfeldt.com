@@ -5,7 +5,7 @@ description: |
 date: '2018-03-21'
 categories:
   - ggplot2
-image: "featured.png"
+image: "featured.webp"
 ---
 
 

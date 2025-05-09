@@ -6,7 +6,7 @@ date: '2022-08-24'
 categories:
   - slidecraft 101
   - quarto
-image: "featured.png"
+image: "featured.webp"
 ---
 
 Hello! This will be a multi-part series about what I like to call **slidecrafting**; The art of putting together slides that are functional and aesthetically pleasing. I will be using [quarto presentations](https://quarto.org/) as my medium, but the advice should be fairly tool-agnostic. 

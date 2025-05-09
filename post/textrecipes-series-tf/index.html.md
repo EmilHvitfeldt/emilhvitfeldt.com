@@ -8,7 +8,7 @@ categories:
   - textrecipes
   - tidytuesday
   - textrecipes series
-image: "featured.jpeg"
+image: "featured.webp"
 ---
 
 

@@ -6,7 +6,7 @@ date: '2019-12-18'
 categories:
   - ggplot2
   - color palettes
-image: "paletteer.png"
+image: "featured.webp"
 ---
 
 I'm over-the-moon excited to announce the release of version 1.0.0 of [paletteer](https://github.com/EmilHvitfeldt/paletteer).

@@ -5,7 +5,7 @@ description: |
 date: '2018-03-15'
 categories:
   - tidytext
-image: "featured.png"
+image: "featured.webp"
 ---
 
 

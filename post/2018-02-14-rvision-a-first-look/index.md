@@ -4,7 +4,7 @@ description: |
   Recently I stumbled across the `Rvision` package, which frankly looks amazing so far. So I decided to take it for a spin and show you what I found.
 date: '2018-02-15'
 categories:
-image: "featured.jpg"
+image: "featured.webp"
 ---
 
 ::: {.callout-note}

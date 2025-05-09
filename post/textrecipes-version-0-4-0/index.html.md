@@ -6,7 +6,7 @@ date: '2020-11-13'
 categories:
   - tidymodels
   - textrecipes
-image: "featured.png"
+image: "featured.webp"
 ---
 
 

@@ -6,7 +6,7 @@ date: '2018-02-23'
 categories:
   - ggplot2
   - tidytext
-image: "featured.png"
+image: "featured.webp"
 ---
 
 ::: {.callout-note}

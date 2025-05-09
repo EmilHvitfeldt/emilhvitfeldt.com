@@ -7,7 +7,7 @@ categories:
   - tidymodels
   - textrecipes
   - textrecipes series
-image: "featured.jpg"
+image: "featured.webp"
 ---
 
 This is the fifth blog post in the [textrecipes](https://github.com/tidymodels/textrecipes) series where I go over the various text preprocessing workflows you can do with textrecipes. This post will be showcasing how to use [pretrained word embeddings](https://www.analyticsvidhya.com/blog/2020/03/pretrained-word-embeddings-nlp/#:~:text=Pretrained%20Word%20Embeddings%20are%20the,a%20form%20of%20Transfer%20Learning).

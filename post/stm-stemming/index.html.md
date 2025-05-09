@@ -5,7 +5,7 @@ description: |
 date: '2020-03-16'
 categories:
   - tidytext
-image: "featured.jpg"
+image: "featured.webp"
 ---
 
 

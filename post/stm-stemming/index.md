@@ -5,7 +5,7 @@ description: |
 date: '2020-03-16'
 categories:
   - tidytext
-image: "featured.jpg"
+image: "featured.webp"
 ---
 
 It is known that topic modeling does not benefit from stemming [ref](https://mimno.infosci.cornell.edu/papers/schofield_tacl_2016.pdf).

@@ -4,7 +4,7 @@ description: |
   With the advent of purrrresolution on Twitter I'll throw my 2 cents in in form of my bag of tips and tricks.
 date: '2018-01-08'
 categories:
-image: "featured.jpg"
+image: "featured.webp"
 ---
 
 ::: {.callout-note}

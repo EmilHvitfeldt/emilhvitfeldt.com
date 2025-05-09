@@ -5,7 +5,7 @@ description: |
 date: '2021-02-04'
 categories:
   - xaringan
-image: "featured.png"
+image: "featured.webp"
 ---
 
 

@@ -6,7 +6,7 @@ date: '2020-01-02'
 categories:
   - ggplot2
   - emoji
-image: "featured.png"
+image: "featured.webp"
 ---
 
 

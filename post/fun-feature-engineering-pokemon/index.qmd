@@ -6,7 +6,7 @@ date: '2025-04-05'
 categories:
   - Feature Engineering
   - tidy Tuesday
-image: "featured.png"
+image: "featured.webp"
 ---
 
 I had the idea behind this blog post for a while,

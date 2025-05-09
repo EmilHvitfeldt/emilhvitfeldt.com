@@ -7,7 +7,7 @@ categories:
   - ggplot2
   - tidytext
   - emoji
-image: "featured.png"
+image: "featured.webp"
 ---
 
 

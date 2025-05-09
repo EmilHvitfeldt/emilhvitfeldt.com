@@ -4,7 +4,7 @@ description: |
   his post will show you how you can set up a bookdown site with Netlify using Github Actions.
 date: '2020-01-20'
 categories:
-image: "featured.png"
+image: "featured.webp"
 ---
 
 With the new [Github Actions](https://github.com/features/actions) comes many possibilities. 

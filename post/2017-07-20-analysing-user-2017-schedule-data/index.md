@@ -5,7 +5,7 @@ description: |
 date: '2017-07-20'
 categories:
   - tidytext
-image: "featured.png"
+image: "featured.webp"
 ---
 
 <script src="index_files/htmlwidgets/htmlwidgets.js"></script>

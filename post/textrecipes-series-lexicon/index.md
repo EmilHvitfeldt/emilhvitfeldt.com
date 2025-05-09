@@ -8,7 +8,7 @@ categories:
   - textrecipes
   - tidytuesday
   - textrecipes series
-image: "featured.jpg"
+image: "featured.webp"
 ---
 
 This is the second blog post in the [textrecipes](https://github.com/tidymodels/textrecipes) series where I go over the various text preprocessing workflows you can do with textrecipes. This post will be covering how to use lexicons to create features.

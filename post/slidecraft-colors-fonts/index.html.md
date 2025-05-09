@@ -6,7 +6,7 @@ date: '2022-08-24'
 categories:
   - slidecraft 101
   - quarto
-image: "featured.png"
+image: "featured.webp"
 ---
 
 

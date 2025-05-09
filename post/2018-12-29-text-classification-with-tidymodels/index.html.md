@@ -5,7 +5,7 @@ description: |
 date: '2018-12-29'
 categories:
   - tidymodels
-image: "featured.png"
+image: "featured.webp"
 ---
 
 

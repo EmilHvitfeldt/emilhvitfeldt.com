@@ -4,7 +4,7 @@ description: |
   Many different ways to share pictures of code
 date: '2023-12-06'
 categories:
-image: "featured.png"
+image: "featured.webp"
 css: "stars.css"
 ---
 
