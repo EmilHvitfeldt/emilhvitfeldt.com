@@ -18,7 +18,7 @@ I’m a Software Engineer at [Posit PBC](https://posit.co/). Proud co-author of 
 :::
 
 ::: {.right}
-![](home.png)
+![](home.webp)
 :::
 
 :::

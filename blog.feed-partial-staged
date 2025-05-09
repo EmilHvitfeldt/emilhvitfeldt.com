@@ -10,14 +10,14 @@
 <atom:link href="https://emilhvitfeldt.com/blog.xml" rel="self" type="application/rss+xml"/>
 <description>Emil Hvitfeldt blog about R, slides and modeling</description>
 <generator>quarto-1.6.42</generator>
-<lastBuildDate>Mon, 28 Apr 2025 07:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sun, 27 Apr 2025 22:00:00 GMT</lastBuildDate>
 <item>
   <title>{B4F502887207:/post/sparse-vs-dense-dummies/index.html}</title>
   <link>https://emilhvitfeldt.com/post/sparse-vs-dense-dummies/</link>
   <description>{B4F502887207:/post/sparse-vs-dense-dummies/index.html}</description>
   <category>tidymodels</category>
   <guid>https://emilhvitfeldt.com/post/sparse-vs-dense-dummies/</guid>
-  <pubDate>Mon, 28 Apr 2025 07:00:00 GMT</pubDate>
+  <pubDate>Sun, 27 Apr 2025 22:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/sparse-vs-dense-dummies/index_files/figure-html/fig-length-v-runtime-1.png" medium="image" type="image/png" height="103" width="144"/>
 </item>
 <item>
@@ -27,7 +27,7 @@
   <category>Feature Engineering</category>
   <category>tidy Tuesday</category>
   <guid>https://emilhvitfeldt.com/post/fun-feature-engineering-pokemon/</guid>
-  <pubDate>Sat, 05 Apr 2025 07:00:00 GMT</pubDate>
+  <pubDate>Fri, 04 Apr 2025 22:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/fun-feature-engineering-pokemon/featured.png" medium="image" type="image/png" height="98" width="144"/>
 </item>
 <item>
@@ -36,7 +36,7 @@
   <description>{B4F502887207:/post/positron-key-bindings/index.html}</description>
   <category>positron</category>
   <guid>https://emilhvitfeldt.com/post/positron-key-bindings/</guid>
-  <pubDate>Fri, 10 Jan 2025 08:00:00 GMT</pubDate>
+  <pubDate>Thu, 09 Jan 2025 23:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/positron-key-bindings/featured.png" medium="image" type="image/png" height="114" width="144"/>
 </item>
 <item>
@@ -46,7 +46,7 @@
   <category>slidecraft 101</category>
   <category>quarto</category>
   <guid>https://emilhvitfeldt.com/post/slidecraft-fragment-js/</guid>
-  <pubDate>Thu, 22 Aug 2024 07:00:00 GMT</pubDate>
+  <pubDate>Wed, 21 Aug 2024 22:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/slidecraft-fragment-js/featured.png" medium="image" type="image/png" height="95" width="144"/>
 </item>
 <item>
@@ -56,7 +56,7 @@
   <category>slidecraft 101</category>
   <category>quarto</category>
   <guid>https://emilhvitfeldt.com/post/slidecraft-fragment-css/</guid>
-  <pubDate>Wed, 21 Aug 2024 07:00:00 GMT</pubDate>
+  <pubDate>Tue, 20 Aug 2024 22:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/slidecraft-fragment-css/featured.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
@@ -66,7 +66,7 @@
   <category>slidecraft 101</category>
   <category>quarto</category>
   <guid>https://emilhvitfeldt.com/post/slidecraft-plot-sizing/</guid>
-  <pubDate>Thu, 01 Aug 2024 07:00:00 GMT</pubDate>
+  <pubDate>Wed, 31 Jul 2024 22:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/slidecraft-plot-sizing/figures/9.png" medium="image" type="image/png" height="86" width="144"/>
 </item>
 <item>
@@ -76,7 +76,7 @@
   <category>slidecraft 101</category>
   <category>quarto</category>
   <guid>https://emilhvitfeldt.com/post/slidecraft-plot-backgrounds/</guid>
-  <pubDate>Mon, 08 Jul 2024 07:00:00 GMT</pubDate>
+  <pubDate>Sun, 07 Jul 2024 22:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/slidecraft-plot-backgrounds/figures/base-after.png" medium="image" type="image/png" height="87" width="144"/>
 </item>
 <item>
@@ -86,7 +86,7 @@
   <category>slidecraft 101</category>
   <category>quarto</category>
   <guid>https://emilhvitfeldt.com/post/slidecraft-scss-loops/</guid>
-  <pubDate>Sun, 07 Jul 2024 07:00:00 GMT</pubDate>
+  <pubDate>Sat, 06 Jul 2024 22:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/slidecraft-scss-loops/featured.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
@@ -96,7 +96,7 @@
   <category>slidecraft 101</category>
   <category>quarto</category>
   <guid>https://emilhvitfeldt.com/post/slidecraft-asciicast/</guid>
-  <pubDate>Mon, 01 Jul 2024 07:00:00 GMT</pubDate>
+  <pubDate>Sun, 30 Jun 2024 22:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/slidecraft-asciicast/featured.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
@@ -106,7 +106,7 @@
   <category>slidecraft 101</category>
   <category>quarto</category>
   <guid>https://emilhvitfeldt.com/post/slidecraft-scss-uses/</guid>
-  <pubDate>Mon, 24 Jun 2024 07:00:00 GMT</pubDate>
+  <pubDate>Sun, 23 Jun 2024 22:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/slidecraft-scss-uses/featured.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
@@ -115,7 +115,7 @@
   <description>{B4F502887207:/post/pyenv-for-r-packages/index.html}</description>
   <category>package development</category>
   <guid>https://emilhvitfeldt.com/post/pyenv-for-r-packages/</guid>
-  <pubDate>Mon, 19 Feb 2024 08:00:00 GMT</pubDate>
+  <pubDate>Sun, 18 Feb 2024 23:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/pyenv-for-r-packages/featured.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
@@ -125,7 +125,7 @@
   <category>slidecraft 101</category>
   <category>quarto</category>
   <guid>https://emilhvitfeldt.com/post/slidecraft-layout/</guid>
-  <pubDate>Tue, 16 Jan 2024 08:00:00 GMT</pubDate>
+  <pubDate>Mon, 15 Jan 2024 23:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/slidecraft-layout/featured.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
@@ -133,7 +133,7 @@
   <link>https://emilhvitfeldt.com/post/sharing-code-pictures/</link>
   <description>{B4F502887207:/post/sharing-code-pictures/index.html}</description>
   <guid>https://emilhvitfeldt.com/post/sharing-code-pictures/</guid>
-  <pubDate>Wed, 06 Dec 2023 08:00:00 GMT</pubDate>
+  <pubDate>Tue, 05 Dec 2023 23:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/sharing-code-pictures/featured.png" medium="image" type="image/png" height="91" width="144"/>
 </item>
 <item>
@@ -143,7 +143,7 @@
   <category>slidecraft 101</category>
   <category>quarto</category>
   <guid>https://emilhvitfeldt.com/post/slidecraft-7-tips-and-tricks/</guid>
-  <pubDate>Sat, 14 Oct 2023 07:00:00 GMT</pubDate>
+  <pubDate>Fri, 13 Oct 2023 22:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/slidecraft-7-tips-and-tricks/featured.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
@@ -153,7 +153,7 @@
   <category>slidecraft 101</category>
   <category>quarto</category>
   <guid>https://emilhvitfeldt.com/post/slidecraft-scss-themes/</guid>
-  <pubDate>Mon, 07 Aug 2023 07:00:00 GMT</pubDate>
+  <pubDate>Sun, 06 Aug 2023 22:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/slidecraft-scss-themes/featured.png" medium="image" type="image/png" height="89" width="144"/>
 </item>
 <item>
@@ -163,7 +163,7 @@
   <category>slidecraft 101</category>
   <category>quarto</category>
   <guid>https://emilhvitfeldt.com/post/slidecraft-theme-variants/</guid>
-  <pubDate>Fri, 26 May 2023 07:00:00 GMT</pubDate>
+  <pubDate>Thu, 25 May 2023 22:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/slidecraft-theme-variants/featured.png" medium="image" type="image/png" height="83" width="144"/>
 </item>
 <item>
@@ -173,7 +173,7 @@
   <category>slidecraft 101</category>
   <category>quarto</category>
   <guid>https://emilhvitfeldt.com/post/slidecraft-code-output/</guid>
-  <pubDate>Tue, 06 Sep 2022 07:00:00 GMT</pubDate>
+  <pubDate>Mon, 05 Sep 2022 22:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/slidecraft-code-output/featured.png" medium="image" type="image/png" height="94" width="144"/>
 </item>
 <item>
@@ -183,7 +183,7 @@
   <category>slidecraft 101</category>
   <category>quarto</category>
   <guid>https://emilhvitfeldt.com/post/slidecraft-colors-fonts/</guid>
-  <pubDate>Wed, 24 Aug 2022 07:00:00 GMT</pubDate>
+  <pubDate>Tue, 23 Aug 2022 22:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/slidecraft-colors-fonts/featured.png" medium="image" type="image/png" height="93" width="144"/>
 </item>
 <item>
@@ -193,7 +193,7 @@
   <category>smltar</category>
   <category>book</category>
   <guid>https://emilhvitfeldt.com/post/smltar-story/</guid>
-  <pubDate>Wed, 04 Aug 2021 07:00:00 GMT</pubDate>
+  <pubDate>Tue, 03 Aug 2021 22:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/smltar-story/featured.png" medium="image" type="image/png" height="144" width="144"/>
 </item>
 <item>
@@ -202,7 +202,7 @@
   <description>{B4F502887207:/post/xaringan-first-letter/index.html}</description>
   <category>xaringan</category>
   <guid>https://emilhvitfeldt.com/post/xaringan-first-letter/</guid>
-  <pubDate>Mon, 22 Mar 2021 07:00:00 GMT</pubDate>
+  <pubDate>Sun, 21 Mar 2021 23:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/xaringan-first-letter/featured.png" medium="image" type="image/png" height="125" width="144"/>
 </item>
 </channel>

@@ -1,7 +1,7 @@
 ---
 title: "Hello, my name is Emil Hvitfeldt. Thanks for stopping by!"
 pagetitle: Emil Hvitfeldt - About
-image: home.png
+image: home.webp
 about:
   template: jolla
   links:
