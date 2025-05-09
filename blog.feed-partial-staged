@@ -25,7 +25,7 @@
   <link>https://emilhvitfeldt.com/post/fun-feature-engineering-pokemon/</link>
   <description>{B4F502887207:/post/fun-feature-engineering-pokemon/index.html}</description>
   <category>Feature Engineering</category>
-  <category>tidy Tuesday</category>
+  <category>tidytuesday</category>
   <guid>https://emilhvitfeldt.com/post/fun-feature-engineering-pokemon/</guid>
   <pubDate>Fri, 04 Apr 2025 22:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/fun-feature-engineering-pokemon/featured.webp" medium="image" type="image/webp"/>
@@ -207,6 +207,7 @@
 </item>
 </channel>
 </rss>
+
 tion>
   <category>xaringan</category>
   <guid>https://emilhvitfeldt.com/post/xaringan-first-letter/</guid>

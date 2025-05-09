@@ -2,11 +2,11 @@
 title: 'Fun Feature Engineering with Gen 1 Pokémon'
 description: |
  A tidytuesday inspired feature engineering journey into Pokémon 
-date: '2024-04-05'
+date: '2025-04-05'
 categories:
   - Feature Engineering
-  - tidy Tuesday
-image: "featured.png"
+  - tidytuesday
+image: "featured.webp"
 ---
 
 
