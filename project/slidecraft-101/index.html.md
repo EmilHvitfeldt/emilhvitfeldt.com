@@ -4,7 +4,7 @@ date: "2024-06-05"
 description: |
   All things slidecraft with Quarto Revealjs slides
 categories:
-image: "featured.png"
+image: "featured.webp"
 ---
 
 

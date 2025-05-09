@@ -5,7 +5,7 @@ description: |
   Cleaned gutenbergr text
 categories:
   - R package
-image: "featured.jpg"
+image: "featured.webp"
 ---
 
 <div class="project-buttons">

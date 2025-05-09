@@ -5,7 +5,7 @@ description: |
   Creates Page Layout Visualizations
 categories:
   - R package
-image: "featured-hex.png"
+image: "featured.svg"
 ---
 
 <div class="project-buttons">

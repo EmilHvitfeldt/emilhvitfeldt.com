@@ -6,7 +6,7 @@ description: |
 categories:
   - R package
   - data set
-image: "featured-hex.png"
+image: "featured.svg"
 ---
 
 

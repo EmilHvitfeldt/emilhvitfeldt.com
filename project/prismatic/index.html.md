@@ -5,7 +5,7 @@ description: |
   Manipulate and visualize colors in a intuitive, low-dependency and functional way
 categories:
   - R package
-image: "featured-hex.png"
+image: "featured.svg"
 ---
 
 

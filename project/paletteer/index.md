@@ -5,7 +5,7 @@ description: |
   A comprehensive collection of color palettes in R using a common interface
 categories:
   - R package
-image: "featured-hex.png"
+image: "featured.svg"
 ---
 
 <div class="project-buttons">

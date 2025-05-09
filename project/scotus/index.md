@@ -6,7 +6,7 @@ description: |
 categories:
   - R package
   - data set
-image: "featured.png"
+image: "featured.webp"
 ---
 
 <div class="project-buttons">

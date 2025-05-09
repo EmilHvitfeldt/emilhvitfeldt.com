@@ -5,7 +5,7 @@ description: |
   Extra Recipes Steps for imbalanced data
 categories:
   - R package
-image: "featured.png"
+image: "featured.svg"
 ---
 
 <div class="project-buttons">

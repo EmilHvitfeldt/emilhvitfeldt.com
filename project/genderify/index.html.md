@@ -5,7 +5,7 @@ description: |
   satirical Gender Classification Service
 categories:
   - website
-image: "featured.png"
+image: "featured.webp"
 ---
 
 

@@ -5,7 +5,7 @@ description: |
   Book written with Julia Silge
 categories:
   - book
-image: "featured.jpg"
+image: "featured.webp"
 ---
 
 

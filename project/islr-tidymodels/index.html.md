@@ -5,7 +5,7 @@ description: |
   Provides labs to 'An Introduction to Statistical Learning' using tidymodels
 categories:
   - website
-image: "featured.png"
+image: "featured.webp"
 ---
 
 

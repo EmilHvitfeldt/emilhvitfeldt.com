@@ -5,7 +5,7 @@ description: |
   Provides a framework to download, parse, and store text datasets
 categories:
   - R package
-image: "featured.png"
+image: "featured.svg"
 ---
 
 <div class="project-buttons">

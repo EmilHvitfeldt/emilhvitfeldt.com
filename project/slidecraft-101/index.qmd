@@ -4,7 +4,7 @@ date: "2024-06-05"
 description: |
   All things slidecraft with Quarto Revealjs slides
 categories:
-image: "featured.png"
+image: "featured.webp"
 ---
 
 I find slidecrafting an entertaining endeavour, and have thus created a number of projects and material to further it in the world. This is a round overview of the material I have created.

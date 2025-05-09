@@ -5,7 +5,7 @@ description: |
   List of textual data sources to be used for text mining in R
 categories:
   - website
-image: "featured.jpg"
+image: "featured.webp"
 ---
 
 <div class="project-buttons">

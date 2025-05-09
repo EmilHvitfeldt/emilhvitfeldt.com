@@ -5,7 +5,7 @@ description: |
   The last book you will ever need about feature engineering
 categories:
   - book
-image: "featured.jpg"
+image: "featured.webp"
 ---
 
 

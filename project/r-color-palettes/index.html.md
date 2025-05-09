@@ -5,7 +5,7 @@ description: |
   Comprehensive list of color palettes available in R
 categories:
   - website
-image: "featured.png"
+image: "featured.webp"
 ---
 
 
