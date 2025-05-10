@@ -50,6 +50,12 @@ $code-color: #4758AB;
 
 @font-face {
   font-family: 'Fraunces';
+  font-weight: 100;
+  src: url('assets/fonts/Fraunces72pt-Thin.woff2') format('woff2'),
+       url('assets/fonts/Fraunces72pt-Thin.woff') format('woff');
+}
+@font-face {
+  font-family: 'Fraunces';
   font-weight: 400;
   src: url('assets/fonts/Fraunces72pt-Regular.woff2') format('woff2'),
        url('assets/fonts/Fraunces72pt-Regular.woff') format('woff');
