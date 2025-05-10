@@ -29,7 +29,44 @@ $code-color: #4758AB;
 
 // Fonts -----------------------------------------------------------------------
 
-@import url('https://fonts.googleapis.com/css2?family=Commissioner&family=Fraunces:wght@100&family=Inconsolata:wght@400&display=swap');
+@font-face {
+  font-family: 'Commissioner';
+  font-weight: 400;
+  src: url('assets/fonts/Commissioner-Regular.woff2') format('woff2'),
+       url('assets/fonts/Commissioner-Regular.woff') format('woff');
+}
+@font-face {
+  font-family: 'Commissioner';
+  font-weight: 600;
+  src: url('assets/fonts/Commissioner-SemiBold.woff2') format('woff2'),
+       url('assets/fonts/Commissioner-SemiBold.woff') format('woff');
+}
+@font-face {
+  font-family: 'Commissioner';
+  font-weight: 700;
+  src: url('assets/fonts/Commissioner-Bold.woff2') format('woff2'),
+       url('assets/fonts/Commissioner-Bold.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Fraunces';
+  font-weight: 400;
+  src: url('assets/fonts/Fraunces72pt-Regular.woff2') format('woff2'),
+       url('assets/fonts/Fraunces72pt-Regular.woff') format('woff');
+}
+@font-face {
+  font-family: 'Fraunces';
+  font-weight: 600;
+  src: url('assets/fonts/Fraunces72pt-SemiBold.woff2') format('woff2'),
+       url('assets/fonts/Fraunces72pt-SemiBold.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Inconsolata';
+  font-weight: 400;
+  src: url('assets/fonts/Inconsolata-Regular.woff2') format('woff2'),
+       url('assets/fonts/Inconsolata-Regular.woff') format('woff');
+}
 
 $font-family-sans-serif: Commissioner;
 $font-family-monospace: Inconsolata;
