@@ -5,15 +5,16 @@ description: |
   This talk shows what happens when we take one step further into explorability. Using handcrafted color features, dimensionality reduction, and interactive tools will we create and explore a color palette embedding.
 slides: https://palette2vec-whyr2020.netlify.app/
 video: https://www.youtube.com/watch?v=ebHtp5nhn7w
+toggle:
+  slides: true
+  github: false
+  video: true
 categories:
   - talk
 image: "featured.webp"
 ---
 
-<a href="https://palette2vec-whyr2020.netlify.app/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
-<a href="https://www.youtube.com/watch?v=ebHtp5nhn7w" class="listing-video btn-links">{{< fa play-circle >}}Video<a>
-
-<iframe class="slide-deck" src="https://palette2vec-whyr2020.netlify.app/"></iframe>
+{{< include ../_template.qmd >}}
 
 There are many palettes available in various R packages. Having a way to explore all of these palettes are already found within the https://github.com/EmilHvitfeldt/r-color-palettes repository and the {paletteer} package.
 

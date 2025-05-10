@@ -6,6 +6,10 @@ description: |
 slides: https://emilhvitfeldt.github.io/useR2020-text-modeling-tutorial/
 video: https://www.youtube.com/watch?v=Sz8RB_fPYOk
 github: https://github.com/EmilHvitfeldt/useR2020-text-modeling-tutorial
+toggle:
+  slides: true
+  github: true
+  video: true
 categories:
   - workshop
 image: "featured.webp"
@@ -14,12 +18,55 @@ image: "featured.webp"
 
 
 
+::: {.content-hidden unless-meta="toggle.slides"}
 
-<a href="https://emilhvitfeldt.github.io/useR2020-text-modeling-tutorial/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
-<a href="https://www.youtube.com/watch?v=Sz8RB_fPYOk" class="listing-video btn-links">{{< fa play-circle >}}Video<a>
-<a href="https://github.com/EmilHvitfeldt/useR2020-text-modeling-tutorial" class="listing-github btn-links">{{< fa brands github >}}Github<a>
-      
-<iframe class="slide-deck" src="https://emilhvitfeldt.github.io/useR2020-text-modeling-tutorial/"></iframe>
+
+
+```{=html}
+<a href={{< meta slides >}} class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
+```
+
+
+
+:::
+
+::: {.content-hidden unless-meta="toggle.video"}
+
+
+
+```{=html}
+<a href={{< meta video >}} class="listing-video btn-links">{{< fa play-circle >}}Video<a>
+```
+
+
+
+:::
+
+::: {.content-hidden unless-meta="toggle.github"}
+
+
+
+```{=html}
+<a href={{< meta github >}} class="listing-github btn-links">{{< fa brands github >}}Github<a>
+```
+
+
+
+:::
+
+::: {.content-hidden unless-meta="toggle.slides"}
+
+
+
+```{=html}
+<iframe class="slide-deck" src={{< meta slides >}}></iframe>
+```
+
+
+
+:::
+
+
 
 J. Silge and E. Hvitfeldt
 

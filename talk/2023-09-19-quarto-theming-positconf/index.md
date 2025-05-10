@@ -6,16 +6,15 @@ description: |
 slides: https://emilhvitfeldt.github.io/talk-quarto-theming-positconf/
 github: https://github.com/EmilHvitfeldt/talk-quarto-theming-positconf
 video: https://www.youtube.com/watch?v=CblUFMoC9yg
+toggle:
+  slides: true
+  github: true
+  video: true
 categories:
   - talk
 image: "featured.webp"
 ---
 
-<a href="https://emilhvitfeldt.github.io/talk-quarto-theming-positconf/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
-<a href="https://www.youtube.com/watch?v=CblUFMoC9yg" class="listing-video btn-links">{{< fa play-circle >}}Video<a>
-<a href="https://github.com/EmilHvitfeldt/talk-quarto-theming-positconf" class="listing-github btn-links">{{< fa brands github >}}Github<a>
-      
-<iframe class="slide-deck" src="https://emilhvitfeldt.github.io/talk-quarto-theming-positconf/"></iframe>
-        
+{{< include ../_template.qmd >}}
 
 This was a talk given at [posit::conf 2023](https://posit.co/conference/)

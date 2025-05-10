@@ -6,16 +6,16 @@ description: |
 slides: https://emilhvitfeldt.github.io/talk-aoc/
 video: https://www.youtube.com/watch?v=HnHAIdqULd0
 github: https://github.com/EmilHvitfeldt/talk-aoc
+toggle:
+  slides: true
+  github: true
+  video: true
 categories:
   - talk
 image: "featured.webp"
 ---
 
-<a href="https://emilhvitfeldt.github.io/talk-aoc/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
-<a href="https://www.youtube.com/watch?v=HnHAIdqULd0" class="listing-video btn-links">{{< fa play-circle >}}Video<a>
-<a href="https://github.com/EmilHvitfeldt/talk-aoc" class="listing-github btn-links">{{< fa brands github >}}Github<a>
-      
-<iframe class="slide-deck" src="https://emilhvitfeldt.github.io/talk-aoc/"></iframe>
+{{< include ../_template.qmd >}}
 
 Invited talk at [NYR conference](https://rstats.ai/nyr/)
 

@@ -6,16 +6,16 @@ description: |
 slides: https://emilhvitfeldt.github.io/useR2020-text-modeling-tutorial/
 video: https://www.youtube.com/watch?v=Sz8RB_fPYOk
 github: https://github.com/EmilHvitfeldt/useR2020-text-modeling-tutorial
+toggle:
+  slides: true
+  github: true
+  video: true
 categories:
   - workshop
 image: "featured.webp"
 ---
 
-<a href="https://emilhvitfeldt.github.io/useR2020-text-modeling-tutorial/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
-<a href="https://www.youtube.com/watch?v=Sz8RB_fPYOk" class="listing-video btn-links">{{< fa play-circle >}}Video<a>
-<a href="https://github.com/EmilHvitfeldt/useR2020-text-modeling-tutorial" class="listing-github btn-links">{{< fa brands github >}}Github<a>
-      
-<iframe class="slide-deck" src="https://emilhvitfeldt.github.io/useR2020-text-modeling-tutorial/"></iframe>
+{{< include ../_template.qmd >}}
 
 J. Silge and E. Hvitfeldt
 

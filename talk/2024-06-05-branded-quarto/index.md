@@ -5,14 +5,15 @@ description: |
   Making corporate branded quarto documents
 slides: https://emilhvitfeldt.github.io/talk-branded-quarto/
 github: https://github.com/EmilHvitfeldt/talk-branded-quarto
+toggle:
+  slides: true
+  github: true
+  video: false
 categories:
   - talk
 image: "featured.webp"
 ---
 
-<a href="https://emilhvitfeldt.github.io/talk-branded-quarto/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
-<a href="https://github.com/EmilHvitfeldt/talk-branded-quarto" class="listing-github btn-links">{{< fa brands github >}}Github<a>
-      
-<iframe class="slide-deck" src="https://emilhvitfeldt.github.io/talk-branded-quarto/"></iframe>
+{{< include ../_template.qmd >}}
         
 This was given as a posit small group webinar

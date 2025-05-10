@@ -5,15 +5,16 @@ description: |
    This talk will focus on the importance of checking assumptions and defaults in the software you use.
 slides: https://slcrug-stopwords.netlify.app/
 video: https://www.youtube.com/watch?v=Q2ilhRqp1Vo
+toggle:
+  slides: true
+  github: false
+  video: true
 categories:
   - talk
 image: "featured.webp"
 ---
 
-<a href="https://slcrug-stopwords.netlify.app/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
-<a href="https://www.youtube.com/watch?v=Q2ilhRqp1Vo" class="listing-video btn-links">{{< fa play-circle >}}Video<a>
-
-<iframe class="slide-deck" src="https://slcrug-stopwords.netlify.app/"></iframe>
+{{< include ../_template.qmd >}}
 
 Invited talk at Salt Lake City R Users Group
 

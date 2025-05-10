@@ -5,15 +5,16 @@ description: |
   This talk will walk through the landscape of packages and their individual place, helping you get a bird's eye view.
 slides: https://allborg-tidymodels-2021.netlify.app/
 github: https://github.com/EmilHvitfeldt/talks/aalborg-tidymodels
+toggle:
+  slides: true
+  github: true
+  video: false
 categories:
   - talk
 image: "featured.webp"
 ---
 
-<a href="https://allborg-tidymodels-2021.netlify.app/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
-<a href="https://github.com/EmilHvitfeldt/talks/aalborg-tidymodels" class="listing-github btn-links">{{< fa brands github >}}Github<a>
-      
-<iframe class="slide-deck" src="https://allborg-tidymodels-2021.netlify.app/"></iframe>
+{{< include ../_template.qmd >}}
 
 Invited talk at Aalborg RUG
 

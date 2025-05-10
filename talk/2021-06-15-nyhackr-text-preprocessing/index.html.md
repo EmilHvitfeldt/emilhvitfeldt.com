@@ -5,6 +5,10 @@ description: |
   This talk will focus on the {textrecipes} package and its recent advancements in the realm of text preprocessing.
 slides: https://nyhackr-text-preprocessing-2021.netlify.app/
 video: https://www.youtube.com/watch?v=kjA7LwaYYfM
+toggle:
+  slides: true
+  github: false
+  video: true
 categories:
   - talk
 image: "featured.webp"
@@ -13,11 +17,55 @@ image: "featured.webp"
 
 
 
+::: {.content-hidden unless-meta="toggle.slides"}
 
-<a href="https://nyhackr-text-preprocessing-2021.netlify.app/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
-<a href="https://www.youtube.com/watch?v=kjA7LwaYYfM" class="listing-video btn-links">{{< fa play-circle >}}Video<a>
 
-<iframe class="slide-deck" src="https://nyhackr-text-preprocessing-2021.netlify.app/"></iframe>
+
+```{=html}
+<a href={{< meta slides >}} class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
+```
+
+
+
+:::
+
+::: {.content-hidden unless-meta="toggle.video"}
+
+
+
+```{=html}
+<a href={{< meta video >}} class="listing-video btn-links">{{< fa play-circle >}}Video<a>
+```
+
+
+
+:::
+
+::: {.content-hidden unless-meta="toggle.github"}
+
+
+
+```{=html}
+<a href={{< meta github >}} class="listing-github btn-links">{{< fa brands github >}}Github<a>
+```
+
+
+
+:::
+
+::: {.content-hidden unless-meta="toggle.slides"}
+
+
+
+```{=html}
+<iframe class="slide-deck" src={{< meta slides >}}></iframe>
+```
+
+
+
+:::
+
+
 
 Invited talk at New York Open Statistical Programming Meetup
 

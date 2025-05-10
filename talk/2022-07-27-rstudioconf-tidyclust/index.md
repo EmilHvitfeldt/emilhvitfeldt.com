@@ -6,16 +6,16 @@ description: |
 slides: https://emilhvitfeldt.github.io/talk-rstudioconf2022-tidyclust/#/section
 video: https://www.youtube.com/watch?v=vsXJBO6-nQk
 github: https://github.com/EmilHvitfeldt/talk-rstudioconf2022-tidyclust
+toggle:
+  slides: true
+  github: true
+  video: true
 categories:
   - talk
 image: "featured.webp"
 ---
 
-<a href="https://emilhvitfeldt.github.io/talk-rstudioconf2022-tidyclust/#/section" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
-<a href="https://www.youtube.com/watch?v=vsXJBO6-nQk" class="listing-video btn-links">{{< fa play-circle >}}Video<a>
-<a href="https://github.com/EmilHvitfeldt/talk-rstudioconf2022-tidyclust" class="listing-github btn-links">{{< fa brands github >}}Github<a>
-      
-<iframe class="slide-deck" src="https://emilhvitfeldt.github.io/talk-rstudioconf2022-tidyclust/#/section"></iframe>
+{{< include ../_template.qmd >}}
 
 Accepted talk at [rstudio::conf(2022)](https://www.rstudio.com/conference/)
 

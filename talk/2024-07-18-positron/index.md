@@ -5,14 +5,15 @@ description: |
   Small early demo of new beta Positron IDE
 slides: https://emilhvitfeldt.github.io/talk-socal-positron/
 github: https://github.com/EmilHvitfeldt/talk-socal-positron
+toggle:
+  slides: true
+  github: true
+  video: false
 categories:
   - talk
 image: "featured.webp"
 ---
 
-<a href="https://emilhvitfeldt.github.io/talk-socal-positron/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
-<a href="https://github.com/EmilHvitfeldt/talk-socal-positron" class="listing-github btn-links">{{< fa brands github >}}Github<a>
-      
-<iframe class="slide-deck" src="https://emilhvitfeldt.github.io/talk-socal-positron/#/"></iframe>
-        
+{{< include ../_template.qmd >}}
+
 This was an invited/organized talk at [SoCal R User Group](https://www.meetup.com/socal-rug/events/301934176/)

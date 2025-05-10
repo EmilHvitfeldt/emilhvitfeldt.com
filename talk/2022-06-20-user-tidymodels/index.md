@@ -5,13 +5,16 @@ description: |
   This workshop will provide a gentle introduction to machine learning with R using the modern suite of predictive modeling packages called tidymodels.
 slides: https://emilhvitfeldt.github.io/workshop-useR2022-tidymodels/
 github: https://github.com/EmilHvitfeldt/workshop-useR2022-tidymodels
+toggle:
+  slides: true
+  github: true
+  video: false
 categories:
   - workshop
 image: "featured.webp"
 ---
 
-<a href="https://emilhvitfeldt.github.io/workshop-useR2022-tidymodels/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
-<a href="https://github.com/EmilHvitfeldt/workshop-useR2022-tidymodels" class="listing-github btn-links">{{< fa brands github >}}Github<a>
+{{< include ../_template.qmd >}}
 
 Accepted workshop at [useR2022!](https://user2022.r-project.org/)
 

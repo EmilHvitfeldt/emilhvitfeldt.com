@@ -5,15 +5,16 @@ description: |
   This talk shows how we can use the pptxtemplates package to automatically style powerpoints.
 slides: https://rmedicine2021-pptxtemplate.netlify.app/
 github: https://github.com/EmilHvitfeldt/talks/tree/master/Rmedicine2021-pptxtemplate
+toggle:
+  slides: true
+  github: true
+  video: false
 categories:
   - talk
 image: "featured.webp"
 ---
 
-<a href="https://rmedicine2021-pptxtemplate.netlify.app/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
-<a href="https://github.com/EmilHvitfeldt/talks/tree/master/Rmedicine2021-pptxtemplate" class="listing-github btn-links">{{< fa brands github >}}Github<a>
-      
-<iframe class="slide-deck" src="https://rmedicine2021-pptxtemplate.netlify.app/"></iframe>
+{{< include ../_template.qmd >}}
 
 Submitted talk at R/Medicine
 

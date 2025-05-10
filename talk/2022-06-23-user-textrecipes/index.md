@@ -6,16 +6,16 @@ description: |
 slides: https://emilhvitfeldt.github.io/talk-useR2022-textrecipes/
 video: https://youtu.be/e2bE9o9DaNE?t=1368
 github: https://github.com/EmilHvitfeldt/talk-useR2022-textrecipes
+toggle:
+  slides: true
+  github: true
+  video: true
 categories:
   - talk
 image: "featured.webp"
 ---
 
-<a href="https://emilhvitfeldt.github.io/talk-useR2022-textrecipes/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
-<a href="https://youtu.be/e2bE9o9DaNE?t=1368" class="listing-video btn-links">{{< fa play-circle >}}Video<a>
-<a href="https://github.com/EmilHvitfeldt/talk-useR2022-textrecipes" class="listing-github btn-links">{{< fa brands github >}}Github<a>
-      
-<iframe class="slide-deck" src="https://emilhvitfeldt.github.io/talk-useR2022-textrecipes/"></iframe>
+{{< include ../_template.qmd >}}
 
 Accepted talk at [useR2022!](https://user2022.r-project.org/)
 

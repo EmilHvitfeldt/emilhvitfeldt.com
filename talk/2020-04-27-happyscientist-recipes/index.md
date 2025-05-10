@@ -5,14 +5,15 @@ description: |
   Talk about using the recipes package to do preprocessing.
 slides: https://happyscientist-recipes.netlify.app/
 github: https://github.com/EmilHvitfeldt/talks/tree/master/happy-scientist_recipes
+toggle:
+  slides: true
+  github: true
+  video: false
 categories:
   - talk
 image: "featured.webp"
 ---
 
-<a href="https://happyscientist-recipes.netlify.app/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
-<a href="https://github.com/EmilHvitfeldt/talks/tree/master/happy-scientist_recipes" class="listing-github btn-links">{{< fa brands github >}}Github<a>
-      
-<iframe class="slide-deck" src="https://happyscientist-recipes.netlify.app/"></iframe>
+{{< include ../_template.qmd >}}
 
 Talk about using the recipes package to do preprocessing.

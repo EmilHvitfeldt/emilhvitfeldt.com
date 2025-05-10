@@ -5,15 +5,16 @@ description: |
   This talk will focus on the {textrecipes} package and its recent advancements in the realm of text preprocessing.
 slides: https://nyhackr-text-preprocessing-2021.netlify.app/
 video: https://www.youtube.com/watch?v=kjA7LwaYYfM
+toggle:
+  slides: true
+  github: false
+  video: true
 categories:
   - talk
 image: "featured.webp"
 ---
 
-<a href="https://nyhackr-text-preprocessing-2021.netlify.app/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
-<a href="https://www.youtube.com/watch?v=kjA7LwaYYfM" class="listing-video btn-links">{{< fa play-circle >}}Video<a>
-
-<iframe class="slide-deck" src="https://nyhackr-text-preprocessing-2021.netlify.app/"></iframe>
+{{< include ../_template.qmd >}}
 
 Invited talk at New York Open Statistical Programming Meetup
 

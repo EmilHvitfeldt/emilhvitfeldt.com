@@ -4,6 +4,10 @@ date: "2020-10-09"
 description: |
   This tutorial is geared toward an R user with intermediate familiarity with R, RStudio, the basics of regression and classification modeling, and tidyverse packages such as dplyr and ggplot2. 
 slides: https://textmodels4pharma.netlify.app/
+toggle:
+  slides: true
+  github: false
+  video: false
 categories:
   - workshop
 image: "featured.webp"
@@ -12,8 +16,55 @@ image: "featured.webp"
 
 
 
+::: {.content-hidden unless-meta="toggle.slides"}
 
-<a href="https://textmodels4pharma.netlify.app/" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
+
+
+```{=html}
+<a href={{< meta slides >}} class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
+```
+
+
+
+:::
+
+::: {.content-hidden unless-meta="toggle.video"}
+
+
+
+```{=html}
+<a href={{< meta video >}} class="listing-video btn-links">{{< fa play-circle >}}Video<a>
+```
+
+
+
+:::
+
+::: {.content-hidden unless-meta="toggle.github"}
+
+
+
+```{=html}
+<a href={{< meta github >}} class="listing-github btn-links">{{< fa brands github >}}Github<a>
+```
+
+
+
+:::
+
+::: {.content-hidden unless-meta="toggle.slides"}
+
+
+
+```{=html}
+<iframe class="slide-deck" src={{< meta slides >}}></iframe>
+```
+
+
+
+:::
+
+
       
 Invited workshop for [R/Pharma Conference](https://rinpharma.com/)
 

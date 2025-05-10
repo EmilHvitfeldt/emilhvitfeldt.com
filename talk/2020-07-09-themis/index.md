@@ -6,16 +6,16 @@ description: |
 slides: https://user-themis.netlify.app
 video: https://www.youtube.com/watch?v=kL5qWitjvNg
 github: https://github.com/EmilHvitfeldt/talks/tree/master/user2020-themis
+toggle:
+  slides: true
+  github: true
+  video: true
 categories:
   - talk
 image: "featured.webp"
 ---
 
-<a href="https://user-themis.netlify.app" class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
-<a href="https://www.youtube.com/watch?v=kL5qWitjvNg" class="listing-video btn-links">{{< fa play-circle >}}Video<a>
-<a href="https://github.com/EmilHvitfeldt/talks/tree/master/user2020-themis" class="listing-github btn-links">{{< fa brands github >}}Github<a>
-      
-<iframe class="slide-deck" src="https://user-themis.netlify.app"></iframe>
+{{< include ../_template.qmd >}}
 
 Many classification tasks come with an unbalanced dataset. Examples range from disease prediction to fraud detection. Naively applying your model will lead to an ineffective predictor that only predicts the majority class.
 
