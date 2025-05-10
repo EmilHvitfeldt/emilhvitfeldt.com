@@ -37,7 +37,6 @@ format:
   html:
     toc: true
     theme:
-      - cosmo
       - styles.scss
     grid:
       body-width: 840px
