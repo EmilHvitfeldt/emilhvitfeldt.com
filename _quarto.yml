@@ -40,3 +40,4 @@ format:
       - styles.scss
     grid:
       body-width: 840px
+    html-math-method: plain
