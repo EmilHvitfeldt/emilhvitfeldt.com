@@ -1,6 +1,7 @@
 {
   "listing": "/blog.html",
   "items": [
+    "/post/quarto-performance/index.html",
     "/post/sparse-vs-dense-dummies/index.html",
     "/post/fun-feature-engineering-pokemon/index.html",
     "/post/positron-key-bindings/index.html",

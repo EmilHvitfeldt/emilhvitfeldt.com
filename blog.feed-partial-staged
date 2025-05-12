@@ -10,7 +10,16 @@
 <atom:link href="https://emilhvitfeldt.com/blog.xml" rel="self" type="application/rss+xml"/>
 <description>Emil Hvitfeldt blog about R, slides and modeling</description>
 <generator>quarto-1.6.42</generator>
-<lastBuildDate>Sun, 27 Apr 2025 22:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sun, 11 May 2025 22:00:00 GMT</lastBuildDate>
+<item>
+  <title>{B4F502887207:/post/quarto-performance/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/quarto-performance/</link>
+  <description>{B4F502887207:/post/quarto-performance/index.html}</description>
+  <category>quarto</category>
+  <guid>https://emilhvitfeldt.com/post/quarto-performance/</guid>
+  <pubDate>Sun, 11 May 2025 22:00:00 GMT</pubDate>
+  <media:content url="https://emilhvitfeldt.com/post/quarto-performance/featured.webp" medium="image" type="image/webp"/>
+</item>
 <item>
   <title>{B4F502887207:/post/sparse-vs-dense-dummies/index.html}</title>
   <link>https://emilhvitfeldt.com/post/sparse-vs-dense-dummies/</link>
@@ -196,16 +205,9 @@
   <pubDate>Tue, 03 Aug 2021 22:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/smltar-story/featured.webp" medium="image" type="image/webp"/>
 </item>
-<item>
-  <title>{B4F502887207:/post/xaringan-first-letter/index.html}</title>
-  <link>https://emilhvitfeldt.com/post/xaringan-first-letter/</link>
-  <description>{B4F502887207:/post/xaringan-first-letter/index.html}</description>
-  <category>xaringan</category>
-  <guid>https://emilhvitfeldt.com/post/xaringan-first-letter/</guid>
-  <pubDate>Sun, 21 Mar 2021 23:00:00 GMT</pubDate>
-  <media:content url="https://emilhvitfeldt.com/post/xaringan-first-letter/featured.webp" medium="image" type="image/webp"/>
-</item>
 </channel>
+</rss>
+/channel>
 </rss>
 
 tion>
