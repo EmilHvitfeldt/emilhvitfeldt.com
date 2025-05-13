@@ -29,8 +29,10 @@ website:
       - text: "Talks"
         href: talks.qmd
       - icon: github
+        aria-label: "Github"
         href: https://github.com/emilhvitfeldt
       - icon: rss
+        aria-label: "RSS Feed"
         href: blog.xml
 
 format:
