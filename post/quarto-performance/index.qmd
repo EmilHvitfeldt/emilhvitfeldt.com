@@ -245,7 +245,7 @@ One of the benefits of Quarto is that it allows for the display of equations out
 However, if you know your website doesn't need that, then you can [turn it off](https://quarto.org/docs/reference/formats/html.html#format-options) by setting `format: html: html-math-method: plain` in `_quarto.yml`.
 This way, you don't need to load the JS needed for equation rendering.
 
-### Seach
+### Search
 
 As noted in [this Quarto Github discussion](https://github.com/quarto-dev/quarto-cli/discussions/9330) one can save some time by [disabling search](https://quarto.org/docs/websites/website-search.html#disablingforcing-search) on a wesite with
 
