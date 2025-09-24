@@ -1,6 +1,7 @@
 {
   "listing": "/projects.html",
   "items": [
+    "/project/slidecrafting/index.html",
     "/project/tidymodels-sparsity/index.html",
     "/project/orbital/index.html",
     "/project/slidecraft-101/index.html",
