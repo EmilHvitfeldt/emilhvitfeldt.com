@@ -16,4 +16,4 @@ image: "featured.webp"
 
 {{< include ../_template.qmd >}}
 
-This was a talk given for internal Kaiser webinar.
+This was a talk given for [Workshops for Ukraine](https://sites.google.com/view/dariia-mykhailyshyna/main/r-workshops-for-ukraine#h.v4zz6hlylw9i).
