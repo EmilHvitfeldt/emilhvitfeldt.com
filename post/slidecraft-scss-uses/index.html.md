@@ -13,6 +13,10 @@ image: "featured.webp"
 
 
 
+::: {.callout-note}
+The information contained in this blogpost has been cleaned up and reformulated on <https://slidecrafting-book.com/>.
+:::
+
 Hello and welcome back to my multi-part series about what I like to call **slidecrafting**; The art of putting together slides that are functional and aesthetically pleasing. I will be using [quarto presentations](https://quarto.org/). This is the seventh post, you can find all other posts in the [slidecraft 101](../../project/slidecraft-101/index.qmd#blog-posts) project.
 
 Last time I was working on a set of slides I realized that I wasn't using SASS to its fullest potential. I loved the changes so much that I incorporated them into my [revealjs starter template](https://github.com/EmilHvitfeldt/quarto-revealjs-template). This post goes over what I learned and how you can use it too!

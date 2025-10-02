@@ -12,6 +12,10 @@ image: "featured.webp"
 
 
 
+::: {.callout-note}
+The information contained in this blogpost has been cleaned up and reformulated on <https://slidecrafting-book.com/>.
+:::
+
 Hello and welcome back to my multi-part series about what I like to call **slidecrafting**; The art of putting together slides that are functional and aesthetically pleasing. I will be using [quarto presentations](https://quarto.org/). This is the fifth post, you can find all other posts in the [slidecraft 101](../../project/slidecraft-101/index.qmd#blog-posts) project.
 
 Doing my personal slidecrafting sessions I sometimes find little ideas I share on social media. This post is a collection of 7 such nuggets in one place, with the hope that it will stop them from disappearing into the ether.

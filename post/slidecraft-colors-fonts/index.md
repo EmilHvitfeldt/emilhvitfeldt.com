@@ -9,6 +9,10 @@ categories:
 image: "featured.webp"
 ---
 
+::: {.callout-note}
+The information contained in this blogpost has been cleaned up and reformulated on <https://slidecrafting-book.com/>.
+:::
+
 Hello! This will be a multi-part series about what I like to call **slidecrafting**; The art of putting together slides that are functional and aesthetically pleasing. I will be using [quarto presentations](https://quarto.org/) as my medium, but the advice should be fairly tool-agnostic. 
 
 I think of slidecrafting as an art because of the inexact nature of many of the decisions you will be making. After all many slide decks can be distilled down into a series of still images, each of which should be carefully crafted.
