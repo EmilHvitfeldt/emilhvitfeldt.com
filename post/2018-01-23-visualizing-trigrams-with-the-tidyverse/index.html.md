@@ -9,9 +9,6 @@ categories:
 image: "featured.webp"
 ---
 
-
-
-
 <script src="index_files/twitter-widget/widgets.js"></script>
 
 <div class="note">

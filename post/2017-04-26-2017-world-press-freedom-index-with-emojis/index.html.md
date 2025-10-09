@@ -9,9 +9,6 @@ categories:
 image: "featured.webp"
 ---
 
-
-
-
 ::: {.callout-note}
 Emojis are now fully supported in {ggplot2} thanks to the {ragg} package. Read more about it here: <a href="https://www.tidyverse.org/blog/2021/02/modern-text-features/">Modern Text Features in R</a>.
 :::

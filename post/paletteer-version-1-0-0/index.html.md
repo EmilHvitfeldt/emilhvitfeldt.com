@@ -9,9 +9,6 @@ categories:
 image: "featured.webp"
 ---
 
-
-
-
 I'm over-the-moon excited to announce the release of version 1.0.0 of [paletteer](https://github.com/EmilHvitfeldt/paletteer).
 This version comes with breaking changes and major quality of life improvements.
 I will unironically name this the "first useable version" for reasons that will be obvious later in this post.

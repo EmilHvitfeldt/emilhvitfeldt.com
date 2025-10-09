@@ -10,9 +10,6 @@ categories:
 image: "featured.webp"
 ---
 
-
-
-
 :::note
 This code has been lightly revised to make sure it works as of 2018-12-16.
 :::

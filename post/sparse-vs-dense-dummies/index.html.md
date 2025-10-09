@@ -11,7 +11,6 @@ image: "index_files/figure-html/fig-length-v-runtime-1.png"
 
 
 
-
 Over the last year, I have worked on [improving sparsity support in tidymodels](https://www.tidyverse.org/blog/2025/03/tidymodels-sparsity/).
 With that work, I spend time with various levels of abstraction,
 one of the low levels includes the creation of dummy variables.

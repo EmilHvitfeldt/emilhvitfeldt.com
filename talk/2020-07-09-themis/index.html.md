@@ -15,57 +15,29 @@ categories:
 image: "featured.webp"
 ---
 
-
-
-
 ::: {.content-hidden unless-meta="toggle.slides"}
-
-
-
 ```{=html}
 <a href={{< meta slides >}} class="listing-slides btn-links">{{< fa door-open >}}Slides<a>
 ```
-
-
-
 :::
 
 ::: {.content-hidden unless-meta="toggle.video"}
-
-
-
 ```{=html}
 <a href={{< meta video >}} class="listing-video btn-links">{{< fa play-circle >}}Video<a>
 ```
-
-
-
 :::
 
 ::: {.content-hidden unless-meta="toggle.github"}
-
-
-
 ```{=html}
 <a href={{< meta github >}} class="listing-github btn-links">{{< fa brands github >}}Github<a>
 ```
-
-
-
 :::
 
 ::: {.content-hidden unless-meta="toggle.slides"}
-
-
-
 ```{=html}
 <iframe class="slide-deck" src={{< meta slides >}}></iframe>
 ```
-
-
-
 :::
-
 
 
 Many classification tasks come with an unbalanced dataset. Examples range from disease prediction to fraud detection. Naively applying your model will lead to an ineffective predictor that only predicts the majority class.

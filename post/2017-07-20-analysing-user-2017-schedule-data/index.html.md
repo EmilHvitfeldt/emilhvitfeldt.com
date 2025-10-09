@@ -8,9 +8,6 @@ categories:
 image: "featured.webp"
 ---
 
-
-
-
 <script src="index_files/htmlwidgets/htmlwidgets.js"></script>
 <script src="index_files/plotly-binding/plotly.js"></script>
 <script src="index_files/typedarray/typedarray.min.js"></script>

@@ -8,9 +8,6 @@ categories:
 image: "featured.webp"
 ---
 
-
-
-
 ::: {.callout-warning}
 This blogpost uses the old api for gganimate and will not work with current version. No update of this blogpost is planned for this moment.
 :::

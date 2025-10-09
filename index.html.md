@@ -3,10 +3,6 @@ page-layout: custom
 pagetitle: Emil Hvitfeldt - Home
 ---
 
-
-
-
-
 ::: {.main}
 
 ::: {.left}

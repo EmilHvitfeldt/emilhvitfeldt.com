@@ -8,10 +8,6 @@ categories:
 image: "featured.svg"
 ---
 
-
-
-
-
 I spend a long time making this come true. This is an extension of the work we have done previously with blueprints, which would carry the data sparsely some of the way.
 
 Now sparse data is passed around seamlessly in tidymodels, allowing for small and fast model fitting and predictions when the data allows for it.

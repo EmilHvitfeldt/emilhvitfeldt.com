@@ -9,9 +9,6 @@ categories:
 image: "featured.webp"
 ---
 
-
-
-
 I have been waiting a long time to finally be able to craft this blog post.
 Last Friday [Julia Silge](https://twitter.com/juliasilge) and I led a [userR! 2020 online tutorial](https://user2020.r-project.org/program/tutorials/) on "predictive modeling with text using tidy data principles". The tutorial was host by [R-Ladies en Argentina](https://github.com/RLadiesEnArgentina/user2020tutorial) and I could not be more grateful for all the work the organizers put into this making this event happen.
 

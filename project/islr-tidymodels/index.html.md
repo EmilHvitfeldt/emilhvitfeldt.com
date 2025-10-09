@@ -8,10 +8,6 @@ categories:
 image: "featured.webp"
 ---
 
-
-
-
-
 <div class="project-buttons">
 <a href="https://github.com/EmilHvitfeldt/ISLR-tidymodels-labs">
   {{< fa brands github >}} github

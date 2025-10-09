@@ -8,10 +8,6 @@ categories:
 image: "featured.svg"
 ---
 
-
-
-
-
 <div class="project-buttons">
 <a href="https://orbital.tidymodels.org/">
  {{< fa door-open >}} Website

@@ -7,10 +7,6 @@ categories:
 image: "featured.webp"
 ---
 
-
-
-
-
 I find slidecrafting an entertaining endeavour, and have thus created a number of projects and material to further it in the world. This is a round overview of the material I have created.
 
 I use [Quarto](https://quarto.org/) to create slides using the [revealjs](https://revealjs.com/) framework.

@@ -8,10 +8,6 @@ categories:
 image: "featured.svg"
 ---
 
-
-
-
-
 <div class="project-buttons">
 <a href="https://github.com/EmilHvitfeldt/themis">
   {{< fa brands github >}} github

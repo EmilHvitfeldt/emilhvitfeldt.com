@@ -11,7 +11,6 @@ image: "featured.webp"
 
 
 
-
 I had the idea behind this blog post for a while,
 but [tidytuesday](https://github.com/rfordatascience/tidytuesday/blob/main/data/2025/2025-04-01/readme.md) was doing Pokemon data this week I had to do it.
 I have been thinking about [Feature Engineering](https://feaz-book.com/) for a while now,

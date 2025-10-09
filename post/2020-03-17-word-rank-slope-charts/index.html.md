@@ -7,9 +7,6 @@ categories:
 image: "featured.webp"
 ---
 
-
-
-
 I have been working on visualizing how different kinds of words are used in texts and I finally found a good visualization style with the [slope chart](https://datavizproject.com/data-type/slope-chart/).
 More specifically I'm thinking of two groups of paired words.
 

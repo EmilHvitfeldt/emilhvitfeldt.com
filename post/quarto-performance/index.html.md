@@ -8,9 +8,6 @@ categories:
 image: "featured.webp"
 ---
 
-
-
-
 I have a number of Quarto websites I manage professionally and recreationally.
 Lately, I have been bothered enough about slowness on those sites that I decided to do something about it.
 This post goes over what I did to improve the load times of Quarto websites and what else could be done that I didn't do.

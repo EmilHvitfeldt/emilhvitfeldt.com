@@ -8,9 +8,6 @@ categories:
 image: "featured.webp"
 ---
 
-
-
-
 # Why are we here?
 
 Some days ago I saw this little cute pen and it sparked something inside me. 

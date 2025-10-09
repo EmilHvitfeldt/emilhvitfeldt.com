@@ -9,10 +9,6 @@ categories:
 image: "featured.webp"
 ---
 
-
-
-
-
 <div class="project-buttons">
 <a href="https://github.com/EmilHvitfeldt/scotus">
   {{< fa brands github >}} github

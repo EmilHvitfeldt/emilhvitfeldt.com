@@ -8,9 +8,6 @@ categories:
 image: "featured.webp"
 ---
 
-
-
-
 the scope of this blog post is to show how to do binary text classification using standard tools such as `tidytext` and `caret` packages. One of if not the most common binary text classification task is the spam detection (spam vs non-spam) that happens in most email services but has many other application such as language identification (English vs non-English).  
 
 In this post I'll showcase 5 different classification methods to see how they compare with this data. The methods all land on the less complex side of the spectrum and thus does not include creating complex deep neural networks.  

@@ -9,10 +9,6 @@ categories:
 image: "featured.svg"
 ---
 
-
-
-
-
 <div class="project-buttons">
 <a href="https://github.com/EmilHvitfeldt/palmtrees">
   {{< fa brands github >}} github

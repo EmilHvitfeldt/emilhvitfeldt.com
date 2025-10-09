@@ -8,9 +8,6 @@ categories:
 image: "featured.webp"
 ---
 
-
-
-
 I'm happy to announce a small new package of mine: [xaringancolor](https://github.com/EmilHvitfeldt/xaringancolor).
 xaringancolor allows you to specify shared text colors in the text, equations and code sections of [xaringan](https://github.com/yihui/xaringan) slides.
 

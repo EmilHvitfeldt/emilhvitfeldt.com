@@ -9,9 +9,6 @@ categories:
 image: "featured.webp"
 ---
 
-
-
-
 I'm happy to announce my newest package [prismatic](https://github.com/EmilHvitfeldt/prismatic) which facilitates simple manipulations of colors. I had been working on this package online and offline for some time, but the [promise of easy manipulation of mapped data in ggplot2](https://github.com/tidyverse/ggplot2/pull/3534) forced me to get some work done to get this package out before ggplot2 version 3.3.0. (as of the time of writing.)
 
 This post will go over some of the finer details with lots of pretty pictures!

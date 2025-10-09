@@ -8,10 +8,6 @@ categories:
 image: "featured.svg"
 ---
 
-
-
-
-
 <div class="project-buttons">
 <a href="https://tidyclust.tidymodels.org/">
  {{< fa door-open >}} Website

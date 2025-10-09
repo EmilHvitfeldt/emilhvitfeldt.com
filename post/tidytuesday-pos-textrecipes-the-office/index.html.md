@@ -10,9 +10,6 @@ categories:
 image: "featured.webp"
 ---
 
-
-
-
 <script src="index_files/core-js/shim.min.js"></script>
 <script src="index_files/react/react.min.js"></script>
 <script src="index_files/react/react-dom.min.js"></script>

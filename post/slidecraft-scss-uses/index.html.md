@@ -9,10 +9,6 @@ categories:
 image: "featured.webp"
 ---
 
-
-
-
-
 ::: {.callout-note}
 The information contained in this blogpost has been cleaned up and reformulated on <https://slidecrafting-book.com/>.
 :::

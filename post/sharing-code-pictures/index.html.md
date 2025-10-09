@@ -9,7 +9,6 @@ css: "stars.css"
 ---
 
 
-
 When sharing code on social media, we often tend to do so using pictures to show the code easily. A lot of times this happens because most social media sites are not equipped to format code beyond 1 or 2 lines of code. It is also worth noting that whenever possible the code is meant to be run by other people. Make it easy for them to do so. Either by putting the code in the alt text or linking to the code snippet somewhere else with sites like [pastebin.com](https://pastebin.com/) and [gist.github.com](https://gist.github.com/).
 
 This post goes over the different ways one can generate pictures of code for sharing, in part to remind myself of the options.

@@ -7,9 +7,6 @@ categories:
 image: "featured.webp"
 ---
 
-
-
-
 With the new [Github Actions](https://github.com/features/actions) comes many possibilities. 
 Some new and some old.
 One of the benefits is that you don't have to use third-party applications to do continuous integration.

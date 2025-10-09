@@ -11,9 +11,6 @@ categories:
 image: "featured.webp"
 ---
 
-
-
-
 This is the third blog post in the [textrecipes](https://github.com/tidymodels/textrecipes) series where I go over the various text preprocessing workflows you can do with textrecipes. This post will be showcasing how to perform [term frequency-inverse document frequency](http://www.tfidf.com/) (Tf-IDF for short). 
 
 ## Packages 📦

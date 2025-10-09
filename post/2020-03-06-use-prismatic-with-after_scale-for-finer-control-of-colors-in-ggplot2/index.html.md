@@ -9,9 +9,6 @@ categories:
 image: "featured.webp"
 ---
 
-
-
-
 With the release of version 3.3.0 of ggplot2 came the ability to have more control over the aesthetic evaluation.
 This allows us to modify the colors of the mapped palettes with [prismatic](https://github.com/EmilHvitfeldt/prismatic) now easier than ever.
 

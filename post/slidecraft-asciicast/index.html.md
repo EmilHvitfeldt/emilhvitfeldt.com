@@ -10,7 +10,6 @@ image: "featured.jpg"
 ---
 
 
-
 Hello and welcome back to my multi-part series about what I like to call **slidecrafting**; The art of putting together slides that are functional and aesthetically pleasing. I will be using [quarto presentations](https://quarto.org/). This is the eighth post, you can find all other posts in the [slidecraft 101](../../project/slidecraft-101/index.qmd#blog-posts) project.
 
 This post celebrates the [asciicast](https://github.com/r-lib/asciicast) R package to showcase rich output.
