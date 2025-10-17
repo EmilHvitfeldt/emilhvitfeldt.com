@@ -5,10 +5,11 @@ description: |
   Progress so far in orbital, using orbital to run predictions in the data base
 slides: https://emilhvitfeldt.github.io/talk-orbital-socalrug/
 github: https://github.com/EmilHvitfeldt/talk-orbital-socalrug
+video: https://www.youtube.com/live/pm-Ve3ww0lg?si=RosXZ0l4S3olz3mU
 toggle:
   slides: true
   github: true
-  video: false
+  video: true
 categories:
   - talk
 image: "featured.webp"
