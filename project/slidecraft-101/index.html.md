@@ -54,6 +54,7 @@ Modifying content on slides
 - [designmode](https://github.com/EmilHvitfeldt/quarto-designmode)
 - [snow](https://github.com/EmilHvitfeldt/quarto-snow)
 - [loud](https://github.com/EmilHvitfeldt/quarto-revealjs-loud)
+- [color-classes](https://github.com/EmilHvitfeldt/quarto-color-classes)
 
 ## Talks about slidecrafting / quarto theming
 
