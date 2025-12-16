@@ -1,0 +1,1 @@
+typst compile --format svg ./post/adventofcode-2017-09/_featured.typ

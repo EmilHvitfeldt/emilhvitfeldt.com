@@ -1,0 +1,287 @@
+---
+title: 'Advent of Code: 2017 Day 9'
+description: |
+  Stream Processing: Exploring different ways I took to solve this puzzle and alternative solutions
+date: '2025-12-16'
+categories:
+ - Advent of Code
+image: "featured.svg"
+---
+
+::: {.callout-warning}
+This post will contain spoilers, including multiple solutions to the Advent of Code [2017 day 9](https://adventofcode.com/2017/day/9) puzzle. Proceed at your own risk.
+:::
+
+I will not spend much time going over the puzzle specification itself.
+Please [read it yourself](https://adventofcode.com/2017/day/9) if you do not remember it.
+
+I enjoyed this puzzle quite a bit despite not doing too hot on it the first time around.
+I will go over the different paths I went on,
+followed by some other solutions I found afterwards.
+
+## Part 1
+
+There are two parts to this one: we need to identify garbage and groups.
+Could this be handled in one go?
+Maybe, and it would be a lot harder!
+Being able to identify what we need to do and how to do it is what separates the good from the great.
+
+### Garbage
+
+We need to find the garbage and remove it, with the little wrinkle that `!` cancels the next character.
+
+My original solution looks something like this:
+
+```{r}
+#| code-line-numbers: true
+remove_garbage <- function(input) {
+  input_len <- length(input)
+  garbage <- logical(input_len)
+
+  i <- 1
+  start <- NA
+  end <- NA
+
+  while (i <= input_len) {
+    cur <- input[i]
+    if (cur == "!") {
+      i <- i + 2
+      next
+    }
+    if (cur == "<" && is.na(start)) {
+      start <- i
+    }
+    if (cur == ">" && !is.na(start)) {
+      end <- i
+
+      garbage[seq(start, end)] <- TRUE
+      start <- NA
+      end <- NA
+    }
+    i <- i + 1
+  }
+
+  input[!garbage]
+}
+```
+
+This assumes that the input has already been split into a character vector using `str_split_1(input, "")`.
+
+The code should be fairly easy to follow:
+- We iterate over the character vector (line 9-10, 25)
+- If we see a `!`, we skip one value (line 11-14)
+- If we see a `<`, we denote the index as the starting location, but only do so if we haven't already set a starting location (line 15-17)
+- If we see a `>`, we check that we have a starting location; if one is set, then we denote the ending location. We then indicate the garbage using our found starting and ending location, resetting both, and continue (line 18-24)
+
+Since we know that garbage is also well structured, there shouldn't be any issues.
+
+There shouldn't be any major issues with the code as it stands.
+There are many small ways we can improve the above,
+one of which is the lack of `else if`.
+Unless I absolutely have to, I don't really like how `else` looks in R.
+
+But all of this doesn't matter because this part of the puzzle can be solved using regular expressions.
+And most of the time, when there is a regular expression problem, it is often pretty darn fast.
+
+```r
+input |>
+  str_remove_all("!.") |>
+  str_remove_all("<.*?>")
+```
+
+We now have 2 parts to it. First, we delete all the cancellations, then we delete the garbage.
+We are lucky that regex follows the same conventions that we need here.
+`!.` removes each `!` followed by the next character.
+It does it in order such that `<!!>` turns into `<>` because the second `!` is cancelled before it has time to cancel.
+
+Now that we have removed all the cancellations, we can remove the garbage. Finding all the sections of text that start with `<`, followed by any character `.`, zero or more times `*` until we see the next end `>`.
+
+Could we rewrite these two calls to `str_remove_all()` with a single one?
+Properly, but it would have made it much more complicated and way harder to reason about.
+
+This change alone makes a HUGE difference in the speed and memory allocation between these two approaches!
+
+```r
+#> # A tibble: 2 × 13
+#>   expression      min   median `itr/sec` mem_alloc `gc/sec` n_itr
+#>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl> <int>
+#> 1 fun          4.65ms   4.84ms      204.  467.87KB    33.7     85
+#> 2 regex      321.48µs 352.76µs     2824.    1.03KB     2.01  1407
+```
+
+### Groups
+
+We need to identify the groups and then give each of them values and sum them.
+
+We know from the puzzle specification that if we have removed the garbage correctly, all the groups will be properly formatted.
+
+My first hunch for how to deal with this task is overly complicated.
+I tried treating this problem using recursion.
+I would start at the beginning of the sequence, then move along until I found the matching closing bracket, which would require keeping track of the levels.
+Then once I found a group, I would subset into the sequence `input[seq(start + 1, end - 1)]` and repeat in there.
+I never got the code to work before I realized I was over-engineering it.
+
+My realization was that each group only needs to know its nesting level,
+not what happened to the groups on the inside or the group it was inside.
+
+Each group has exactly one left `{` and one right `}`.
+Each left increase and each right decrease the point value.
+We can then go through the sequence and increase the level each time we see an opening bracket, and decrease it each time we see a closing bracket.
+
+We also need to capture how much each group is worth.
+This should be done somewhere between the two steps above, 
+after we increase the value or before we decrease it.
+
+We also see from the shown examples that empty groups are allowed.
+the following group `{}` is identical to `{,}`,
+and `{{}}` is identical to `{,{}}`.
+
+We can also show it a little bit graphically, like so:
+
+```md
+{{{},{},{{}}}}
+```
+
+```md
+ {}
+ {} {} {  }
+ {  ,  ,    }
+{            }
+```
+
+Another thing we notice is that we could completely ignore all the `,`s if we wanted to.
+
+This brings me to my first solution:
+
+```r
+input <- input[input != ","]
+
+res <- 0
+level <- 0
+
+for (i in input) {
+  if (i == "{") {
+    level <- level + 1
+    res <- res + level
+  }
+  if (i == "}") {
+    level <- level - 1
+  }
+}
+
+res
+```
+
+We first filter out all the commas as they aren't needed anymore.
+Which very neatly followed the algorithms outlined earlier.
+
+Another fun option would be to lean into using a `switch()`. It tightens up the `for` loop itself at the expense of a little more work beforehand and computational speed.
+
+```r
+res <- 0
+level <- 0
+
+inc <- function() {
+  level <<- level + 1
+}
+dec <- function() {
+  res <<- res + level
+  level <<- level - 1
+}
+  
+for (i in input) {
+  switch(i, "{" = inc(), "}" = dec())
+}
+
+res
+```
+
+Both of these solutions are very generic programming solutions.
+That could be translated word-for-word into most other languages and would work perfectly fine.
+
+Let us now see if we can use some more R-specific tools and vectorize this task.
+
+We are looking at the change in level over time. We could use `cumsum()` if we properly encode the vector itself.
+Then it is simply a matter of finding the beginning of each group and summing the values.
+Giving us this final solution.
+
+```r
+changes <- c("}" = -1, "{" = 1, "," = 0)[input]
+levels <- cumsum(changes)
+starts <- levels[input == "{"]
+sum(starts)
+```
+
+All the solutions are good by themselves.
+
+```r
+#> # A tibble: 3 × 13
+#>   expression      min   median `itr/sec` mem_alloc `gc/sec`
+#>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
+#> 1 ifelse      207.5µs  237.9µs     4081.    68.9KB     12.5
+#> 2 switch        463µs  512.5µs     1937.        0B     10.2
+#> 3 cumsum       40.3µs   51.9µs    19218.   206.3KB     99.1
+```
+
+## Part 2
+
+We now need to identify how much of the input was garbage. Specifically excluding the cancellations.
+
+My first solution was very `for` and `if` heavy.
+working with the character vector produced with `str_split_1(input, "")`.
+
+```r
+garbage <- logical(length(input))
+
+inside <- FALSE
+i <- 1
+
+while (i <= length(input)) {
+  garbage[i] <- inside
+
+  cur <- input[i]
+
+  if (cur == "<") {
+    inside <- TRUE
+  } else if (cur == ">") {
+    inside <- FALSE
+    garbage[i] <- FALSE
+  } else if (cur == "!") {
+    garbage[i] <- FALSE
+    garbage[i + 1] <- FALSE
+    i <- i + 1
+  }
+  i <- i + 1
+}
+
+sum(garbage)
+```
+
+Generate a garbage logical vector,
+Then going over line by line to either denote something as garbage or not.
+
+As you have properly realized, we can use regular expressions again.
+Switching the second `str_remove_all()` with `str_extract_all()` gives us all the garbage, then it is simply a matter of calculating their lengths, remembering that the start and end don't count.
+
+```r
+input |>
+  str_remove_all("!.") |>
+  str_extract_all("<.*?>") |>
+  lapply(\(x) nchar(x) - 2) |>
+  unlist() |>
+  sum()
+```
+
+This solution fits a single pipe and is a little bit faster as well.
+
+```r
+#> # A tibble: 2 × 13
+#>   expression      min   median `itr/sec` mem_alloc `gc/sec`
+#>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
+#> 1 old          3.61ms   3.69ms      267.   230.5KB    27.4 
+#> 2 new        315.78µs 346.86µs     2880.    20.8KB     2.01
+```
+
+## Roundup
+
+I don't know if you learned anything. Sorry if you didn't. But I hope you had fun, which is all that Advent of Code is about.

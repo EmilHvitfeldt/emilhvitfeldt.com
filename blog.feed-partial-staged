@@ -10,7 +10,16 @@
 <atom:link href="https://emilhvitfeldt.com/blog.xml" rel="self" type="application/rss+xml"/>
 <description>Emil Hvitfeldt blog about R, slides and modeling</description>
 <generator>quarto-1.8.25</generator>
-<lastBuildDate>Mon, 12 May 2025 07:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 16 Dec 2025 08:00:00 GMT</lastBuildDate>
+<item>
+  <title>{B4F502887207:/post/adventofcode-2017-09/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/adventofcode-2017-09/</link>
+  <description>{B4F502887207:/post/adventofcode-2017-09/index.html}</description>
+  <category>Advent of Code</category>
+  <guid>https://emilhvitfeldt.com/post/adventofcode-2017-09/</guid>
+  <pubDate>Tue, 16 Dec 2025 08:00:00 GMT</pubDate>
+  <media:content url="https://emilhvitfeldt.com/post/adventofcode-2017-09/featured.svg" medium="image" type="image/svg+xml"/>
+</item>
 <item>
   <title>{B4F502887207:/post/quarto-performance/index.html}</title>
   <link>https://emilhvitfeldt.com/post/quarto-performance/</link>
@@ -195,22 +204,9 @@
   <pubDate>Wed, 24 Aug 2022 07:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/slidecraft-colors-fonts/featured.webp" medium="image" type="image/webp"/>
 </item>
-<item>
-  <title>{B4F502887207:/post/smltar-story/index.html}</title>
-  <link>https://emilhvitfeldt.com/post/smltar-story/</link>
-  <description>{B4F502887207:/post/smltar-story/index.html}</description>
-  <category>smltar</category>
-  <category>book</category>
-  <guid>https://emilhvitfeldt.com/post/smltar-story/</guid>
-  <pubDate>Wed, 04 Aug 2021 07:00:00 GMT</pubDate>
-  <media:content url="https://emilhvitfeldt.com/post/smltar-story/featured.webp" medium="image" type="image/webp"/>
-</item>
 </channel>
 </rss>
-/channel>
-</rss>
-
-tion>
+>
   <category>xaringan</category>
   <guid>https://emilhvitfeldt.com/post/xaringan-first-letter/</guid>
   <pubDate>Sun, 21 Mar 2021 23:00:00 GMT</pubDate>
