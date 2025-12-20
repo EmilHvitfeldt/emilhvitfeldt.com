@@ -14,7 +14,7 @@
 
 /*-- scss:defaults --*/
 
-$theme-lightgreen: #F0F3EE;
+$theme-lightgreen: #f0f3ee;
 $theme-darkgreen: #17261e;
 $theme-green: #4a7862;
 
@@ -25,53 +25,53 @@ $body-color: $theme-darkgreen;
 $link-color: $theme-green;
 $link-hover-color: darken(saturate($link-color, 50%), 15%);
 
-$code-color: #4758AB;
+$code-color: #4758ab;
 
 // Fonts -----------------------------------------------------------------------
 
 @font-face {
-  font-family: 'Commissioner';
+  font-family: "Commissioner";
   font-weight: 400;
-  src: url('assets/fonts/Commissioner-Regular.woff2') format('woff2'),
-       url('assets/fonts/Commissioner-Regular.woff') format('woff');
+  src: url("assets/fonts/Commissioner-Regular.woff2") format("woff2"),
+    url("assets/fonts/Commissioner-Regular.woff") format("woff");
 }
 @font-face {
-  font-family: 'Commissioner';
+  font-family: "Commissioner";
   font-weight: 600;
-  src: url('assets/fonts/Commissioner-SemiBold.woff2') format('woff2'),
-       url('assets/fonts/Commissioner-SemiBold.woff') format('woff');
+  src: url("assets/fonts/Commissioner-SemiBold.woff2") format("woff2"),
+    url("assets/fonts/Commissioner-SemiBold.woff") format("woff");
 }
 @font-face {
-  font-family: 'Commissioner';
+  font-family: "Commissioner";
   font-weight: 700;
-  src: url('assets/fonts/Commissioner-Bold.woff2') format('woff2'),
-       url('assets/fonts/Commissioner-Bold.woff') format('woff');
+  src: url("assets/fonts/Commissioner-Bold.woff2") format("woff2"),
+    url("assets/fonts/Commissioner-Bold.woff") format("woff");
 }
 
 @font-face {
-  font-family: 'Fraunces';
+  font-family: "Fraunces";
   font-weight: 100;
-  src: url('assets/fonts/Fraunces72pt-Thin.woff2') format('woff2'),
-       url('assets/fonts/Fraunces72pt-Thin.woff') format('woff');
+  src: url("assets/fonts/Fraunces72pt-Thin.woff2") format("woff2"),
+    url("assets/fonts/Fraunces72pt-Thin.woff") format("woff");
 }
 @font-face {
-  font-family: 'Fraunces';
+  font-family: "Fraunces";
   font-weight: 400;
-  src: url('assets/fonts/Fraunces72pt-Regular.woff2') format('woff2'),
-       url('assets/fonts/Fraunces72pt-Regular.woff') format('woff');
+  src: url("assets/fonts/Fraunces72pt-Regular.woff2") format("woff2"),
+    url("assets/fonts/Fraunces72pt-Regular.woff") format("woff");
 }
 @font-face {
-  font-family: 'Fraunces';
+  font-family: "Fraunces";
   font-weight: 600;
-  src: url('assets/fonts/Fraunces72pt-SemiBold.woff2') format('woff2'),
-       url('assets/fonts/Fraunces72pt-SemiBold.woff') format('woff');
+  src: url("assets/fonts/Fraunces72pt-SemiBold.woff2") format("woff2"),
+    url("assets/fonts/Fraunces72pt-SemiBold.woff") format("woff");
 }
 
 @font-face {
-  font-family: 'Inconsolata';
+  font-family: "Inconsolata";
   font-weight: 400;
-  src: url('assets/fonts/Inconsolata-Regular.woff2') format('woff2'),
-       url('assets/fonts/Inconsolata-Regular.woff') format('woff');
+  src: url("assets/fonts/Inconsolata-Regular.woff2") format("woff2"),
+    url("assets/fonts/Inconsolata-Regular.woff") format("woff");
 }
 
 $font-family-sans-serif: Commissioner;
@@ -91,7 +91,7 @@ $navbar-fg: $theme-green;
   position: relative;
 
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     bottom: 0;
     left: 0;
@@ -160,7 +160,7 @@ h3 {
 
 @media screen and (min-width: 60em) {
   .main {
-    display: flex
+    display: flex;
   }
 
   .left {
@@ -205,7 +205,8 @@ div.quarto-post .body h3.listing-title {
 
 // project ---------------------------------------------------------------------
 
-.quarto-listing-container-grid:has(.quarto-grid-item:hover) .quarto-grid-item:not(:hover) {
+.quarto-listing-container-grid:has(.quarto-grid-item:hover)
+  .quarto-grid-item:not(:hover) {
   filter: brightness(95%);
 }
 
@@ -217,7 +218,7 @@ div.quarto-post .body h3.listing-title {
     box-shadow: 0 12px 16px rgba($theme-green, 0.2);
   }
 
-  p.card-img-top>img {
+  p.card-img-top > img {
     object-fit: contain;
     background-color: lighten($theme-green, 50%);
   }
@@ -230,8 +231,7 @@ div.quarto-post .body h3.listing-title {
   @include btn-inverse;
 }
 
-// talk ------------------------------------------------------------------------
-
+// talks ------------------------------------------------------------------------
 
 article {
   margin-bottom: 2em;
@@ -290,7 +290,7 @@ article {
 /* .project-buttons>p>a Buttons used in post/slidecraft-scss-themes */
 div.quarto-about-jolla .about-link,
 .btn-links,
-.project-buttons>p>a {
+.project-buttons > p > a {
   border-style: solid;
   padding-bottom: 8px;
   padding-left: 16px;
