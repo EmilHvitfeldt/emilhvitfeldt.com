@@ -105,10 +105,26 @@ $navbar-fg: $theme-green;
     transform-origin: center;
   }
 
+  &:hover {
+    color: $link-hover-color;
+  }
+
   &:hover::after,
   &:focus::after {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+nav .nav-item.compact .nav-link {
+  &:hover {
+    color: $link-hover-color;
+  }
+}
+
+.navbar #quarto-search.type-overlay .aa-Autocomplete svg.aa-SubmitIcon {
+  &:hover {
+    color: $link-hover-color;
   }
 }
 
