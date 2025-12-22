@@ -16,7 +16,7 @@ about:
 
 ---
 
-I’m a Software Engineer at [Posit PBC](https://posit.co/) working on the tidymodels team. My educational material started right here on this blog but has grown over the years to include talks, university courses, books, and workshops at the conferences like satRday, R in Pharma, useR, rstudio::conf, and posit::conf.
+I’m a Software Engineer at [Posit PBC](https://posit.co/) working on the tidymodels team. My educational material started right here on this blog but has grown over the years to include talks, university courses, books, and workshops at the conferences like [satRday](https://github.com/satRdays), [R/Pharma](https://rinpharma.com/), [NYR](https://rstats.ai/), [useR!](https://user2025.r-project.org/), [rstudio::conf](https://cloud.rstudio.com/tags/rstudioconf/), and [posit::conf](https://posit.co/conference/).
 
 My non-work interests include: [Jigsaw Puzzles](https://oddpieces.com/), [Cross Stitch](https://github.com/EmilHvitfeldt/data-crossstitch), [Reading](https://bookshop.org/books/the-color-of-law-a-forgotten-history-of-how-our-government-segregated-america/9781631494536), [Games](https://megamitensei.fandom.com/wiki/Persona_3_Reload).
 
