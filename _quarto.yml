@@ -40,6 +40,7 @@ format:
     toc: true
     theme:
       - styles.scss
+    include-after-body: [misc.html]
     grid:
       body-width: 840px
     html-math-method: plain

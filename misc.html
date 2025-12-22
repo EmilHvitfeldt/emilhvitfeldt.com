@@ -1,0 +1,6 @@
+<!-- remove home buttom on home page -->
+<script>
+  if (window.location.pathname === "/") {
+    document.querySelector(".navbar-nav > li > a > span").remove();
+  }
+</script>
