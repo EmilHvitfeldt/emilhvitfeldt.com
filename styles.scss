@@ -18,6 +18,7 @@
 $theme-lightgreen: #f0f3ee;
 $theme-darkgreen: #17261e;
 $theme-green: #4a7862;
+$font-size-root: 22px;
 
 // colors ----------------------------------------------------------------------
 
@@ -141,51 +142,56 @@ h3 {
 }
 
 .main {
-  padding: 2em;
-  align-items: center;
-  max-width: 1440px;
-  margin: auto;
+  display: flex;
+  gap: 1rem; /* optional spacing */
+  margin: 10rem;
 
-  font-size: 20px;
+  font-size: 40px;
 
   h1 {
-    font-size: 80px;
+    font-size: 160px;
   }
 
   h2 {
-    font-size: 16px;
+    font-size: 48px;
     text-transform: uppercase;
     border-bottom: unset;
   }
 
   .left {
-    margin-left: 2rem;
-    margin-right: 2rem;
+    width: 70%;
   }
 
   .right {
-    margin-right: 2rem;
-    text-align: right;
-
+    width: 30%;
+    display: flex;
+    align-items: center;
     img {
-      width: 70%;
-      margin: auto;
+      width: 140%;
       display: block;
+      max-width: unset;
     }
   }
 }
 
-@media screen and (min-width: 60em) {
+@media (max-width: 1900px) {
   .main {
-    display: flex;
-  }
+    flex-direction: column;
+    margin: 5rem;
 
-  .left {
-    width: 50%;
-  }
+    .left {
+      width: 100%;
+    }
 
-  .right {
-    width: 50%;
+    .right {
+      width: 100%;
+      p {
+        width: 100%;
+        img {
+          width: 100%;
+        }
+      }
+    }
   }
 }
 
