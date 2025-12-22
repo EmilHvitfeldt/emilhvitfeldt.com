@@ -141,6 +141,13 @@ h3 {
   font-family: Fraunces;
 }
 
+.page-item.active .page-link {
+  background-color: $theme-green;
+  border-color: $theme-green;
+}
+
+// home ------------------------------------------------------------------------
+
 .main {
   display: flex;
   gap: 1rem; /* optional spacing */
@@ -181,6 +188,7 @@ h3 {
 
     .left {
       width: 100%;
+      margin-bottom: 5rem;
     }
 
     .right {
@@ -188,16 +196,16 @@ h3 {
       p {
         width: 100%;
         img {
-          width: 100%;
+          width: 80%;
+          margin: auto;
         }
       }
     }
   }
 }
 
-.page-item.active .page-link {
-  background-color: $theme-green;
-  border-color: $theme-green;
+.page-layout-custom {
+  overflow: hidden;
 }
 
 // blog ------------------------------------------------------------------------
