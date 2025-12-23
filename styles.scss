@@ -148,40 +148,47 @@ h3 {
 
 // home ------------------------------------------------------------------------
 
+$home-main-width: 1400px;
+$home-left-width: 65%;
+
 .main {
   display: flex;
-  gap: 1rem; /* optional spacing */
-  margin: 10rem;
-
-  font-size: 40px;
-
-  h1 {
-    font-size: 160px;
-  }
-
-  h2 {
-    font-size: 48px;
-    text-transform: uppercase;
-    border-bottom: unset;
-  }
+  margin: auto;
+  width: $home-main-width;
+  margin-top: 2rem;
+  gap: 1.5rem;
 
   .left {
-    width: 70%;
+    width: $home-left-width;
+    font-size: 28px;
+
+    h1 {
+      font-size: 140px;
+      margin-top: 0;
+    }
+
+    h2 {
+      font-size: 40px;
+      text-transform: uppercase;
+      border-bottom: unset;
+      margin-top: 0;
+    }
   }
 
   .right {
-    width: 30%;
+    width: 100% - $home-left-width;
     display: flex;
-    align-items: center;
-    img {
-      width: 140%;
-      display: block;
-      max-width: unset;
+
+    p {
+      width: 100%;
+      img {
+        width: 100%;
+      }
     }
   }
 }
 
-@media (max-width: 1900px) {
+@media (max-width: calc($home-main-width + 4rem)) {
   .main {
     flex-direction: column;
     margin: 5rem;
