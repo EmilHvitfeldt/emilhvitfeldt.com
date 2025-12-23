@@ -3,6 +3,13 @@ page-layout: custom
 pagetitle: Emil Hvitfeldt - Home
 ---
 
+```{=html}
+<!-- remove home buttom on home page -->
+<script>
+document.querySelector(".navbar-nav > li > a > span").remove();
+</script>
+```
+
 ::: {.main}
 
 ::: {.left}
