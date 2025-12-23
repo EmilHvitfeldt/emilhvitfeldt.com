@@ -192,6 +192,7 @@ $home-left-width: 65%;
   .main {
     flex-direction: column;
     margin: 5rem;
+    width: unset;
 
     .left {
       width: 100%;
@@ -203,8 +204,9 @@ $home-left-width: 65%;
       p {
         width: 100%;
         img {
-          width: 80%;
+          display: block;
           margin: auto;
+          width: 80%;
         }
       }
     }
