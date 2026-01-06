@@ -171,8 +171,8 @@ The general layout of Positron often looks like this for me.
 And I use the folllowing key bindings to change this:
 
 - View: Toggle Primary Side Bar Visibility `Cmd+B`
-- View: Toggle Secondary Side Bar Visibility `Cmd+J`
-- View: Toggle Panel Visibility `Cmd+Alt+B`
+- View: Toggle Secondary Side Bar Visibility `Cmd+Alt+B`
+- View: Toggle Panel Visibility `Cmd+J`
 - Activate Positron Data Science layout `Cmd+. Cmd+L`
 
 ```json
@@ -199,53 +199,41 @@ And I use the folllowing key bindings to change this:
 
 ## Switching Focus
 
-I'm trying this thing where Editor means `C`, Console means `V` and Terminal means `B`.
-These keys don't map to the concepts, but are physically close on the keyboard,
-and are ordered in how they feel in my brain.
+I have switched to setting `"workbench.keybindings.rstudioKeybindings": true` in `settings.json`,
+which gives me a way to switch between the editor and console with `Cmd+1` and `Cmd+2` respectively. 
+Adding `Cmd+3` to move me to the terminal.
 
-Notice I how used the shift modifier to denote clearing. And 
 
 ### Editor
 
-- Switch Focus to Editor `Cmd+. Cmd+C`
-
-```json
-{
-  "key": "cmd+. cmd+c",
-  "command": "workbench.action.focusActiveEditorGroup"
-}
-```
+- Switch Focus to Editor `Cmd+1`
 
 ### Console
 
-- Switch Focus to Console `Cmd+. Cmd+V`
-- Clear Console `Cmd+. Cmd+Shift+V`
+- Switch Focus to Console `Cmd+2`
+- Clear Console `Cmd+Alt+2`
 - Restart Console `Cmd+Shift+0`
 
 ```json
 {
-  "key": "cmd+. cmd+v",
-  "command": "workbench.action.positronConsole.focusConsole"
-},
-{
-  "key": "cmd+. cmd+shift+v",
+  "key": "cmd+alt+2",
   "command": "workbench.action.positronConsole.clearConsole"
-}
+},
 ```
 
 ### Terminal
 
-- Switch Focus to Terminal `Cmd+. Cmd+B`
-- Clear Terminal `Cmd+. Cmd+Shift+B`
+- Switch Focus to Terminal `Cmd+3`
+- Clear Terminal `Cmd+Alt+3`
 - Restart Terminal `Cmd+Shift+9` (similar to Restart Console)
 
 ```json
 {
-  "key": "cmd+. cmd+b",
+  "key": "cmd+3",
   "command": "workbench.action.terminal.focus"
 },
 {
-  "key": "cmd+. cmd+shift+b",
+  "key": "cmd+alt+3",
   "command": "workbench.action.terminal.clear"
 },
 { // Restart terminal
@@ -399,26 +387,18 @@ don't treat this as a static document.
   },
   // Focus
   //// Editor
-  {
-    "key": "cmd+. cmd+c",
-    "command": "workbench.action.focusActiveEditorGroup"
-  },
   //// Console
   {
-    "key": "cmd+. cmd+v",
-    "command": "workbench.action.positronConsole.focusConsole"
-  },
-  {
-    "key": "cmd+. cmd+shift+v",
+    "key": "cmd+alt+2",
     "command": "workbench.action.positronConsole.clearConsole"
   },
   //// Terminal
   {
-    "key": "cmd+. cmd+b",
+    "key": "cmd+3",
     "command": "workbench.action.terminal.focus"
   },
   {
-    "key": "cmd+. cmd+shift+b",
+    "key": "cmd+alt+3",
     "command": "workbench.action.terminal.clear"
   },
   { // Restart terminal
@@ -465,6 +445,34 @@ don't treat this as a static document.
       "focus": false
     }
   },
+  {
+    "key": "cmd+. cmd+3",
+    "command": "workbench.action.executeCode.silently",
+    "args": {
+      "langId": "r",
+      "code": "eval(parse(text = paste0('debugonce(', reprex:::rstudio_selection(), ')')))",
+      "focus": false
+    }
+  },
+  {
+    "key": "cmd+. cmd+4",
+    "command": "workbench.action.executeCode.silently",
+    "when": "editorTextFocus",
+    "args": {
+        "langId": "r",
+        "code": "rlang::env_get(pal:::.pal_env, '.pal_rs_cli')()",
+        "focus": true
+    }
+},
+  {
+    "key": "cmd+. cmd+5",
+    "command": "workbench.action.executeCode.silently",
+    "args": {
+        "langId": "r",
+        "code": "quickchat::quickchat()",
+        "focus": true
+    }
+},
   // Package Development
   {
     "key": "cmd+. cmd+r",
@@ -492,6 +500,10 @@ don't treat this as a static document.
       "code": "devtools::test_active_file()",
       "focus": false
     }
+  },
+  {
+    "key": "alt+cmd+b",
+    "command": "-workbench.action.positronConsole.executeCodeBeforeCursor"
   }
 ]
 ```
