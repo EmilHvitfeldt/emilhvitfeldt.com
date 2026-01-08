@@ -173,13 +173,19 @@ And I use the folllowing key bindings to change this:
 - View: Toggle Primary Side Bar Visibility `Cmd+B`
 - View: Toggle Secondary Side Bar Visibility `Cmd+Alt+B`
 - View: Toggle Panel Visibility `Cmd+J`
-- Activate Positron Data Science layout `Cmd+. Cmd+L`
+- Activate Positron Data Science layout + Close Panel `Cmd+. Cmd+L`
 
 ```json
 {
   "key": "cmd+. cmd+l",
-  "command": "workbench.action.positronTwoPaneDataScienceLayout"
-}
+  "command": "runCommands",
+  "args": {
+    "commands": [
+      "workbench.action.positronTwoPaneDataScienceLayout", 
+      "workbench.action.closePanel"
+    ]
+  }
+},
 ```
 
 ## Cursors
@@ -383,7 +389,13 @@ don't treat this as a static document.
   // Moving things around
   {
     "key": "cmd+. cmd+l",
-    "command": "workbench.action.positronTwoPaneDataScienceLayout"
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        "workbench.action.positronTwoPaneDataScienceLayout", 
+        "workbench.action.closePanel"
+      ]
+    }
   },
   // Focus
   //// Editor
