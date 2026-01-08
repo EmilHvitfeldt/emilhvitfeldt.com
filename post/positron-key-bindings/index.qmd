@@ -513,9 +513,16 @@ don't treat this as a static document.
       "focus": false
     }
   },
+  // Other
+  //// Disable RStudio specific keybinding I don't like
   {
     "key": "alt+cmd+b",
     "command": "-workbench.action.positronConsole.executeCodeBeforeCursor"
+  },
+  //// Reset Zoom level
+  {
+    "key": "cmd+0",
+    "command": "workbench.action.zoomReset"
   }
 ]
 ```
