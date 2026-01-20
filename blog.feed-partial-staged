@@ -10,7 +10,16 @@
 <atom:link href="https://emilhvitfeldt.com/blog.xml" rel="self" type="application/rss+xml"/>
 <description>Emil Hvitfeldt blog about R, slides and modeling</description>
 <generator>quarto-1.8.25</generator>
-<lastBuildDate>Tue, 16 Dec 2025 08:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 20 Jan 2026 08:00:00 GMT</lastBuildDate>
+<item>
+  <title>{B4F502887207:/post/positron-settings-extensions/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/positron-settings-extensions/</link>
+  <description>{B4F502887207:/post/positron-settings-extensions/index.html}</description>
+  <category>positron</category>
+  <guid>https://emilhvitfeldt.com/post/positron-settings-extensions/</guid>
+  <pubDate>Tue, 20 Jan 2026 08:00:00 GMT</pubDate>
+  <media:content url="https://emilhvitfeldt.com/post/positron-settings-extensions/featured.webp" medium="image" type="image/webp"/>
+</item>
 <item>
   <title>{B4F502887207:/post/adventofcode-2017-09/index.html}</title>
   <link>https://emilhvitfeldt.com/post/adventofcode-2017-09/</link>
@@ -194,17 +203,9 @@
   <pubDate>Tue, 06 Sep 2022 07:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/slidecraft-code-output/featured.webp" medium="image" type="image/webp"/>
 </item>
-<item>
-  <title>{B4F502887207:/post/slidecraft-colors-fonts/index.html}</title>
-  <link>https://emilhvitfeldt.com/post/slidecraft-colors-fonts/</link>
-  <description>{B4F502887207:/post/slidecraft-colors-fonts/index.html}</description>
-  <category>slidecraft 101</category>
-  <category>quarto</category>
-  <guid>https://emilhvitfeldt.com/post/slidecraft-colors-fonts/</guid>
-  <pubDate>Wed, 24 Aug 2022 07:00:00 GMT</pubDate>
-  <media:content url="https://emilhvitfeldt.com/post/slidecraft-colors-fonts/featured.webp" medium="image" type="image/webp"/>
-</item>
 </channel>
+</rss>
+el>
 </rss>
 >
   <category>xaringan</category>

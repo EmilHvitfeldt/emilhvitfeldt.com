@@ -1,6 +1,7 @@
 {
   "listing": "/blog.html",
   "items": [
+    "/post/positron-settings-extensions/index.html",
     "/post/adventofcode-2017-09/index.html",
     "/post/quarto-performance/index.html",
     "/post/sparse-vs-dense-dummies/index.html",
