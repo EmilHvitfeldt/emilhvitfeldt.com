@@ -223,6 +223,10 @@ $home-left-width: 65%;
 
 // blog ------------------------------------------------------------------------
 
+div.quarto-post {
+  border-bottom: unset;
+}
+
 div.quarto-post .listing-categories .listing-category,
 .quarto-title .quarto-categories .quarto-category {
   color: $theme-green;
@@ -238,6 +242,21 @@ div.quarto-post .listing-categories .listing-category,
 div.quarto-post .body h3.listing-title {
   font-family: Fraunces;
   color: $theme-darkgreen;
+  display: inline;
+  background-image: linear-gradient($theme-green, $theme-green);
+  background-size: 0% 2px;
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  transition: background-size 0.3s, color 0.3s;
+}
+
+div.quarto-post:hover .body h3.listing-title {
+  color: $theme-green;
+  background-size: 100% 2px;
+}
+
+div.quarto-post:hover .listing-categories .listing-category {
+  font-weight: 600;
 }
 
 #title-block-header.quarto-title-block.default .quarto-title-meta-heading,
