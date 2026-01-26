@@ -10,7 +10,16 @@
 <atom:link href="https://emilhvitfeldt.com/blog.xml" rel="self" type="application/rss+xml"/>
 <description>Emil Hvitfeldt blog about R, slides and modeling</description>
 <generator>quarto-1.8.25</generator>
-<lastBuildDate>Tue, 20 Jan 2026 08:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 26 Jan 2026 08:00:00 GMT</lastBuildDate>
+<item>
+  <title>{B4F502887207:/post/ai-talking-dog/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/ai-talking-dog/</link>
+  <description>{B4F502887207:/post/ai-talking-dog/index.html}</description>
+  <category>AI</category>
+  <guid>https://emilhvitfeldt.com/post/ai-talking-dog/</guid>
+  <pubDate>Mon, 26 Jan 2026 08:00:00 GMT</pubDate>
+  <media:content url="https://emilhvitfeldt.com/post/ai-talking-dog/featured.webp" medium="image" type="image/webp"/>
+</item>
 <item>
   <title>{B4F502887207:/post/positron-settings-extensions/index.html}</title>
   <link>https://emilhvitfeldt.com/post/positron-settings-extensions/</link>
@@ -193,15 +202,10 @@
   <pubDate>Fri, 26 May 2023 07:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/slidecraft-theme-variants/featured.webp" medium="image" type="image/webp"/>
 </item>
-<item>
-  <title>{B4F502887207:/post/slidecraft-code-output/index.html}</title>
-  <link>https://emilhvitfeldt.com/post/slidecraft-code-output/</link>
-  <description>{B4F502887207:/post/slidecraft-code-output/index.html}</description>
-  <category>slidecraft 101</category>
-  <category>quarto</category>
-  <guid>https://emilhvitfeldt.com/post/slidecraft-code-output/</guid>
-  <pubDate>Tue, 06 Sep 2022 07:00:00 GMT</pubDate>
-  <media:content url="https://emilhvitfeldt.com/post/slidecraft-code-output/featured.webp" medium="image" type="image/webp"/>
+</channel>
+</rss>
+/rss>
+featured.webp" medium="image" type="image/webp"/>
 </item>
 </channel>
 </rss>
