@@ -10,7 +10,16 @@
 <atom:link href="https://emilhvitfeldt.com/blog.xml" rel="self" type="application/rss+xml"/>
 <description>Emil Hvitfeldt blog about R, slides and modeling</description>
 <generator>quarto-1.8.25</generator>
-<lastBuildDate>Mon, 26 Jan 2026 08:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 30 Jan 2026 08:00:00 GMT</lastBuildDate>
+<item>
+  <title>{B4F502887207:/post/r-color-palettees-refresh/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/r-color-palettees-refresh/</link>
+  <description>{B4F502887207:/post/r-color-palettees-refresh/index.html}</description>
+  <category>color palettes</category>
+  <guid>https://emilhvitfeldt.com/post/r-color-palettees-refresh/</guid>
+  <pubDate>Fri, 30 Jan 2026 08:00:00 GMT</pubDate>
+  <media:content url="https://emilhvitfeldt.com/post/r-color-palettees-refresh/featured.webp" medium="image" type="image/webp"/>
+</item>
 <item>
   <title>{B4F502887207:/post/ai-talking-dog/index.html}</title>
   <link>https://emilhvitfeldt.com/post/ai-talking-dog/</link>
@@ -192,15 +201,9 @@
   <pubDate>Mon, 07 Aug 2023 07:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/slidecraft-scss-themes/featured.webp" medium="image" type="image/webp"/>
 </item>
-<item>
-  <title>{B4F502887207:/post/slidecraft-theme-variants/index.html}</title>
-  <link>https://emilhvitfeldt.com/post/slidecraft-theme-variants/</link>
-  <description>{B4F502887207:/post/slidecraft-theme-variants/index.html}</description>
-  <category>slidecraft 101</category>
-  <category>quarto</category>
-  <guid>https://emilhvitfeldt.com/post/slidecraft-theme-variants/</guid>
-  <pubDate>Fri, 26 May 2023 07:00:00 GMT</pubDate>
-  <media:content url="https://emilhvitfeldt.com/post/slidecraft-theme-variants/featured.webp" medium="image" type="image/webp"/>
+</channel>
+</rss>
+"/>
 </item>
 </channel>
 </rss>
