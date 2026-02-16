@@ -301,8 +301,8 @@ div.quarto-post:hover .listing-categories .listing-category {
       }
 
       &:hover {
-        transform: scale(1.1);
-        filter: drop-shadow(0 6px 10px rgba($theme-green, 0.3));
+        transform: scale(1.03);
+        filter: drop-shadow(0 3px 6px rgba($theme-green, 0.2));
       }
     }
 
@@ -313,6 +313,10 @@ div.quarto-post:hover .listing-categories .listing-category {
 
       p {
         margin: 0;
+      }
+
+      .package-title {
+        font-weight: 600;
       }
     }
   }

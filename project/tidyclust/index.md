@@ -2,7 +2,7 @@
 title: tidyclust
 date: "2022-07-27"
 description: |
-    provides a tidy unified interface to clustering model within the tidymodels framework.
+    provides a tidy unified interface to clustering model within the tidymodels framework
 categories:
  - R package
 image: "featured.svg"

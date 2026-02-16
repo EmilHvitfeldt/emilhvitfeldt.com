@@ -26,7 +26,7 @@ const sortedCategories = Array.from(allCategories).sort();
 <img src="<%- item.image %>" alt="<%= item.title %>">
 </a>
 <div class="package-content">
-<p><%- item.description %></p>
+<p><span class="package-title"><%= item.title %></span>, <%- item.description %></p>
 </div>
 </div>
 <% } %>

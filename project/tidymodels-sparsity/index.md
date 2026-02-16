@@ -1,8 +1,8 @@
 ---
-title: sparsity in tidymodels
+title: sparsevctrs
 date: "2025-03-19"
 description: |
-    sparsevctrs enables sparsity operations in tidymodels.
+    Enables sparsity operations in tidymodels
 categories:
  - R package
 image: "featured.svg"
