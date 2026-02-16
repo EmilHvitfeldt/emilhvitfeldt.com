@@ -1,0 +1,29 @@
+<%
+// Collect all unique categories
+const allCategories = new Set();
+for (const item of items) {
+  if (item.categories) {
+    for (const cat of item.categories) {
+      allCategories.add(cat);
+    }
+  }
+}
+const sortedCategories = Array.from(allCategories).sort();
+%>
+
+<% for (const category of sortedCategories) { %>
+<h2><%= category %></h2>
+<% const desc = templateParams['category-descriptions'] && templateParams['category-descriptions'][category]; %>
+<% if (desc) { %>
+<p><%- desc %></p>
+<% } %>
+<ul>
+<% for (const item of items) { %>
+<% if (item.categories && item.categories.includes(category)) { %>
+  <li <%= metadataAttrs(item) %>>
+    <a href="<%- item.path %>"><%= item.title %></a>
+  </li>
+<% } %>
+<% } %>
+</ul>
+<% } %>
