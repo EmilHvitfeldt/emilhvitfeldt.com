@@ -1,3 +1,4 @@
+<div class="projects-listing">
 <%
 // Collect all unique categories
 const allCategories = new Set();
@@ -10,20 +11,37 @@ for (const item of items) {
 }
 const sortedCategories = Array.from(allCategories).sort();
 %>
-
 <% for (const category of sortedCategories) { %>
 <h2><%= category %></h2>
 <% const desc = templateParams['category-descriptions'] && templateParams['category-descriptions'][category]; %>
 <% if (desc) { %>
 <p><%- desc %></p>
 <% } %>
+<% if (category === 'R package') { %>
+<div class="package-list">
+<% for (const item of items) { %>
+<% if (item.categories && item.categories.includes(category)) { %>
+<div class="package-item" <%= metadataAttrs(item) %>>
+<a href="<%- item.path %>" class="package-image">
+<img src="<%- item.image %>" alt="<%= item.title %>">
+</a>
+<div class="package-content">
+<p><%- item.description %></p>
+</div>
+</div>
+<% } %>
+<% } %>
+</div>
+<% } else { %>
 <ul>
 <% for (const item of items) { %>
 <% if (item.categories && item.categories.includes(category)) { %>
-  <li <%= metadataAttrs(item) %>>
-    <a href="<%- item.path %>"><%= item.title %></a>
-  </li>
+<li <%= metadataAttrs(item) %>>
+<a href="<%- item.path %>"><%= item.title %></a>
+</li>
 <% } %>
 <% } %>
 </ul>
 <% } %>
+<% } %>
+</div>
