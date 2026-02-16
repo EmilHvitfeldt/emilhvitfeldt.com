@@ -322,12 +322,20 @@ div.quarto-post:hover .listing-categories .listing-category {
   }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 600px) {
   .package-list {
-    --hex-size: 105px;
+    --hex-size: 80px;
+    gap: 1rem;
 
     .package-item {
       gap: 1rem;
+      margin-bottom: 0;
+      flex-direction: row;
+      align-items: center;
+
+      &:nth-child(odd) {
+        margin-left: 0;
+      }
     }
   }
 }
