@@ -4,7 +4,6 @@ date: "2022-04-12"
 description: |
   Data set of traffic sign locations in Copenhagen, Denmark.
 categories:
-  - R package
   - data set
 image: "featured.svg"
 ---

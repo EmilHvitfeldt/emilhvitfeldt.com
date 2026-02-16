@@ -4,7 +4,7 @@ date: "2019-03-06"
 description: |
   Cleaned gutenbergr text
 categories:
-  - R package
+  - data set
 image: "featured.webp"
 ---
 

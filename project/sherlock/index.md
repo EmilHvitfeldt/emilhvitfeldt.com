@@ -4,7 +4,6 @@ date: "2021-08-16"
 description: |
   Sherlock Holmes text as Data
 categories:
-  - R package
   - data set
 image: "featured.svg"
 ---

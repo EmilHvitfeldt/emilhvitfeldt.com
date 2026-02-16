@@ -4,7 +4,6 @@ date: "2020-08-30"
 description: |
   Data set with descriptions of animals
 categories:
-  - R package
   - data set
 image: "featured.svg"
 ---
