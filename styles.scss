@@ -298,6 +298,7 @@ div.quarto-post:hover .listing-categories .listing-category {
         width: 100%;
         height: auto;
         display: block;
+        aspect-ratio: cos(30deg);
       }
 
       &:hover {
@@ -360,6 +361,7 @@ div.quarto-post:hover .listing-categories .listing-category {
       height: auto;
       display: block;
       border-radius: 4px;
+      aspect-ratio: 1000 / 1579;
     }
 
     &:hover {
