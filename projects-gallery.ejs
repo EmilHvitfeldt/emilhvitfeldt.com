@@ -1,5 +1,8 @@
 <div class="projects-listing">
 <%
+// Lowercase first letter of a string
+const lcFirst = (str) => str ? str.charAt(0).toLowerCase() + str.slice(1) : '';
+
 // Collect all unique categories
 const allCategories = new Set();
 for (const item of items) {
@@ -29,7 +32,7 @@ const orderedCategories = templateParams['category-order']
 <img src="<%- item.image %>" alt="<%= item.title %>">
 </a>
 <div class="package-content">
-<p><span class="package-title"><%= item.title %></span>, <%- item.description %></p>
+<p><span class="package-title"><%= item.title %></span>, <%- lcFirst(item.description) %></p>
 </div>
 </div>
 <% } %>
