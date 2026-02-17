@@ -4,7 +4,6 @@ date: "2023-07-24"
 description: |
   Dataset of roundabouts from around the world
 categories:
-  - R Packages
   - Data Sets
 image: "featured.svg"
 ---

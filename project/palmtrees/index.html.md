@@ -4,7 +4,6 @@ date: "2023-02-01"
 description: |
   Data About All Species of Palm Trees
 categories:
-  - R Packages
   - Data Sets
 image: "featured.svg"
 ---

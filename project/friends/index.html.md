@@ -4,7 +4,6 @@ date: "2020-08-26"
 description: |
   The Entire Transcript from Friends in Tidy Format
 categories:
-  - R Packages
   - Data Sets
 image: "featured.svg"
 ---

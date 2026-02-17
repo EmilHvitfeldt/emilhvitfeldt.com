@@ -4,7 +4,6 @@ date: "2021-09-25"
 description: |
   Data About Emojis
 categories:
-  - R Packages
   - Data Sets
 image: "featured.svg"
 ---

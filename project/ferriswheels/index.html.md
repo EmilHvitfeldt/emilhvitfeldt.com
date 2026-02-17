@@ -4,7 +4,6 @@ date: "2022-07-28"
 description: |
   Harmless data set about ferris wheels
 categories:
-  - R Packages
   - Data Sets
 image: "featured.svg"
 ---
