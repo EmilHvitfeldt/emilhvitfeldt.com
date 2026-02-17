@@ -4,7 +4,7 @@
 const lcFirst = (str) => str ? str.charAt(0).toLowerCase() + str.slice(1) : '';
 
 // Collect all unique categories
-const allCategories = new Set();
+const allCategories = new Set()
 for (const item of items) {
   if (item.categories) {
     for (const cat of item.categories) {
@@ -44,6 +44,22 @@ const orderedCategories = templateParams['category-order']
 <% if (item.categories && item.categories.includes(category)) { %>
 <a href="<%- item.path %>" class="book-item" title="<%= item.title %>" <%= metadataAttrs(item) %>>
 <img src="<%- item.image %>" alt="<%= item.title %>">
+</a>
+<% } %>
+<% } %>
+</div>
+<% } else if (category === 'Websites') { %>
+<div class="websites-grid">
+<% for (const item of items) { %>
+<% if (item.categories && item.categories.includes(category)) { %>
+<a href="<%- item.path %>" class="website-card" <%= metadataAttrs(item) %>>
+<div class="website-image">
+<img src="<%- item.image %>" alt="<%= item.title %>">
+</div>
+<div class="website-content">
+<h3><%= item.title %></h3>
+<p><%= item.description %></p>
+</div>
 </a>
 <% } %>
 <% } %>

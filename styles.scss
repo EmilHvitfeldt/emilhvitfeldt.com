@@ -371,6 +371,69 @@ div.quarto-post:hover .listing-categories .listing-category {
   }
 }
 
+.websites-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+
+  // Hide spurious empty p-wrapped links created by Quarto
+  > p {
+    display: none;
+  }
+
+  .website-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid rgba($theme-green, 0.2);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 16px rgba($theme-green, 0.15);
+      border-color: $theme-green;
+    }
+
+    .website-image {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      overflow: hidden;
+      background-color: lighten($theme-green, 50%);
+
+      p {
+        margin: 0;
+        height: 100%;
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    .website-content {
+      padding: 1rem;
+
+      h3 {
+        margin: 0 0 0.5rem 0;
+        font-size: 1.1rem;
+        color: $theme-darkgreen;
+      }
+
+      p {
+        margin: 0;
+        font-size: 0.9rem;
+        color: lighten($theme-darkgreen, 20%);
+      }
+    }
+  }
+}
+
 .hex-grid-container {
   display: flex;
   flex-direction: column;
