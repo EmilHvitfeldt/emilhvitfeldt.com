@@ -371,6 +371,37 @@ div.quarto-post:hover .listing-categories .listing-category {
   }
 }
 
+.hex-grid-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hex-description {
+  height: 3rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0.5rem 1rem;
+  margin-top: 1rem;
+  color: $theme-darkgreen;
+
+  .hex-description-default {
+    font-style: italic;
+    opacity: 0.7;
+  }
+
+  .hex-description-text {
+    display: none;
+  }
+
+  @media (max-width: 650px) {
+    display: none;
+  }
+}
+
 div.hex-grid {
   --s: 125px;
   --m: 4px;
@@ -402,23 +433,46 @@ div.hex-grid {
     }
 
     // First item in offset rows gets the margin to push the whole row
-    &.hex-first-offset {
+    // 5 columns (desktop)
+    &.hex-offset-5 {
       margin-left: calc(var(--s) / 2 + var(--m) * 2) !important;
     }
   }
 }
 
-@media (max-width: 650px) {
+@media (max-width: 750px) {
   div.hex-grid {
     --s: 100px;
     width: calc(4 * var(--s) + 8 * var(--m) + var(--s) / 2);
+    margin: 1rem auto 2rem auto;
+
+    a.hex-item {
+      // Disable 5-col offset, enable 4-col offset
+      &.hex-offset-5 {
+        margin-left: var(--m) !important;
+      }
+      &.hex-offset-4 {
+        margin-left: calc(var(--s) / 2 + var(--m) * 2) !important;
+      }
+    }
   }
 }
 
-@media (max-width: 450px) {
+@media (max-width: 550px) {
   div.hex-grid {
     --s: 88px;
     width: calc(3 * var(--s) + 6 * var(--m) + var(--s) / 2);
+    margin: 1rem auto 2rem auto;
+
+    a.hex-item {
+      // Disable 4-col offset, enable 3-col offset
+      &.hex-offset-4 {
+        margin-left: var(--m) !important;
+      }
+      &.hex-offset-3 {
+        margin-left: calc(var(--s) / 2 + var(--m) * 2) !important;
+      }
+    }
   }
 }
 
