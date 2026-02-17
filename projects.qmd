@@ -10,6 +10,7 @@ listing:
       - Books
       - Websites
       - Data Sets
+      - Miscellaneous
     category-descriptions:
       R Packages: "R packages I have authored or contributed to."
       Data Sets: "Datasets packaged for easy use in R."
