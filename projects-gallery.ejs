@@ -38,6 +38,16 @@ const orderedCategories = templateParams['category-order']
 <% } %>
 <% } %>
 </div>
+<% } else if (category === 'Books') { %>
+<div class="books-list">
+<% for (const item of items) { %>
+<% if (item.categories && item.categories.includes(category)) { %>
+<a href="<%- item.path %>" class="book-item" title="<%= item.title %>" <%= metadataAttrs(item) %>>
+<img src="<%- item.image %>" alt="<%= item.title %>">
+</a>
+<% } %>
+<% } %>
+</div>
 <% } else { %>
 <ul>
 <% for (const item of items) { %>

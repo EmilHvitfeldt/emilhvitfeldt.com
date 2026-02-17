@@ -340,6 +340,35 @@ div.quarto-post:hover .listing-categories .listing-category {
   }
 }
 
+.books-list {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+
+  .book-item {
+    display: block;
+    width: 200px;
+    flex: 0 0 200px;
+    transition: transform 0.2s ease, filter 0.2s ease;
+
+    img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 4px;
+    }
+
+    &:hover {
+      transform: scale(1.03);
+      filter: drop-shadow(0 3px 6px rgba($theme-green, 0.2));
+    }
+  }
+}
+
 .quarto-listing-container-grid:has(.quarto-grid-item:hover)
   .quarto-grid-item:not(:hover) {
   filter: brightness(95%);
