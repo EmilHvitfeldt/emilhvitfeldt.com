@@ -4,7 +4,7 @@ date: "2025-03-19"
 description: |
     Enables sparsity operations in tidymodels
 categories:
- - R package
+ - R Packages
 image: "featured.svg"
 ---
 

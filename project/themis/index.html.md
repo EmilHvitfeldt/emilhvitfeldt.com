@@ -4,7 +4,7 @@ date: "2020-01-13"
 description: |
   Extra Recipes Steps for imbalanced data
 categories:
-  - R package
+  - R Packages
 image: "featured.svg"
 ---
 

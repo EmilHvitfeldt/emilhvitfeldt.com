@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(wc:*)",
+      "Bash(ls:*)",
+      "WebFetch(domain:quarto.org)",
+      "WebFetch(domain:ejs.co)",
+      "WebFetch(domain:css-tricks.com)"
+    ]
+  }
+}

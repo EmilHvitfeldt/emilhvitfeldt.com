@@ -6,6 +6,6 @@ listing:
   template: projects-gallery.ejs
   template-params:
     category-descriptions:
-      R package: "R packages I have authored or contributed to."
-      data set: "Datasets packaged for easy use in R."
+      R Packages: "R packages I have authored or contributed to."
+      data Sets: "Datasets packaged for easy use in R."
 ---

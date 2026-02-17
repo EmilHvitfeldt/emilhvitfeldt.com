@@ -4,7 +4,7 @@ date: "2023-02-01"
 description: |
   Data About All Species of Palm Trees
 categories:
-  - data set
+  - Data Sets
 image: "featured.svg"
 ---
 

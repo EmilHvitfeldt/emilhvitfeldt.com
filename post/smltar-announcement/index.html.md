@@ -5,7 +5,7 @@ description: |
 date: '2020-07-27'
 categories:
   - smltar
-  - book
+  - Books
 image: "featured.webp"
 ---
 

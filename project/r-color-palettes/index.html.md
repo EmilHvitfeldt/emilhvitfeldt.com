@@ -4,7 +4,7 @@ date: "2018-06-16"
 description: |
   Comprehensive list of color palettes available in R
 categories:
-  - website
+  - Websites
 image: "featured.webp"
 ---
 

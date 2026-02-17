@@ -4,7 +4,7 @@ date: "2025-11-16"
 description: |
   The last book you will ever need about feature engineering
 categories:
-  - book
+  - Books
 image: "featured.webp"
 ---
 

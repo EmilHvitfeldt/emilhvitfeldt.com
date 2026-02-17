@@ -4,7 +4,7 @@ date: "2025-09-24"
 description: |
   Book about how to make beautiful slides with quarto and revealjs
 categories:
-  - book
+  - Books
 image: "featured.webp"
 ---
 

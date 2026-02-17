@@ -4,7 +4,7 @@ date: "2024-07-28"
 description: |
   Turning fitted workflows into SQL for easy predictions in databases
 categories:
- - R package
+ - R Packages
 image: "featured.svg"
 ---
 

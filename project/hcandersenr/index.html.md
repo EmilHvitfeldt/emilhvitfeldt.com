@@ -4,8 +4,8 @@ date: "2019-01-19"
 description: |
   An R Package for H.C. Andersens fairy tales
 categories:
-  - R package
-  - data set
+  - R Packages
+  - Data Sets
 image: "featured.svg"
 ---
 

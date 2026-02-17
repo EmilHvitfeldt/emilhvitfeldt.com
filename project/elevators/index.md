@@ -4,7 +4,7 @@ date: "2022-05-06"
 description: |
   Data Package Containing Information About Elevators in NYC
 categories:
-  - data set
+  - Data Sets
 image: "featured.svg"
 ---
 

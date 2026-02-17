@@ -4,7 +4,7 @@ date: "2018-12-18"
 description: |
   Extra Recipes Steps for Text Processing
 categories:
-  - R package
+  - R Packages
 image: "featured.svg"
 ---
 

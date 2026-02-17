@@ -4,7 +4,7 @@ date: "2018-08-16"
 description: |
   List of textual data sources to be used for text mining in R
 categories:
-  - website
+  - Websites
 image: "featured.webp"
 ---
 

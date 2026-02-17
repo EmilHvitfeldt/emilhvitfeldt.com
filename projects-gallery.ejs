@@ -17,7 +17,7 @@ const sortedCategories = Array.from(allCategories).sort();
 <% if (desc) { %>
 <p><%- desc %></p>
 <% } %>
-<% if (category === 'R package') { %>
+<% if (category === 'R Packages') { %>
 <div class="package-list">
 <% for (const item of items) { %>
 <% if (item.categories && item.categories.includes(category)) { %>

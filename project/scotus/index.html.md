@@ -4,8 +4,8 @@ date: "2019-03-06"
 description: |
   Dataset of Supreme Court of the United States opinions
 categories:
-  - R package
-  - data set
+  - R Packages
+  - Data Sets
 image: "featured.webp"
 ---
 

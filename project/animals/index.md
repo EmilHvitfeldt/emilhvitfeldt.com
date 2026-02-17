@@ -4,7 +4,7 @@ date: "2020-08-30"
 description: |
   Data set with descriptions of animals
 categories:
-  - data set
+  - Data Sets
 image: "featured.svg"
 ---
   

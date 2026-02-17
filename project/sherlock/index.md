@@ -4,7 +4,7 @@ date: "2021-08-16"
 description: |
   Sherlock Holmes text as Data
 categories:
-  - data set
+  - Data Sets
 image: "featured.svg"
 ---
 

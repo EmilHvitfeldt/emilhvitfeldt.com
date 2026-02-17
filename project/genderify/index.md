@@ -4,7 +4,7 @@ date: "2020-08-01"
 description: |
   satirical Gender Classification Service
 categories:
-  - website
+  - Websites
 image: "featured.webp"
 ---
 

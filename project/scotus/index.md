@@ -4,7 +4,7 @@ date: "2019-03-06"
 description: |
   Dataset of Supreme Court of the United States opinions
 categories:
-  - data set
+  - Data Sets
 image: "featured.webp"
 ---
 

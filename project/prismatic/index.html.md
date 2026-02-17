@@ -4,7 +4,7 @@ date: "2019-10-06"
 description: |
   Manipulate and visualize colors in a intuitive, low-dependency and functional way
 categories:
-  - R package
+  - R Packages
 image: "featured.svg"
 ---
 

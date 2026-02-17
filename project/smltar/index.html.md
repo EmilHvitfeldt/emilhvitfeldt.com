@@ -4,7 +4,7 @@ date: "2020-08-06"
 description: |
   Book written with Julia Silge
 categories:
-  - book
+  - Books
 image: "featured.webp"
 ---
 

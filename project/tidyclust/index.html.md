@@ -4,7 +4,7 @@ date: "2022-07-27"
 description: |
     provides a tidy unified interface to clustering model within the tidymodels framework.
 categories:
- - R package
+ - R Packages
 image: "featured.svg"
 ---
 

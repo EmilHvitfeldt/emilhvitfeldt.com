@@ -4,7 +4,7 @@ date: "2021-08-07"
 description: |
   Provides labs to 'An Introduction to Statistical Learning' using tidymodels
 categories:
-  - website
+  - Websites
 image: "featured.webp"
 ---
 

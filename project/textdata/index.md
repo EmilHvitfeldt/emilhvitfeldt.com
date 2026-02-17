@@ -4,7 +4,7 @@ date: "2019-06-12"
 description: |
   Provides a framework to download, parse, and store text datasets
 categories:
-  - R package
+  - R Packages
 image: "featured.svg"
 ---
 

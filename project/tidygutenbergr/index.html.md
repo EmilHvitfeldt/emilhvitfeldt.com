@@ -4,7 +4,7 @@ date: "2019-03-06"
 description: |
   Cleaned gutenbergr text
 categories:
-  - data set
+  - Data Sets
 image: "featured.webp"
 ---
 

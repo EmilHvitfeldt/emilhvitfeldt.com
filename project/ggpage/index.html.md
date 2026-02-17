@@ -4,7 +4,7 @@ date: "2019-01-19"
 description: |
   Creates Page Layout Visualizations
 categories:
-  - R package
+  - R Packages
 image: "featured.svg"
 ---
 

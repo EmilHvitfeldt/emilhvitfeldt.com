@@ -4,7 +4,7 @@ date: "2018-07-10"
 description: |
   A comprehensive collection of color palettes in R using a common interface
 categories:
-  - R package
+  - R Packages
 image: "featured.svg"
 ---
 
