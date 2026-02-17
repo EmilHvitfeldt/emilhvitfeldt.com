@@ -8,8 +8,8 @@ listing:
     category-order:
       - R Packages
       - Books
-      - Websites
       - Data Sets
+      - Websites
       - Miscellaneous
     category-descriptions:
       R Packages: "R packages I have authored or contributed to."

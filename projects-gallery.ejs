@@ -48,6 +48,26 @@ const orderedCategories = templateParams['category-order']
 <% } %>
 <% } %>
 </div>
+<% } else if (category === 'Data Sets') { %>
+<div class="hex-grid">
+<%
+  const colsPerRow = 5;
+  let hexIndex = 0;
+%>
+<% for (const item of items) { %>
+<% if (item.categories && item.categories.includes(category)) { %>
+<%
+  const row = Math.floor(hexIndex / colsPerRow);
+  const isOffsetRow = row % 2 === 1;
+  const isFirstInRow = hexIndex % colsPerRow === 0;
+  hexIndex++;
+%>
+<a href="<%- item.path %>" class="hex-item<%= isOffsetRow ? ' hex-offset' : '' %><%= isFirstInRow && isOffsetRow ? ' hex-first-offset' : '' %>" title="<%= item.title %>" <%= metadataAttrs(item) %>>
+<img src="<%- item.image %>" alt="<%= item.title %>">
+</a>
+<% } %>
+<% } %>
+</div>
 <% } else { %>
 <ul>
 <% for (const item of items) { %>

@@ -371,6 +371,57 @@ div.quarto-post:hover .listing-categories .listing-category {
   }
 }
 
+div.hex-grid {
+  --s: 125px;
+  --m: 4px;
+
+  display: flex !important;
+  flex-wrap: wrap !important;
+  margin: 1rem auto 2rem auto;
+  width: calc(5 * var(--s) + 10 * var(--m) + var(--s) / 2);
+
+  a.hex-item {
+    display: block !important;
+    width: var(--s) !important;
+    aspect-ratio: 0.866 !important;
+    margin: var(--m) !important;
+    margin-bottom: calc(var(--s) / -2.25) !important;
+    transition: transform 0.2s ease, filter 0.2s ease;
+
+    img {
+      width: 100% !important;
+      height: auto !important;
+      object-fit: contain;
+      display: block;
+    }
+
+    &:hover {
+      transform: scale(1.05);
+      filter: drop-shadow(0 4px 8px rgba($theme-green, 0.25));
+      z-index: 10;
+    }
+
+    // First item in offset rows gets the margin to push the whole row
+    &.hex-first-offset {
+      margin-left: calc(var(--s) / 2 + var(--m) * 2) !important;
+    }
+  }
+}
+
+@media (max-width: 650px) {
+  div.hex-grid {
+    --s: 100px;
+    width: calc(4 * var(--s) + 8 * var(--m) + var(--s) / 2);
+  }
+}
+
+@media (max-width: 450px) {
+  div.hex-grid {
+    --s: 88px;
+    width: calc(3 * var(--s) + 6 * var(--m) + var(--s) / 2);
+  }
+}
+
 .quarto-listing-container-grid:has(.quarto-grid-item:hover)
   .quarto-grid-item:not(:hover) {
   filter: brightness(95%);
