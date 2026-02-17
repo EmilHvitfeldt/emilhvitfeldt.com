@@ -5,7 +5,12 @@ listing:
   sort: "date desc"
   template: projects-gallery.ejs
   template-params:
+    category-order:
+      - R Packages
+      - Books
+      - Websites
+      - Data Sets
     category-descriptions:
       R Packages: "R packages I have authored or contributed to."
-      data Sets: "Datasets packaged for easy use in R."
+      Data Sets: "Datasets packaged for easy use in R."
 ---

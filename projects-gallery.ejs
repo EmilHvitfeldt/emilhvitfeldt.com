@@ -9,9 +9,12 @@ for (const item of items) {
     }
   }
 }
-const sortedCategories = Array.from(allCategories).sort();
+// Use custom order if provided, otherwise sort alphabetically
+const orderedCategories = templateParams['category-order']
+  ? templateParams['category-order'].filter(cat => allCategories.has(cat))
+  : Array.from(allCategories).sort();
 %>
-<% for (const category of sortedCategories) { %>
+<% for (const category of orderedCategories) { %>
 <h2><%= category %></h2>
 <% const desc = templateParams['category-descriptions'] && templateParams['category-descriptions'][category]; %>
 <% if (desc) { %>
