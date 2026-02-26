@@ -10,7 +10,16 @@
 <atom:link href="https://emilhvitfeldt.com/blog.xml" rel="self" type="application/rss+xml"/>
 <description>Emil Hvitfeldt blog about R, slides and modeling</description>
 <generator>quarto-1.8.25</generator>
-<lastBuildDate>Fri, 30 Jan 2026 08:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 26 Feb 2026 08:00:00 GMT</lastBuildDate>
+<item>
+  <title>{B4F502887207:/post/ast-grep-r-claude-code/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/ast-grep-r-claude-code/</link>
+  <description>{B4F502887207:/post/ast-grep-r-claude-code/index.html}</description>
+  <category>AI</category>
+  <guid>https://emilhvitfeldt.com/post/ast-grep-r-claude-code/</guid>
+  <pubDate>Thu, 26 Feb 2026 08:00:00 GMT</pubDate>
+  <media:content url="https://emilhvitfeldt.com/post/ast-grep-r-claude-code/featured.webp" medium="image" type="image/webp"/>
+</item>
 <item>
   <title>{B4F502887207:/post/r-color-palettees-refresh/index.html}</title>
   <link>https://emilhvitfeldt.com/post/r-color-palettees-refresh/</link>
@@ -191,15 +200,9 @@
   <pubDate>Sat, 14 Oct 2023 07:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/slidecraft-7-tips-and-tricks/featured.webp" medium="image" type="image/webp"/>
 </item>
-<item>
-  <title>{B4F502887207:/post/slidecraft-scss-themes/index.html}</title>
-  <link>https://emilhvitfeldt.com/post/slidecraft-scss-themes/</link>
-  <description>{B4F502887207:/post/slidecraft-scss-themes/index.html}</description>
-  <category>slidecraft 101</category>
-  <category>quarto</category>
-  <guid>https://emilhvitfeldt.com/post/slidecraft-scss-themes/</guid>
-  <pubDate>Mon, 07 Aug 2023 07:00:00 GMT</pubDate>
-  <media:content url="https://emilhvitfeldt.com/post/slidecraft-scss-themes/featured.webp" medium="image" type="image/webp"/>
+</channel>
+</rss>
+="image/webp"/>
 </item>
 </channel>
 </rss>
