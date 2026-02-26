@@ -21,6 +21,10 @@ This lets us search for things that are otherwise really hard to get right in re
 
 ast-grep doens't have native R support, but we are able to add it using [custom language support](https://ast-grep.github.io/advanced/custom-language.html).
 
+::: {.callout-tip}
+A different way of approaching this is by installing the R package [astgrepr](https://github.com/etiennebacher/astgrepr) and have Claude Code use the R functions instead of the CLI.
+:::
+
 ## Installing things
 
 First, you need to [install ast-grep](https://ast-grep.github.io/guide/quick-start.html#installation).
