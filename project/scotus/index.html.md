@@ -5,7 +5,7 @@ description: |
   Dataset of Supreme Court of the United States opinions
 categories:
   - Data Sets
-image: "featured.webp"
+image: "featured.svg"
 ---
 
 <div class="project-buttons">
