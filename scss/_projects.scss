@@ -1,0 +1,330 @@
+// =============================================================================
+// PROJECTS PAGE
+// =============================================================================
+
+// Projects listing container --------------------------------------------------
+
+.projects-listing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  > h2 {
+    position: relative;
+    width: 100%;
+    margin: 3rem 0 0.5rem;
+    font-family: Fraunces;
+    font-weight: 100;
+    font-size: 2.5rem;
+    text-align: center;
+
+    .anchorjs-link {
+      position: absolute;
+    }
+  }
+
+  > p {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    width: 100%;
+  }
+}
+
+// Package list (R packages) ---------------------------------------------------
+
+.package-list {
+  --hex-size: 150px;
+  display: flex;
+  flex-direction: column;
+  margin: 1rem 0 2rem;
+
+  .package-item {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: calc(var(--hex-size) / (-4 * cos(30deg)));
+
+    &:nth-child(odd) {
+      margin-left: calc(var(--hex-size) / 2);
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .package-image {
+      flex-shrink: 0;
+      width: var(--hex-size);
+      transition: $transition-hover;
+
+      img {
+        width: 100%;
+        height: auto;
+        display: block;
+        aspect-ratio: cos(30deg);
+      }
+
+      &:hover {
+        @include card-hover;
+      }
+    }
+
+    .package-content {
+      flex: 1;
+      display: flex;
+      align-items: center;
+
+      p {
+        margin: 0;
+      }
+
+      .package-title {
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .package-list {
+    --hex-size: 80px;
+    gap: 1rem;
+
+    .package-item {
+      gap: 1rem;
+      margin-bottom: 0;
+
+      &:nth-child(odd) {
+        margin-left: 0;
+      }
+    }
+  }
+}
+
+// Books list ------------------------------------------------------------------
+
+.projects-listing .books-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin: 1rem 0 2rem;
+
+  .book-item {
+    display: block;
+    width: 200px;
+    flex: 0 0 200px;
+    transition: $transition-hover;
+
+    img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 4px;
+      aspect-ratio: 1000 / 1579;
+    }
+
+    &:hover {
+      @include card-hover;
+    }
+  }
+}
+
+// Websites grid ---------------------------------------------------------------
+
+.websites-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin: 1rem 0 2rem;
+
+  // Hide spurious empty p-wrapped links created by Quarto
+  > p {
+    display: none;
+  }
+
+  .website-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid $theme-green-shadow;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      @include card-hover-lift;
+      border-color: $theme-green;
+    }
+
+    .website-image {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      overflow: hidden;
+      background-color: $theme-green-light;
+
+      p {
+        margin: 0;
+        height: 100%;
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    .website-content {
+      padding: 1rem;
+
+      h3 {
+        margin: 0 0 0.5rem 0;
+        font-size: 1.1rem;
+        color: $theme-darkgreen;
+      }
+
+      p {
+        margin: 0;
+        font-size: 0.9rem;
+        color: lighten($theme-darkgreen, 20%);
+      }
+    }
+  }
+}
+
+// Hex grid (data sets) --------------------------------------------------------
+
+.hex-grid-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hex-description {
+  height: 3rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0.5rem 1rem;
+  margin-top: 1rem;
+  color: $theme-darkgreen;
+
+  .hex-description-default {
+    font-style: italic;
+    opacity: 0.7;
+  }
+
+  .hex-description-text {
+    display: none;
+  }
+
+  @media (max-width: 650px) {
+    display: none;
+  }
+}
+
+// Nested under .projects-listing for specificity (avoids !important)
+.projects-listing div.hex-grid {
+  --s: 125px;
+  --m: 4px;
+
+  display: flex;
+  flex-wrap: wrap;
+  margin: 1rem auto 2rem;
+  padding-left: calc(var(--s) / 4);
+  width: calc(5 * var(--s) + 10 * var(--m) + var(--s) / 2);
+
+  a.hex-item {
+    display: block;
+    width: var(--s);
+    aspect-ratio: 0.866;
+    margin: var(--m);
+    margin-bottom: calc(var(--s) / -2.25);
+    transition: $transition-hover;
+
+    img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    &:hover {
+      @include card-hover(1.05, 4px 8px, rgba($theme-green, 0.25));
+      z-index: 10;
+    }
+
+    // First item in offset rows gets the margin to push the whole row
+    // 5 columns (desktop)
+    &.hex-offset-5 {
+      margin-left: calc(var(--s) / 2 + var(--m) * 2);
+    }
+  }
+}
+
+@media (max-width: 750px) {
+  .projects-listing div.hex-grid {
+    --s: 100px;
+    padding-left: calc(var(--s) / 4);
+    width: calc(4 * var(--s) + 8 * var(--m) + var(--s) / 2);
+
+    a.hex-item {
+      // Disable 5-col offset, enable 4-col offset
+      &.hex-offset-5 {
+        margin-left: var(--m);
+      }
+      &.hex-offset-4 {
+        margin-left: calc(var(--s) / 2 + var(--m) * 2);
+      }
+    }
+  }
+}
+
+@media (max-width: 550px) {
+  .projects-listing div.hex-grid {
+    --s: 88px;
+    padding-left: calc(var(--s) / 4);
+    width: calc(3 * var(--s) + 6 * var(--m) + var(--s) / 2);
+
+    a.hex-item {
+      // Disable 4-col offset, enable 3-col offset
+      &.hex-offset-4 {
+        margin-left: var(--m);
+      }
+      &.hex-offset-3 {
+        margin-left: calc(var(--s) / 2 + var(--m) * 2);
+      }
+    }
+  }
+}
+
+// Quarto grid items (miscellaneous projects) ----------------------------------
+
+.quarto-listing-container-grid:has(.quarto-grid-item:hover)
+  .quarto-grid-item:not(:hover) {
+  filter: brightness(95%);
+}
+
+.quarto-grid-item {
+  transition: all 0.25s;
+
+  &:hover {
+    border-color: $theme-green;
+    box-shadow: 0 12px 16px $theme-green-shadow;
+  }
+
+  p.card-img-top > img {
+    object-fit: contain;
+    background-color: $theme-green-light;
+  }
+}
+
+.quarto-grid-item .listing-categories .listing-category {
+  color: $theme-green;
+  border-color: $theme-green;
+
+  @include btn-inverse;
+}

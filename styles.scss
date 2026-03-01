@@ -1,35 +1,50 @@
 /*-- scss:mixins --*/
 
+@mixin card-hover($scale: 1.03, $shadow-size: 3px 6px, $shadow-color: $theme-green-shadow) {
+  transform: scale($scale);
+  filter: drop-shadow(0 $shadow-size $shadow-color);
+}
+
+@mixin card-hover-lift($shadow-color: rgba($theme-green, 0.15)) {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px $shadow-color;
+}
+
+@mixin respond-to($breakpoint) {
+  @media (max-width: $breakpoint) {
+    @content;
+  }
+}
+
 @mixin btn-inverse {
-  transition-delay: 0s;
-  transition-duration: 0.15s;
-  transition-property: color;
-  transition-timing-function: ease-in;
+  transition: color 0.15s ease-in;
 
   &:hover {
     background-color: $theme-green;
-    color: rgb(250, 249, 240);
+    color: #faf9f0;
     border-color: $theme-green;
   }
 }
 
 /*-- scss:defaults --*/
 
+// Theme colors ----------------------------------------------------------------
+
 $theme-lightgreen: #f0f3ee;
 $theme-darkgreen: #17261e;
 $theme-green: #4a7862;
+$theme-green-light: lighten($theme-green, 50%);
+$theme-green-shadow: rgba($theme-green, 0.2);
+
+// Transitions -----------------------------------------------------------------
+
+$transition-hover: transform 0.2s ease, filter 0.2s ease;
+
+// Typography ------------------------------------------------------------------
+
 $font-size-root: 22px;
-
-// colors ----------------------------------------------------------------------
-
-$body-bg: $theme-lightgreen;
-$body-color: $theme-darkgreen;
-$link-color: $theme-green;
-$link-hover-color: darken(saturate($link-color, 50%), 15%);
-
-$code-color: #4758ab;
-
-// Fonts -----------------------------------------------------------------------
+$font-family-sans-serif: Commissioner;
+$font-family-monospace: Inconsolata;
 
 @font-face {
   font-family: "Commissioner";
@@ -76,17 +91,46 @@ $code-color: #4758ab;
     url("assets/fonts/Inconsolata-Regular.woff") format("woff");
 }
 
-$font-family-sans-serif: Commissioner;
-$font-family-monospace: Inconsolata;
+// Quarto variable overrides ---------------------------------------------------
+
+$body-bg: $theme-lightgreen;
+$body-color: $theme-darkgreen;
+$link-color: $theme-green;
+$link-hover-color: darken(saturate($link-color, 50%), 15%);
+$code-color: #4758ab;
+$navbar-bg: $theme-lightgreen;
+$navbar-fg: $theme-green;
+$btn-code-copy-color-active: $theme-green;
+
+// Page-specific variables -----------------------------------------------------
+
+$home-main-width: 1400px;
+$home-left-width: 65%;
+
+/*-- scss:rules --*/
+
+// =============================================================================
+// BASE ELEMENTS
+// =============================================================================
+
+h1,
+h2,
+h3 {
+  font-family: Fraunces;
+}
 
 .sourceCode {
   font-size: 1.1em;
 }
 
-// Navigation ------------------------------------------------------------------
+.page-item.active .page-link {
+  background-color: $theme-green;
+  border-color: $theme-green;
+}
 
-$navbar-bg: $theme-lightgreen;
-$navbar-fg: $theme-green;
+// =============================================================================
+// NAVIGATION
+// =============================================================================
 
 .menu-text {
   display: block;
@@ -100,10 +144,10 @@ $navbar-fg: $theme-green;
     width: 100%;
     height: 0.1em;
     background-color: $theme-green;
-    transition: opacity 300ms, transform 300ms;
     opacity: 1;
     transform: scale(0);
     transform-origin: center;
+    transition: opacity 300ms, transform 300ms;
   }
 
   &:hover {
@@ -129,540 +173,34 @@ nav .nav-item.compact .nav-link {
   }
 }
 
-// code blocks -----------------------------------------------------------------
+// =============================================================================
+// PAGE-SPECIFIC STYLES (imported from partials)
+// =============================================================================
+
+@import "scss/home";
+@import "scss/blog";
+@import "scss/projects";
+@import "scss/talks";
+
+// =============================================================================
+// SHARED COMPONENTS
+// =============================================================================
+
+// Button links (used in about page, talks, and some posts) --------------------
+// - div.quarto-about-jolla .about-link: Social buttons in about.qmd
+// - .btn-links: Buttons in talk posts
+// - .project-buttons>p>a: Buttons in post/slidecraft-scss-themes
 
-$btn-code-copy-color-active: $theme-green;
-
-/*-- scss:rules --*/
-
-h1,
-h2,
-h3 {
-  font-family: Fraunces;
-}
-
-.page-item.active .page-link {
-  background-color: $theme-green;
-  border-color: $theme-green;
-}
-
-// home ------------------------------------------------------------------------
-
-$home-main-width: 1400px;
-$home-left-width: 65%;
-
-.main {
-  display: flex;
-  margin: auto;
-  width: $home-main-width;
-  margin-top: 2rem;
-  margin-bottom: 4rem;
-  gap: 1.5rem;
-
-  .left {
-    width: $home-left-width;
-    font-size: 28px;
-    line-height: calc(28px * 1.5);
-
-    h1 {
-      font-size: 140px;
-      margin-top: 0;
-      line-height: calc(140px * 1.2);
-      letter-spacing: -5px;
-    }
-
-    h2 {
-      text-transform: uppercase;
-      border-bottom: unset;
-      margin-top: 0;
-      margin-bottom: 0;
-    }
-  }
-
-  .right {
-    width: 100% - $home-left-width;
-    display: flex;
-
-    p {
-      width: 100%;
-      img {
-        width: 100%;
-      }
-    }
-  }
-}
-
-@media (max-width: calc($home-main-width + 4rem)) {
-  .main {
-    flex-direction: column;
-    margin: 5rem;
-    width: unset;
-
-    .left {
-      width: 100%;
-      margin-bottom: 5rem;
-    }
-
-    .right {
-      width: 100%;
-      p {
-        width: 100%;
-        img {
-          display: block;
-          margin: auto;
-          width: 80%;
-        }
-      }
-    }
-  }
-}
-
-.page-layout-custom {
-  overflow: hidden;
-}
-
-// blog ------------------------------------------------------------------------
-
-div.quarto-post {
-  border-bottom: unset;
-}
-
-div.quarto-post .listing-categories .listing-category,
-.quarto-title .quarto-categories .quarto-category {
-  color: $theme-green;
-  border: solid 1px $theme-green;
-
-  @include btn-inverse;
-}
-
-.quarto-listing-category-title {
-  color: $theme-green;
-}
-
-div.quarto-post .body h3.listing-title {
-  font-family: Fraunces;
-  color: $theme-darkgreen;
-  display: inline;
-  background-image: linear-gradient($theme-green, $theme-green);
-  background-size: 0% 2px;
-  background-repeat: no-repeat;
-  background-position: left bottom;
-  transition: background-size 0.3s, color 0.3s;
-}
-
-div.quarto-post:hover .body h3.listing-title {
-  color: $theme-green;
-  background-size: 100% 2px;
-}
-
-div.quarto-post:hover .listing-categories .listing-category {
-  font-weight: 600;
-}
-
-#title-block-header.quarto-title-block.default .quarto-title-meta-heading,
-.quarto-title-banner .page-columns .page-full,
-.quarto-title-banner {
-  margin-top: unset;
-  margin-bottom: unset;
-}
-
-// project ---------------------------------------------------------------------
-
-.projects-listing {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  > h2 {
-    text-align: center;
-    font-family: Fraunces;
-    font-weight: 100;
-    font-size: 2.5rem;
-    margin-top: 3rem;
-    margin-bottom: 0.5rem;
-    width: 100%;
-    position: relative;
-
-    .anchorjs-link {
-      position: absolute;
-    }
-  }
-
-  > p {
-    text-align: center;
-    margin-bottom: 1.5rem;
-    width: 100%;
-  }
-}
-
-.package-list {
-  --hex-size: 150px;
-  display: flex;
-  flex-direction: column;
-  margin-top: 1rem;
-  margin-bottom: 2rem;
-
-  .package-item {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    margin-bottom: calc(var(--hex-size) / (-4 * cos(30deg)));
-
-    &:nth-child(odd) {
-      margin-left: calc(var(--hex-size) / 2);
-    }
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-
-    .package-image {
-      flex-shrink: 0;
-      width: var(--hex-size);
-      transition: transform 0.2s ease, filter 0.2s ease;
-
-      img {
-        width: 100%;
-        height: auto;
-        display: block;
-        aspect-ratio: cos(30deg);
-      }
-
-      &:hover {
-        transform: scale(1.03);
-        filter: drop-shadow(0 3px 6px rgba($theme-green, 0.2));
-      }
-    }
-
-    .package-content {
-      flex: 1;
-      display: flex;
-      align-items: center;
-
-      p {
-        margin: 0;
-      }
-
-      .package-title {
-        font-weight: 600;
-      }
-    }
-  }
-}
-
-@media (max-width: 600px) {
-  .package-list {
-    --hex-size: 80px;
-    gap: 1rem;
-
-    .package-item {
-      gap: 1rem;
-      margin-bottom: 0;
-      flex-direction: row;
-      align-items: center;
-
-      &:nth-child(odd) {
-        margin-left: 0;
-      }
-    }
-  }
-}
-
-.books-list {
-  display: flex !important;
-  flex-direction: row !important;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1.5rem;
-  margin-top: 1rem;
-  margin-bottom: 2rem;
-
-  .book-item {
-    display: block;
-    width: 200px;
-    flex: 0 0 200px;
-    transition: transform 0.2s ease, filter 0.2s ease;
-
-    img {
-      width: 100%;
-      height: auto;
-      display: block;
-      border-radius: 4px;
-      aspect-ratio: 1000 / 1579;
-    }
-
-    &:hover {
-      transform: scale(1.03);
-      filter: drop-shadow(0 3px 6px rgba($theme-green, 0.2));
-    }
-  }
-}
-
-.websites-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.5rem;
-  margin-top: 1rem;
-  margin-bottom: 2rem;
-
-  // Hide spurious empty p-wrapped links created by Quarto
-  > p {
-    display: none;
-  }
-
-  .website-card {
-    display: block;
-    text-decoration: none;
-    color: inherit;
-    border: 1px solid rgba($theme-green, 0.2);
-    border-radius: 8px;
-    overflow: hidden;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-
-    &:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 16px rgba($theme-green, 0.15);
-      border-color: $theme-green;
-    }
-
-    .website-image {
-      width: 100%;
-      aspect-ratio: 16 / 10;
-      overflow: hidden;
-      background-color: lighten($theme-green, 50%);
-
-      p {
-        margin: 0;
-        height: 100%;
-      }
-
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-    }
-
-    .website-content {
-      padding: 1rem;
-
-      h3 {
-        margin: 0 0 0.5rem 0;
-        font-size: 1.1rem;
-        color: $theme-darkgreen;
-      }
-
-      p {
-        margin: 0;
-        font-size: 0.9rem;
-        color: lighten($theme-darkgreen, 20%);
-      }
-    }
-  }
-}
-
-.hex-grid-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.hex-description {
-  height: 3rem;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 0.5rem 1rem;
-  margin-top: 1rem;
-  color: $theme-darkgreen;
-
-  .hex-description-default {
-    font-style: italic;
-    opacity: 0.7;
-  }
-
-  .hex-description-text {
-    display: none;
-  }
-
-  @media (max-width: 650px) {
-    display: none;
-  }
-}
-
-div.hex-grid {
-  --s: 125px;
-  --m: 4px;
-
-  display: flex !important;
-  flex-wrap: wrap !important;
-  margin: 1rem auto 2rem auto;
-  width: calc(5 * var(--s) + 10 * var(--m) + var(--s) / 2);
-
-  a.hex-item {
-    display: block !important;
-    width: var(--s) !important;
-    aspect-ratio: 0.866 !important;
-    margin: var(--m) !important;
-    margin-bottom: calc(var(--s) / -2.25) !important;
-    transition: transform 0.2s ease, filter 0.2s ease;
-
-    img {
-      width: 100% !important;
-      height: auto !important;
-      object-fit: contain;
-      display: block;
-    }
-
-    &:hover {
-      transform: scale(1.05);
-      filter: drop-shadow(0 4px 8px rgba($theme-green, 0.25));
-      z-index: 10;
-    }
-
-    // First item in offset rows gets the margin to push the whole row
-    // 5 columns (desktop)
-    &.hex-offset-5 {
-      margin-left: calc(var(--s) / 2 + var(--m) * 2) !important;
-    }
-  }
-}
-
-@media (max-width: 750px) {
-  div.hex-grid {
-    --s: 100px;
-    width: calc(4 * var(--s) + 8 * var(--m) + var(--s) / 2);
-    margin: 1rem auto 2rem auto;
-
-    a.hex-item {
-      // Disable 5-col offset, enable 4-col offset
-      &.hex-offset-5 {
-        margin-left: var(--m) !important;
-      }
-      &.hex-offset-4 {
-        margin-left: calc(var(--s) / 2 + var(--m) * 2) !important;
-      }
-    }
-  }
-}
-
-@media (max-width: 550px) {
-  div.hex-grid {
-    --s: 88px;
-    width: calc(3 * var(--s) + 6 * var(--m) + var(--s) / 2);
-    margin: 1rem auto 2rem auto;
-
-    a.hex-item {
-      // Disable 4-col offset, enable 3-col offset
-      &.hex-offset-4 {
-        margin-left: var(--m) !important;
-      }
-      &.hex-offset-3 {
-        margin-left: calc(var(--s) / 2 + var(--m) * 2) !important;
-      }
-    }
-  }
-}
-
-.quarto-listing-container-grid:has(.quarto-grid-item:hover)
-  .quarto-grid-item:not(:hover) {
-  filter: brightness(95%);
-}
-
-.quarto-grid-item {
-  transition: all 0.25s;
-
-  &:hover {
-    border-color: $theme-green;
-    box-shadow: 0 12px 16px rgba($theme-green, 0.2);
-  }
-
-  p.card-img-top > img {
-    object-fit: contain;
-    background-color: lighten($theme-green, 50%);
-  }
-}
-
-.quarto-grid-item .listing-categories .listing-category {
-  color: $theme-green;
-  border-color: $theme-green;
-
-  @include btn-inverse;
-}
-
-// talks ------------------------------------------------------------------------
-
-article {
-  margin-bottom: 2em;
-}
-
-.flex {
-  display: block;
-
-  @media screen and (min-width: 40em) {
-    display: flex;
-  }
-
-  figure {
-    width: 100%;
-    display: block;
-    margin: 0;
-
-    a .figure-img {
-      width: 100%;
-    }
-
-    @media screen and (min-width: 40em) {
-      width: 30%;
-      margin-right: 1rem;
-      display: flex;
-    }
-  }
-
-  .content {
-    width: 100%;
-
-    p {
-      margin-top: 0.25rem;
-      margin-bottom: 0.25rem;
-    }
-
-    @media screen and (min-width: 40em) {
-      width: 70%;
-    }
-
-    h1 {
-      font-size: 20px;
-      margin-top: 0.25rem;
-      margin-bottom: 0.25rem;
-    }
-
-    footer {
-      margin-top: 16px;
-      display: inline-flex;
-    }
-  }
-}
-
-/* div.quarto-about-jolla .about-link Social buttons used in about.qmd */
-/* .btn-links Buttons used talk posts */
-/* .project-buttons>p>a Buttons used in post/slidecraft-scss-themes */
 div.quarto-about-jolla .about-link,
 .btn-links,
 .project-buttons > p > a {
+  display: inline-block;
+  margin: 0 8px 16px 0;
+  padding: 8px 16px;
   border-style: solid;
-  padding-bottom: 8px;
-  padding-left: 16px;
-  padding-right: 16px;
-  padding-top: 8px;
-  margin-right: 8px;
-  margin-bottom: 16px;
   font-family: Commissioner;
   text-transform: uppercase;
   text-decoration-line: none;
-  display: inline-block;
 
   @include btn-inverse;
 
@@ -671,10 +209,10 @@ div.quarto-about-jolla .about-link,
   }
 }
 
+// Slide deck embed ------------------------------------------------------------
+
 .slide-deck {
   width: 100%;
   aspect-ratio: 1.5;
-
-  border-style: solid;
-  border-width: 1px;
+  border: 1px solid;
 }

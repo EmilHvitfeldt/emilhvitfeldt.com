@@ -1,0 +1,70 @@
+// =============================================================================
+// HOME PAGE
+// =============================================================================
+
+.main {
+  display: flex;
+  width: $home-main-width;
+  margin: 2rem auto 4rem;
+  gap: 1.5rem;
+
+  .left {
+    width: $home-left-width;
+    font-size: 28px;
+    line-height: 1.5;
+
+    h1 {
+      margin-top: 0;
+      font-size: 140px;
+      line-height: 1.2;
+      letter-spacing: -5px;
+    }
+
+    h2 {
+      margin: 0;
+      border-bottom: unset;
+      text-transform: uppercase;
+    }
+  }
+
+  .right {
+    width: 100% - $home-left-width;
+    display: flex;
+
+    p {
+      width: 100%;
+      img {
+        width: 100%;
+      }
+    }
+  }
+}
+
+@media (max-width: calc($home-main-width + 4rem)) {
+  .main {
+    flex-direction: column;
+    margin: 5rem;
+    width: unset;
+
+    .left {
+      width: 100%;
+      margin-bottom: 5rem;
+    }
+
+    .right {
+      width: 100%;
+      p {
+        width: 100%;
+        img {
+          display: block;
+          margin: auto;
+          width: 80%;
+        }
+      }
+    }
+  }
+}
+
+.page-layout-custom {
+  overflow: hidden;
+}
