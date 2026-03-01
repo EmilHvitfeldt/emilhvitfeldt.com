@@ -280,11 +280,18 @@ div.quarto-post:hover .listing-categories .listing-category {
     font-size: 2.5rem;
     margin-top: 3rem;
     margin-bottom: 0.5rem;
+    width: 100%;
+    position: relative;
+
+    .anchorjs-link {
+      position: absolute;
+    }
   }
 
   > p {
     text-align: center;
     margin-bottom: 1.5rem;
+    width: 100%;
   }
 }
 

@@ -1,5 +1,6 @@
 ---
 pagetitle: Emil Hvitfeldt - Projects
+toc: false
 listing:
   contents: project
   sort: "date desc"
