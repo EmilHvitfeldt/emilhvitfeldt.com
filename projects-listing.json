@@ -1,9 +1,12 @@
 {
   "listing": "/projects.html",
   "items": [
+    "/project/enemies/index.html",
     "/project/cross-stitch/index.html",
+    "/project/sushis/index.html",
     "/project/slidecrafting/index.html",
     "/project/tidymodels-sparsity/index.html",
+    "/project/animalshelter/index.html",
     "/project/orbital/index.html",
     "/project/slidecraft-101/index.html",
     "/project/feaz/index.html",
