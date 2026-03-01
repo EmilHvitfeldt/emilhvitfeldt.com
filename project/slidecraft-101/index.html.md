@@ -50,6 +50,8 @@ Modifying content on slides
 
 - [highlightword](https://github.com/EmilHvitfeldt/quarto-revealjs-highlightword)
 - [codewindows](https://github.com/EmilHvitfeldt/quarto-revealjs-codewindow)
+- [more-fragments](https://github.com/EmilHvitfeldt/quarto-revealjs-more-fragments)
+- [editable](https://github.com/EmilHvitfeldt/quarto-revealjs-editable)
 - [spotlight](https://github.com/EmilHvitfeldt/quarto-revealjs-spotlight)
 - [roughnotation](https://github.com/EmilHvitfeldt/quarto-roughnotation)
 - [designmode](https://github.com/EmilHvitfeldt/quarto-designmode)
