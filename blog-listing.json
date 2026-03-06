@@ -1,6 +1,7 @@
 {
   "listing": "/blog.html",
   "items": [
+    "/post/claude-code-alt-text-quarto/index.html",
     "/post/ast-grep-r-claude-code/index.html",
     "/post/r-color-palettees-refresh/index.html",
     "/post/ai-talking-dog/index.html",

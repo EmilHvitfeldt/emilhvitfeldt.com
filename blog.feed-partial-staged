@@ -10,7 +10,17 @@
 <atom:link href="https://emilhvitfeldt.com/blog.xml" rel="self" type="application/rss+xml"/>
 <description>Emil Hvitfeldt blog about R, slides and modeling</description>
 <generator>quarto-1.8.25</generator>
-<lastBuildDate>Thu, 26 Feb 2026 08:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 06 Mar 2026 08:00:00 GMT</lastBuildDate>
+<item>
+  <title>{B4F502887207:/post/claude-code-alt-text-quarto/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/claude-code-alt-text-quarto/</link>
+  <description>{B4F502887207:/post/claude-code-alt-text-quarto/index.html}</description>
+  <category>AI</category>
+  <category>quarto</category>
+  <guid>https://emilhvitfeldt.com/post/claude-code-alt-text-quarto/</guid>
+  <pubDate>Fri, 06 Mar 2026 08:00:00 GMT</pubDate>
+  <media:content url="https://emilhvitfeldt.com/post/claude-code-alt-text-quarto/featured.webp" medium="image" type="image/webp"/>
+</item>
 <item>
   <title>{B4F502887207:/post/ast-grep-r-claude-code/index.html}</title>
   <link>https://emilhvitfeldt.com/post/ast-grep-r-claude-code/</link>
@@ -190,17 +200,9 @@
   <pubDate>Wed, 06 Dec 2023 08:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/sharing-code-pictures/featured.webp" medium="image" type="image/webp"/>
 </item>
-<item>
-  <title>{B4F502887207:/post/slidecraft-7-tips-and-tricks/index.html}</title>
-  <link>https://emilhvitfeldt.com/post/slidecraft-7-tips-and-tricks/</link>
-  <description>{B4F502887207:/post/slidecraft-7-tips-and-tricks/index.html}</description>
-  <category>slidecraft 101</category>
-  <category>quarto</category>
-  <guid>https://emilhvitfeldt.com/post/slidecraft-7-tips-and-tricks/</guid>
-  <pubDate>Sat, 14 Oct 2023 07:00:00 GMT</pubDate>
-  <media:content url="https://emilhvitfeldt.com/post/slidecraft-7-tips-and-tricks/featured.webp" medium="image" type="image/webp"/>
-</item>
 </channel>
+</rss>
+/channel>
 </rss>
 ="image/webp"/>
 </item>
