@@ -1,6 +1,7 @@
 {
   "listing": "/talks.html",
   "items": [
+    "/talk/2026-03-19-quarto-tips-and-tricks/index.html",
     "/talk/2026-03-05-slidecraft/index.html",
     "/talk/2026-02-09-fairness/index.html",
     "/talk/2025-11-12-tuning/index.html",

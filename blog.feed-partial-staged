@@ -9,7 +9,7 @@
 <link>https://emilhvitfeldt.com/blog.html</link>
 <atom:link href="https://emilhvitfeldt.com/blog.xml" rel="self" type="application/rss+xml"/>
 <description>Emil Hvitfeldt blog about R, slides and modeling</description>
-<generator>quarto-1.8.25</generator>
+<generator>quarto-1.9.35</generator>
 <lastBuildDate>Fri, 06 Mar 2026 08:00:00 GMT</lastBuildDate>
 <item>
   <title>{B4F502887207:/post/claude-code-alt-text-quarto/index.html}</title>
