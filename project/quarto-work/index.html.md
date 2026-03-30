@@ -8,6 +8,8 @@ categories:
 image: "featured.webp"
 ---
 
+For Quarto RevealJS themes, extensions, and slidecrafting blog posts, see [Slidecraft 101](../slidecraft-101/index.qmd).
+
 A collection of all my Quarto related work.
 
 ## Extensions
