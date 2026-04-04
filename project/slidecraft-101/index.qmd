@@ -60,6 +60,7 @@ Modifying content on slides
 - [snow](https://github.com/EmilHvitfeldt/quarto-snow)
 - [loud](https://github.com/EmilHvitfeldt/quarto-revealjs-loud)
 - [color-classes](https://github.com/EmilHvitfeldt/quarto-color-classes)
+- [chat-bubbles](https://github.com/EmilHvitfeldt/quarto-revealjs-chat-bubbles)
 
 ## Talks about slidecrafting / quarto theming
 
