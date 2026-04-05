@@ -47,6 +47,7 @@ Modifying content on slides
 - [seasons theme](https://github.com/EmilHvitfeldt/quarto-revealjs-seasons) to showcase [Theme Varients](../../post/slidecraft-theme-variants/index.md)
 - [personal starter template](https://github.com/EmilHvitfeldt/quarto-revealjs-template)
 - [pechakucha](https://github.com/EmilHvitfeldt/quarto-revealjs-pechakucha)
+- [highlighter-theme](https://github.com/EmilHvitfeldt/quarto-revealjs-highlighter-theme)
 
 ## Quarto Extensions
 
