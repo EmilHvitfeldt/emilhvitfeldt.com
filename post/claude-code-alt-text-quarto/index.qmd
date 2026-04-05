@@ -257,6 +257,8 @@ plotting_data |>
 
 </details>
 
+A slightly modified version of this skill is also available as part of the [posit-dev/skills](https://github.com/posit-dev/skills#quarto) collection.
+
 ## In use
 
 Once I want to add or make sure my alt text is looking good,
