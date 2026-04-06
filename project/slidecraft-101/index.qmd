@@ -62,6 +62,7 @@ Modifying content on slides
 - [loud](https://github.com/EmilHvitfeldt/quarto-revealjs-loud)
 - [color-classes](https://github.com/EmilHvitfeldt/quarto-color-classes)
 - [chat-bubbles](https://github.com/EmilHvitfeldt/quarto-revealjs-chat-bubbles)
+- [tldraw](https://github.com/EmilHvitfeldt/quarto-revealjs-tldraw)
 
 ## Talks about slidecrafting / quarto theming
 
