@@ -15,6 +15,7 @@ A collection of all my Quarto related work.
 ## Extensions
 
 - [quarto-arrows](https://github.com/EmilHvitfeldt/quarto-arrows): Shortcodes to draw arrows for HTML, PDF, Typst, and RevealJS
+- [quarto-timeline](https://github.com/EmilHvitfeldt/quarto-timeline): Styled timelines for HTML documents and RevealJS presentations
 
 ## VS Code Extensions
 
