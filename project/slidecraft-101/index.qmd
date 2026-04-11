@@ -64,6 +64,7 @@ Modifying content on slides
 - [chat-bubbles](https://github.com/EmilHvitfeldt/quarto-revealjs-chat-bubbles)
 - [tldraw](https://github.com/EmilHvitfeldt/quarto-revealjs-tldraw)
 - [timeline](https://github.com/EmilHvitfeldt/quarto-timeline)
+- [transitions](https://github.com/EmilHvitfeldt/quarto-revealjs-transitions)
 
 ## Talks about slidecrafting / quarto theming
 
