@@ -14,28 +14,42 @@ I find slidecrafting an entertaining endeavour, and have thus created a number o
 
 I use [Quarto](https://quarto.org/) to create slides using the [revealjs](https://revealjs.com/) framework.
 
-## Blog posts
+## Book
 
-Change the appearance of your slides. Colors, fonts and sizes
+The blog posts have been reimagined as the [Slidecrafting Book](https://slidecrafting-book.com/). A practical guide to making beautiful slides with reveal.js and Quarto, covering theming, layout, interactivity, and extensions.
 
-- [Colors and fonts](../../post/slidecraft-colors-fonts/index.md)
-- [Code and Output](../../post/slidecraft-code-output/index.md)
-- [Better SCSS files](../../post/slidecraft-scss-uses/index.qmd)
-- [Creative uses of SASS loops](../../post/slidecraft-scss-loops/index.qmd)
-- [Theme Varients](../../post/slidecraft-theme-variants/index.md)
-- [Advanced Slide themes](../../post/slidecraft-scss-themes/index.qmd)
+### Theming
 
-Interesting things to add to your slides
+Changing the visual appearance of your slides
 
-- [7 Tips and Tricks](../../post/slidecraft-7-tips-and-tricks/index.qmd)
-- [Layout](../../post/slidecraft-layout/index.qmd)
-- [asciicast](../../post/slidecraft-asciicast/index.qmd)
+- [10 Minute Theme](https://slidecrafting-book.com/10-minute). Quick setup for establishing a style rapidly
+- [Colors](https://slidecrafting-book.com/colors)
+- [Fonts](https://slidecrafting-book.com/fonts)
+- [Sizes](https://slidecrafting-book.com/sizes)
+- [CSS/SCSS](https://slidecrafting-book.com/scss)
+- [Theme](https://slidecrafting-book.com/theme)
 
-Modifying content on slides
+### Content
 
-- [Transparent plot backgrounds](../../post/slidecraft-plot-backgrounds/index.qmd)
-- [Modifying plot sizes](../../post/slidecraft-plot-sizing/index.qmd)
-- [Fragments - CSS](../../post/slidecraft-fragment-css/index.qmd)
+Techniques for varying slide content and highlighting information
+
+- [Elements](https://slidecrafting-book.com/elements). Managing images, figures, and visual components
+- [Layout](https://slidecrafting-book.com/layout)
+- [Manual Code](https://slidecrafting-book.com/manual-code). Highlighting specific code sections
+- [Asciicast](https://slidecrafting-book.com/asciicast). Showcasing code with corresponding output
+
+### Interactivity
+
+- [Fragments](https://slidecrafting-book.com/fragments). Elements that change dynamically throughout presentations
+
+### Extensions
+
+- [Letterbox](https://slidecrafting-book.com/letterbox)
+- [Codewindow](https://slidecrafting-book.com/codewindow)
+
+### Miscellaneous
+
+- [Miscellaneous](https://slidecrafting-book.com/miscellaneous)
 
 ## Quarto Themes
 
