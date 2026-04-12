@@ -61,7 +61,7 @@ Modifying content on slides
 - [snow](https://github.com/EmilHvitfeldt/quarto-snow)
 - [loud](https://github.com/EmilHvitfeldt/quarto-revealjs-loud)
 - [color-classes](https://github.com/EmilHvitfeldt/quarto-color-classes)
-- [chat-bubbles](https://github.com/EmilHvitfeldt/quarto-revealjs-chat-bubbles)
+[chat-bubbles](https://github.com/EmilHvitfeldt/quarto-revealjs-chat-bubbles)
 - [tldraw](https://github.com/EmilHvitfeldt/quarto-revealjs-tldraw)
 - [timeline](https://github.com/EmilHvitfeldt/quarto-timeline)
 - [transitions](https://github.com/EmilHvitfeldt/quarto-revealjs-transitions)
@@ -72,19 +72,19 @@ Here is a selection of talks where I talk about slidecrafting or quarto theming 
 
 [Branded Quarto](../../talk/2024-06-05-branded-quarto/index.md)
 
-<iframe class="slide-deck" src="https://emilhvitfeldt.github.io/talk-branded-quarto/"></iframe>
+<iframe class="slide-deck" title="Branded Quarto slides" src="https://emilhvitfeldt.github.io/talk-branded-quarto/" loading="lazy"></iframe>
 
 [Slidecraft with quarto](../../talk/2023-11-27-slc-slidecraft/index.md)
 
-<iframe class="slide-deck" src="https://emilhvitfeldt.github.io/talk-slc-slidecraft/"></iframe>
+<iframe class="slide-deck" title="Slidecraft with Quarto slides" src="https://emilhvitfeldt.github.io/talk-slc-slidecraft/" loading="lazy"></iframe>
 
 [Styling and Templating Quarto Documents](../../talk/2023-09-19-quarto-theming-positconf/index.md)
 
-<iframe class="slide-deck" src="https://emilhvitfeldt.github.io/talk-quarto-theming-positconf/"></iframe>
+<iframe class="slide-deck" title="Styling and Templating Quarto Documents slides" src="https://emilhvitfeldt.github.io/talk-quarto-theming-positconf/" loading="lazy"></iframe>
 
 [Slidecraft - the art of creating pretty presentations](../../talk/2023-07-13-nyr-slidecraft/index.md)
 
-<iframe class="slide-deck" src="https://emilhvitfeldt.github.io/talk-nyr-slidecraft/"></iframe>
+<iframe class="slide-deck" title="Slidecraft - the art of creating pretty presentations slides" src="https://emilhvitfeldt.github.io/talk-nyr-slidecraft/" loading="lazy"></iframe>
 
 ## Other
 
