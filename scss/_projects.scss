@@ -301,6 +301,65 @@
   }
 }
 
+// Slidecraft card grid (quarto themes & extensions) ---------------------------
+
+.slidecraft-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin: 1rem 0 2rem;
+
+  > p {
+    display: none;
+  }
+}
+
+.slidecraft-card {
+  border: 1px solid $theme-green-shadow;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    @include card-hover-lift;
+    border-color: $theme-green;
+  }
+
+  > p:first-child {
+    margin: 0;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background-color: $theme-green-light;
+
+    a {
+      display: block;
+      height: 100%;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+  }
+
+  > p:last-child {
+    padding: 0.75rem 1rem;
+    margin: 0;
+
+    a {
+      color: $theme-darkgreen;
+      text-decoration: none;
+      font-weight: 600;
+
+      &:hover {
+        color: $theme-green;
+      }
+    }
+  }
+}
+
 // Quarto grid items (miscellaneous projects) ----------------------------------
 
 .quarto-listing-container-grid:has(.quarto-grid-item:hover)
