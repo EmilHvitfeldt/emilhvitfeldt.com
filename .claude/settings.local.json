@@ -6,7 +6,8 @@
       "WebFetch(domain:quarto.org)",
       "WebFetch(domain:ejs.co)",
       "WebFetch(domain:css-tricks.com)",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:emilhvitfeldt.github.io)"
     ]
   }
 }

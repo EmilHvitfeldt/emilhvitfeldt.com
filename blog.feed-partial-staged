@@ -10,7 +10,17 @@
 <atom:link href="https://emilhvitfeldt.com/blog.xml" rel="self" type="application/rss+xml"/>
 <description>Emil Hvitfeldt blog about R, slides and modeling</description>
 <generator>quarto-1.9.35</generator>
-<lastBuildDate>Fri, 06 Mar 2026 08:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 13 Apr 2026 07:00:00 GMT</lastBuildDate>
+<item>
+  <title>{B4F502887207:/post/quarto-timeline/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/quarto-timeline/</link>
+  <description>{B4F502887207:/post/quarto-timeline/index.html}</description>
+  <category>quarto</category>
+  <category>slidecraft 101</category>
+  <guid>https://emilhvitfeldt.com/post/quarto-timeline/</guid>
+  <pubDate>Mon, 13 Apr 2026 07:00:00 GMT</pubDate>
+  <media:content url="https://emilhvitfeldt.com/post/quarto-timeline/featured.webp" medium="image" type="image/webp"/>
+</item>
 <item>
   <title>{B4F502887207:/post/claude-code-alt-text-quarto/index.html}</title>
   <link>https://emilhvitfeldt.com/post/claude-code-alt-text-quarto/</link>
@@ -192,20 +202,10 @@
   <pubDate>Tue, 16 Jan 2024 08:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/slidecraft-layout/featured.webp" medium="image" type="image/webp"/>
 </item>
-<item>
-  <title>{B4F502887207:/post/sharing-code-pictures/index.html}</title>
-  <link>https://emilhvitfeldt.com/post/sharing-code-pictures/</link>
-  <description>{B4F502887207:/post/sharing-code-pictures/index.html}</description>
-  <guid>https://emilhvitfeldt.com/post/sharing-code-pictures/</guid>
-  <pubDate>Wed, 06 Dec 2023 08:00:00 GMT</pubDate>
-  <media:content url="https://emilhvitfeldt.com/post/sharing-code-pictures/featured.webp" medium="image" type="image/webp"/>
-</item>
 </channel>
 </rss>
-/channel>
-</rss>
-="image/webp"/>
-</item>
+>
+
 </channel>
 </rss>
 "/>

@@ -1,0 +1,67 @@
+---
+format:
+  revealjs:
+    self-contained: true
+    width: 900
+    height: 450
+filters:
+  - timeline
+---
+
+## `.fragment-slide` pan mode {.smaller}
+
+::: {.timeline .horizontal .fragment-slide}
+::: {.event data-label="2019"}
+**Idea Born**
+Napkin sketch becomes a roadmap.
+:::
+::: {.event .fragment data-label="2020"}
+**Project Started**
+Initial concept and planning phase.
+:::
+::: {.event .fragment data-label="2021"}
+**First Release**
+Launched version 1.0 to early users.
+:::
+::: {.event .fragment data-label="2022"}
+**Major Update**
+Rewrote core engine for performance.
+:::
+::: {.event .fragment data-label="2023"}
+**Scale Up**
+Reached 1 million users worldwide.
+:::
+::: {.event .fragment data-label="2024"}
+**Going Global**
+Expanded to 50 countries.
+:::
+:::
+
+## `.fragment-conveyor` pan mode {.smaller}
+
+::: {.timeline .horizontal .fragment-conveyor}
+::: {.event data-label="2019"}
+**Idea Born**
+Napkin sketch becomes a roadmap.
+:::
+::: {.event .fragment data-label="2020"}
+**Project Started**
+Initial concept and planning phase.
+:::
+::: {.event .fragment data-label="2021"}
+**First Release**
+Launched version 1.0 to early users.
+:::
+::: {.event .fragment data-label="2022"}
+**Major Update**
+Rewrote core engine for performance.
+:::
+::: {.event .fragment data-label="2023"}
+**Scale Up**
+Reached 1 million users worldwide.
+:::
+::: {.event .fragment data-label="2024"}
+**Going Global**
+Expanded to 50 countries.
+:::
+:::
