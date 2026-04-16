@@ -161,6 +161,12 @@ Techniques for varying slide content and highlighting information
 :::
 
 ::: {.slidecraft-card}
+[![](tegaki.gif){fig-alt="Tegaki extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-tegaki)
+
+**[Tegaki](https://github.com/EmilHvitfeldt/quarto-tegaki)**
+:::
+
+::: {.slidecraft-card}
 [![](highlightword.webp){fig-alt="Highlight Word extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-highlightword)
 
 **[Highlight Word](https://github.com/EmilHvitfeldt/quarto-revealjs-highlightword)**
