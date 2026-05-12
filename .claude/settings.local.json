@@ -7,7 +7,8 @@
       "WebFetch(domain:ejs.co)",
       "WebFetch(domain:css-tricks.com)",
       "WebFetch(domain:github.com)",
-      "WebFetch(domain:emilhvitfeldt.github.io)"
+      "WebFetch(domain:emilhvitfeldt.github.io)",
+      "Bash(identify *)"
     ]
   }
 }
