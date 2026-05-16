@@ -17,6 +17,7 @@ A collection of all my Quarto related work.
 - [quarto-arrows](https://github.com/EmilHvitfeldt/quarto-arrows): Shortcodes to draw arrows for HTML, PDF, Typst, and RevealJS
 - [quarto-tegaki](https://github.com/EmilHvitfeldt/quarto-tegaki): Tegaki hand-drawn style for RevealJS presentations
 - [quarto-timeline](https://github.com/EmilHvitfeldt/quarto-timeline): Styled timelines for HTML documents and RevealJS presentations
+- [quarto-redacted](https://github.com/EmilHvitfeldt/quarto-redacted): Redacted-style text (solid bars or scribbles) for HTML, RevealJS, PDF, and Typst
 
 ## VS Code Extensions
 

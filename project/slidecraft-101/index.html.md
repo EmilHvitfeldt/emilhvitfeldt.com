@@ -167,6 +167,12 @@ Techniques for varying slide content and highlighting information
 :::
 
 ::: {.slidecraft-card}
+[![](redacted.webp){fig-alt="Redacted extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-redacted)
+
+**[Redacted](https://github.com/EmilHvitfeldt/quarto-redacted)**
+:::
+
+::: {.slidecraft-card}
 [![](highlightword.webp){fig-alt="Highlight Word extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-highlightword)
 
 **[Highlight Word](https://github.com/EmilHvitfeldt/quarto-revealjs-highlightword)**
