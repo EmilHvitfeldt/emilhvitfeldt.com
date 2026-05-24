@@ -18,6 +18,7 @@ A collection of all my Quarto related work.
 - [quarto-tegaki](https://github.com/EmilHvitfeldt/quarto-tegaki): Tegaki hand-drawn style for RevealJS presentations
 - [quarto-timeline](https://github.com/EmilHvitfeldt/quarto-timeline): Styled timelines for HTML documents and RevealJS presentations
 - [quarto-redacted](https://github.com/EmilHvitfeldt/quarto-redacted): Redacted-style text (solid bars or scribbles) for HTML, RevealJS, PDF, and Typst
+- [quarto-sticky-notes](https://github.com/EmilHvitfeldt/quarto-sticky-notes): Draggable sticky notes for HTML documents and RevealJS presentations
 
 ## VS Code Extensions
 
