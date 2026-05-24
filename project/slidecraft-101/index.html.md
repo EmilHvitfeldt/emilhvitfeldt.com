@@ -203,6 +203,12 @@ Techniques for varying slide content and highlighting information
 :::
 
 ::: {.slidecraft-card}
+[![](sticky-notes.webp){fig-alt="Sticky Notes extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-sticky-notes)
+
+**[Sticky Notes](https://github.com/EmilHvitfeldt/quarto-sticky-notes)**
+:::
+
+::: {.slidecraft-card}
 [![](snow.webp){fig-alt="Snow extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-snow)
 
 **[Snow](https://github.com/EmilHvitfeldt/quarto-snow)**
