@@ -119,6 +119,12 @@ Techniques for varying slide content and highlighting information
 ::: {.slidecraft-grid}
 
 ::: {.slidecraft-card}
+[![](code-line-style.webp){fig-alt="Code Line Style extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-code-line-style)
+
+**[Code Line Style](https://github.com/EmilHvitfeldt/quarto-code-line-style)**
+:::
+
+::: {.slidecraft-card}
 [![](editable.webp){fig-alt="Editable extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-editable)
 
 **[Editable](https://github.com/EmilHvitfeldt/quarto-revealjs-editable)**
