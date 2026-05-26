@@ -10,7 +10,17 @@
 <atom:link href="https://emilhvitfeldt.com/blog.xml" rel="self" type="application/rss+xml"/>
 <description>Emil Hvitfeldt blog about R, slides and modeling</description>
 <generator>quarto-1.9.35</generator>
-<lastBuildDate>Mon, 13 Apr 2026 07:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 27 May 2026 07:00:00 GMT</lastBuildDate>
+<item>
+  <title>{B4F502887207:/post/quarto-revealjs-editable-modify/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/quarto-revealjs-editable-modify/</link>
+  <description>{B4F502887207:/post/quarto-revealjs-editable-modify/index.html}</description>
+  <category>quarto</category>
+  <category>slidecraft 101</category>
+  <guid>https://emilhvitfeldt.com/post/quarto-revealjs-editable-modify/</guid>
+  <pubDate>Wed, 27 May 2026 07:00:00 GMT</pubDate>
+  <media:content url="https://emilhvitfeldt.com/post/quarto-revealjs-editable-modify/featured.webp" medium="image" type="image/webp"/>
+</item>
 <item>
   <title>{B4F502887207:/post/quarto-timeline/index.html}</title>
   <link>https://emilhvitfeldt.com/post/quarto-timeline/</link>
@@ -192,28 +202,9 @@
   <pubDate>Mon, 19 Feb 2024 08:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/pyenv-for-r-packages/featured.webp" medium="image" type="image/webp"/>
 </item>
-<item>
-  <title>{B4F502887207:/post/slidecraft-layout/index.html}</title>
-  <link>https://emilhvitfeldt.com/post/slidecraft-layout/</link>
-  <description>{B4F502887207:/post/slidecraft-layout/index.html}</description>
-  <category>slidecraft 101</category>
-  <category>quarto</category>
-  <guid>https://emilhvitfeldt.com/post/slidecraft-layout/</guid>
-  <pubDate>Tue, 16 Jan 2024 08:00:00 GMT</pubDate>
-  <media:content url="https://emilhvitfeldt.com/post/slidecraft-layout/featured.webp" medium="image" type="image/webp"/>
-</item>
 </channel>
 </rss>
->
-
-</channel>
-</rss>
-"/>
-</item>
-</channel>
-</rss>
-/rss>
-featured.webp" medium="image" type="image/webp"/>
+" medium="image" type="image/webp"/>
 </item>
 </channel>
 </rss>

@@ -1,6 +1,7 @@
 {
   "listing": "/blog.html",
   "items": [
+    "/post/quarto-revealjs-editable-modify/index.html",
     "/post/quarto-timeline/index.html",
     "/post/claude-code-alt-text-quarto/index.html",
     "/post/ast-grep-r-claude-code/index.html",
