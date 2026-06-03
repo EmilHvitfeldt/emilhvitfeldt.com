@@ -232,6 +232,12 @@ Techniques for varying slide content and highlighting information
 **[Video Fragments](https://github.com/EmilHvitfeldt/quarto-revealjs-video-fragments)**
 :::
 
+::: {.slidecraft-card}
+[![](featured.webp){fig-alt="Diagrams extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-diagrams)
+
+**[Diagrams](https://github.com/EmilHvitfeldt/quarto-diagrams)**
+:::
+
 :::
 
 ## Talks about slidecrafting / quarto theming
