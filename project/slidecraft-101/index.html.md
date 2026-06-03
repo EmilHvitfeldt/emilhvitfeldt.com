@@ -137,6 +137,12 @@ Techniques for varying slide content and highlighting information
 :::
 
 ::: {.slidecraft-card}
+[![](diagrams.webp){fig-alt="Diagrams extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-diagrams)
+
+**[diagrams](https://github.com/EmilHvitfeldt/quarto-diagrams)**
+:::
+
+::: {.slidecraft-card}
 [![](transitions.webp){fig-alt="Transitions extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-transitions)
 
 **[Transitions](https://github.com/EmilHvitfeldt/quarto-revealjs-transitions)**
@@ -230,12 +236,6 @@ Techniques for varying slide content and highlighting information
 [![](video-fragments.webp){fig-alt="Video Fragments extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-video-fragments)
 
 **[Video Fragments](https://github.com/EmilHvitfeldt/quarto-revealjs-video-fragments)**
-:::
-
-::: {.slidecraft-card}
-[![](diagrams.webp){fig-alt="Diagrams extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-diagrams)
-
-**[Diagrams](https://github.com/EmilHvitfeldt/quarto-diagrams)**
 :::
 
 :::
