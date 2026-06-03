@@ -233,7 +233,7 @@ Techniques for varying slide content and highlighting information
 :::
 
 ::: {.slidecraft-card}
-[![](featured.webp){fig-alt="Diagrams extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-diagrams)
+[![](diagrams.webp){fig-alt="Diagrams extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-diagrams)
 
 **[Diagrams](https://github.com/EmilHvitfeldt/quarto-diagrams)**
 :::
