@@ -10,7 +10,17 @@
 <atom:link href="https://emilhvitfeldt.com/blog.xml" rel="self" type="application/rss+xml"/>
 <description>Emil Hvitfeldt blog about R, slides and modeling</description>
 <generator>quarto-1.9.35</generator>
-<lastBuildDate>Wed, 03 Jun 2026 04:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 05 Jun 2026 04:00:00 GMT</lastBuildDate>
+<item>
+  <title>{B4F502887207:/post/quarto-timeline-advanced/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/quarto-timeline-advanced/</link>
+  <description>{B4F502887207:/post/quarto-timeline-advanced/index.html}</description>
+  <category>quarto</category>
+  <category>slidecraft 101</category>
+  <guid>https://emilhvitfeldt.com/post/quarto-timeline-advanced/</guid>
+  <pubDate>Fri, 05 Jun 2026 04:00:00 GMT</pubDate>
+  <media:content url="https://emilhvitfeldt.com/post/quarto-timeline-advanced/featured.webp" medium="image" type="image/webp"/>
+</item>
 <item>
   <title>{B4F502887207:/post/quarto-diagrams/index.html}</title>
   <link>https://emilhvitfeldt.com/post/quarto-diagrams/</link>
@@ -193,21 +203,13 @@
   <pubDate>Mon, 01 Jul 2024 04:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/slidecraft-asciicast/featured.webp" medium="image" type="image/webp"/>
 </item>
-<item>
-  <title>{B4F502887207:/post/slidecraft-scss-uses/index.html}</title>
-  <link>https://emilhvitfeldt.com/post/slidecraft-scss-uses/</link>
-  <description>{B4F502887207:/post/slidecraft-scss-uses/index.html}</description>
-  <category>slidecraft 101</category>
-  <category>quarto</category>
-  <guid>https://emilhvitfeldt.com/post/slidecraft-scss-uses/</guid>
-  <pubDate>Mon, 24 Jun 2024 04:00:00 GMT</pubDate>
-  <media:content url="https://emilhvitfeldt.com/post/slidecraft-scss-uses/featured.webp" medium="image" type="image/webp"/>
+</channel>
+</rss>
+webp"/>
 </item>
 </channel>
 </rss>
-" medium="image" type="image/webp"/>
-</item>
-</channel>
+>
 </rss>
 el>
 </rss>

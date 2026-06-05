@@ -1,6 +1,7 @@
 {
   "listing": "/blog.html",
   "items": [
+    "/post/quarto-timeline-advanced/index.html",
     "/post/quarto-diagrams/index.html",
     "/post/quarto-revealjs-editable-modify/index.html",
     "/post/quarto-timeline/index.html",
