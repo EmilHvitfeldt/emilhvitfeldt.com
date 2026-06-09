@@ -119,6 +119,12 @@ Techniques for varying slide content and highlighting information
 ::: {.slidecraft-grid}
 
 ::: {.slidecraft-card}
+[![](checklist.webp){fig-alt="Checklist Fragments extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-checklist-fragments)
+
+**[Checklist Fragments](https://github.com/EmilHvitfeldt/quarto-revealjs-checklist-fragments)**
+:::
+
+::: {.slidecraft-card}
 [![](editable.webp){fig-alt="Editable extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-editable)
 
 **[Editable](https://github.com/EmilHvitfeldt/quarto-revealjs-editable)**

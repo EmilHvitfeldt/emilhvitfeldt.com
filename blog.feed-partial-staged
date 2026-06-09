@@ -10,7 +10,7 @@
 <atom:link href="https://emilhvitfeldt.com/blog.xml" rel="self" type="application/rss+xml"/>
 <description>Emil Hvitfeldt blog about R, slides and modeling</description>
 <generator>quarto-1.9.35</generator>
-<lastBuildDate>Fri, 05 Jun 2026 04:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 05 Jun 2026 07:00:00 GMT</lastBuildDate>
 <item>
   <title>{B4F502887207:/post/quarto-timeline-advanced/index.html}</title>
   <link>https://emilhvitfeldt.com/post/quarto-timeline-advanced/</link>
@@ -18,7 +18,7 @@
   <category>quarto</category>
   <category>slidecraft 101</category>
   <guid>https://emilhvitfeldt.com/post/quarto-timeline-advanced/</guid>
-  <pubDate>Fri, 05 Jun 2026 04:00:00 GMT</pubDate>
+  <pubDate>Fri, 05 Jun 2026 07:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/quarto-timeline-advanced/featured.webp" medium="image" type="image/webp"/>
 </item>
 <item>
@@ -28,7 +28,7 @@
   <category>quarto</category>
   <category>slidecraft 101</category>
   <guid>https://emilhvitfeldt.com/post/quarto-diagrams/</guid>
-  <pubDate>Wed, 03 Jun 2026 04:00:00 GMT</pubDate>
+  <pubDate>Wed, 03 Jun 2026 07:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/quarto-diagrams/featured.webp" medium="image" type="image/webp"/>
 </item>
 <item>
@@ -38,7 +38,7 @@
   <category>quarto</category>
   <category>slidecraft 101</category>
   <guid>https://emilhvitfeldt.com/post/quarto-revealjs-editable-modify/</guid>
-  <pubDate>Wed, 27 May 2026 04:00:00 GMT</pubDate>
+  <pubDate>Wed, 27 May 2026 07:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/quarto-revealjs-editable-modify/featured.webp" medium="image" type="image/webp"/>
 </item>
 <item>
@@ -48,7 +48,7 @@
   <category>quarto</category>
   <category>slidecraft 101</category>
   <guid>https://emilhvitfeldt.com/post/quarto-timeline/</guid>
-  <pubDate>Mon, 13 Apr 2026 04:00:00 GMT</pubDate>
+  <pubDate>Mon, 13 Apr 2026 07:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/quarto-timeline/featured.webp" medium="image" type="image/webp"/>
 </item>
 <item>
@@ -58,7 +58,7 @@
   <category>AI</category>
   <category>quarto</category>
   <guid>https://emilhvitfeldt.com/post/claude-code-alt-text-quarto/</guid>
-  <pubDate>Fri, 06 Mar 2026 05:00:00 GMT</pubDate>
+  <pubDate>Fri, 06 Mar 2026 08:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/claude-code-alt-text-quarto/featured.webp" medium="image" type="image/webp"/>
 </item>
 <item>
@@ -67,7 +67,7 @@
   <description>{B4F502887207:/post/ast-grep-r-claude-code/index.html}</description>
   <category>AI</category>
   <guid>https://emilhvitfeldt.com/post/ast-grep-r-claude-code/</guid>
-  <pubDate>Thu, 26 Feb 2026 05:00:00 GMT</pubDate>
+  <pubDate>Thu, 26 Feb 2026 08:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/ast-grep-r-claude-code/featured.webp" medium="image" type="image/webp"/>
 </item>
 <item>
@@ -76,7 +76,7 @@
   <description>{B4F502887207:/post/r-color-palettees-refresh/index.html}</description>
   <category>color palettes</category>
   <guid>https://emilhvitfeldt.com/post/r-color-palettees-refresh/</guid>
-  <pubDate>Fri, 30 Jan 2026 05:00:00 GMT</pubDate>
+  <pubDate>Fri, 30 Jan 2026 08:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/r-color-palettees-refresh/featured.webp" medium="image" type="image/webp"/>
 </item>
 <item>
@@ -85,7 +85,7 @@
   <description>{B4F502887207:/post/ai-talking-dog/index.html}</description>
   <category>AI</category>
   <guid>https://emilhvitfeldt.com/post/ai-talking-dog/</guid>
-  <pubDate>Mon, 26 Jan 2026 05:00:00 GMT</pubDate>
+  <pubDate>Mon, 26 Jan 2026 08:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/ai-talking-dog/featured.webp" medium="image" type="image/webp"/>
 </item>
 <item>
@@ -94,7 +94,7 @@
   <description>{B4F502887207:/post/positron-settings-extensions/index.html}</description>
   <category>positron</category>
   <guid>https://emilhvitfeldt.com/post/positron-settings-extensions/</guid>
-  <pubDate>Tue, 20 Jan 2026 05:00:00 GMT</pubDate>
+  <pubDate>Tue, 20 Jan 2026 08:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/positron-settings-extensions/featured.webp" medium="image" type="image/webp"/>
 </item>
 <item>
@@ -103,7 +103,7 @@
   <description>{B4F502887207:/post/adventofcode-2017-09/index.html}</description>
   <category>Advent of Code</category>
   <guid>https://emilhvitfeldt.com/post/adventofcode-2017-09/</guid>
-  <pubDate>Tue, 16 Dec 2025 05:00:00 GMT</pubDate>
+  <pubDate>Tue, 16 Dec 2025 08:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/adventofcode-2017-09/featured.svg" medium="image" type="image/svg+xml"/>
 </item>
 <item>
@@ -112,7 +112,7 @@
   <description>{B4F502887207:/post/quarto-performance/index.html}</description>
   <category>quarto</category>
   <guid>https://emilhvitfeldt.com/post/quarto-performance/</guid>
-  <pubDate>Mon, 12 May 2025 04:00:00 GMT</pubDate>
+  <pubDate>Mon, 12 May 2025 07:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/quarto-performance/featured.webp" medium="image" type="image/webp"/>
 </item>
 <item>
@@ -121,7 +121,7 @@
   <description>{B4F502887207:/post/sparse-vs-dense-dummies/index.html}</description>
   <category>tidymodels</category>
   <guid>https://emilhvitfeldt.com/post/sparse-vs-dense-dummies/</guid>
-  <pubDate>Mon, 28 Apr 2025 04:00:00 GMT</pubDate>
+  <pubDate>Mon, 28 Apr 2025 07:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/sparse-vs-dense-dummies/featured.webp" medium="image" type="image/webp"/>
 </item>
 <item>
@@ -131,7 +131,7 @@
   <category>Feature Engineering</category>
   <category>tidytuesday</category>
   <guid>https://emilhvitfeldt.com/post/fun-feature-engineering-pokemon/</guid>
-  <pubDate>Sat, 05 Apr 2025 04:00:00 GMT</pubDate>
+  <pubDate>Sat, 05 Apr 2025 07:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/fun-feature-engineering-pokemon/featured.webp" medium="image" type="image/webp"/>
 </item>
 <item>
@@ -140,7 +140,7 @@
   <description>{B4F502887207:/post/positron-key-bindings/index.html}</description>
   <category>positron</category>
   <guid>https://emilhvitfeldt.com/post/positron-key-bindings/</guid>
-  <pubDate>Fri, 10 Jan 2025 05:00:00 GMT</pubDate>
+  <pubDate>Fri, 10 Jan 2025 08:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/positron-key-bindings/featured.webp" medium="image" type="image/webp"/>
 </item>
 <item>
@@ -150,7 +150,7 @@
   <category>slidecraft 101</category>
   <category>quarto</category>
   <guid>https://emilhvitfeldt.com/post/slidecraft-fragment-js/</guid>
-  <pubDate>Thu, 22 Aug 2024 04:00:00 GMT</pubDate>
+  <pubDate>Thu, 22 Aug 2024 07:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/slidecraft-fragment-js/featured.webp" medium="image" type="image/webp"/>
 </item>
 <item>
@@ -160,7 +160,7 @@
   <category>slidecraft 101</category>
   <category>quarto</category>
   <guid>https://emilhvitfeldt.com/post/slidecraft-fragment-css/</guid>
-  <pubDate>Wed, 21 Aug 2024 04:00:00 GMT</pubDate>
+  <pubDate>Wed, 21 Aug 2024 07:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/slidecraft-fragment-css/featured.webp" medium="image" type="image/webp"/>
 </item>
 <item>
@@ -170,7 +170,7 @@
   <category>slidecraft 101</category>
   <category>quarto</category>
   <guid>https://emilhvitfeldt.com/post/slidecraft-plot-sizing/</guid>
-  <pubDate>Thu, 01 Aug 2024 04:00:00 GMT</pubDate>
+  <pubDate>Thu, 01 Aug 2024 07:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/slidecraft-plot-sizing/featured.webp" medium="image" type="image/webp"/>
 </item>
 <item>
@@ -180,7 +180,7 @@
   <category>slidecraft 101</category>
   <category>quarto</category>
   <guid>https://emilhvitfeldt.com/post/slidecraft-plot-backgrounds/</guid>
-  <pubDate>Mon, 08 Jul 2024 04:00:00 GMT</pubDate>
+  <pubDate>Mon, 08 Jul 2024 07:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/slidecraft-plot-backgrounds/featured.webp" medium="image" type="image/webp"/>
 </item>
 <item>
@@ -190,7 +190,7 @@
   <category>slidecraft 101</category>
   <category>quarto</category>
   <guid>https://emilhvitfeldt.com/post/slidecraft-scss-loops/</guid>
-  <pubDate>Sun, 07 Jul 2024 04:00:00 GMT</pubDate>
+  <pubDate>Sun, 07 Jul 2024 07:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/slidecraft-scss-loops/featured.webp" medium="image" type="image/webp"/>
 </item>
 <item>
@@ -200,7 +200,7 @@
   <category>slidecraft 101</category>
   <category>quarto</category>
   <guid>https://emilhvitfeldt.com/post/slidecraft-asciicast/</guid>
-  <pubDate>Mon, 01 Jul 2024 04:00:00 GMT</pubDate>
+  <pubDate>Mon, 01 Jul 2024 07:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/slidecraft-asciicast/featured.webp" medium="image" type="image/webp"/>
 </item>
 </channel>
