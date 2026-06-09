@@ -14,43 +14,6 @@ I find slidecrafting an entertaining endeavour, and have thus created a number o
 
 I use [Quarto](https://quarto.org/) to create slides using the [revealjs](https://revealjs.com/) framework.
 
-## Book
-
-The blog posts have been reimagined as the [Slidecrafting Book](https://slidecrafting-book.com/). A practical guide to making beautiful slides with reveal.js and Quarto, covering theming, layout, interactivity, and extensions.
-
-### Theming
-
-Changing the visual appearance of your slides
-
-- [10 Minute Theme](https://slidecrafting-book.com/10-minute). Quick setup for establishing a style rapidly
-- [Colors](https://slidecrafting-book.com/colors)
-- [Fonts](https://slidecrafting-book.com/fonts)
-- [Sizes](https://slidecrafting-book.com/sizes)
-- [CSS/SCSS](https://slidecrafting-book.com/scss)
-- [Theme](https://slidecrafting-book.com/theme)
-
-### Content
-
-Techniques for varying slide content and highlighting information
-
-- [Elements](https://slidecrafting-book.com/elements). Managing images, figures, and visual components
-- [Layout](https://slidecrafting-book.com/layout)
-- [Manual Code](https://slidecrafting-book.com/manual-code). Highlighting specific code sections
-- [Asciicast](https://slidecrafting-book.com/asciicast). Showcasing code with corresponding output
-
-### Interactivity
-
-- [Fragments](https://slidecrafting-book.com/fragments). Elements that change dynamically throughout presentations
-
-### Extensions
-
-- [Letterbox](https://slidecrafting-book.com/letterbox)
-- [Codewindow](https://slidecrafting-book.com/codewindow)
-
-### Miscellaneous
-
-- [Miscellaneous](https://slidecrafting-book.com/miscellaneous)
-
 ## Quarto Themes
 
 <!-- Images: 800×500px -->
@@ -245,6 +208,43 @@ Techniques for varying slide content and highlighting information
 :::
 
 :::
+
+## Book
+
+The blog posts have been reimagined as the [Slidecrafting Book](https://slidecrafting-book.com/). A practical guide to making beautiful slides with reveal.js and Quarto, covering theming, layout, interactivity, and extensions.
+
+### Theming
+
+Changing the visual appearance of your slides
+
+- [10 Minute Theme](https://slidecrafting-book.com/10-minute). Quick setup for establishing a style rapidly
+- [Colors](https://slidecrafting-book.com/colors)
+- [Fonts](https://slidecrafting-book.com/fonts)
+- [Sizes](https://slidecrafting-book.com/sizes)
+- [CSS/SCSS](https://slidecrafting-book.com/scss)
+- [Theme](https://slidecrafting-book.com/theme)
+
+### Content
+
+Techniques for varying slide content and highlighting information
+
+- [Elements](https://slidecrafting-book.com/elements). Managing images, figures, and visual components
+- [Layout](https://slidecrafting-book.com/layout)
+- [Manual Code](https://slidecrafting-book.com/manual-code). Highlighting specific code sections
+- [Asciicast](https://slidecrafting-book.com/asciicast). Showcasing code with corresponding output
+
+### Interactivity
+
+- [Fragments](https://slidecrafting-book.com/fragments). Elements that change dynamically throughout presentations
+
+### Extensions
+
+- [Letterbox](https://slidecrafting-book.com/letterbox)
+- [Codewindow](https://slidecrafting-book.com/codewindow)
+
+### Miscellaneous
+
+- [Miscellaneous](https://slidecrafting-book.com/miscellaneous)
 
 ## Talks about slidecrafting / quarto theming
 
