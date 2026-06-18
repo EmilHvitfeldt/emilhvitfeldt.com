@@ -82,6 +82,12 @@ I use [Quarto](https://quarto.org/) to create slides using the [revealjs](https:
 ::: {.slidecraft-grid}
 
 ::: {.slidecraft-card}
+[![](shapes.webp){fig-alt="Shapes extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-shapes)
+
+**[Shapes](https://github.com/EmilHvitfeldt/quarto-shapes)**
+:::
+
+::: {.slidecraft-card}
 [![](checklist.webp){fig-alt="Checklist Fragments extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-checklist-fragments)
 
 **[Checklist Fragments](https://github.com/EmilHvitfeldt/quarto-revealjs-checklist-fragments)**
