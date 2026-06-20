@@ -24,6 +24,7 @@ A collection of all my Quarto related work.
 ## VS Code Extensions
 
 - [quarto-helpers](https://github.com/EmilHvitfeldt/quarto-helpers): Autocomplete for Sass variables, includes, fragments, and more
+- [quarto-theme-tweaker](https://github.com/EmilHvitfeldt/quarto-theme-tweaker): Live Sass theming of Quarto documents with sliders and color pickers, instant preview, and write-back to custom.scss
 
 ## Other
 
