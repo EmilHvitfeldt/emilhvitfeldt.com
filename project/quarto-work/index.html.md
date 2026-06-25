@@ -19,10 +19,12 @@ A collection of all my Quarto related work.
 - [quarto-timeline](https://github.com/EmilHvitfeldt/quarto-timeline): Styled timelines for HTML documents and RevealJS presentations
 - [quarto-redacted](https://github.com/EmilHvitfeldt/quarto-redacted): Redacted-style text (solid bars or scribbles) for HTML, RevealJS, PDF, and Typst
 - [quarto-sticky-notes](https://github.com/EmilHvitfeldt/quarto-sticky-notes): Draggable sticky notes for HTML documents and RevealJS presentations
+- [Shapes](https://github.com/EmilHvitfeldt/quarto-shapes): CSS shape classes to style divs as shapes (circles, hexagons, stars, and more) for HTML, RevealJS, and Typst
 
 ## VS Code Extensions
 
 - [quarto-helpers](https://github.com/EmilHvitfeldt/quarto-helpers): Autocomplete for Sass variables, includes, fragments, and more
+- [quarto-theme-tweaker](https://github.com/EmilHvitfeldt/quarto-theme-tweaker): Live Sass theming of Quarto documents with sliders and color pickers, instant preview, and write-back to custom.scss
 
 ## Other
 
