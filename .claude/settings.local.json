@@ -8,7 +8,10 @@
       "WebFetch(domain:css-tricks.com)",
       "WebFetch(domain:github.com)",
       "WebFetch(domain:emilhvitfeldt.github.io)",
-      "Bash(identify *)"
+      "Bash(identify *)",
+      "Bash(python3 -c \"import shapely;print\\(shapely.__version__\\)\")",
+      "Bash(magick featured.svg -resize 400x /private/tmp/claude-502/-Users-emilhvitfeldt-Github-emilhvitfeldt-com/2c131bc0-89a2-4c54-ab74-b1ec7cc767ea/scratchpad/feat.png)",
+      "Bash(magick paper-cut.svg -resize 400x /private/tmp/claude-502/-Users-emilhvitfeldt-Github-emilhvitfeldt-com/2c131bc0-89a2-4c54-ab74-b1ec7cc767ea/scratchpad/pc.png)"
     ]
   }
 }

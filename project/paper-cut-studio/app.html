@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paper-Cut Studio</title>
+<style>
+  :root{
+    --bg:#14121a; --panel:#1e1b26; --panel2:#272332; --line:#332e40;
+    --ink:#ece9f2; --muted:#a49db8; --accent:#d76ba0; --accent2:#8c5cff;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{
+    background:var(--bg); color:var(--ink);
+    font:14px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    display:grid; grid-template-columns:340px 1fr; height:100vh; overflow:hidden;
+  }
+  #panel{background:var(--panel); border-right:1px solid var(--line); overflow-y:auto; padding:18px 18px 40px}
+  #panel h1{font-size:16px; margin:0 0 2px; letter-spacing:.3px}
+  #panel .sub{color:var(--muted); font-size:12px; margin:0 0 18px}
+  .group{border:1px solid var(--line); border-radius:12px; padding:14px; margin-bottom:14px; background:var(--panel2)}
+  .group h2{font-size:11px; text-transform:uppercase; letter-spacing:1.4px; color:var(--muted); margin:0 0 12px; display:flex; justify-content:space-between}
+  .group h2 .count{color:var(--accent)}
+  .row{margin-bottom:14px}
+  .row:last-child{margin-bottom:0}
+  .row label{display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px}
+  .row label .val{color:var(--accent); font-variant-numeric:tabular-nums}
+  input[type=range]{-webkit-appearance:none; width:100%; height:4px; border-radius:4px; background:var(--line); outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; width:16px; height:16px; border-radius:50%;
+    background:var(--accent); cursor:pointer; border:2px solid #fff2; box-shadow:0 1px 4px #0006}
+  .swatches{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+  .swatches input[type=color]{width:44px; height:34px; border:1px solid var(--line); border-radius:8px; background:none; cursor:pointer; padding:2px}
+  .presets{display:grid; grid-template-columns:repeat(3,1fr); gap:8px}
+  .preset{height:30px; border-radius:8px; border:1px solid var(--line); cursor:pointer}
+  .preset:hover{outline:2px solid var(--accent)}
+  .btn{display:block; width:100%; padding:11px; border:none; border-radius:10px; cursor:pointer; font-size:13px; font-weight:600}
+  .btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff}
+  .btn.ghost{background:var(--panel2); color:var(--ink); border:1px solid var(--line)}
+  .btnrow{display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px}
+  .toggle{display:flex; gap:8px}
+  .toggle button{flex:1; padding:7px; border:1px solid var(--line); background:var(--panel); color:var(--muted); border-radius:8px; cursor:pointer; font-size:12px}
+  .toggle button.on{background:var(--accent); color:#fff; border-color:transparent}
+  .check{display:flex; align-items:center; gap:8px; font-size:12px; color:var(--muted); cursor:pointer}
+  .seedrow{display:flex; gap:8px}
+  .seedrow input[type=number]{flex:1; background:var(--panel); border:1px solid var(--line); color:var(--ink); border-radius:8px; padding:8px}
+  #stage{position:relative; display:flex; align-items:center; justify-content:center; padding:32px;
+    background:radial-gradient(circle at 30% 20%, #211d2c, #100e15 70%);}
+  /* checkerboard: the art itself is transparent, so show what "no background" means */
+  #frame{position:relative; width:min(78vh,720px); height:min(78vh,720px);
+    background:conic-gradient(#e6e3ec 0 25%, #fff 0 50%) 0 0/24px 24px;
+    border-radius:16px; box-shadow:0 30px 80px #0009; touch-action:none; user-select:none}
+  #frame svg{position:absolute; inset:0; width:100%; height:100%; border-radius:16px}
+  #dots{pointer-events:none}
+  #frame.add{cursor:crosshair}
+  #frame.move{cursor:default}
+  #frame.erase{cursor:cell}
+  #hint{position:absolute; bottom:14px; left:0; right:0; text-align:center; color:#5b556b; font-size:12px}
+</style>
+</head>
+<body>
+  <aside id="panel">
+    <h1>Paper-Cut Studio</h1>
+    <p class="sub">Draw points → density becomes the map</p>
+
+    <div class="group">
+      <h2>Canvas <span class="count" id="ptcount">0 pts</span></h2>
+      <div class="row">
+        <div class="toggle" id="mode">
+          <button data-m="add" class="on">✏️ Add</button>
+          <button data-m="move">✋ Move</button>
+          <button data-m="erase">⌫ Erase</button>
+        </div>
+      </div>
+      <div class="row"><label>Brush size <span class="val" id="brushv"></span></label><input type="range" id="brush" min="3" max="28" step="1"></div>
+      <button class="btn ghost" id="showpts">👁 Hide points</button>
+      <div class="btnrow">
+        <button class="btn ghost" id="scatter">Scatter</button>
+        <button class="btn ghost" id="clear">Clear</button>
+      </div>
+    </div>
+
+    <div class="group">
+      <h2>Colors</h2>
+      <div class="row"><div class="presets" id="presets"></div></div>
+      <div class="row">
+        <label>Outer → Inner</label>
+        <div class="swatches">
+          <input type="color" id="cOuter" value="#dd6ea3"><span style="color:var(--muted)">→</span>
+          <input type="color" id="cInner" value="#43204c">
+        </div>
+      </div>
+    </div>
+
+    <div class="group">
+      <h2>Layers &amp; Look</h2>
+      <div class="row"><label>Layers <span class="val" id="layersv"></span></label><input type="range" id="layers" min="2" max="12" step="1"></div>
+      <div class="row"><label>Organic edge <span class="val" id="organicv"></span></label><input type="range" id="organic" min="0" max="100" step="1"></div>
+      <div class="row"><label>Smoothness <span class="val" id="detailv"></span></label><input type="range" id="detail" min="120" max="300" step="20"></div>
+    </div>
+
+    <div class="group">
+      <h2>Lighting</h2>
+      <div class="row">
+        <label>Shadow direction</label>
+        <div class="toggle" id="shadowMode">
+          <button data-m="inner" class="on">Inward</button>
+          <button data-m="outer">Outward</button>
+        </div>
+      </div>
+      <div class="row"><label>Light angle <span class="val" id="anglev"></span></label><input type="range" id="angle" min="0" max="360" step="1"></div>
+      <div class="row"><label>Depth <span class="val" id="depthv"></span></label><input type="range" id="depth" min="0" max="100" step="1"></div>
+      <div class="row"><label>Softness <span class="val" id="softv"></span></label><input type="range" id="soft" min="2" max="20" step="1"></div>
+    </div>
+
+    <div class="group">
+      <h2>Seed <span class="count">(organic noise)</span></h2>
+      <div class="seedrow">
+        <input type="number" id="seed" value="11">
+        <button class="btn ghost" style="width:auto;padding:8px 14px" id="dice">🎲</button>
+      </div>
+    </div>
+
+    <button class="btn primary" id="download">⬇ Download SVG</button>
+    <div class="btnrow">
+      <button class="btn ghost" id="copy">Copy SVG</button>
+      <button class="btn ghost" id="randomize">Randomize look</button>
+    </div>
+  </aside>
+
+  <main id="stage">
+    <div id="frame" class="add">
+      <svg id="art" viewBox="0 0 900 900" xmlns="http://www.w3.org/2000/svg"></svg>
+      <svg id="dots" viewBox="0 0 900 900" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div id="hint">Add: draw points · Move: drag to reposition, click to delete · Erase: brush away · right-click deletes one</div>
+  </main>
+
+<script>
+/* ===================== math helpers ===================== */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function makeNoise(seed){
+  const rnd=mulberry32(seed),P=512,perm=new Float32Array(P);
+  for(let i=0;i<P;i++)perm[i]=rnd();
+  const latt=(i,j)=>perm[((((i&511)*541)^((j&511)*997))>>>0)%P];
+  const sm=t=>t*t*(3-2*t);
+  function vn(x,y){const x0=Math.floor(x),y0=Math.floor(y),fx=sm(x-x0),fy=sm(y-y0);
+    const a=latt(x0,y0),b=latt(x0+1,y0),c=latt(x0,y0+1),d=latt(x0+1,y0+1);
+    return (a*(1-fx)+b*fx)*(1-fy)+(c*(1-fx)+d*fx)*fy;}
+  return (x,y)=>{let v=0,a=.5,f=1;for(let o=0;o<2;o++){v+=a*vn(x*f,y*f);a*=.5;f*=2;}return v/.75;};
+}
+function regionPath(V,gx,gy,cw,ch,level){
+  let d='';const idx=(i,j)=>j*(gx+1)+i;
+  for(let j=0;j<gy;j++)for(let i=0;i<gx;i++){
+    const p=[{x:i*cw,y:j*ch,v:V[idx(i,j)]},{x:(i+1)*cw,y:j*ch,v:V[idx(i+1,j)]},
+             {x:(i+1)*cw,y:(j+1)*ch,v:V[idx(i+1,j+1)]},{x:i*cw,y:(j+1)*ch,v:V[idx(i,j+1)]}];
+    const poly=[];
+    for(let k=0;k<4;k++){const a=p[k],b=p[(k+1)%4],ai=a.v>=level,bi=b.v>=level;
+      if(ai)poly.push(a);
+      if(ai!==bi){const t=(level-a.v)/(b.v-a.v);poly.push({x:a.x+t*(b.x-a.x),y:a.y+t*(b.y-a.y)});}}
+    if(poly.length>=3)d+='M'+poly.map(q=>q.x.toFixed(1)+' '+q.y.toFixed(1)).join('L')+'Z';
+  }
+  return d;
+}
+function hex2hsl(h){h=h.replace('#','');const r=parseInt(h.slice(0,2),16)/255,g=parseInt(h.slice(2,4),16)/255,b=parseInt(h.slice(4,6),16)/255;
+  const mx=Math.max(r,g,b),mn=Math.min(r,g,b);let hh,s,l=(mx+mn)/2;
+  if(mx===mn){hh=s=0;}else{const d=mx-mn;s=l>.5?d/(2-mx-mn):d/(mx+mn);
+    hh=mx===r?(g-b)/d+(g<b?6:0):mx===g?(b-r)/d+2:(r-g)/d+4;hh/=6;}return[hh*360,s,l];}
+function hsl2hex(h,s,l){h/=360;const q=l<.5?l*(1+s):l+s-l*s,p=2*l-q;
+  const f=t=>{t=(t+1)%1;return t<1/6?p+(q-p)*6*t:t<.5?q:t<2/3?p+(q-p)*(2/3-t)*6:p;};
+  const c=x=>('0'+Math.round(Math.max(0,Math.min(1,x))*255).toString(16)).slice(-2);
+  return'#'+c(f(h+1/3))+c(f(h))+c(f(h-1/3));}
+function ramp(outer,inner,n){
+  const A=hex2hsl(outer),B=hex2hsl(inner),out=[];let dh=B[0]-A[0];if(dh>180)dh-=360;if(dh<-180)dh+=360;
+  for(let i=0;i<n;i++){const t=n<2?0:i/(n-1);out.push(hsl2hex(A[0]+dh*t,A[1]+(B[1]-A[1])*t,A[2]+(B[2]-A[2])*t));}
+  return out;}
+
+/* ===================== build artwork from POINTS ===================== */
+const SZ=900;
+function buildField(P,res){
+  const g=res, V=new Float32Array((g+1)*(g+1));
+  const sig=P.brush/100, inv=1/(2*sig*sig), cut=(3.2*sig)**2;
+  const noise=makeNoise(P.seed|0);
+  for(let j=0;j<=g;j++)for(let i=0;i<=g;i++){
+    const nx=i/g, ny=j/g; let f=0;
+    for(let k=0;k<P.points.length;k++){
+      const dx=nx-P.points[k][0], dy=ny-P.points[k][1], d2=dx*dx+dy*dy;
+      if(d2<cut) f+=Math.exp(-d2*inv);
+    }
+    V[j*(g+1)+i]=f;
+  }
+  // normalise, then add a little organic noise wobble at the edges
+  let mx=0; for(let k=0;k<V.length;k++) if(V[k]>mx)mx=V[k];
+  if(mx<=0) return {V,g,empty:true};
+  for(let j=0;j<=g;j++)for(let i=0;i<=g;i++){
+    let v=V[j*(g+1)+i]/mx;
+    if(P.organic>0){ v += (noise(i/g*3.2+0.3, j/g*3.2+0.7)-0.5)*P.organic*0.35; }
+    V[j*(g+1)+i]=v;
+  }
+  // renormalise 0..1
+  let a=1e9,b=-1e9; for(let k=0;k<V.length;k++){const v=V[k];if(v<a)a=v;if(v>b)b=v;}
+  for(let k=0;k<V.length;k++) V[k]=(V[k]-a)/(b-a||1);
+  return {V,g,empty:false};
+}
+function buildDefs(P){
+  const ang=P.angle*Math.PI/180, off=4+P.depth*10, dx=(Math.cos(ang)*off).toFixed(1), dy=(Math.sin(ang)*off).toFixed(1);
+  const op=(0.15+P.depth*0.45).toFixed(2);
+  const hi=hex2hsl(P.inner), sc=hsl2hex(hi[0],hi[1],Math.max(0.05,hi[2]-0.15));
+  return `
+    <filter id="drop" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="${dx}" dy="${dy}" stdDeviation="${P.soft}" flood-color="${sc}" flood-opacity="${op}"/>
+    </filter>
+    <filter id="inner" x="-30%" y="-30%" width="160%" height="160%">
+      <feComponentTransfer in="SourceAlpha" result="inv"><feFuncA type="table" tableValues="1 0"/></feComponentTransfer>
+      <feGaussianBlur in="inv" stdDeviation="${P.soft}" result="b"/>
+      <feOffset in="b" dx="${dx}" dy="${dy}" result="o"/>
+      <feFlood flood-color="${sc}" flood-opacity="${(+op+0.15).toFixed(2)}" result="c"/>
+      <feComposite in="c" in2="o" operator="in" result="s"/>
+      <feComposite in="s" in2="SourceAlpha" operator="in" result="cl"/>
+      <feMerge><feMergeNode in="SourceGraphic"/><feMergeNode in="cl"/></feMerge>
+    </filter>`;
+}
+function buildArt(P,res){
+  const {V,g,empty}=buildField(P,res);
+  const cw=SZ/g, ch=SZ/g, n=P.layers, colors=ramp(P.outer,P.inner,n);
+  let paths='';
+  if(!empty){
+    const lo=0.30, hi=0.92;
+    for(let k=0;k<n;k++){
+      const level=lo+(hi-lo)*(k/n);
+      const d=regionPath(V,g,g,cw,ch,level); if(!d)continue;
+      if(P.shadow==='outer') paths+=`<path d="${d}" fill="${colors[k]}" filter="url(#drop)"/>`;
+      else if(k===0)         paths+=`<g filter="url(#drop)"><path d="${d}" fill="${colors[k]}" filter="url(#inner)"/></g>`;
+      else                   paths+=`<path d="${d}" fill="${colors[k]}" filter="url(#inner)"/>`;
+    }
+  }
+  return `<defs>${buildDefs(P)}</defs>${paths}`;   // no background rect: exports stay transparent
+}
+function ptsOverlay(P,hl){
+  if(!P.showpts) return '';
+  let s=''; P.points.forEach(([x,y],i)=>{
+    const on=i===hl;
+    s+=`<circle cx="${(x*SZ).toFixed(1)}" cy="${(y*SZ).toFixed(1)}" r="${on?8:5}"
+        fill="${on?'#d76ba0':'#ffffffcc'}" stroke="${on?'#ffffff':'#00000088'}" stroke-width="${on?2.5:1.5}"/>`;
+  }); return s;
+}
+function svgWrap(inner){return `<svg viewBox="0 0 ${SZ} ${SZ}" xmlns="http://www.w3.org/2000/svg">${inner}</svg>`;}
+
+/* ===================== state + UI ===================== */
+const $=id=>document.getElementById(id);
+const PRESETS={
+  Grape:['#dd6ea3','#43204c'], Forest:['#9ee2a8','#0a4d33'], Ocean:['#8fd3ff','#0b2b57'],
+  Sunset:['#ffd06b','#7a1e5c'], Slate:['#c9ced6','#20242e'], Ember:['#ffcf9e','#5a1216'],
+};
+let P={
+  points:[], mode:'add', brush:12, showpts:true,
+  outer:'#dd6ea3', inner:'#43204c',
+  layers:6, organic:0.5, detail:200,
+  shadow:'inner', angle:55, depth:0.35, soft:8, seed:11,
+};
+let artHi=''; // last full-res artwork (for export)
+
+function syncLabels(){
+  $('ptcount').textContent=P.points.length+' pts';
+  $('brushv').textContent=P.brush;
+  $('layersv').textContent=P.layers;
+  $('organicv').textContent=Math.round(P.organic*100)+'%';
+  $('detailv').textContent=P.detail;
+  $('anglev').textContent=P.angle+'°';
+  $('depthv').textContent=Math.round(P.depth*100)+'%';
+  $('softv').textContent=P.soft;
+}
+const artEl=$('art'), dotsEl=$('dots');
+let raf=null, hlIdx=-1;
+function renderDots(){ dotsEl.innerHTML=ptsOverlay(P,hlIdx); }
+function render(dragging){
+  if(raf)cancelAnimationFrame(raf);
+  raf=requestAnimationFrame(()=>{
+    const res=dragging?Math.min(P.detail,140):P.detail;
+    const art=buildArt(P,res);
+    if(!dragging) artHi=art;              // keep clean full-res version for download
+    artEl.innerHTML=art;
+    renderDots();
+    syncLabels();
+  });
+}
+function pushControls(){
+  $('brush').value=P.brush; $('layers').value=P.layers; $('organic').value=Math.round(P.organic*100);
+  $('detail').value=P.detail; $('angle').value=P.angle; $('depth').value=Math.round(P.depth*100);
+  $('soft').value=P.soft; $('seed').value=P.seed;
+  $('cOuter').value=P.outer; $('cInner').value=P.inner;
+  $('showpts').textContent=P.showpts?'👁 Hide points':'👁 Show points';
+  document.querySelectorAll('#shadowMode button').forEach(b=>b.classList.toggle('on',b.dataset.m===P.shadow));
+  document.querySelectorAll('#mode button').forEach(b=>b.classList.toggle('on',b.dataset.m===P.mode));
+  $('frame').className=P.mode;
+  syncLabels();
+}
+function bind(id,fn){$(id).addEventListener('input',e=>{fn(e.target.value);render(false);});}
+bind('brush',v=>P.brush=+v);
+bind('layers',v=>P.layers=+v);
+bind('organic',v=>P.organic=+v/100);
+bind('detail',v=>P.detail=+v);
+bind('angle',v=>P.angle=+v);
+bind('depth',v=>P.depth=+v/100);
+bind('soft',v=>P.soft=+v);
+bind('cOuter',v=>P.outer=v);
+bind('cInner',v=>P.inner=v);
+$('showpts').addEventListener('click',()=>{P.showpts=!P.showpts;pushControls();renderDots();});
+$('seed').addEventListener('input',e=>{P.seed=+e.target.value||0;render(false);});
+$('dice').addEventListener('click',()=>{P.seed=Math.floor(Math.random()*99999);pushControls();render(false);});
+document.querySelectorAll('#shadowMode button').forEach(b=>b.addEventListener('click',()=>{P.shadow=b.dataset.m;pushControls();render(false);}));
+document.querySelectorAll('#mode button').forEach(b=>b.addEventListener('click',()=>{P.mode=b.dataset.m;pushControls();}));
+
+const pc=$('presets');
+Object.entries(PRESETS).forEach(([name,[o,i]])=>{
+  const el=document.createElement('button');
+  el.className='preset'; el.title=name; el.style.background=`linear-gradient(135deg,${o},${i})`;
+  el.addEventListener('click',()=>{P.outer=o;P.inner=i;pushControls();render(false);});
+  pc.appendChild(el);
+});
+$('clear').addEventListener('click',()=>{P.points=[];render(false);});
+$('scatter').addEventListener('click',()=>{ // random cloud, denser in the middle
+  const rng=mulberry32(Date.now()&0xffff), N=40;
+  for(let i=0;i<N;i++){const a=rng()*6.283, r=Math.pow(rng(),0.6)*0.32;
+    P.points.push([0.5+Math.cos(a)*r, 0.5+Math.sin(a)*r]);}
+  render(false);
+});
+$('randomize').addEventListener('click',()=>{
+  const keys=Object.keys(PRESETS);const[o,i]=PRESETS[keys[Math.floor(Math.random()*keys.length)]];
+  P.outer=o;P.inner=i; P.layers=4+Math.floor(Math.random()*6);
+  P.organic=0.2+Math.random()*0.6; P.angle=Math.floor(Math.random()*360); P.seed=Math.floor(Math.random()*99999);
+  pushControls();render(false);
+});
+$('download').addEventListener('click',()=>{
+  const blob=new Blob([svgWrap(artHi)],{type:'image/svg+xml'});   // export without the point dots
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='paper-cut.svg';a.click();URL.revokeObjectURL(a.href);
+});
+$('copy').addEventListener('click',async()=>{
+  try{await navigator.clipboard.writeText(svgWrap(artHi));$('copy').textContent='Copied!';setTimeout(()=>$('copy').textContent='Copy SVG',1200);}catch(e){}
+});
+
+/* ---------- editing on the canvas ---------- */
+const frame=$('frame');
+const HITR=0.024, THRESH=0.012;           // grab radius and click-vs-drag threshold
+let painting=false, lastPt=null;          // Add-mode brush state
+let dragIdx=-1, downPt=null, moved=false;  // point-move / delete state
+function toNorm(e){const r=frame.getBoundingClientRect();
+  return [Math.max(0,Math.min(1,(e.clientX-r.left)/r.width)), Math.max(0,Math.min(1,(e.clientY-r.top)/r.height))];}
+function hitTest(nx,ny){
+  let best=-1, bd=HITR*HITR;
+  P.points.forEach(([x,y],i)=>{const d=(x-nx)**2+(y-ny)**2; if(d<bd){bd=d;best=i;}});
+  return best;
+}
+function eraseAt(nx,ny){const r2=(P.brush/100*0.9)**2; P.points=P.points.filter(([x,y])=>((x-nx)**2+(y-ny)**2)>r2);}
+function paintAt(nx,ny){const sig=P.brush/100;
+  if(lastPt){const dx=nx-lastPt[0],dy=ny-lastPt[1]; if(dx*dx+dy*dy<(sig*0.35)**2)return;}
+  P.points.push([nx,ny]); lastPt=[nx,ny];
+}
+
+frame.addEventListener('pointerdown',e=>{
+  frame.setPointerCapture(e.pointerId);
+  const[nx,ny]=toNorm(e); downPt=[nx,ny]; moved=false;
+  if(P.mode==='erase'){ painting=true; eraseAt(nx,ny); render(true); }
+  else if(P.mode==='move'){ dragIdx=hitTest(nx,ny); }
+  else{ // add: grab an existing point if you press one, else start painting
+    const idx=hitTest(nx,ny);
+    if(idx>=0){ dragIdx=idx; }
+    else{ painting=true; lastPt=null; paintAt(nx,ny); render(true); }
+  }
+});
+frame.addEventListener('pointermove',e=>{
+  const[nx,ny]=toNorm(e);
+  if(dragIdx>=0){                                   // moving a point
+    if(downPt && ((nx-downPt[0])**2+(ny-downPt[1])**2)>THRESH*THRESH) moved=true;
+    P.points[dragIdx]=[nx,ny]; hlIdx=dragIdx; render(true); return;
+  }
+  if(painting){ (P.mode==='erase')?eraseAt(nx,ny):paintAt(nx,ny); render(true); return; }
+  // hovering (no button): highlight the grabbable point in Move mode
+  if(P.mode==='move'){ const idx=hitTest(nx,ny); frame.style.cursor=idx>=0?'grab':'default';
+    if(idx!==hlIdx){ hlIdx=idx; renderDots(); } }
+});
+frame.addEventListener('pointerup',e=>{
+  if(dragIdx>=0){
+    if(P.mode==='move' && !moved) P.points.splice(dragIdx,1); // a click (no drag) deletes
+    dragIdx=-1;
+  }
+  painting=false; lastPt=null; downPt=null; moved=false;
+  render(false);
+});
+frame.addEventListener('pointerleave',()=>{ if(dragIdx<0 && !painting && hlIdx!==-1){ hlIdx=-1; renderDots(); } });
+frame.addEventListener('contextmenu',e=>{                 // right-click deletes one point
+  e.preventDefault(); const[nx,ny]=toNorm(e); const idx=hitTest(nx,ny);
+  if(idx>=0){ P.points.splice(idx,1); hlIdx=-1; render(false); }
+});
+
+/* ---------- starter cluster ---------- */
+(function seed(){const rng=mulberry32(3);
+  for(let i=0;i<26;i++){const a=rng()*6.283,r=Math.pow(rng(),0.6)*0.28;
+    P.points.push([0.5+Math.cos(a)*r*1.05, 0.5+Math.sin(a)*r]);}
+  P.points.push([0.24,0.7],[0.78,0.32],[0.7,0.8]); // a few outliers -> satellites
+})();
+pushControls();render(false);
+</script>
+</body>
+</html>
