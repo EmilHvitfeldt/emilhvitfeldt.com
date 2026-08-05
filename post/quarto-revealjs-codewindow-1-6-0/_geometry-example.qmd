@@ -1,0 +1,77 @@
+---
+format:
+  revealjs:
+    self-contained: true
+    width: 900
+    height: 450
+revealjs-plugins:
+  - codewindow
+---
+
+## Default geometry
+
+```{=html}
+<style>
+.reveal .squared .codewindow {
+  --codewindow-radius: 0px;
+  --codewindow-tab-radius: 0px;
+  --codewindow-tab-gap: 0px;
+}
+.reveal .compact .codewindow {
+  --codewindow-header-height: 20px;
+  --codewindow-header-pad: 8px;
+  --codewindow-tab-padding: 10px;
+  --codewindow-tab-radius: 4px 4px 0 0;
+}
+</style>
+```
+
+:::: {.codewindow}
+::: {.editor .r name="00-load.R"}
+```r
+data <- read.csv("my-data.csv")
+```
+:::
+
+::: {.editor .r name="01-clean.R"}
+```r
+data <- dplyr::filter(data, x > 0)
+```
+:::
+::::
+
+## Squared off
+
+::: {.squared}
+:::: {.codewindow}
+::: {.editor .r name="00-load.R"}
+```r
+data <- read.csv("my-data.csv")
+```
+:::
+
+::: {.editor .r name="01-clean.R"}
+```r
+data <- dplyr::filter(data, x > 0)
+```
+:::
+::::
+:::
+
+## Compact
+
+::: {.compact}
+:::: {.codewindow}
+::: {.editor .r name="00-load.R"}
+```r
+data <- read.csv("my-data.csv")
+```
+:::
+
+::: {.editor .r name="01-clean.R"}
+```r
+data <- dplyr::filter(data, x > 0)
+```
+:::
+::::
+:::

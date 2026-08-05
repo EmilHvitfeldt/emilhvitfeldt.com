@@ -1,0 +1,36 @@
+---
+format:
+  revealjs:
+    self-contained: true
+    width: 900
+    height: 450
+revealjs-plugins:
+  - codewindow
+---
+
+## `chrome="mac"` (the default)
+
+::: {.codewindow .r chrome="mac"}
+analysis.R
+```r
+mean(1:10)
+```
+:::
+
+## `chrome="windows"`
+
+::: {.codewindow .r chrome="windows"}
+analysis.R
+```r
+mean(1:10)
+```
+:::
+
+## `chrome="none"`
+
+::: {.codewindow .r chrome="none"}
+analysis.R
+```r
+mean(1:10)
+```
+:::

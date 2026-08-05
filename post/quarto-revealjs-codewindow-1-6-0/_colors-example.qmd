@@ -1,0 +1,75 @@
+---
+format:
+  revealjs:
+    self-contained: true
+    width: 900
+    height: 450
+revealjs-plugins:
+  - codewindow
+---
+
+## Default colors
+
+::: {.codewindow .r}
+analysis.R
+```r
+library(dplyr)
+
+penguins |>
+  group_by(species) |>
+  summarise(mass = mean(body_mass, na.rm = TRUE))
+```
+:::
+
+## Per-window arguments
+
+::: {.codewindow .sass bg="#fdf6e3" header-bg="#eee8d5" tab-bg="#d9d2ba" color="#073642" shadow-color="#93a1a1"}
+styles.scss
+```scss
+.pink {
+  color: pink;
+}
+```
+:::
+
+## Deck-wide custom properties
+
+```{=html}
+<style>
+.reveal .deck-wide .codewindow {
+  --codewindow-bg: #fdf6e3;
+  --codewindow-header-bg: #eee8d5;
+  --codewindow-tab-bg: #d9d2ba;
+  --codewindow-tab-active-bg: #fdf6e3;
+  --codewindow-color: #073642;
+  --codewindow-shadow-color: #93a1a1;
+}
+</style>
+```
+
+::: {.deck-wide}
+::: {.codewindow .r}
+analysis.R
+```r
+mean(1:10)
+```
+:::
+
+::: {.codewindow .python}
+analysis.py
+```python
+sum(range(10)) / 10
+```
+:::
+:::
+
+## `.codewindow-dark`
+
+::: {.codewindow .sass .codewindow-dark}
+styles.scss
+```scss
+.pink {
+  color: pink;
+}
+```
+:::

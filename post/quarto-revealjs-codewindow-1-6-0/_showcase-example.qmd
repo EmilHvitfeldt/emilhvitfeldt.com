@@ -1,0 +1,179 @@
+---
+format:
+  revealjs:
+    self-contained: true
+    width: 900
+    height: 675
+revealjs-plugins:
+  - codewindow
+---
+
+## Everything at once {.smaller}
+
+```{=html}
+<style>
+.reveal .codewindow .header {
+  font-size: 0.8em;
+}
+.reveal .codewindow {
+  --codewindow-tab-padding: 6px;
+  --codewindow-tab-gap: 2px;
+  --codewindow-header-pad: 8px;
+}
+.reveal .codewindow.squared {
+  --codewindow-radius: 0px;
+  --codewindow-tab-radius: 0px;
+  --codewindow-tab-gap: 0px;
+}
+</style>
+```
+
+:::: {.columns}
+::: {.column width="50%"}
+::::: {.codewindow width="95%"}
+:::: {.editor .sql name="query.sql"}
+```sql
+select id, name
+from users
+where active
+order by id
+```
+::::
+
+:::: {.editor .json name="data.json"}
+```json
+{"x": 1}
+```
+::::
+
+:::: {.editor .yaml name="_quarto.yml"}
+```yaml
+project:
+  type: website
+```
+::::
+:::::
+
+::::: {.codewindow chrome="none" bg="#fdf6e3" header-bg="#eee8d5" tab-bg="#d9d2ba" color="#073642" shadow-color="#93a1a1" width="95%"}
+:::: {.editor .stan name="model.stan"}
+```stan
+parameters {
+  real mu;
+}
+model {
+  y ~ normal(mu, 1);
+}
+```
+::::
+
+:::: {.editor .mplus name="model.inp"}
+```text
+ANALYSIS: TYPE = GENERAL;
+```
+::::
+
+:::: {.editor .sas name="fit.sas"}
+```sas
+proc reg; run;
+```
+::::
+:::::
+
+::::: {.codewindow bg="#f1f8f2" header-bg="#d7ecda" tab-bg="#b5d9bb" color="#16351c" shadow-color="#7fbc8c" width="95%"}
+:::: {.editor .bash name="deploy.sh"}
+```bash
+quarto render
+quarto publish gh-pages
+git add _freeze
+git commit -m "update"
+```
+::::
+
+:::: {.editor .git name=".gitignore"}
+```bash
+_site/
+```
+::::
+
+:::: {.editor .markdown name="README.md"}
+```markdown
+# Title
+```
+::::
+:::::
+:::
+
+::: {.column width="50%"}
+::::: {.codewindow .codewindow-dark chrome="windows" width="95%"}
+:::: {.editor .typescript name="app.ts"}
+```typescript
+const x: number = 1
+function id(v: string) {
+  return v
+}
+export { id }
+```
+::::
+
+:::: {.editor .rust name="main.rs"}
+```rust
+fn main() {}
+```
+::::
+
+:::: {.editor .go name="main.go"}
+```go
+func main() {}
+```
+::::
+:::::
+
+::::: {.codewindow .squared bg="#f4ecff" header-bg="#e3d5ff" tab-bg="#cdb8f0" color="#2d1b4e" shadow-color="#b39ddb" width="95%"}
+:::: {.editor .rmd name="report.Rmd"}
+```r
+knitr::opts_chunk$set(
+  echo = TRUE
+)
+library(dplyr)
+summarise(data, mean(x))
+```
+::::
+
+:::: {.editor .matlab name="sim.m"}
+```matlab
+x = linspace(0, 1);
+```
+::::
+
+:::: {.editor .cpp name="fast.cpp"}
+```cpp
+int add(int a, int b) { return a + b; }
+```
+::::
+:::::
+
+::::: {.codewindow chrome="windows" width="95%"}
+:::: {.editor .spss name="survey.sps"}
+```text
+FREQUENCIES x.
+DESCRIPTIVES y.
+CROSSTABS x BY y.
+EXAMINE z.
+```
+::::
+
+:::: {.editor .stata name="analysis.do"}
+```stata
+regress y x
+```
+::::
+
+:::: {.editor .fortran name="solver.f90"}
+```fortran
+program main
+end program
+```
+::::
+:::::
+:::
+::::

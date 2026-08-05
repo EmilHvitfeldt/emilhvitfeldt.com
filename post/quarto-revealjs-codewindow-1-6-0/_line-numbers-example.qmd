@@ -1,0 +1,26 @@
+---
+format:
+  revealjs:
+    self-contained: true
+    width: 900
+    height: 450
+revealjs-plugins:
+  - codewindow
+---
+
+## Highlighting steps {auto-animate=true}
+
+Press right arrow to step through highlights.
+
+::: {.codewindow .r}
+analysis.R
+```{.r code-line-numbers="|1|3-5|7"}
+library(dplyr)
+
+penguins |>
+  group_by(species) |>
+  summarise(mass = mean(body_mass, na.rm = TRUE))
+
+plot(penguins$bill_len, penguins$bill_dep)
+```
+:::
