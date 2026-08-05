@@ -10,7 +10,17 @@
 <atom:link href="https://emilhvitfeldt.com/blog.xml" rel="self" type="application/rss+xml"/>
 <description>Emil Hvitfeldt blog about R, slides and modeling</description>
 <generator>quarto-1.9.35</generator>
-<lastBuildDate>Thu, 25 Jun 2026 07:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 05 Aug 2026 07:00:00 GMT</lastBuildDate>
+<item>
+  <title>{B4F502887207:/post/quarto-revealjs-codewindow-1-6-0/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/quarto-revealjs-codewindow-1-6-0/</link>
+  <description>{B4F502887207:/post/quarto-revealjs-codewindow-1-6-0/index.html}</description>
+  <category>quarto</category>
+  <category>slidecraft 101</category>
+  <guid>https://emilhvitfeldt.com/post/quarto-revealjs-codewindow-1-6-0/</guid>
+  <pubDate>Wed, 05 Aug 2026 07:00:00 GMT</pubDate>
+  <media:content url="https://emilhvitfeldt.com/post/quarto-revealjs-codewindow-1-6-0/featured.webp" medium="image" type="image/webp"/>
+</item>
 <item>
   <title>{B4F502887207:/post/love-island-connections/index.html}</title>
   <link>https://emilhvitfeldt.com/post/love-island-connections/</link>
@@ -191,20 +201,9 @@
   <pubDate>Mon, 08 Jul 2024 07:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/slidecraft-plot-backgrounds/featured.webp" medium="image" type="image/webp"/>
 </item>
-<item>
-  <title>{B4F502887207:/post/slidecraft-scss-loops/index.html}</title>
-  <link>https://emilhvitfeldt.com/post/slidecraft-scss-loops/</link>
-  <description>{B4F502887207:/post/slidecraft-scss-loops/index.html}</description>
-  <category>slidecraft 101</category>
-  <category>quarto</category>
-  <guid>https://emilhvitfeldt.com/post/slidecraft-scss-loops/</guid>
-  <pubDate>Sun, 07 Jul 2024 07:00:00 GMT</pubDate>
-  <media:content url="https://emilhvitfeldt.com/post/slidecraft-scss-loops/featured.webp" medium="image" type="image/webp"/>
-</item>
 </channel>
 </rss>
-s/featured.webp" medium="image" type="image/webp"/>
-</item>
+tem>
 </channel>
 </rss>
 >

@@ -1,0 +1,119 @@
+---
+format:
+  revealjs:
+    self-contained: true
+    width: 900
+    height: 450
+revealjs-plugins:
+  - codewindow
+---
+
+## Formats and tooling {.smaller}
+
+:::: {.columns}
+::: {.column width="50%"}
+::: {.codewindow .sql width="90%"}
+query.sql
+```sql
+select 1
+```
+:::
+
+::: {.codewindow .yaml width="90%"}
+_quarto.yml
+```yaml
+project:
+  type: website
+```
+:::
+:::
+
+::: {.column width="50%"}
+::: {.codewindow .json width="90%"}
+data.json
+```json
+{"x": 1}
+```
+:::
+
+::: {.codewindow .bash width="90%"}
+deploy.sh
+```bash
+quarto render
+```
+:::
+:::
+::::
+
+## Statistical and scientific {.smaller}
+
+:::: {.columns}
+::: {.column width="50%"}
+::: {.codewindow .stan width="90%"}
+model.stan
+```stan
+parameters { real mu; }
+```
+:::
+
+::: {.codewindow .stata width="90%"}
+analysis.do
+```stata
+regress y x
+```
+:::
+:::
+
+::: {.column width="50%"}
+::: {.codewindow .cpp width="90%"}
+fast.cpp
+```cpp
+int add(int a, int b) { return a + b; }
+```
+:::
+
+::: {.codewindow .fortran width="90%"}
+solver.f90
+```fortran
+program main
+end program
+```
+:::
+:::
+::::
+
+## General purpose {.smaller}
+
+:::: {.columns}
+::: {.column width="50%"}
+::: {.codewindow .typescript width="90%"}
+app.ts
+```typescript
+const x: number = 1
+```
+:::
+
+::: {.codewindow .rust width="90%"}
+main.rs
+```rust
+fn main() {}
+```
+:::
+:::
+
+::: {.column width="50%"}
+::: {.codewindow .go width="90%"}
+main.go
+```go
+func main() {}
+```
+:::
+
+::: {.codewindow .git width="90%"}
+.gitignore
+```bash
+_site/
+```
+:::
+:::
+::::

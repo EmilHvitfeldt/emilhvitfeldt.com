@@ -1,0 +1,3 @@
+quarto render ./post/quarto-revealjs-codewindow-1-6-0/_showcase-example.qmd
+npx playwright screenshot --viewport-size=1200,960 --wait-for-timeout=3000 file://$PWD/post/quarto-revealjs-codewindow-1-6-0/_showcase-example.html /tmp/featured-raw.png
+magick /tmp/featured-raw.png -crop 1200x900+0+0 +repage -quality 90 ./post/quarto-revealjs-codewindow-1-6-0/featured.webp
