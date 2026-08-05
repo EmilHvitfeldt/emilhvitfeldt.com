@@ -1,0 +1,1782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blob Frame Maker</title>
+<style>
+:root {
+  --bg: #0f1115;
+  --panel: #171a21;
+  --panel2: #1e222b;
+  --line: #2a2f3a;
+  --text: #e7ebf2;
+  --muted: #9aa4b2;
+  --accent: #7cc4ff;
+  --accent2: #8fd14f;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+header {
+  padding: 18px 24px 6px;
+}
+header h1 {
+  margin: 0;
+  font-size: 22px;
+  letter-spacing: .3px;
+}
+header .tag {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+main {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 18px;
+  padding: 14px 24px 32px;
+  align-items: start;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 6px 16px 16px;
+  position: sticky;
+  top: 12px;
+  max-height: calc(100vh - 24px);
+  overflow-y: auto;
+}
+
+.panel section {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+.panel section:last-child { border-bottom: 0; }
+
+.panel h2 {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--muted);
+  margin: 0 0 10px;
+}
+
+label {
+  display: block;
+  font-size: 13px;
+  color: var(--text);
+  margin: 10px 0;
+}
+label output {
+  float: right;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+label.check { display: flex; align-items: center; gap: 8px; }
+label.check input { width: auto; }
+
+/* Grid size: a number field with -/+ steppers rather than a slider, since cols
+   and rows are a handful of discrete values and exact ones are what you want. */
+label.stepRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.stepper {
+  display: inline-flex;
+  align-items: stretch;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--panel2);
+}
+.stepper input[type=number] {
+  width: 44px;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  padding: 6px 0;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+.stepper input[type=number]::-webkit-outer-spin-button,
+.stepper input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.stepper input[type=number]:focus-visible { outline: 1px solid var(--accent); outline-offset: -1px; }
+button.step {
+  flex: 0 0 auto;
+  min-width: 0;
+  width: 28px;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1;
+}
+button.step:hover { background: var(--line); filter: none; }
+button.step:disabled { color: var(--muted); opacity: .45; cursor: default; background: transparent; }
+
+input[type=range] {
+  width: 100%;
+  margin-top: 6px;
+  accent-color: var(--accent);
+}
+select, input[type=file] {
+  width: 100%;
+  margin-top: 6px;
+  background: var(--panel2);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 7px 8px;
+  font-size: 13px;
+}
+input[type=color] {
+  width: 100%;
+  height: 34px;
+  margin-top: 6px;
+  background: var(--panel2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 2px;
+}
+.colorRow, .imgRow { transition: opacity .15s; }
+
+.hint { font-size: 11px; color: var(--muted); margin: 10px 0 0; line-height: 1.4; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; }
+button {
+  flex: 1;
+  min-width: 64px;
+  background: var(--accent);
+  color: #06263f;
+  border: 0;
+  border-radius: 9px;
+  padding: 9px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+button.ghost {
+  background: var(--panel2);
+  color: var(--text);
+  border: 1px solid var(--line);
+  font-weight: 500;
+}
+button:hover { filter: brightness(1.08); }
+
+.stage {
+  background:
+    radial-gradient(circle at 20% 20%, #1b1f27, #0d0f13);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.canvasWrap {
+  width: 100%;
+  max-width: 640px;
+}
+.canvasWrap svg { width: 100%; height: auto; display: block; }
+
+/* edit overlay handles */
+.edit-cell {
+  fill: transparent;
+  stroke: rgba(255,255,255,.14);
+  stroke-width: 1;
+  cursor: pointer;
+}
+.edit-cell:hover { fill: rgba(124,196,255,.18); }
+.edit-dot { fill: rgba(255,255,255,.22); pointer-events: none; }
+
+/* Seam and corner handles are invisible at rest: the render itself already shows
+   where the channels and corners are, so drawing the targets on top of it was
+   noise. They stay clickable (`transparent` still takes pointer events, unlike
+   `none`) and light up on hover so a click is never a guess. */
+.edit-seam {
+  fill: transparent;
+  stroke: transparent;
+  stroke-width: 1.5;
+  cursor: pointer;
+}
+.edit-seam:hover {
+  fill: rgba(124,196,255,.55);
+  stroke: rgba(255,255,255,.5);
+}
+/* a cut seam highlights more faintly, so hover still tells the two apart */
+.edit-seam.is-cut:hover {
+  fill: rgba(124,196,255,.25);
+  stroke: rgba(255,255,255,.35);
+}
+
+.edit-corner {
+  fill: transparent;
+  stroke: transparent;
+  stroke-width: 1.5;
+  cursor: pointer;
+}
+.edit-corner:hover {
+  fill: rgba(255,190,90,.55);
+  stroke: rgba(255,205,130,.75);
+}
+/* a vertex already carrying an override or a bridge reads brighter on hover */
+.edit-corner.is-set:hover { fill: rgba(255,170,50,.85); }
+
+@media (max-width: 820px) {
+  main { grid-template-columns: 1fr; }
+  .panel { position: static; max-height: none; }
+}
+
+/* ---------- gallery.html ---------- */
+body.gallery main {
+  display: block;
+  padding: 8px 24px 60px;
+}
+header .tag a { color: var(--accent); }
+
+.galleryBar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  padding: 10px 24px 12px;
+  background: rgba(15,17,21,.94);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--line);
+}
+.galleryBar label { margin: 0; min-width: 150px; font-size: 12px; color: var(--muted); }
+.galleryBar label.check { min-width: 0; }
+.galleryBar select { margin-top: 2px; }
+.galleryBar input[type=range] { margin-top: 2px; }
+.galleryCount { margin-left: auto; color: var(--muted); font-size: 12px; }
+
+.gsection { padding: 20px 0 4px; border-bottom: 1px solid var(--line); }
+.gsection h2 {
+  margin: 0;
+  font-size: 13px;
+  letter-spacing: .6px;
+  text-transform: uppercase;
+  color: var(--text);
+}
+.gsection .hint { margin: 6px 0 0; max-width: 90ch; }
+
+.tiles {
+  display: grid;
+  /* auto-fill so the whole space is enumerable at a glance on a wide window */
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 10px;
+  margin: 12px 0 0;
+}
+.tile {
+  margin: 0;
+  padding: 6px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  cursor: pointer;
+}
+.tile:hover { border-color: var(--accent); }
+.tile svg { width: 100%; height: auto; display: block; border-radius: 6px; }
+.tile figcaption {
+  margin-top: 5px;
+  font-size: 10px;
+  line-height: 1.35;
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  word-break: break-all;
+}
+/* the ID stays visible with labels off: it is how a tile gets referred to */
+.tile .tid {
+  display: block;
+  margin-bottom: 4px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .4px;
+  color: var(--muted);
+  text-decoration: none;
+}
+.tile .tid:hover { color: var(--accent); }
+/* gallery.html#V7 scrolls to that tile and marks it */
+.tile:target { border-color: #ffbe5a; box-shadow: 0 0 0 2px rgba(255,190,90,.35); }
+.tile:target .tid { color: #ffbe5a; }
+.gsection h2 .prefix {
+  margin-left: 10px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-weight: 400;
+  text-transform: none;
+  color: var(--muted);
+}
+.tile figcaption .note { display: block; color: var(--accent2); }
+.tile figcaption .note.warn { color: #ffbe5a; }
+body.no-labels .tile figcaption { display: none; }
+.hint a { color: var(--accent); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Blob Frame Maker</h1>
+  <p class="tag">Click / drag cells on the grid. Adjacent cells fuse into a smooth blob frame.</p>
+</header>
+
+<main>
+  <aside class="panel">
+    <section>
+      <h2>Grid</h2>
+      <label class="stepRow">Columns
+        <span class="stepper">
+          <button type="button" class="step" data-target="cols" data-step="-1" aria-label="Fewer columns">&minus;</button>
+          <input type="number" id="cols" min="1" max="8" step="1" value="4">
+          <button type="button" class="step" data-target="cols" data-step="1" aria-label="More columns">+</button>
+        </span></label>
+      <label class="stepRow">Rows
+        <span class="stepper">
+          <button type="button" class="step" data-target="rows" data-step="-1" aria-label="Fewer rows">&minus;</button>
+          <input type="number" id="rows" min="1" max="8" step="1" value="4">
+          <button type="button" class="step" data-target="rows" data-step="1" aria-label="More rows">+</button>
+        </span></label>
+      <div class="row">
+        <button id="clearBtn" class="ghost">Clear</button>
+        <button id="fillAllBtn" class="ghost">Fill all</button>
+        <button id="invertBtn" class="ghost">Invert</button>
+        <button id="randomBtn" class="ghost">Random</button>
+      </div>
+      <p class="hint">Click a cell to fill/empty. Click the blue seam between two filled cells to cut the connection (turns red).</p>
+    </section>
+
+    <section>
+      <h2>Presets</h2>
+      <div class="row">
+        <button id="ref1Btn" class="ghost">Preset 1</button>
+        <button id="ref2Btn" class="ghost">Preset 2</button>
+        <button id="ref3Btn" class="ghost">Preset 3</button>
+        <button id="ref4Btn" class="ghost">Preset 4</button>
+        <button id="ref5Btn" class="ghost">Preset 5</button>
+        <button id="ref6Btn" class="ghost">Preset 6</button>
+        <button id="ref10Btn" class="ghost">Preset 7</button>
+        <button id="ref11Btn" class="ghost">Preset 8</button>
+      </div>
+    </section>
+
+    <section>
+      <h2>Shape</h2>
+      <label>Cell style
+        <select id="shape">
+          <option value="rounded">Rounded squares (grid)</option>
+          <option value="circle">Circles (beads)</option>
+        </select>
+      </label>
+      <label>Connection thickness <output id="neckOut">60</output>
+        <input type="range" id="neck" min="0" max="100" value="60"></label>
+      <label>Blob padding <output id="insetOut">10</output>
+        <input type="range" id="inset" min="0" max="40" value="10"></label>
+      <label>Channel width <output id="gapOut">6</output>
+        <input type="range" id="gap" min="0" max="40" value="6"></label>
+      <label>Corner roundness <output id="roundOut">24</output>
+        <input type="range" id="round" min="0" max="50" value="24"></label>
+      <label>Smoothing <output id="gooOut">10</output>
+        <input type="range" id="goo" min="1" max="24" value="10"></label>
+    </section>
+
+    <section>
+      <h2>Fill</h2>
+      <label>Fill mode
+        <select id="fillMode">
+          <option value="gradient">Four-corner gradient</option>
+          <option value="color">Solid color</option>
+          <option value="image">Upload image…</option>
+        </select>
+      </label>
+      <label class="colorRow" data-for="color">Fill color
+        <input type="color" id="fillColor" value="#bfe2f5"></label>
+      <label class="imgRow" data-for="image">Image
+        <input type="file" id="imageFile" accept="image/*"></label>
+    </section>
+
+    <section>
+      <h2>Export</h2>
+      <div class="row">
+        <button id="svgBtn">Download SVG</button>
+        <button id="pngBtn">Download PNG</button>
+      </div>
+    </section>
+  </aside>
+
+  <div class="stage">
+    <div class="canvasWrap" id="canvasWrap"></div>
+  </div>
+</main>
+
+<script>
+"use strict";
+
+const CS = 100; // logical cell size
+
+const state = {
+  cols: 4,
+  rows: 4,
+  cells: new Set(),          // "r,c"
+  cuts: new Set(),           // cut seams: "h:r:c" (r,c|r,c+1) or "v:r:c" (r,c|r+1,c)
+  corners: new Map(),        // per-vertex radius override: "p:r:c" -> units (absent = use round)
+  bridges: new Set(),        // diagonal connections: "b:r:c:f" ("/") or "b:r:c:b" ("\")
+  shape: "rounded",
+  goo: 10,
+  round: 24,
+  inset: 10,
+  gap: 6,            // width of the black channel between unjoined cells
+  neck: 60,          // connection thickness between adjacent cells (0 = none)
+  fillMode: "gradient",
+  fillColor: "#bfe2f5",
+  image: null,               // dataURL
+};
+
+const $ = (id) => document.getElementById(id);
+const key = (r, c) => `${r},${c}`;
+// lattice vertex: r in 0..rows, c in 0..cols. The grid's faces are `cells` and
+// its edges are `cuts`; these are the vertices, carrying radius overrides.
+const pKey = (r, c) => `p:${r}:${c}`;
+/* A bridge is a diagonal connection across a vertex. The orientation is part of
+   the key because a vertex with all four cells filled is otherwise ambiguous:
+   both diagonals are available and they mean different things.
+     "b" = "\" joins (r-1,c-1) and (r,c)      "f" = "/" joins (r-1,c) and (r,c-1)
+   frame_01's top-left 2x2 is exactly the ambiguous case: four filled cells, all
+   four seams cut, and one "/" bridge. */
+const bKey = (r, c, d) => `b:${r}:${c}:${d}`;
+const bridgeCells = (r, c, d) => (d === "b"
+  ? [[r - 1, c - 1], [r, c]]
+  : [[r - 1, c], [r, c - 1]]);
+// the two cells the bridge does NOT join, which pinch its neck from either side
+const bridgeOpposing = (r, c, d) => bridgeCells(r, c, d === "b" ? "f" : "b");
+const setSlider = (id, prop, val) => {
+  state[prop] = val; $(id).value = val;
+  const out = $(id + "Out");  // the stepper fields carry their value in the input itself
+  if (out) out.textContent = val;
+  syncStepper(id);
+};
+
+/* ---------- reference presets ---------- */
+// Frame 1: a 3x4 grid, all cells filled, with a staircase of cut connections.
+const REF1 = {
+  cols: 3, rows: 4,
+  cells: "all",
+  // derived from reference/frame_01.png: top cells separate, merging into the lower body
+  // Exactly four seam joins survive, and they chain into one S-shaped snake:
+  // (1,2)-(2,2)-(2,1)-(3,1)-(3,0). The rest of the frame is held together by
+  // diagonals, not seams (see `bridges` below); only (0,0) and (3,2) are islands.
+  // Verified per seam against the PNG by walking the straight line between the
+  // two cell centres (centres at x 40/112/184, y 25/97/169/241) and checking
+  // for an unbroken light run; joined seams read >=140 gray, cut ones ~30.
+  cuts: [
+    "h:0:0", "h:0:1", "h:1:0", "h:1:1", "h:2:0", "h:3:1",
+    "v:0:0", "v:0:1", "v:0:2", "v:1:0", "v:1:1",
+    "v:2:0", "v:2:2",
+  ],
+  // Geometry measured off frame_01.png (cell pitch ~72px), in grid units:
+  //   channel between separated cells ~4px      -> gap 6
+  //   corner radius, area-fit on isolated cells -> round 24 (the reference runs
+  //     24-28; it is a freehand asset so no two cells agree exactly)
+  //   joined cells show no waist at all: the bridge spans the full ~72px body,
+  //     which the outline model gives for free (neck is unused in rounded mode)
+  // The cut seams are not a plain grid of channels: every channel in the PNG is a
+  // *staircase* that turns at a vertex, and the two arms it does not use are where
+  // a "/" diagonal carries the frame across. Three vertices do this, so the frame
+  // has a diagonal chain (0,2)-(1,1)-(2,0) and a diagonal pair (0,1)-(1,0)
+  // alongside the orthogonal snake. Five groups in all, 3+2+5+1+1 = 12 cells.
+  // How to see it in the PNG: print a +-26px window of the thresholded image round
+  // each of the six interior vertices. Each shows four possible channel arms, and
+  // they pair up. At p:1:1 the arm coming down the col0/col1 divider curves *left*
+  // into the row0/row1 divider and stops, while the arm coming up from below curves
+  // *right*: top+left and bottom+right, with a light corridor between them on the
+  // "/" diagonal. p:1:2 and p:2:1 show the same pairing. p:2:2, p:3:1 and p:3:2
+  // have only two arms each (the other two seams are joined), so no diagonal.
+  // Do not trust a straight centre-to-centre diagonal walk alone here: the asset's
+  // rows are staggered by up to ~7px per column, so the "/" walk reads light at
+  // p:3:1/p:3:2 too, where the cells are in fact joined the long way round.
+  bridges: ["b:1:1:f", "b:1:2:f", "b:2:1:f"],
+  // The neck throat is 2*(sqrt2*(gap/2+R) - R - gap), so the vertex radius is the
+  // only knob for it. Measured throats (minimum perpendicular light run along the
+  // corridor): p:1:1 21.4 units, p:1:2 22.8, p:2:1 21.4, which invert to R 30/32/30
+  // against a global `round` of 24 (which would give only 16.4).
+  // The coupling is real, not a fudge: a fatter diagonal neck comes precisely from
+  // rounding those four corners harder. The reference measures 24-28 there, so this
+  // trades ~6 units of corner radius for ~5 of throat, and the throat is the more
+  // prominent feature.
+  corners: { "p:1:1": 30, "p:1:2": 32, "p:2:1": 30 },
+  shape: "rounded", inset: 10, gap: 6, neck: 80, goo: 10, round: 24,
+};
+
+/* Frame 2: a 4x4 grid, all cells filled, cut into three groups by two channels
+   that each run clear from one outer edge to another. No diagonals and no slits,
+   which makes it the plain counterpart to REF1 - every cut here separates two
+   groups, so the whole frame is expressible as outlines alone.
+     - Channel A: down the col0/col1 divider from the top edge, then right along
+       the row0/row1 divider to the right edge. Lops off the top bar.
+     - Channel B: up from the bottom edge along the col0/col1 divider, right along
+       row1/row2, down col1/col2, right along row2/row3, up col2/col3, then right
+       along row1/row2 again to the right edge. This is the staple-and-U figure
+       that dominates the lower half of the reference.
+   Groups: {(0,1),(0,2),(0,3)} (3), the 8 cells left/above channel B, and the 5
+   right/below it. Derived per the CLAUDE.md recipe; the grid is 4x4 because the
+   three interior vertical channels sit at x 57/110/166 over a 219px span, which
+   only fits four columns, and the horizontal ones at y 81/140/193 over 214px.
+   The asset is freehand: col0 measures ~59px against ~53 for cols 1-3, and the
+   lower channels stagger by up to 10px, so this is a same-family recreation. */
+const REF2 = {
+  cols: 4, rows: 4,
+  cells: "all",
+  cuts: [
+    "h:0:0", "h:2:0", "h:2:1", "h:2:2", "h:3:0",
+    "v:0:1", "v:0:2", "v:0:3", "v:1:1", "v:1:3", "v:2:2",
+  ],
+  bridges: [], corners: {},
+  // Geometry: drawn extent 218.6 x 213.9px over 4x4 cells with a mean channel of
+  // 4.45px (22 subpixel trough measurements, 3.3-6.5) gives a pitch of ~55.2px,
+  // so gap = 8. Area-fit on the isolated top bar gives R = 15.75px = 28.5 units,
+  // less the ~0.7 the >=128 threshold adds, so round = 28.
+  shape: "rounded", inset: 10, gap: 8, neck: 80, goo: 10, round: 28,
+};
+
+/* Frame 3: a 3x3 grid of circles joined only on the "\" diagonal. Every one of
+   the 12 orthogonal seams is cut and all four interior vertices carry a back
+   diagonal, giving five groups: {(0,0),(1,1),(2,2)}, {(0,1),(1,2)}, {(1,0),(2,1)}
+   and the singletons (0,2) and (2,0). Connected-component labelling of the PNG
+   returns exactly that, which is a cleaner read than seam walks here because the
+   answer is the same for all 12 seams (min gray 25-39) and all four diagonals
+   (140-235).
+   Despite being all circles this is a **rounded**-mode frame, not a bead one. At
+   `round 50` groupPath clamps the radius to (CS-gap)/2, which is precisely the
+   radius at which a cell body becomes a circle with no straight edge left, and
+   `bridgesMarkup` degenerates to a pure lens between two circles. Bead mode could
+   draw the circles but not the diagonals: buildSVG routes `shape: "circle"` away
+   from outlinesMarkup, and connectorsMarkup only emits orthogonal bars.
+   Measured: pitch 74.0px, circle diameter 70.0px, so gap = 5.4 units -> gap 5.
+   The predicted throat at gap 5 is 36.4 units against 35.1 measured, so nothing
+   needs a corner override; the throat comes out right from the radius clamp. */
+const REF3 = {
+  cols: 3, rows: 3,
+  cells: "all",
+  cuts: [
+    "h:0:0", "h:0:1", "h:1:0", "h:1:1", "h:2:0", "h:2:1",
+    "v:0:0", "v:0:1", "v:0:2", "v:1:0", "v:1:1", "v:1:2",
+  ],
+  bridges: ["b:1:1:b", "b:1:2:b", "b:2:1:b", "b:2:2:b"],
+  corners: {},
+  shape: "rounded", inset: 10, gap: 5, neck: 80, goo: 10, round: 50,
+};
+
+/* Frame 4: a 4x3 grid of circles, same maximum-radius rounded mode as REF3, but
+   mixing one orthogonal join with four "/" diagonals. Exactly one seam survives -
+   h:1:1, which fuses (1,1) and (1,2) into the wide pill across the middle - and
+   the other 16 are cut. Components: {(0,1),(1,0)}, {(0,3),(1,1),(1,2),(2,0)},
+   {(1,3),(2,2)}, and the singletons (0,0), (0,2), (2,1), (2,3).
+   Note the crop: frame_04.png carries a ~7px sliver of the frame above it at the
+   top (y 0..6), which is sheet bleed and not part of the frame. Blank y < 20
+   before taking the bbox or the grid comes out one row too tall.
+   None of the four bridge vertices touches h:1:1 - its endpoints are p:1:2 and
+   p:2:2, which carry no diagonal - so every bridge sits at a properly pinched
+   vertex. Measured pitch 54.7px, circle diameter 51.5px -> gap 5; the throat
+   measures 19.75px = 36.4 units, which is exactly what gap 5 with the radius
+   clamped to 47.5 predicts, so again no corner overrides. */
+const REF4 = {
+  cols: 4, rows: 3,
+  cells: "all",
+  cuts: [
+    "h:0:0", "h:0:1", "h:0:2", "h:1:0", "h:1:2", "h:2:0", "h:2:1", "h:2:2",
+    "v:0:0", "v:0:1", "v:0:2", "v:0:3", "v:1:0", "v:1:1", "v:1:2", "v:1:3",
+  ],
+  bridges: ["b:1:1:f", "b:1:3:f", "b:2:1:f", "b:2:3:f"],
+  corners: {},
+  shape: "rounded", inset: 10, gap: 5, neck: 80, goo: 10, round: 50,
+};
+
+/* Frame 5: a 4x4 grid, all filled, in three kinds of piece:
+     - four isolated corner circles, (0,0) (0,3) (3,0) (3,3);
+     - a square ring of four 2x1 bars (the top, left, right and bottom edges)
+       held together by a diagonal at each of its four inner vertices;
+     - a solid 2x2 block in the middle, all four of its own seams joined.
+   Eight seams survive - h:0:1, h:1:1, h:2:1, h:3:1 (the top bar, the two rows of
+   the centre block, the bottom bar) and v:1:0, v:1:1, v:1:2, v:1:3 (the left bar,
+   the centre block's two columns, the right bar) - and the other 16 are cut.
+   The ring is worth understanding because it looks like it needs hole punching and
+   does not. Its 8 cells are one `groups()` group only via the bridges; they share
+   no *edges* across the corners, so boundaryEdges/edgeLoops yields four disjoint
+   2x1 loops rather than an outer loop plus an inner one. The middle is simply
+   never covered, and the centre block is a separate group with its own path. So
+   the nonzero-fill hole trick is not involved here at all.
+   Geometry, and the one honest compromise: the corner cells are true circles (area
+   fit R = 24.6px against a half-width of 25.4), which needs the radius clamp, i.e.
+   `round 50`. But the centre block fits R = 40.6 units and the ring bars ~40, so
+   at `round 50` those two come out about 5 units rounder than the reference. A
+   global `round 41` would fix them and cost the corner circles instead, and per
+   vertex overrides cannot separate the two: every vertex of a corner cell except
+   the grid's outermost is shared with a ring bar or the centre block, and an
+   override applies to every turn at its vertex. `round 50` is the better trade,
+   since the circles are the more distinctive feature.
+   The channel measures 8.8 units between corner and ring and 10.9 between ring and
+   centre (the asset is inconsistent), so gap 10. At the radius clamp the throat
+   reduces to 41.42 - gap = 31.4 units against 34.2 measured; that 2.8-unit deficit
+   is the same freehand spread - the corner circles imply gap 7.2 while the centre
+   block implies 12.5. */
+const REF5 = {
+  cols: 4, rows: 4,
+  cells: "all",
+  cuts: [
+    "h:0:0", "h:0:2", "h:1:0", "h:1:2", "h:2:0", "h:2:2", "h:3:0", "h:3:2",
+    "v:0:0", "v:0:1", "v:0:2", "v:0:3", "v:2:0", "v:2:1", "v:2:2", "v:2:3",
+  ],
+  bridges: ["b:1:1:f", "b:1:3:b", "b:3:1:b", "b:3:3:f"],
+  corners: {},
+  shape: "rounded", inset: 10, gap: 10, neck: 80, goo: 10, round: 50,
+};
+
+/* Frame 6: the first preset whose cells are not the whole grid. A 4x4 with the
+   four corners empty, so a 12-cell diamond:
+       . X X .
+       X X X X
+       X X X X
+       . X X .
+   Every one of the 16 seams between filled neighbours is cut (min gray 19-40) and
+   the frame is held together *entirely* by eight "/" and "\" diagonals, which is
+   the purest diagonal case in the set. Four groups of three cells each, and the
+   equal component sizes in the PNG (7554/7570/7631/7652) are the giveaway:
+     {(0,1),(1,0),(2,1)}  {(0,2),(1,1),(1,3)}
+     {(1,2),(2,3),(3,2)}  {(2,0),(2,2),(3,1)}
+   Every vertex carries at most one diagonal, so none of them hits the unfixed
+   crossed-bridge defect (see the gallery notes on M15.15.3).
+   Circle diameter measures 52.0px at a pitch of 55.2, so gap 6 with the radius at
+   the clamp. The throat then predicts 41.42 - gap = 35.4 units against 36.1
+   measured across the eight necks. */
+const REF6 = {
+  cols: 4, rows: 4,
+  cells: [
+    [0, 1], [0, 2],
+    [1, 0], [1, 1], [1, 2], [1, 3],
+    [2, 0], [2, 1], [2, 2], [2, 3],
+    [3, 1], [3, 2],
+  ],
+  cuts: [
+    "h:0:1", "h:1:0", "h:1:1", "h:1:2", "h:2:0", "h:2:1", "h:2:2", "h:3:1",
+    "v:0:1", "v:0:2", "v:1:0", "v:1:1", "v:1:2", "v:1:3", "v:2:1", "v:2:2",
+  ],
+  bridges: [
+    "b:1:1:f", "b:1:2:f", "b:1:3:b", "b:2:1:b",
+    "b:2:3:b", "b:3:1:b", "b:3:2:f", "b:3:3:f",
+  ],
+  corners: {},
+  shape: "rounded", inset: 10, gap: 6, neck: 80, goo: 10, round: 50,
+};
+
+/* Frame 10: two plus-pentominoes linked by a three-cell diagonal chain, on a 5x5
+   grid with 13 cells:
+       . X . . .
+       X X X X .
+       . X X X .
+       . X X X X
+       . . . X .
+   Eight seams joined, eight cut, two bridges. The groups are
+     {(0,1),(1,0),(1,1),(1,2),(2,1)}  the upper plus
+     {(1,3),(2,2),(3,1)}              the "/" chain, via b:2:3:f and b:3:2:f
+     {(2,3),(3,2),(3,3),(3,4),(4,3)}  the lower plus
+   CLAUDE.md used to call this one an out-of-scope freeform "splat". It isn't; the
+   two things that made it look freeform both have mundane explanations. The blobs
+   come in two apparent sizes (largest inscribed circle 38.2px vs ~20px) only
+   because a fused plus has a bigger inscribed circle than a single cell. And the
+   grid cannot be read off the bbox, because the crop clips the frame top and
+   bottom: fit the lattice to the lobe centres instead. Three unclipped single-cell
+   lobes sit at (155.3,53.7), (111.9,96.8) and (68.6,139.9), i.e. two exact
+   (-43.2,+43.2) steps, which pins pitch 43.2 and the origin. A bbox-derived 6x5
+   grid instead produced five groups where the PNG has three, and that mismatch is
+   the tell that the lattice was wrong rather than the frame being freeform.
+   Beware: at this pitch the raw diagonal walk flags nine candidates, and seven are
+   spurious - two cells joined the long way round through a live seam read as a
+   light diagonal. Filtering by `vertexPinched` (all four seams at the vertex cut or
+   absent) leaves exactly the two real ones, and those two are exactly what the
+   component structure needs. Throats measure 34.7 and 38.2 units against the 37.4
+   predicted by gap 4 at the radius clamp; cell bodies measure 41.5px at pitch 43.2,
+   which is the same gap 4.
+   One honest gap: the grid spans y -11.2..204.8 while the PNG is 0..190, so the
+   reference shows (0,1) and (4,3) cut off by the crop and the preset draws them
+   whole. That is a property of the asset, not of the model. */
+const REF10 = {
+  cols: 5, rows: 5,
+  cells: [
+    [0, 1],
+    [1, 0], [1, 1], [1, 2], [1, 3],
+    [2, 1], [2, 2], [2, 3],
+    [3, 1], [3, 2], [3, 3], [3, 4],
+    [4, 3],
+  ],
+  cuts: ["h:1:2", "h:2:1", "h:2:2", "h:3:1", "v:1:2", "v:1:3", "v:2:1", "v:2:2"],
+  bridges: ["b:2:3:f", "b:3:2:f"],
+  corners: {},
+  shape: "rounded", inset: 10, gap: 4, neck: 80, goo: 10, round: 50,
+};
+
+/* Frame 11: the densest diagonal frame in the set. A 5x4 grid with 14 cells,
+       . X X X .
+       . X X X .
+       X X X X X
+       . X X X .
+   every one of the 19 seams cut, and eight diagonals doing all the work. Six
+   groups: two three-cell wedges {(0,1),(0,3),(1,2)} and {(2,1),(2,3),(3,2)}, one
+   five-cell zigzag {(1,1),(1,3),(2,0),(2,2),(2,4)}, and the singletons (0,2),
+   (3,1), (3,3).
+   Also formerly written off as a freeform splat, and also wrong: a distance
+   transform finds exactly 14 lobes of uniform radius (17.5-21.1px) sitting on a
+   44px lattice, 5 columns by 4 rows, and the bbox-derived grid comes out at
+   43.80 x 44.00 - an aspect ratio of 1.005, the squarest of any frame here.
+   Cell bodies measure 40.4px at pitch 43.9, implying gap 8, while the throats
+   (34.2-37.6, mean 35.5) imply gap 5.9. gap 7 splits the difference at a predicted
+   throat of 34.4. */
+const REF11 = {
+  cols: 5, rows: 4,
+  cells: [
+    [0, 1], [0, 2], [0, 3],
+    [1, 1], [1, 2], [1, 3],
+    [2, 0], [2, 1], [2, 2], [2, 3], [2, 4],
+    [3, 1], [3, 2], [3, 3],
+  ],
+  cuts: [
+    "h:0:1", "h:0:2", "h:1:1", "h:1:2", "h:2:0", "h:2:1", "h:2:2", "h:2:3",
+    "h:3:1", "h:3:2",
+    "v:0:1", "v:0:2", "v:0:3", "v:1:1", "v:1:2", "v:1:3",
+    "v:2:1", "v:2:2", "v:2:3",
+  ],
+  bridges: [
+    "b:1:2:b", "b:1:3:f", "b:2:1:f", "b:2:2:b",
+    "b:2:3:f", "b:2:4:b", "b:3:2:b", "b:3:3:f",
+  ],
+  corners: {},
+  shape: "rounded", inset: 10, gap: 7, neck: 80, goo: 10, round: 50,
+};
+
+function loadReference(cfg) {
+  setSlider("cols", "cols", cfg.cols); setSlider("rows", "rows", cfg.rows);
+  setSlider("inset", "inset", cfg.inset); setSlider("neck", "neck", cfg.neck);
+  setSlider("gap", "gap", cfg.gap);
+  setSlider("goo", "goo", cfg.goo); setSlider("round", "round", cfg.round);
+  state.shape = cfg.shape; $("shape").value = cfg.shape; syncShapeRows();
+  state.cells.clear();
+  if (cfg.cells === "all") {
+    for (let r = 0; r < cfg.rows; r++) for (let c = 0; c < cfg.cols; c++) state.cells.add(key(r, c));
+  } else {
+    cfg.cells.forEach(([r, c]) => state.cells.add(key(r, c)));
+  }
+  state.cuts = new Set(cfg.cuts || []);
+  state.corners = new Map(Object.entries(cfg.corners || {}));
+  state.bridges = new Set(cfg.bridges || []);
+  customCorners.clear();  // remembered states belong to the frame being replaced
+  render();
+}
+
+/* ---------- default starting pattern (a puzzle-ish frame) ---------- */
+function seed() {
+  state.cells.clear();
+  [[0,0],[0,1],[1,0],[1,1],[1,2],[2,0],[2,2],[2,3],[3,0],[3,1],[3,3]]
+    .forEach(([r, c]) => state.cells.add(key(r, c)));
+}
+
+/* ---------- geometry ---------- */
+function cellShapeSVG(r, c) {
+  const x = c * CS, y = r * CS;
+  const inset = state.inset;
+  const d = CS - inset * 2;
+  const rx = state.shape === "circle" ? d / 2 : state.round;
+  return `<rect x="${x + inset}" y="${y + inset}" width="${d}" height="${d}" rx="${rx}" ry="${rx}"/>`;
+}
+
+function filled(r, c) {
+  return r >= 0 && c >= 0 && r < state.rows && c < state.cols && state.cells.has(key(r, c));
+}
+
+const hKey = (r, c) => `h:${r}:${c}`; // seam between (r,c) and (r,c+1)
+const vKey = (r, c) => `v:${r}:${c}`; // seam between (r,c) and (r+1,c)
+
+// a connection exists when both cells are filled AND the seam isn't cut
+const joinedH = (r, c) => filled(r, c) && filled(r, c + 1) && !state.cuts.has(hKey(r, c));
+const joinedV = (r, c) => filled(r, c) && filled(r + 1, c) && !state.cuts.has(vKey(r, c));
+
+/* A vertex can only carry a diagonal when it is a genuine pinch point: every seam
+   meeting it is either absent or cut. The neck is bounded by the opposing cells
+   dilated by `gap`, and its straight tails are meant to lie exactly ON the
+   connected cells' own edges - that is the whole reason nothing pokes out of it.
+   A live seam dissolves the very edge the neck seats against, so the tails end up
+   crossing an already-fused body and the neck renders as a gash through it. The
+   four incident seams are the two horizontal ones above and below the vertex and
+   the two vertical ones to its left and right. */
+const vertexPinched = (r, c) =>
+  !joinedH(r - 1, c - 1) && !joinedH(r, c - 1)
+  && !joinedV(r - 1, c - 1) && !joinedV(r - 1, c);
+
+/* The second legality rule: there has to be ROOM for a neck.
+
+   The throat is `2*(D - rho)` where `D = sqrt2*(gap/2 + R)` reaches the dilated
+   opposing corner and `rho = R + gap` is its radius. That is positive only when
+
+       R > gap / sqrt2
+
+   Below it the two opposing cells, dilated by `gap`, overlap across the vertex:
+   there is no corridor, and the geometry is saying these cells cannot be joined
+   diagonally without cutting into the opposing pair. At `gap 40` the threshold is
+   28.3 against a radius clamp of 30, a 1.7-unit window, so wide channels have
+   effectively no room for a diagonal at all - which is the honest answer.
+
+   This used to be papered over by flooring `rho` at `D - 1.5`, which fabricated a
+   3-unit sliver instead. That produced a spindly needle across the channel, made
+   the throat identical at every radius (the vertex radius stopped controlling
+   anything), and broke the tail geometry: with `rho` floored, `tt` falls short of
+   the real tangent point and the neck's near end pokes out of the cell too.
+
+   Requiring a throat worth drawing removes all of that at once, and `rho = R + gap`
+   holds unconditionally afterwards, so both tail bounds are exact again. */
+const MIN_THROAT = 4;    // units; a hair under 5% of a cell, thin but legible
+const neckR = (r, c) => Math.min(cornerR(r, c, state.round), (CS - state.gap) / 2);
+const throatWidth = (R, g) => 2 * (Math.SQRT2 * (g / 2 + R) - R - g);
+const throatFits = (R) => throatWidth(Math.min(R, (CS - state.gap) / 2), state.gap) >= MIN_THROAT;
+const bridgeFits = (r, c) => throatFits(neckR(r, c));
+
+/* A bridge is on when it's set, both cells it joins are filled, the vertex is
+   pinched, and there is room for a neck. Unlike seams, bridges default to OFF: a
+   diagonal touch reads as pinched unless asked otherwise. Like the filled check,
+   these make an illegal bridge inert rather than deleting the key, so re-cutting
+   the seam (or narrowing the channel, or rounding the corner up) brings it back
+   instead of silently losing what the user set. */
+const bridged = (r, c, d) =>
+  state.bridges.has(bKey(r, c, d))
+  && bridgeCells(r, c, d).every(([q, s]) => filled(q, s))
+  && vertexPinched(r, c)
+  && bridgeFits(r, c);
+
+/* Both diagonals bridged at one vertex: the two neck shapes overlap at the vertex,
+   so all four cells fuse geometrically. Grouping has to agree, or the render shows
+   one blob while groups() still thinks there are two - and group identity is what
+   decides hole punching and slit carving. Implies all four cells are filled. */
+const bothBridged = (r, c) => bridged(r, c, "b") && bridged(r, c, "f");
+const vertexCells = (r, c) => [[r - 1, c - 1], [r - 1, c], [r, c - 1], [r, c]];
+
+/* explicit bars bridging connected adjacent cells; cut seams get no bar,
+   so the gap between the two outlined blobs reads as a channel */
+function connectorsMarkup() {
+  const n = state.neck;
+  if (n <= 0) return "";
+  const half = n / 2;
+  const rx = Math.min(half, 18);
+  let s = "";
+  for (let r = 0; r < state.rows; r++) {
+    for (let c = 0; c < state.cols; c++) {
+      const cx = c * CS + CS / 2, cy = r * CS + CS / 2;
+      if (joinedH(r, c))
+        s += `<rect x="${cx}" y="${cy - half}" width="${CS}" height="${n}" rx="${rx}" ry="${rx}"/>`;
+      if (joinedV(r, c))
+        s += `<rect x="${cx - half}" y="${cy}" width="${n}" height="${CS}" rx="${rx}" ry="${rx}"/>`;
+    }
+  }
+  return s;
+}
+
+/* fill the small gap at an interior corner where four cells form a solid
+   2x2 block (all filled and all four surrounding seams joined) */
+function junctionsMarkup() {
+  const side = 2 * state.inset + 40;
+  let s = "";
+  for (let r = 1; r < state.rows; r++) {
+    for (let c = 1; c < state.cols; c++) {
+      const solid =
+        filled(r - 1, c - 1) && filled(r - 1, c) && filled(r, c - 1) && filled(r, c) &&
+        !state.cuts.has(hKey(r - 1, c - 1)) && !state.cuts.has(hKey(r, c - 1)) &&
+        !state.cuts.has(vKey(r - 1, c - 1)) && !state.cuts.has(vKey(r - 1, c));
+      if (solid)
+        s += `<rect x="${c * CS - side / 2}" y="${r * CS - side / 2}" width="${side}" height="${side}" rx="12" ry="12"/>`;
+    }
+  }
+  return s;
+}
+
+/* ---------- exact blob outlines (rounded mode) ----------
+
+   The gooey filter can't hit the reference geometry: a tight channel forces a
+   small blur, and the post-threshold grow that would buy the channel back also
+   expands INTO concave corners, cancelling the very fillets the blur made. So
+   for rounded mode the silhouette is built as real geometry instead.
+
+   Each connected group of joined cells is a rectilinear polyomino. We trace its
+   boundary, push every edge inwards by gap/2 (that offset IS the channel: two
+   groups either side of a cut seam each retreat by half of it), and emit the
+   path with an arc at every corner. Convex and concave corners get the same
+   radius, which is what the reference frames actually show. Result: channel
+   width and fillet radius are both exact and fully independent.  */
+
+/* cells reachable from (r,c) through joined seams, and through bridges unless
+   `useBridges` is false. The seam-only view is what decides whether a bridge is
+   worth offering in the UI: it's stable regardless of which bridges are set, so
+   the handle can't vanish the moment a bridge makes its own cells connected. */
+function groups(useBridges = true) {
+  const seen = new Set(), out = [];
+  for (const k of state.cells) {
+    if (seen.has(k)) continue;
+    const [r0, c0] = k.split(",").map(Number);
+    const stack = [[r0, c0]], grp = [];
+    seen.add(k);
+    while (stack.length) {
+      const [r, c] = stack.pop();
+      grp.push([r, c]);
+      const nbrs = [
+        [r, c + 1, joinedH(r, c)], [r, c - 1, joinedH(r, c - 1)],
+        [r + 1, c, joinedV(r, c)], [r - 1, c, joinedV(r - 1, c)],
+        // diagonals, via a bridge on one of this cell's four corner vertices.
+        // Grouping has to know about these: all loops of a group share one
+        // <path> so the nonzero rule can punch holes, and a bridge can newly
+        // enclose a region that no seam encloses.
+        [r - 1, c - 1, useBridges && bridged(r, c, "b")],
+        [r + 1, c + 1, useBridges && bridged(r + 1, c + 1, "b")],
+        [r - 1, c + 1, useBridges && bridged(r, c + 1, "f")],
+        [r + 1, c - 1, useBridges && bridged(r + 1, c, "f")],
+      ];
+      // crossing bridges fuse all four cells at that vertex, not just the pairs
+      if (useBridges) {
+        for (const [vr, vc] of [[r, c], [r, c + 1], [r + 1, c], [r + 1, c + 1]]) {
+          if (bothBridged(vr, vc))
+            for (const [q, s] of vertexCells(vr, vc)) nbrs.push([q, s, true]);
+        }
+      }
+      for (const [nr, nc, ok] of nbrs) {
+        const nk = key(nr, nc);
+        if (ok && !seen.has(nk)) { seen.add(nk); stack.push([nr, nc]); }
+      }
+    }
+    out.push(grp);
+  }
+  return out;
+}
+
+/* boundary edges of a group, each directed so the interior lies to its right
+   (y-down, so the right normal of (dx,dy) is (-dy,dx)) */
+function boundaryEdges(grp) {
+  const inGrp = new Set(grp.map(([r, c]) => key(r, c)));
+  const has = (r, c) => inGrp.has(key(r, c));
+  const edges = [];
+  for (const [r, c] of grp) {
+    if (!has(r - 1, c)) edges.push([c, r, c + 1, r]);             // top,    dir (1,0)
+    if (!has(r, c + 1)) edges.push([c + 1, r, c + 1, r + 1]);     // right,  dir (0,1)
+    if (!has(r + 1, c)) edges.push([c + 1, r + 1, c, r + 1]);     // bottom, dir (-1,0)
+    if (!has(r, c - 1)) edges.push([c, r + 1, c, r]);             // left,   dir (0,-1)
+  }
+  return edges;
+}
+
+// chain directed edges into closed loops of corner vertices
+function edgeLoops(edges) {
+  const byStart = new Map();
+  for (const e of edges) {
+    const k = e[0] + "," + e[1];
+    if (!byStart.has(k)) byStart.set(k, []);
+    byStart.get(k).push(e);
+  }
+  const loops = [], used = new Set();
+  for (const e0 of edges) {
+    if (used.has(e0)) continue;
+    const loop = [];
+    let e = e0;
+    while (e && !used.has(e)) {
+      used.add(e);
+      loop.push([e[0], e[1]]);
+      const cand = byStart.get(e[2] + "," + e[3]) || [];
+      // at a diagonal pinch a vertex has two exits; take the sharpest right
+      // turn so the loop hugs this group instead of leaking into the touch point
+      const din = [e[2] - e[0], e[3] - e[1]];
+      let best = null, bestScore = -Infinity;
+      for (const n of cand) {
+        if (used.has(n)) continue;
+        const dout = [n[2] - n[0], n[3] - n[1]];
+        const cross = din[0] * dout[1] - din[1] * dout[0];
+        const dot = din[0] * dout[0] + din[1] * dout[1];
+        const score = cross > 0 ? 2 : (dot > 0 ? 1 : 0); // right turn > straight > left
+        if (score > bestScore) { bestScore = score; best = n; }
+      }
+      e = best;
+    }
+    if (loop.length >= 4) loops.push(loop);
+  }
+  return loops;
+}
+
+// drop the mid-points of collinear runs so each vertex is a real corner
+function simplify(loop) {
+  const n = loop.length, out = [];
+  for (let i = 0; i < n; i++) {
+    const p = loop[i], a = loop[(i - 1 + n) % n], b = loop[(i + 1) % n];
+    const d1 = [p[0] - a[0], p[1] - a[1]], d2 = [b[0] - p[0], b[1] - p[1]];
+    if (d1[0] * d2[1] - d1[1] * d2[0] !== 0) out.push(p);
+  }
+  return out;
+}
+
+const unit = (d) => { const L = Math.hypot(d[0], d[1]) || 1; return [d[0] / L, d[1] / L]; };
+
+/* Vertices where the traced outline actually turns, collected as a side effect of
+   the last outlinesMarkup() pass. The overlay needs to know which lattice points
+   own a real corner, and asking the tracer is exact where reasoning from the
+   local 2x2 of cells is not: three filled cells whose seams are all cut put three
+   separate convex corners on one vertex, not one concave corner. */
+const cornerTurns = new Set();
+
+/* radius to use at a lattice vertex: an override if set, else the global */
+function cornerR(r, c, R) {
+  const v = state.corners.get(pKey(r, c));
+  return v === undefined ? R : v;
+}
+
+/* one group -> path string, inset by d, corners rounded to R */
+function groupPath(grp, d, R) {
+  // all loops of a group go into ONE path element: an enclosed empty cell traces
+  // a loop wound the opposite way to the outer boundary, so the nonzero fill
+  // rule punches it out. As separate <path>s it would just be filled in again.
+  let subs = "";
+  for (const raw of edgeLoops(boundaryEdges(grp))) {
+    const loop = simplify(raw);
+    if (loop.length < 4) continue;
+    const n = loop.length;
+
+    // push every vertex inwards: perpendicular to both adjacent edges, which
+    // for axis-aligned corners is just the sum of the two inward normals
+    const pts = loop.map((p, i) => {
+      const a = loop[(i - 1 + n) % n], b = loop[(i + 1) % n];
+      const din = unit([p[0] - a[0], p[1] - a[1]]);
+      const dout = unit([b[0] - p[0], b[1] - p[1]]);
+      const nin = [-din[1], din[0]], nout = [-dout[1], dout[0]];
+      return [
+        p[0] * CS + (nin[0] + nout[0]) * d,
+        p[1] * CS + (nin[1] + nout[1]) * d,
+      ];
+    });
+
+    let seg = "";
+    for (let i = 0; i < n; i++) {
+      const p = pts[i], a = pts[(i - 1 + n) % n], b = pts[(i + 1) % n];
+      const din = unit([p[0] - a[0], p[1] - a[1]]);
+      const dout = unit([b[0] - p[0], b[1] - p[1]]);
+      const cross = din[0] * dout[1] - din[1] * dout[0];
+      if (cross === 0) continue;
+      // this vertex owns a real turn, so it gets an overridable radius. Read the
+      // key off the RAW loop, not pts: pts are in CS units and already pushed
+      // inwards by gap/2, so they no longer carry the lattice address.
+      cornerTurns.add(pKey(loop[i][1], loop[i][0]));
+      // never eat more than half of either adjacent edge
+      const rr = Math.min(cornerR(loop[i][1], loop[i][0], R),
+                             Math.hypot(p[0] - a[0], p[1] - a[1]) / 2,
+                             Math.hypot(b[0] - p[0], b[1] - p[1]) / 2);
+      const s = [p[0] - din[0] * rr, p[1] - din[1] * rr];
+      const e = [p[0] + dout[0] * rr, p[1] + dout[1] * rr];
+      seg += seg ? `L${s[0].toFixed(2)} ${s[1].toFixed(2)} ` : `M${s[0].toFixed(2)} ${s[1].toFixed(2)} `;
+      if (rr > 0) seg += `A${rr.toFixed(2)} ${rr.toFixed(2)} 0 0 ${cross > 0 ? 1 : 0} ${e[0].toFixed(2)} ${e[1].toFixed(2)} `;
+    }
+    subs += seg + "Z ";
+  }
+  return subs ? `<path d="${subs.trim()}"/>` : "";
+}
+
+/* A cut seam whose two cells are still connected the long way round can't be
+   expressed by the outline alone, so it is carved out of the mask afterwards as
+   a rounded bar. Without this, cutting such a seam would appear to do nothing. */
+function slitsMarkup() {
+  const g = state.gap;
+  if (g <= 0) return "";
+  const id = new Map();
+  groups().forEach((grp, i) => grp.forEach(([r, c]) => id.set(key(r, c), i)));
+  const same = (a, b) => id.get(a) !== undefined && id.get(a) === id.get(b);
+  let s = "";
+  for (let r = 0; r < state.rows; r++) {
+    for (let c = 0; c < state.cols; c++) {
+      const hCut = filled(r, c) && filled(r, c + 1) && state.cuts.has(hKey(r, c));
+      const vCut = filled(r, c) && filled(r + 1, c) && state.cuts.has(vKey(r, c));
+      if (hCut && same(key(r, c), key(r, c + 1)))
+        s += `<rect x="${(c + 1) * CS - g / 2}" y="${r * CS}" width="${g}" height="${CS}" rx="${g / 2}"/>`;
+      if (vCut && same(key(r, c), key(r + 1, c)))
+        s += `<rect x="${c * CS}" y="${(r + 1) * CS - g / 2}" width="${CS}" height="${g}" rx="${g / 2}"/>`;
+    }
+  }
+  return s;
+}
+
+/* Diagonal bridges, added to the mask as positive shapes.
+
+   Deliberately NOT threaded through edgeLoops: a bridged diagonal makes the
+   boundary self-touch at a point, where groupPath's inset step has two competing
+   inward normals. This is slitsMarkup with the opposite sign - the outlines stay
+   untouched and one shape unions the two cells together.
+
+   The neck's width is geometry, not a free parameter, and its shape is NOT a bar:
+   a straight bar's blunt ends poke out past the connected cells' rounded corners
+   and read as thorns in the channel. What actually bounds the neck is the pair of
+   *opposing* cells dilated by `gap`. Each of those is a rounded rect with corner
+   radius R+gap, so in a frame rotated onto the diagonal (t along it, n across)
+   each side of the neck is one corner of one dilated rect: a straight tail, an
+   arc of radius R+gap, then another straight tail. The result is a filleted
+   hourglass whose throat is at the vertex and which widens into both cells,
+   exactly the profile the reference measures.
+
+   The straight tails lie ON the connected cells' own edges: an end cap's corner is
+   at (T, T-q) in the rotated frame, which maps back to x = gap/2 exactly, i.e. onto
+   the cell's edge line. But being on the edge *line* is not the same as being on
+   the cell, and the tail has to stay on the STRAIGHT part of that edge, between the
+   cell's two corner arcs. Both ends of that interval are real bounds:
+
+     near end: the straight edge starts at t = tt, which is where the dilated rect's
+       arc is already tangent - the construction lands on it for free.
+     far end:  the straight edge ends where the cell's *far* corner arc begins, at
+       t = (CS - R)/sqrt2. Run past that and the cap sticks out of the cell it is
+       meant to be tucked inside, into the channel, as a thorn. At R = 50, gap = 6
+       the cap was 60.4 units from the axis while the cell it sits in is a circle of
+       radius 47: the neck was wider than the cell.
+
+   Those two bounds meet exactly when R = (CS-gap)/2, since tt = (R+gap)/sqrt2 and
+   T_max = (CS-R)/sqrt2. That is precisely the radius at which the cell body becomes
+   a circle with no straight edge left, and it is the same value the outline clamps
+   the radius to - so clamping R here (which the outline always did and this did
+   not) is what makes the tail bound consistent rather than an extra fudge. At that
+   radius the tails vanish and the neck is a pure lens between two circles.
+
+   The dilated rects are used whether or not the opposing cells are filled. With
+   them empty the corridor is unbounded and the neck could be fatter, so this is
+   cosmetically conservative rather than wrong, and it keeps the neck a consistent
+   width instead of jumping around as neighbours are painted. */
+function bridgesMarkup() {
+  const g = state.gap;
+  const q = g / Math.SQRT2;        // channel edge offset, in the rotated frame
+  let s = "";
+  for (let r = 0; r <= state.rows; r++) {
+    for (let c = 0; c <= state.cols; c++) {
+      for (const d of ["b", "f"]) {
+        if (!bridged(r, c, d)) continue;
+        /* Same clamp groupPath applies: a cell body is CS-gap across, so a radius
+           past half of that is not what gets drawn. Without this the neck was built
+           against a cell 3 units rounder than the real one and bulged past it. */
+        const R = neckR(r, c);
+        /* No floor on rho: `bridged` already refused this bridge unless the throat
+           `2*(sqrt2*(gap/2+R) - rho)` is worth drawing, so the dilated corners
+           genuinely leave a corridor here. Flooring it was what made `tt` fall
+           short of the real tangent point and let the near end poke out. */
+        const rho = R + g;
+        const tt = rho / Math.SQRT2;                       // arc/tail tangent point
+        // tails stop before the cells' far corner arcs; never shorter than tt, which
+        // the clamp on R above guarantees is reachable
+        const T = Math.max(tt, Math.min(tt + Math.max(8, R * 0.5),
+                                        (CS - R) / Math.SQRT2));
+        const nT = T - q, nt = tt - q;
+        const f = (x) => x.toFixed(2);
+        // both arcs bulge toward the axis, pinching the throat; centres are at
+        // n = -+D so each is traversed in the decreasing-angle (sweep 0) direction
+        const dpath = `M${f(-T)} ${f(-nT)} L${f(-tt)} ${f(-nt)}`
+          + ` A${f(rho)} ${f(rho)} 0 0 0 ${f(tt)} ${f(-nt)}`
+          + ` L${f(T)} ${f(-nT)} L${f(T)} ${f(nT)} L${f(tt)} ${f(nt)}`
+          + ` A${f(rho)} ${f(rho)} 0 0 0 ${f(-tt)} ${f(nt)}`
+          + ` L${f(-T)} ${f(nT)} Z`;
+        s += `<path d="${dpath}" transform="translate(${c * CS} ${r * CS})`
+          + ` rotate(${d === "f" ? -45 : 45})"/>`;
+      }
+    }
+  }
+  return s;
+}
+
+function outlinesMarkup() {
+  const d = state.gap / 2;
+  let s = "";
+  cornerTurns.clear();
+  for (const grp of groups()) s += groupPath(grp, d, state.round);
+  // appended to the same markup string, so a bridged diagonal is part of the
+  // same silhouette (and therefore the same mask) as the cells it joins
+  return s + bridgesMarkup();
+}
+
+function shapesMarkup() {
+  if (state.shape !== "circle") return outlinesMarkup();
+  let s = "";
+  state.cells.forEach((k) => {
+    const [r, c] = k.split(",").map(Number);
+    if (r < state.rows && c < state.cols) s += cellShapeSVG(r, c);
+  });
+  return s + connectorsMarkup() + junctionsMarkup();
+}
+
+/* ---------- isotropic grow: decouples channel width from smoothing ----------
+
+   The gooey filter can only keep two separated cells apart while its blur stays
+   small relative to `inset`, so tight channels used to force tiny fillets. This
+   second blur+threshold pass runs AFTER the merge threshold and grows every
+   blob outwards by a fixed amount, so `inset`/`goo` set the fillet size while
+   `gap` sets the channel width.
+
+   A low threshold cutoff on a blurred alpha moves a straight edge outwards by
+   z * sigma, where cutoff = Phi(-z). With cutoff 4/60 = 0.067, z is ~1.5, so
+   sigma = grow/1.5 buys `grow` units of growth. Unlike feMorphology's square
+   kernel this grows with round corners, which is what the reference frames
+   have. Two blobs `2*inset` apart survive it while 2*Phi(-inset/sigma) stays
+   under the cutoff, i.e. while gap > ~0.36 * inset.  */
+function growAmount() {
+  return Math.max(0, state.inset - state.gap / 2);
+}
+
+function growStage() {
+  const grow = growAmount();
+  if (grow <= 0) return "";
+  return `<feGaussianBlur in="g" stdDeviation="${(grow / 1.5).toFixed(2)}" result="gb"/>
+        <feColorMatrix in="gb" type="matrix"
+          values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 60 -4"/>`;
+}
+
+function viewBox() {
+  const W = state.cols * CS;
+  const H = state.rows * CS;
+  const m = state.shape === "circle"
+    ? state.goo * 2.2 + growAmount() + 12
+    : state.gap / 2 + 2; // reference: outer margin ~= channel width
+  return { minx: -m, miny: -m, W: W + m * 2, H: H + m * 2, gw: W, gh: H };
+}
+
+/* ---------- demo gradient: one colour per corner ----------
+   SVG has no four-corner (bilinear) gradient, so this is built from two
+   horizontal gradients: the top pair, and the bottom pair drawn over it through
+   a vertical black-to-white mask. Interpolating horizontally on each edge and
+   then between the edges IS bilinear interpolation, so the result is exact
+   rather than an approximation, and it needs no CSS blend mode - which matters
+   because the exported SVG has to stand alone. */
+const GRADIENT_CORNERS = {
+  tl: "#ffd3a5",  // warm top-left
+  tr: "#c8e7ff",  // cool top-right
+  bl: "#ffb3c7",  // pink bottom-left
+  br: "#9fe0c8",  // green bottom-right
+};
+
+function gradientDefs(vb, uid) {
+  const g = GRADIENT_CORNERS;
+  const { minx, miny, W, H } = vb;
+  return `
+      <linearGradient id="${uid("gTop")}" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="${g.tl}"/>
+        <stop offset="1" stop-color="${g.tr}"/>
+      </linearGradient>
+      <linearGradient id="${uid("gBot")}" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="${g.bl}"/>
+        <stop offset="1" stop-color="${g.br}"/>
+      </linearGradient>
+      <linearGradient id="${uid("gFade")}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#000"/>
+        <stop offset="1" stop-color="#fff"/>
+      </linearGradient>
+      <mask id="${uid("gMask")}" maskUnits="userSpaceOnUse"
+            x="${minx}" y="${miny}" width="${W}" height="${H}">
+        <rect x="${minx}" y="${miny}" width="${W}" height="${H}" fill="url(#${uid("gFade")})"/>
+      </mask>`;
+}
+
+function cornerGradient(vb, uid) {
+  const { minx, miny, W, H } = vb;
+  const box = `x="${minx}" y="${miny}" width="${W}" height="${H}"`;
+  return `
+    <g>
+      <rect ${box} fill="url(#${uid("gTop")})"/>
+      <rect ${box} fill="url(#${uid("gBot")})" mask="url(#${uid("gMask")})"/>
+    </g>`;
+}
+
+function fillContent(vb, uid) {
+  const { minx, miny, W, H } = vb;
+  if (state.fillMode === "color") {
+    return `<rect x="${minx}" y="${miny}" width="${W}" height="${H}" fill="${state.fillColor}"/>`;
+  }
+  if (state.fillMode === "image" && state.image) {
+    return `<image href="${state.image}" x="${minx}" y="${miny}" width="${W}" height="${H}" preserveAspectRatio="xMidYMid slice"/>`;
+  }
+  return cornerGradient(vb, uid);
+}
+
+/* ---------- build the SVG ---------- */
+function buildSVG({ edit, ns } = { edit: false }) {
+  const vb = viewBox();
+  /* `url(#id)` resolves across the whole document, not within the owning <svg>,
+     so two of these on one page would both use the FIRST one's mask and filters.
+     The editor only ever shows one and passes nothing; gallery.html renders 150+
+     and passes a per-tile namespace. */
+  const uid = (id) => (ns === undefined ? id : `${id}-${ns}`);
+  const shapes = shapesMarkup();
+  // rounded mode is exact geometry already; only the bead mode needs the filter
+  const gooey = state.shape === "circle";
+  const fx = (id) => (gooey ? ` filter="url(#${uid(id)})"` : "");
+  const slits = gooey ? "" : slitsMarkup();
+  const blur = state.goo;
+  // threshold matrix: sharpen the blurred alpha so shapes merge with smooth necks
+  const matrix = "1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9";
+  const growFX = growStage();
+
+  const defs = `
+    <defs>
+      ${gradientDefs(vb, uid)}
+      <filter id="${uid("goo")}" x="-60%" y="-60%" width="220%" height="220%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="${blur}" result="b"/>
+        <feColorMatrix in="b" type="matrix" values="${matrix}" result="g"/>
+        ${growFX}
+      </filter>
+      <mask id="${uid("blobmask")}">
+        <g${fx("goo")} fill="#fff">${shapes}</g>
+        ${slits ? `<g fill="#000">${slits}</g>` : ""}
+      </mask>
+    </defs>`;
+
+  const fillLayer = shapes
+    ? `<g mask="url(#${uid("blobmask")})">${fillContent(vb, uid)}</g>`
+    : "";
+
+  let editLayer = "";
+  if (edit) {
+    let cells = "", seams = "", corners = "";
+    const SH = 26; // seam handle short side
+    for (let r = 0; r < state.rows; r++) {
+      for (let c = 0; c < state.cols; c++) {
+        const on = state.cells.has(key(r, c));
+        cells += `<rect class="edit-cell" data-r="${r}" data-c="${c}"
+          x="${c * CS}" y="${r * CS}" width="${CS}" height="${CS}"/>`;
+        if (!on) cells += `<circle class="edit-dot" cx="${c * CS + CS / 2}" cy="${r * CS + CS / 2}" r="4"/>`;
+        const cx = c * CS + CS / 2, cy = r * CS + CS / 2;
+        // seam handles only between two filled cells
+        if (filled(r, c) && filled(r, c + 1)) {
+          const cut = state.cuts.has(hKey(r, c));
+          seams += `<rect class="edit-seam ${cut ? "is-cut" : ""}" data-seam="${hKey(r, c)}"
+            x="${(c + 1) * CS - SH / 2}" y="${cy - CS * 0.32}" width="${SH}" height="${CS * 0.64}" rx="8"/>`;
+        }
+        if (filled(r, c) && filled(r + 1, c)) {
+          const cut = state.cuts.has(vKey(r, c));
+          seams += `<rect class="edit-seam ${cut ? "is-cut" : ""}" data-seam="${vKey(r, c)}"
+            x="${cx - CS * 0.32}" y="${(r + 1) * CS - SH / 2}" width="${CS * 0.64}" height="${SH}" rx="8"/>`;
+        }
+      }
+    }
+    /* corner handles: only in rounded mode, where the outline is real geometry
+       with traceable corners. Bead mode builds its silhouette from rects fed
+       through #goo, so there is nothing per-corner to override there. */
+    if (state.shape !== "circle") {
+      const sid = seamGroupIds();
+      for (let r = 0; r <= state.rows; r++) {
+        for (let c = 0; c <= state.cols; c++) {
+          // one handle per vertex, present whenever it has more than one state
+          const opts = cornerOptions(r, c, sid);
+          if (opts.length < 2) continue;
+          const i = cornerOptionIndex(opts, r, c);
+          const ov = state.corners.get(pKey(r, c));
+          const brs = cornerBridgesLive(r, c);
+          const x = c * CS, y = r * CS;
+          const set = ov !== undefined || brs.length > 0;
+          corners += `<circle class="edit-corner ${set ? "is-set" : ""}"`
+            + ` data-r="${r}" data-c="${c}" cx="${x}" cy="${y}" r="11">`
+            + `<title>${(opts[i] || opts[0]).label}`
+            + ` — click to cycle (${opts.length}), shift-click to go back</title></circle>`;
+          // no visible label: the geometry shows the radius, and the <title>
+          // above names the exact value on hover
+        }
+      }
+    }
+    editLayer = `<g id="editLayer">${cells}${seams}${corners}</g>`;
+  }
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${vb.minx} ${vb.miny} ${vb.W} ${vb.H}">
+    ${defs}${fillLayer}${editLayer}
+  </svg>`;
+}
+
+/* ---------- the corner handle's option ladder ----------
+
+   One handle per vertex, one cycle through every state that vertex can be in:
+   radius overrides AND diagonal bridges. Two overlapping handle types (a radius
+   circle sitting on top of a bridge bar) meant the bar's visual centre did the
+   other thing, so both are folded into a single list here.
+
+   Each entry fully specifies the vertex, so cycling is deterministic rather than
+   history-dependent: moving to a radius entry clears the bridges, and vice versa.
+
+   Bridge entries get a "wide" variant because throat width is derived from the
+   vertex radius - with a bridge on, the radius IS the neck-width knob, so
+   dropping the combination would make necks untunable by clicking. A bridge entry
+   only appears if the radius it would apply leaves room for a neck (`throatFits`),
+   so at a wide `gap` the bridge entries simply aren't there. */
+
+/* Per-vertex off-ladder states, remembered for the session so cycling past one
+   doesn't destroy it. Not part of `state`: it's UI memory, not frame content. */
+const customCorners = new Map();
+
+// seam-only connectivity, used to decide whether a bridge would connect anything
+function seamGroupIds() {
+  const id = new Map();
+  groups(false).forEach((grp, i) => grp.forEach(([r, c]) => id.set(key(r, c), i)));
+  return id;
+}
+
+/* Offer a bridge when both cells are filled, the vertex is pinched, and it would
+   actually join something new. Already-set bridges stay offered whatever the
+   connectivity says, or there would be no way to switch one back off - but not if
+   the vertex isn't pinched, since such a bridge is inert and there is nothing on
+   screen for the entry to correspond to. */
+function bridgeOfferable(r, c, d, sid) {
+  const [[ar, ac], [br, bc]] = bridgeCells(r, c, d);
+  if (!filled(ar, ac) || !filled(br, bc)) return false;
+  if (!vertexPinched(r, c)) return false;
+  if (state.bridges.has(bKey(r, c, d))) return true;
+  return sid.get(key(ar, ac)) !== sid.get(key(br, bc));
+}
+
+function cornerOptions(r, c, sid) {
+  const R = state.round;
+  const opts = [{ r: undefined, br: [], label: "default" }];
+  if (cornerTurns.has(pKey(r, c))) {
+    opts.push({ r: 0, br: [], label: "square corner" });
+    opts.push({ r: Math.round(R / 2), br: [], label: `radius ${Math.round(R / 2)}` });
+    opts.push({ r: R * 2, br: [], label: `radius ${R * 2}` });
+  }
+  const legal = ["f", "b"].filter((d) => bridgeOfferable(r, c, d, sid));
+  /* Judged by the radius the ENTRY would apply, not the one in force now: the plain
+     entry clears the override and so lands on the global `round`, while the wide one
+     sets its own. A vertex sitting at radius 0 in a frame whose `round` is 24 can
+     still take a bridge - it just has to be the entry that supplies the radius. */
+  const wide = Math.round(R * 1.5);
+  for (const d of legal) {
+    const sym = d === "f" ? "/" : "\\";
+    if (throatFits(R)) opts.push({ r: undefined, br: [d], label: `bridge ${sym}` });
+    if (throatFits(wide)) opts.push({ r: wide, br: [d], label: `bridge ${sym} (wide neck)` });
+  }
+  if (legal.length === 2 && throatFits(R)) {
+    opts.push({ r: undefined, br: ["f", "b"], label: "bridge both (X)" });
+  }
+  /* A state the ladder doesn't contain - a preset's tuned radius, or an override
+     left over from a different `round` - joins the ladder as its own entry rather
+     than being silently discarded on the next click. It has to be *remembered*,
+     not just read off the current state: as a transient entry it would vanish the
+     moment you cycled past it, so one click through REF1 would still destroy its
+     hand-tuned vertex. Held for the session so the cycle is lossless. */
+  const k = pKey(r, c);
+  const cur = state.corners.get(k), curBr = cornerBridgesLive(r, c);
+  const onLadder = (o) => opts.some((q) => q.r === o.r && q.br.join("") === o.br.join(""));
+  if (!onLadder({ r: cur, br: curBr })) customCorners.set(k, { r: cur, br: curBr });
+  /* A remembered state is from an earlier `gap`/`round`, so its bridges may no
+     longer fit. Drop those rather than offering an entry whose bridge half draws
+     nothing: the radius half is still worth keeping, and the bridge comes back on
+     its own once there is room again, because the key stays in `state.bridges`. */
+  const remembered = customCorners.get(k);
+  const custom = remembered && {
+    r: remembered.r,
+    br: throatFits(remembered.r === undefined ? R : remembered.r) ? remembered.br : [],
+  };
+  if (custom && (custom.r !== undefined || custom.br.length) && !onLadder(custom)) {
+    const bits = [];
+    if (custom.r !== undefined) bits.push(`radius ${custom.r}`);
+    if (custom.br.length) bits.push(`bridge ${custom.br.map((d) => (d === "f" ? "/" : "\\")).join(" ")}`);
+    opts.push({ ...custom, label: `${bits.join(" + ")} (custom)` });
+  }
+  return opts;
+}
+
+/* What the vertex is actually *doing*, which is what the ladder has to describe: a
+   key left over from a since-rejoined seam draws nothing, so offering it as an
+   entry (or remembering it as `(custom)`) would put a dead step in the cycle. */
+const cornerBridgesLive = (r, c) => ["f", "b"].filter((d) => bridged(r, c, d));
+
+function cornerOptionIndex(opts, r, c) {
+  const cur = state.corners.get(pKey(r, c));
+  const curBr = cornerBridgesLive(r, c).join("");
+  return opts.findIndex((o) => o.r === cur && o.br.join("") === curBr);
+}
+
+function applyCornerOption(r, c, o) {
+  if (o.r === undefined) state.corners.delete(pKey(r, c));
+  else state.corners.set(pKey(r, c), o.r);
+  for (const d of ["f", "b"]) {
+    if (o.br.includes(d)) state.bridges.add(bKey(r, c, d));
+    else state.bridges.delete(bKey(r, c, d));
+  }
+}
+
+// shift-click steps backwards, which keeps a 9-entry ladder usable
+function cycleCorner(r, c, back) {
+  const opts = cornerOptions(r, c, seamGroupIds());
+  const i = cornerOptionIndex(opts, r, c);
+  if (i < 0) { applyCornerOption(r, c, opts[0]); return; }  // defensive; cornerOptions
+  const n = opts.length;                                    // always includes current
+  applyCornerOption(r, c, opts[(i + (back ? -1 : 1) + n) % n]);
+}
+
+/* ---------- render + wire editing ---------- */
+function render() {
+  const wrap = $("canvasWrap");
+  wrap.innerHTML = buildSVG({ edit: true });
+  const svg = wrap.querySelector("svg");
+  let painting = false;
+  let paintTo = true;
+
+  const cellFromEvt = (e) => {
+    const t = e.target.closest(".edit-cell");
+    if (!t) return null;
+    return { r: +t.dataset.r, c: +t.dataset.c };
+  };
+  const apply = (cell) => {
+    if (!cell) return;
+    const k = key(cell.r, cell.c);
+    if (paintTo) state.cells.add(k); else state.cells.delete(k);
+  };
+
+  svg.addEventListener("pointerdown", (e) => {
+    // priority: corner -> seam -> cell fill
+    const corner = e.target.closest(".edit-corner");
+    if (corner) {
+      cycleCorner(+corner.dataset.r, +corner.dataset.c, e.shiftKey);
+      render();
+      e.preventDefault();
+      return;
+    }
+    const seam = e.target.closest(".edit-seam");
+    if (seam) {
+      const k = seam.dataset.seam;
+      if (state.cuts.has(k)) state.cuts.delete(k); else state.cuts.add(k);
+      render();
+      e.preventDefault();
+      return;
+    }
+    const cell = cellFromEvt(e);
+    if (!cell) return;
+    painting = true;
+    paintTo = !state.cells.has(key(cell.r, cell.c));
+    apply(cell);
+    render();
+    e.preventDefault();
+  });
+  svg.addEventListener("pointerover", (e) => {
+    if (!painting) return;
+    apply(cellFromEvt(e));
+    // light-touch rerender: rebuild only, keep painting state
+    const active = painting, to = paintTo;
+    render();
+    painting = active; paintTo = to;
+  });
+  window.addEventListener("pointerup", () => { painting = false; }, { once: true });
+}
+
+/* ---------- export ---------- */
+function download(name, blob) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function exportSVG() {
+  const svg = buildSVG({ edit: false });
+  download("blob-frame.svg", new Blob([svg], { type: "image/svg+xml" }));
+}
+
+function exportPNG() {
+  const svgStr = buildSVG({ edit: false });
+  const vb = viewBox();
+  const scale = 1000 / vb.W;
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.round(vb.W * scale);
+  canvas.height = Math.round(vb.H * scale);
+  const ctx = canvas.getContext("2d");
+  const img = new Image();
+  const svg64 = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgStr)));
+  img.onload = () => {
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    canvas.toBlob((b) => download("blob-frame.png", b), "image/png");
+  };
+  img.src = svg64;
+}
+
+/* ---------- controls ---------- */
+function syncFillRows() {
+  $("canvasWrap"); // noop
+  const showColor = state.fillMode === "color";
+  const showImg = state.fillMode === "image";
+  document.querySelector('.colorRow[data-for="color"]').style.display = showColor ? "" : "none";
+  document.querySelector('.imgRow[data-for="image"]').style.display = showImg ? "" : "none";
+}
+
+/* neck/inset/goo only drive the gooey bead pipeline; rounded mode derives its
+   geometry from the outline model, so grey them out rather than leaving dead
+   sliders that appear to do nothing */
+function syncShapeRows() {
+  const gooey = state.shape === "circle";
+  for (const id of ["neck", "inset", "goo"]) {
+    const el = $(id);
+    el.disabled = !gooey;
+    el.closest("label").style.opacity = gooey ? "" : "0.4";
+  }
+}
+
+function bindRange(id, prop, outId) {
+  const el = $(id), out = outId ? $(outId) : null;
+  el.addEventListener("input", () => {
+    state[prop] = +el.value;
+    if (out) out.textContent = el.value;
+    render();
+  });
+}
+
+/* Grid size is a number field plus -/+ buttons rather than a range: the whole
+   domain is 1..8, and typing "6" beats dragging to it. The field is the value
+   readout too, so there is no `<output>` to keep in step. Both the buttons and
+   direct typing go through `applyStep`, which clamps to min/max and ignores a
+   half-typed or non-numeric field rather than collapsing the grid to NaN. */
+function stepBounds(el) {
+  return { min: +el.min || 1, max: +el.max || 8 };
+}
+
+// Grey out a stepper button once its end of the range is reached.
+function syncStepper(id) {
+  const el = $(id);
+  if (!el || el.type !== "number") return;
+  const { min, max } = stepBounds(el);
+  document.querySelectorAll(`button.step[data-target="${id}"]`).forEach((b) => {
+    b.disabled = +b.dataset.step < 0 ? +el.value <= min : +el.value >= max;
+  });
+}
+
+function bindStepper(id, prop) {
+  const el = $(id);
+  const apply = (val) => {
+    const { min, max } = stepBounds(el);
+    const v = Math.min(max, Math.max(min, Math.round(val)));
+    state[prop] = v; el.value = v;
+    syncStepper(id);
+    render();
+  };
+  el.addEventListener("input", () => {
+    if (el.value === "" || !Number.isFinite(+el.value)) return;  // mid-edit
+    apply(+el.value);
+  });
+  // Snap a stale or out-of-range entry back once the field is left.
+  el.addEventListener("change", () => apply(Number.isFinite(+el.value) ? +el.value : state[prop]));
+  document.querySelectorAll(`button.step[data-target="${id}"]`).forEach((b) => {
+    b.addEventListener("click", () => apply(state[prop] + +b.dataset.step));
+  });
+  syncStepper(id);
+}
+
+/* A frame handed over from gallery.html, so clicking a tile there opens that exact
+   combination in the editor. localStorage rather than the URL because the payload
+   is a whole frame, and it's consumed once so a reload doesn't keep reapplying it. */
+const HANDOFF = "blobFrameHandoff";
+
+function saveHandoff(frame) {
+  try { localStorage.setItem(HANDOFF, JSON.stringify(frame)); } catch (e) { /* private mode */ }
+}
+
+function loadHandoff() {
+  let raw = null;
+  try { raw = localStorage.getItem(HANDOFF); localStorage.removeItem(HANDOFF); } catch (e) { return false; }
+  if (!raw) return false;
+  try { loadReference(JSON.parse(raw)); return true; } catch (e) { return false; }
+}
+
+function init() {
+  seed();
+
+  bindStepper("cols", "cols");
+  bindStepper("rows", "rows");
+  bindRange("neck", "neck", "neckOut");
+  bindRange("goo", "goo", "gooOut");
+  bindRange("round", "round", "roundOut");
+  bindRange("inset", "inset", "insetOut");
+  bindRange("gap", "gap", "gapOut");
+
+  $("shape").addEventListener("change", (e) => {
+    state.shape = e.target.value;
+    // presets: fused grid = big blobs + fat necks; beads = small circles + thin necks
+    if (state.shape === "circle") {
+      setSlider("inset", "inset", 14); setSlider("neck", "neck", 34); setSlider("goo", "goo", 10);
+      setSlider("gap", "gap", 8);
+    } else {
+      setSlider("inset", "inset", 10); setSlider("neck", "neck", 60); setSlider("goo", "goo", 10);
+      setSlider("gap", "gap", 6); setSlider("round", "round", 24);
+    }
+    syncShapeRows();
+    render();
+  });
+  $("fillMode").addEventListener("change", (e) => {
+    state.fillMode = e.target.value; syncFillRows(); render();
+  });
+  $("fillColor").addEventListener("input", (e) => { state.fillColor = e.target.value; render(); });
+
+  $("imageFile").addEventListener("change", (e) => {
+    const f = e.target.files[0];
+    if (!f) return;
+    const reader = new FileReader();
+    reader.onload = () => { state.image = reader.result; state.fillMode = "image"; $("fillMode").value = "image"; syncFillRows(); render(); };
+    reader.readAsDataURL(f);
+  });
+
+  $("clearBtn").addEventListener("click", () => {
+    state.cells.clear(); state.cuts.clear(); state.corners.clear();
+    state.bridges.clear(); customCorners.clear(); render();
+  });
+  $("fillAllBtn").addEventListener("click", () => {
+    state.cells.clear();
+    for (let r = 0; r < state.rows; r++) for (let c = 0; c < state.cols; c++) state.cells.add(key(r, c));
+    render();
+  });
+  $("ref1Btn").addEventListener("click", () => loadReference(REF1));
+  $("ref2Btn").addEventListener("click", () => loadReference(REF2));
+  $("ref3Btn").addEventListener("click", () => loadReference(REF3));
+  $("ref4Btn").addEventListener("click", () => loadReference(REF4));
+  $("ref5Btn").addEventListener("click", () => loadReference(REF5));
+  $("ref6Btn").addEventListener("click", () => loadReference(REF6));
+  $("ref10Btn").addEventListener("click", () => loadReference(REF10));
+  $("ref11Btn").addEventListener("click", () => loadReference(REF11));
+  $("invertBtn").addEventListener("click", () => {
+    const next = new Set();
+    for (let r = 0; r < state.rows; r++) for (let c = 0; c < state.cols; c++)
+      if (!state.cells.has(key(r, c))) next.add(key(r, c));
+    state.cells = next; render();
+  });
+  $("randomBtn").addEventListener("click", () => {
+    state.cells.clear();
+    for (let r = 0; r < state.rows; r++) for (let c = 0; c < state.cols; c++)
+      if (Math.random() < 0.55) state.cells.add(key(r, c));
+    render();
+  });
+
+  $("svgBtn").addEventListener("click", exportSVG);
+  $("pngBtn").addEventListener("click", exportPNG);
+
+  syncFillRows();
+  syncShapeRows();
+  if (!loadHandoff()) render();
+}
+
+// gallery.html loads this file for `state`/`buildSVG` alone and has none of the
+// editor's controls, so only wire the editor up when its canvas is present
+if ($("canvasWrap")) init();
+</script>
+</body>
+</html>
