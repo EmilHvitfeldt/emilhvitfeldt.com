@@ -1,6 +1,7 @@
 {
   "listing": "/talks.html",
   "items": [
+    "/talk/2026-08-12-slidecrafting-workshop/index.html",
     "/talk/2026-07-30-orbital-mainer/index.html",
     "/talk/2026-06-08-pfizer-posit-summit-feature-engineering/index.html",
     "/talk/2026-03-19-quarto-tips-and-tricks/index.html",
