@@ -252,6 +252,10 @@ Techniques for varying slide content and highlighting information
 
 - [Miscellaneous](https://slidecrafting-book.com/miscellaneous)
 
+## Workshop
+
+The [Slidecrafting Workshop](../../talk/2026-08-12-slidecrafting-workshop/index.md) is a 2-hour hands-on companion to the book, with five teaching modules and a reveal.js deck for each section.
+
 ## Talks about slidecrafting / quarto theming
 
 Here is a selection of talks where I talk about slidecrafting or quarto theming in general. It doesn't include ALL talks as there is some overlap between the talks I have given. See [talks page](../../talks.qmd) for all my past talks.

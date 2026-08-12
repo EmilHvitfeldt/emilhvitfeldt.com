@@ -40,3 +40,4 @@ image: "featured.webp"
 
 
 A 2-hour hands-on workshop on making beautiful slides with reveal.js and Quarto, companion to the [Slidecrafting book](https://slidecrafting-book.com).
+
