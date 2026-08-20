@@ -82,6 +82,12 @@ I use [Quarto](https://quarto.org/) to create slides using the [revealjs](https:
 ::: {.slidecraft-grid}
 
 ::: {.slidecraft-card}
+[![](autoanimate-extra.webp){fig-alt="Auto-Animate Extra extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-autoanimate-extra)
+
+**[Auto-Animate Extra](https://github.com/EmilHvitfeldt/quarto-revealjs-autoanimate-extra)**
+:::
+
+::: {.slidecraft-card}
 [![](shapes.webp){fig-alt="Shapes extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-shapes)
 
 **[Shapes](https://github.com/EmilHvitfeldt/quarto-shapes)**
