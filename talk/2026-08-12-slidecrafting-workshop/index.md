@@ -5,10 +5,11 @@ description: |
   A 2-hour hands-on workshop on making beautiful slides with reveal.js and Quarto
 slides: https://emilhvitfeldt.github.io/workshop-slidecrafting/
 github: https://github.com/EmilHvitfeldt/workshop-slidecrafting
+video: https://www.youtube.com/watch?v=xpFy0UGeb9Q
 toggle:
   slides: true
   github: true
-  video: false
+  video: true
 categories:
   - talk
 image: "featured.webp"
