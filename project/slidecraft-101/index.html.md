@@ -82,6 +82,12 @@ I use [Quarto](https://quarto.org/) to create slides using the [revealjs](https:
 ::: {.slidecraft-grid}
 
 ::: {.slidecraft-card}
+[![](anime.webp){fig-alt="Anime extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-anime)
+
+**[Anime](https://github.com/EmilHvitfeldt/quarto-revealjs-anime)**
+:::
+
+::: {.slidecraft-card}
 [![](zoom-vp.webp){fig-alt="Zoom extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-zoom)
 
 **[Zoom](https://github.com/EmilHvitfeldt/quarto-revealjs-zoom)**
