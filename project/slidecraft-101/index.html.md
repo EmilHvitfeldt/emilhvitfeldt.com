@@ -82,6 +82,12 @@ I use [Quarto](https://quarto.org/) to create slides using the [revealjs](https:
 ::: {.slidecraft-grid}
 
 ::: {.slidecraft-card}
+[![](easycarousel.webp){fig-alt="Carousel extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-easycarousel)
+
+**[Carousel](https://github.com/EmilHvitfeldt/quarto-easycarousel)**
+:::
+
+::: {.slidecraft-card}
 [![](claude-replay.webp){fig-alt="Claude Replay extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-claude-replay)
 
 **[Claude Replay](https://github.com/EmilHvitfeldt/quarto-claude-replay)**
