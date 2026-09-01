@@ -243,6 +243,12 @@ I use [Quarto](https://quarto.org/) to create slides using the [revealjs](https:
 **[Video Fragments](https://github.com/EmilHvitfeldt/quarto-revealjs-video-fragments)**
 :::
 
+::: {.slidecraft-card}
+[![](timing-bar.webp){fig-alt="Timing Bar extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-timing-bar)
+
+**[Timing Bar](https://github.com/EmilHvitfeldt/quarto-revealjs-timing-bar)**
+:::
+
 :::
 
 ## Book
