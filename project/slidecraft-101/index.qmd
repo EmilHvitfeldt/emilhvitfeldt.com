@@ -249,6 +249,12 @@ I use [Quarto](https://quarto.org/) to create slides using the [revealjs](https:
 **[Timing Bar](https://github.com/EmilHvitfeldt/quarto-revealjs-timing-bar)**
 :::
 
+::: {.slidecraft-card}
+[![](cursor-fragments.webp){fig-alt="Cursor Fragments extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-cursor-fragments)
+
+**[Cursor Fragments](https://github.com/EmilHvitfeldt/quarto-revealjs-cursor-fragments)**
+:::
+
 :::
 
 ## Book
