@@ -20,6 +20,8 @@ A collection of all my Quarto related work.
 - [quarto-redacted](https://github.com/EmilHvitfeldt/quarto-redacted): Redacted-style text (solid bars or scribbles) for HTML, RevealJS, PDF, and Typst
 - [quarto-sticky-notes](https://github.com/EmilHvitfeldt/quarto-sticky-notes): Draggable sticky notes for HTML documents and RevealJS presentations
 - [Shapes](https://github.com/EmilHvitfeldt/quarto-shapes): CSS shape classes to style divs as shapes (circles, hexagons, stars, and more) for HTML, RevealJS, and Typst
+- [quarto-claude-replay](https://github.com/EmilHvitfeldt/quarto-claude-replay): Embed interactive AI coding session replays in HTML documents and RevealJS presentations, with fragment-driven turn stepping
+- [quarto-easycarousel](https://github.com/EmilHvitfeldt/quarto-easycarousel): Swipeable image and content carousels for HTML documents and RevealJS presentations, with thumbnails, crossrefs, and fragment stepping
 
 ## VS Code Extensions
 
