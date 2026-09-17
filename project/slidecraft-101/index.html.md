@@ -100,6 +100,12 @@ I use [Quarto](https://quarto.org/) to create slides using the [revealjs](https:
 :::
 
 ::: {.slidecraft-card}
+[![](magic-move.webp){fig-alt="Magic Move extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-magic-move)
+
+**[Magic Move](https://github.com/EmilHvitfeldt/quarto-revealjs-magic-move)**
+:::
+
+::: {.slidecraft-card}
 [![](zoom-vp.webp){fig-alt="Zoom extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-zoom)
 
 **[Zoom](https://github.com/EmilHvitfeldt/quarto-revealjs-zoom)**
