@@ -1,0 +1,37 @@
+---
+format:
+  revealjs:
+    self-contained: true
+    width: 900
+    height: 450
+revealjs-plugins:
+  - magic-move
+---
+
+## Step 1 {.magic-move}
+
+```javascript
+if (condition) a else b
+```
+
+## Step 2 {.magic-move}
+
+```javascript
+if (condition) {
+  a
+} else {
+  b
+}
+```
+
+## Step 3 {.magic-move}
+
+```javascript
+function example() {
+  if (condition) {
+    a
+  } else {
+    b
+  }
+}
+```

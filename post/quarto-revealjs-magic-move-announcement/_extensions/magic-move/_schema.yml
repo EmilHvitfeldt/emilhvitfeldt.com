@@ -1,0 +1,5 @@
+$schema: "https://raw.githubusercontent.com/mcanouil/quarto-wizard/main/schema/schema-1.0.json"
+
+classes:
+  magic-move:
+    description: "Marks a Magic Move animation sequence. Used two ways: as a div wrapping consecutive code/math blocks (fragment-based, animates within one slide), or as a class on consecutive slide headers (slide-based, animates across slides)."

@@ -1,0 +1,112 @@
+.magic-move {
+  position: relative;
+}
+
+.magic-move pre {
+  margin: 0;
+}
+
+.magic-move .magic-move-wrapper {
+  position: relative;
+  padding: 1em;
+  border-radius: 8px;
+  overflow: hidden;
+  /* Quarto/reveal's theme sets `.reveal pre { width: 100% }` (content-box by default),
+   * so any padding we add here would normally push the border box wider than the 100%
+   * content width it's measured against, overflowing the (non-clipping) wrapper-outer
+   * div and forcing a horizontal scrollbar. border-box keeps our own padding, and the
+   * number gutter's padding-left below, inside that 100% instead of adding to it. */
+  box-sizing: border-box;
+}
+
+/* The outer div carries pandoc's `.sourceCode` class, which Quarto's revealjs theme
+ * gives `overflow: auto`. Even once nothing actually overflows it, some browsers (e.g.
+ * with "always show scrollbars") still paint a scrollbar track for an `auto` element.
+ * Nothing here is ever meant to scroll — the wrapper above already clips its own
+ * content — so force it hidden. (Three classes to outrank `.reveal div.sourceCode`'s
+ * two classes + one tag.) */
+.magic-move .sourceCode.magic-move-wrapper-outer {
+  overflow: hidden;
+  /* This div only exists to mimic pandoc's `<div class="sourceCode"><pre>...` nesting
+   * so other `.sourceCode`-scoped rules resolve the same way they would for a real
+   * code block. But that same class also carries a syntax-theme background color and
+   * border-bottom meant for a plain code block, not a wrapper around our own bordered
+   * `.magic-move-wrapper`. The wrapper's box doesn't perfectly cover this div's (a
+   * fraction of a pixel of rounding either side), so without this, a sliver of that
+   * background/border peeked out around the wrapper's edges — looking exactly like a
+   * scrollbar track sitting under the code box. */
+  background: transparent;
+  border-bottom: none;
+}
+
+/* The reveal.js theme's generic `.reveal pre code { overflow: auto; max-height: 400px }`
+ * applies to every code block in every deck, magic-move or not, and can paint a
+ * horizontal scrollbar track from sub-pixel width rounding even when nothing
+ * meaningfully overflows (visible on both the div-based and slide-based demos, not
+ * something specific to the synthetic wrapper). This matches that rule's specificity
+ * (one class, two tags) and wins on source order (this file loads after the theme),
+ * so no scrollbar can ever paint here. */
+.magic-move pre code {
+  overflow: visible;
+}
+
+
+.magic-move .magic-move-render {
+  position: relative;
+  white-space: pre;
+  font-family: var(--bs-font-monospace, monospace);
+  font-size: 0.875em;
+  line-height: 1.5;
+}
+
+.magic-move .magic-move-render span span[data-key] {
+  display: inline-block;
+}
+
+/* Enter/exit animations for the div-based code path (this selector) are driven directly
+ * via the Web Animations API (see buildAnimationPlan/scheduleAnimationPlan/animateToStep in
+ * magic-move.js) so their timing can be scheduled/staggered per-container. `[data-entering]`
+ * is set as a semantic marker only here; `animation: none` is applied inline alongside it to
+ * make sure this rule never fires and double-animates. There is no `[data-leaving]` rule:
+ * exiting tokens are cloned onto a separate overlay layer and animated there instead.
+ * (The slide-based path further down still uses the `magic-enter` keyframes directly.) */
+.magic-move .magic-move-render span span[data-entering] {
+  animation: none;
+}
+
+@keyframes magic-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Math magic move: each step's <p> is centered independently by default (both
+   reveal.js's own paragraph styling and MathJax's inline text-align:center on
+   its own display wrapper), so switching between differently-shaped equations
+   re-centers the whole equation and produces a large, jarring FLIP jump for
+   shared glyphs instead of a small in-place move. Left-align every math step
+   so they share a stable anchor point. !important is required to beat
+   MathJax's inline style on .MathJax_Display / mjx-container. */
+.magic-move > p:has(.math) {
+  text-align: left;
+}
+
+.magic-move > p .MathJax_Display,
+.magic-move > p mjx-container[display="true"] {
+  text-align: left !important;
+}
+
+/* Slide-based magic move */
+.magic-move-slide-overlay span {
+  display: inline-block;
+}
+
+/* Entering animation for slide-based magic move */
+section.magic-move pre code span[data-entering] {
+  animation: magic-enter 0.5s ease-in-out;
+}

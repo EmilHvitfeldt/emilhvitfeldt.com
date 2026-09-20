@@ -1,0 +1,17 @@
+title: Magic Move
+author: Emil Hvitfeldt
+version: 0.1.0
+quarto-required: ">=1.2.0"
+contributes:
+  revealjs-plugins:
+    - name: RevealMagicMove
+      script:
+        - magic-move.js
+      stylesheet:
+        - magic-move.css
+      # Declares `magicMove` as a real reveal.js config key. Without this, Quarto's
+      # revealjs writer silently drops a deck-wide `format: revealjs: magic-move: {...}`
+      # option instead of forwarding it into `Reveal.initialize()` (see issue #4) -
+      # `deck.getConfig().magicMove` in magic-move.js would always read as `undefined`.
+      config:
+        magicMove: {}
