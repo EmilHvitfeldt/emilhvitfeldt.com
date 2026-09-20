@@ -3031,9 +3031,9 @@ function animateToStep(container, fromStep, toStep, options = {}) {
 
   // Container height animation: measure the wrapper's current ("from") height before
   // anything changes, so it can be animated to the new step's natural height below —
-  // same FLIP-style measure-before/measure-after as the token positions, and anchored
-  // to the same startMs 0 / `duration` timeline as token moves by default, so the box
-  // and its contents visibly resize together rather than one lagging the other.
+  // same FLIP-style measure-before/measure-after as the token positions. Its actual
+  // start/duration are computed further down from the full token schedule, so it
+  // tracks whatever `delay-exit`/`delay-move`/`stagger` spreads the content over.
   const { duration = 500, easing = 'ease-in-out' } = options;
   const fromWrapperHeight = wrapper.getBoundingClientRect().height;
 
@@ -3048,9 +3048,8 @@ function animateToStep(container, fromStep, toStep, options = {}) {
   // Plan: what happens (exit/move/enter), independent of the DOM.
   // Schedule: when each of those happens, from the (possibly per-container) timing config.
   const plan = buildAnimationPlan(fromStep, toStep);
-  const scheduleByKey = new Map(
-    scheduleAnimationPlan(plan, options).map(entry => [entry.key, entry])
-  );
+  const scheduleList = scheduleAnimationPlan(plan, options);
+  const scheduleByKey = new Map(scheduleList.map(entry => [entry.key, entry]));
   const defaultSchedule = { startMs: 0, durationMs: 500, easing: 'ease-in-out' };
 
   // Removed tokens are about to be wiped by the DOM swap below, so clone them onto an
@@ -3091,14 +3090,40 @@ function animateToStep(container, fromStep, toStep, options = {}) {
 
   // Animate the wrapper's own height between its pre-render ("from") and just-laid-out
   // ("to") natural sizes — the container-level counterpart of the token FLIP dance
-  // below. Using the same base `duration`/`easing` and no start delay means it runs on
-  // exactly the same startMs-0 timeline as (default, undelayed) token moves, so the box
-  // and its contents resize in lockstep rather than one lagging the other.
+  // below. Unlike entering/exiting tokens (whose *opacity* animates, so they're only
+  // actually visible once their own schedule says so), a moved token is rendered at
+  // its true final position from the moment `renderStep` runs and is fully "there"
+  // the instant its own FLIP transform finishes — it isn't gated by anything else.
+  // So if `move` ops exist, sync the box's height window to exactly their [start, end]:
+  // by the time the last move settles, the box needs to already be sized to contain it
+  // (growing) or have already closed around it (shrinking). Sizing off the *whole*
+  // schedule instead (as this used to) either starts a shrink too early (while an exit clone /
+  // still-moving row still needs the old, larger box) or finishes a grow too late
+  // (after a move has already landed a row past the box's current, still-too-small
+  // edge). Falls back to the exit window (shrink) or enter window (grow) when there's
+  // no move to anchor to, or plain [0, duration] if the plan has no ops at all. With
+  // every delay/stagger option at 0 every case collapses back to exactly
+  // [0, duration], matching the pre-schedule-aware behavior.
   const toWrapperHeight = wrapper.getBoundingClientRect().height;
   let heightAnimFinished = Promise.resolve();
   if (Math.abs(fromWrapperHeight - toWrapperHeight) > 0.5) {
     const fromHeightCSS = fromWrapperHeight / scale;
     const toHeightCSS = toWrapperHeight / scale;
+    let heightDelay = 0;
+    let heightDuration = duration;
+    if (scheduleList.length) {
+      const moveEntries = scheduleList.filter(entry => entry.type === 'move');
+      let relevant = moveEntries;
+      if (!relevant.length) {
+        const fallbackType = toWrapperHeight < fromWrapperHeight ? 'exit' : 'enter';
+        relevant = scheduleList.filter(entry => entry.type === fallbackType);
+      }
+      if (!relevant.length) relevant = scheduleList;
+      const starts = relevant.map(entry => entry.startMs);
+      const ends = relevant.map(entry => entry.startMs + entry.durationMs);
+      heightDelay = Math.min(...starts);
+      heightDuration = Math.max(...ends) - heightDelay;
+    }
     // The wrapper has a permanent `overflow: hidden` (magic-move.css) that used to
     // never actually clip anything, because the wrapper was always pre-sized to fit
     // the tallest step. Now that its height animates, a shrinking box would otherwise
@@ -3108,7 +3133,7 @@ function animateToStep(container, fromStep, toStep, options = {}) {
     wrapper.style.overflow = 'visible';
     const heightAnim = wrapper.animate(
       [{ height: `${fromHeightCSS}px` }, { height: `${toHeightCSS}px` }],
-      { duration, easing, fill: 'backwards' }
+      { duration: heightDuration, delay: heightDelay, easing, fill: 'backwards' }
     );
     heightAnimFinished = heightAnim.finished.catch(() => {});
   }
