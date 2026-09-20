@@ -2463,9 +2463,6 @@ function initDivBasedMagicMove(deck) {
     // Assign keys to tokens for matching across steps
     assignTokenKeys(steps);
 
-    // Calculate max height needed
-    const maxLines = Math.max(...steps.map(s => s.lines.length));
-
     // Create render container - replicate Quarto's structure:
     // <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
     const firstPre = container.querySelector('pre');
@@ -2491,12 +2488,10 @@ function initDivBasedMagicMove(deck) {
     const computedStyle = window.getComputedStyle(firstPre);
     wrapper.style.background = computedStyle.backgroundColor || '#24292e';
     wrapper.style.color = computedStyle.color || '#e1e4e8';
-    wrapper.style.minHeight = (maxLines * 1.5 + 2) + 'em';
 
     const renderTarget = document.createElement('code');
     renderTarget.className = `sourceCode ${lang} magic-move-render`;
     renderTarget.dataset.numbered = numbered ? 'true' : 'false';
-    renderTarget.style.minHeight = (maxLines * 1.5) + 'em';
     wrapper.appendChild(renderTarget);
     outerDiv.appendChild(wrapper);
 
@@ -3034,6 +3029,14 @@ function animateToStep(container, fromStep, toStep, options = {}) {
   const scale = getRevealScale();
   const wrapper = container.closest('.magic-move-wrapper') || container.parentElement;
 
+  // Container height animation: measure the wrapper's current ("from") height before
+  // anything changes, so it can be animated to the new step's natural height below —
+  // same FLIP-style measure-before/measure-after as the token positions, and anchored
+  // to the same startMs 0 / `duration` timeline as token moves by default, so the box
+  // and its contents visibly resize together rather than one lagging the other.
+  const { duration = 500, easing = 'ease-in-out' } = options;
+  const fromWrapperHeight = wrapper.getBoundingClientRect().height;
+
   // FLIP: First - record current positions (and keep the live span around, since
   // exit clones need to copy its rendered content before it's wiped below).
   const oldPositions = new Map();
@@ -3056,6 +3059,7 @@ function animateToStep(container, fromStep, toStep, options = {}) {
   // instantly: the new layout below already reflects the closed gap, and the exiting
   // clone is a decoupled ghost fading on top of it.
   const wrapperRect = wrapper.getBoundingClientRect();
+  const cloneAnimations = [];
   for (const op of plan) {
     if (op.type !== 'exit') continue;
     for (const key of op.keys) {
@@ -3078,11 +3082,39 @@ function animateToStep(container, fromStep, toStep, options = {}) {
       );
       const cleanup = () => clone.remove();
       anim.finished.then(cleanup).catch(cleanup);
+      cloneAnimations.push(anim.finished.catch(() => {}));
     }
   }
 
   // Render new state (Last)
   renderStep(container, toStep);
+
+  // Animate the wrapper's own height between its pre-render ("from") and just-laid-out
+  // ("to") natural sizes — the container-level counterpart of the token FLIP dance
+  // below. Using the same base `duration`/`easing` and no start delay means it runs on
+  // exactly the same startMs-0 timeline as (default, undelayed) token moves, so the box
+  // and its contents resize in lockstep rather than one lagging the other.
+  const toWrapperHeight = wrapper.getBoundingClientRect().height;
+  let heightAnimFinished = Promise.resolve();
+  if (Math.abs(fromWrapperHeight - toWrapperHeight) > 0.5) {
+    const fromHeightCSS = fromWrapperHeight / scale;
+    const toHeightCSS = toWrapperHeight / scale;
+    // The wrapper has a permanent `overflow: hidden` (magic-move.css) that used to
+    // never actually clip anything, because the wrapper was always pre-sized to fit
+    // the tallest step. Now that its height animates, a shrinking box would otherwise
+    // clip an exit clone (appended into this same `wrapper` above) still fading out
+    // below the new, smaller height — so overflow is relaxed for the duration of this
+    // transition and restored once every clone and the height animation have settled.
+    wrapper.style.overflow = 'visible';
+    const heightAnim = wrapper.animate(
+      [{ height: `${fromHeightCSS}px` }, { height: `${toHeightCSS}px` }],
+      { duration, easing, fill: 'backwards' }
+    );
+    heightAnimFinished = heightAnim.finished.catch(() => {});
+  }
+  Promise.allSettled([...cloneAnimations, heightAnimFinished]).then(() => {
+    wrapper.style.overflow = '';
+  });
 
   // Invert & Play
   const newSpans = container.querySelectorAll('span > span[data-key]');

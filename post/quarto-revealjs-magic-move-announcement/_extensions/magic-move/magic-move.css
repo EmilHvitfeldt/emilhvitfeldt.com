@@ -8,14 +8,13 @@
 
 .magic-move .magic-move-wrapper {
   position: relative;
-  padding: 1em;
   border-radius: 8px;
   overflow: hidden;
   /* Quarto/reveal's theme sets `.reveal pre { width: 100% }` (content-box by default),
-   * so any padding we add here would normally push the border box wider than the 100%
-   * content width it's measured against, overflowing the (non-clipping) wrapper-outer
-   * div and forcing a horizontal scrollbar. border-box keeps our own padding, and the
-   * number gutter's padding-left below, inside that 100% instead of adding to it. */
+   * so any padding here (e.g. the number gutter's padding-left below) would normally
+   * push the border box wider than the 100% content width it's measured against,
+   * overflowing the (non-clipping) wrapper-outer div and forcing a horizontal
+   * scrollbar. border-box keeps that padding inside that 100% instead of adding to it. */
   box-sizing: border-box;
 }
 
@@ -29,14 +28,13 @@
   overflow: hidden;
   /* This div only exists to mimic pandoc's `<div class="sourceCode"><pre>...` nesting
    * so other `.sourceCode`-scoped rules resolve the same way they would for a real
-   * code block. But that same class also carries a syntax-theme background color and
-   * border-bottom meant for a plain code block, not a wrapper around our own bordered
+   * code block. But that same class also carries a syntax-theme background color
+   * meant for a plain code block, not a wrapper around our own bordered
    * `.magic-move-wrapper`. The wrapper's box doesn't perfectly cover this div's (a
    * fraction of a pixel of rounding either side), so without this, a sliver of that
-   * background/border peeked out around the wrapper's edges — looking exactly like a
+   * background peeked out around the wrapper's edges — looking exactly like a
    * scrollbar track sitting under the code box. */
   background: transparent;
-  border-bottom: none;
 }
 
 /* The reveal.js theme's generic `.reveal pre code { overflow: auto; max-height: 400px }`
