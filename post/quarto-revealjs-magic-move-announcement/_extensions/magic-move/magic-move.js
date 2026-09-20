@@ -268,18 +268,6 @@ function animateSlideMagicMove(fromSlide, toSlide, fromStep, toStep, overlay, de
   const resolvedOptions = { delayContainer: 0.5, ...options };
   const { duration = 500, easing = 'ease-in-out' } = resolvedOptions;
 
-  // Animate height using the sourceCode div. The container animation is the timing
-  // reference point (`delayContainer` delays *token* ops relative to it, not itself),
-  // so it always starts immediately and runs for `duration`.
-  toSourceCodeDiv.style.height = `${fromHeightCSS}px`;
-  toSourceCodeDiv.style.overflow = 'hidden';
-  toSourceCodeDiv.style.transition = `height ${duration}ms ${easing}`;
-
-  // Use requestAnimationFrame to ensure layout is complete before animating
-  requestAnimationFrame(() => {
-    toSourceCodeDiv.style.height = `${toHeightCSS}px`;
-  });
-
   // Make the code text transparent (but keep structure for line numbers)
   toCodeBlock.style.color = 'transparent';
   // Also hide any syntax-highlighted spans
@@ -309,6 +297,41 @@ function animateSlideMagicMove(fromSlide, toSlide, fromStep, toStep, overlay, de
   const scheduled = scheduleAnimationPlan(plan, resolvedOptions);
   const scheduleByKey = new Map(scheduled.map(entry => [entry.key, entry]));
   const defaultSchedule = { startMs: resolvedOptions.delayContainer * duration, durationMs: duration, easing };
+
+  // Animate height using the sourceCode div. Same reasoning as the div-based path's
+  // wrapper height fix: a moved token is rendered at its true final position from the
+  // moment its own transition ends, so if `move` ops exist the box's own height window
+  // is synced to exactly their [start, end] rather than always running a fixed
+  // [0, duration] regardless of `delay-move`/`stagger` — otherwise a large delay-move
+  // (or stagger spreading exits out) leaves the box shrinking/growing well before or
+  // after the tokens whose settling it's supposed to track. Falls back to the exit
+  // window (shrink) or enter window (grow) when there's no move to anchor to, or plain
+  // [0, duration] if the plan has no ops at all — this still matches the original
+  // hardcoded behavior whenever every delay/stagger option is left at 0.
+  let heightDelay = 0;
+  let heightDuration = duration;
+  if (scheduled.length) {
+    const moveEntries = scheduled.filter(entry => entry.type === 'move');
+    let relevant = moveEntries;
+    if (!relevant.length) {
+      const fallbackType = toHeightCSS < fromHeightCSS ? 'exit' : 'enter';
+      relevant = scheduled.filter(entry => entry.type === fallbackType);
+    }
+    if (!relevant.length) relevant = scheduled;
+    const starts = relevant.map(entry => entry.startMs);
+    const ends = relevant.map(entry => entry.startMs + entry.durationMs);
+    heightDelay = Math.min(...starts);
+    heightDuration = Math.max(...ends) - heightDelay;
+  }
+
+  toSourceCodeDiv.style.height = `${fromHeightCSS}px`;
+  toSourceCodeDiv.style.overflow = 'hidden';
+  toSourceCodeDiv.style.transition = `height ${heightDuration}ms ${easing} ${heightDelay}ms`;
+
+  // Use requestAnimationFrame to ensure layout is complete before animating
+  requestAnimationFrame(() => {
+    toSourceCodeDiv.style.height = `${toHeightCSS}px`;
+  });
 
   function transitionFor(sched) {
     const props = ['left', 'top', 'opacity'];
@@ -426,7 +449,7 @@ function animateSlideMagicMove(fromSlide, toSlide, fromStep, toStep, overlay, de
   // rather than a hardcoded total.
   const allEndTimes = scheduled.map(entry => entry.startMs + entry.durationMs);
   allEndTimes.push(resolvedOptions.delayContainer * duration + duration); // container/default reference
-  allEndTimes.push(duration); // height transition itself
+  allEndTimes.push(heightDelay + heightDuration); // height transition itself
   const cleanupDelay = Math.max(...allEndTimes) + 50; // small buffer, matches original's +50ms
 
   setTimeout(() => {
