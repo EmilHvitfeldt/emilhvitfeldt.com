@@ -8,25 +8,6 @@ revealjs-plugins:
   - magic-move
 ---
 
-## Default timing
-
-::: magic-move
-
-```r
-a <- 1
-b <- 2
-d <- 4
-```
-
-```r
-a <- 1
-b <- 2
-c <- 3
-d <- 4
-```
-
-:::
-
 ## Staggered exit {.smaller}
 
 ::: {.magic-move delay-exit=0 stagger=0.3 delay-move=1.3}

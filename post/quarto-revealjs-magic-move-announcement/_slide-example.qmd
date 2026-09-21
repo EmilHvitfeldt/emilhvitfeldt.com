@@ -8,13 +8,13 @@ revealjs-plugins:
   - magic-move
 ---
 
-## Step 1 {.magic-move}
+## Slide-based magic-move {.magic-move}
 
 ```javascript
 if (condition) a else b
 ```
 
-## Step 2 {.magic-move}
+## Slide-based magic-move {.magic-move}
 
 ```javascript
 if (condition) {
@@ -24,7 +24,7 @@ if (condition) {
 }
 ```
 
-## Step 3 {.magic-move}
+## Slide-based magic-move {.magic-move}
 
 ```javascript
 function example() {
