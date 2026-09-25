@@ -4,6 +4,9 @@ project:
     - "my-name.m4a"
     - "post/slidecraft-layout/_*.qmd"
     - "post/slidecraft-layout/_*.html"
+    - "post/quarto-revealjs-magic-move-svg/_*.qmd"
+    - "post/quarto-revealjs-magic-move-svg/_*.html"
+    - "post/quarto-revealjs-magic-move-svg/_*_files/**"
 
 execute:
   freeze: true

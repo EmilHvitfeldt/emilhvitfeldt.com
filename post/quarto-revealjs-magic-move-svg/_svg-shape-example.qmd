@@ -1,0 +1,52 @@
+---
+format:
+  revealjs:
+    width: 900
+    height: 450
+revealjs-plugins:
+  - magic-move
+---
+
+## 1952 {.magic-move}
+
+```{r}
+#| label: "gapminder-1952"
+#| dev: svg
+#| echo: false
+library(ggplot2)
+library(gapminder)
+
+plot_year <- function(yr) {
+  gapminder |>
+    dplyr::filter(year == yr) |>
+    dplyr::arrange(country) |>
+    ggplot(aes(gdpPercap, lifeExp, size = pop, color = continent)) +
+    geom_point(alpha = 0.7) +
+    scale_x_log10(limits = c(200, 120000)) +
+    scale_y_continuous(limits = c(20, 85)) +
+    scale_size(range = c(1, 20), limits = c(60000, 1350000000), guide = "none") +
+    theme_minimal(base_size = 16) +
+    theme(legend.position = "none") +
+    labs(x = "GDP per capita", y = "Life expectancy", color = NULL)
+}
+
+plot_year(1952)
+```
+
+## 1982 {.magic-move}
+
+```{r}
+#| label: "gapminder-1982"
+#| dev: svg
+#| echo: false
+plot_year(1982)
+```
+
+## 2007 {.magic-move}
+
+```{r}
+#| label: "gapminder-2007"
+#| dev: svg
+#| echo: false
+plot_year(2007)
+```

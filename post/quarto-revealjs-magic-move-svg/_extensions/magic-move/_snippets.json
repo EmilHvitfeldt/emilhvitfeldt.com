@@ -1,0 +1,41 @@
+{
+  "magic-move:div": {
+    "prefix": "magic-move:div",
+    "description": "Div-based magic-move sequence: consecutive code blocks animate as fragments on one slide.",
+    "body": [
+      "::: magic-move",
+      "",
+      "```${1:javascript}",
+      "${2:if (condition) a else b}",
+      "```",
+      "",
+      "```${1:javascript}",
+      "if (condition) {",
+      "  a",
+      "} else {",
+      "  b",
+      "}",
+      "```",
+      "",
+      ":::"
+    ]
+  },
+  "magic-move:slide": {
+    "prefix": "magic-move:slide",
+    "description": "Slide-based magic-move sequence: consecutive slide headers with {.magic-move} animate across slides.",
+    "body": [
+      "## ${1:Step 1} {.magic-move}",
+      "",
+      "```${2:r}",
+      "${3:x <- 1}",
+      "```",
+      "",
+      "## ${4:Step 2} {.magic-move}",
+      "",
+      "```${2:r}",
+      "${5:x <- 1",
+      "y <- 2}",
+      "```"
+    ]
+  }
+}

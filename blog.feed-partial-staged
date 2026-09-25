@@ -10,7 +10,16 @@
 <atom:link href="https://emilhvitfeldt.com/blog.xml" rel="self" type="application/rss+xml"/>
 <description>Emil Hvitfeldt blog about R, slides and modeling</description>
 <generator>quarto-1.9.35</generator>
-<lastBuildDate>Tue, 22 Sep 2026 07:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 25 Sep 2026 07:00:00 GMT</lastBuildDate>
+<item>
+  <title>{B4F502887207:/post/quarto-revealjs-magic-move-svg/index.html}</title>
+  <link>https://emilhvitfeldt.com/post/quarto-revealjs-magic-move-svg/</link>
+  <description>{B4F502887207:/post/quarto-revealjs-magic-move-svg/index.html}</description>
+  <category>quarto</category>
+  <category>slidecraft 101</category>
+  <guid>https://emilhvitfeldt.com/post/quarto-revealjs-magic-move-svg/</guid>
+  <pubDate>Fri, 25 Sep 2026 07:00:00 GMT</pubDate>
+</item>
 <item>
   <title>{B4F502887207:/post/quarto-revealjs-magic-move-announcement/index.html}</title>
   <link>https://emilhvitfeldt.com/post/quarto-revealjs-magic-move-announcement/</link>
@@ -191,15 +200,9 @@
   <pubDate>Wed, 21 Aug 2024 07:00:00 GMT</pubDate>
   <media:content url="https://emilhvitfeldt.com/post/slidecraft-fragment-css/featured.webp" medium="image" type="image/webp"/>
 </item>
-<item>
-  <title>{B4F502887207:/post/slidecraft-plot-sizing/index.html}</title>
-  <link>https://emilhvitfeldt.com/post/slidecraft-plot-sizing/</link>
-  <description>{B4F502887207:/post/slidecraft-plot-sizing/index.html}</description>
-  <category>slidecraft 101</category>
-  <category>quarto</category>
-  <guid>https://emilhvitfeldt.com/post/slidecraft-plot-sizing/</guid>
-  <pubDate>Thu, 01 Aug 2024 07:00:00 GMT</pubDate>
-  <media:content url="https://emilhvitfeldt.com/post/slidecraft-plot-sizing/featured.webp" medium="image" type="image/webp"/>
+</channel>
+</rss>
+craft-plot-sizing/featured.webp" medium="image" type="image/webp"/>
 </item>
 </channel>
 </rss>
