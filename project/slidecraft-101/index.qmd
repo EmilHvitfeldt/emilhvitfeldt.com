@@ -244,6 +244,12 @@ I use [Quarto](https://quarto.org/) to create slides using the [revealjs](https:
 :::
 
 ::: {.slidecraft-card}
+[![](plot-exit.webp){fig-alt="Plot Exit extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-plot-exit)
+
+**[Plot Exit](https://github.com/EmilHvitfeldt/quarto-revealjs-plot-exit)**
+:::
+
+::: {.slidecraft-card}
 [![](video-fragments.webp){fig-alt="Video Fragments extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-video-fragments)
 
 **[Video Fragments](https://github.com/EmilHvitfeldt/quarto-revealjs-video-fragments)**
