@@ -1,0 +1,2582 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Watercolor Wash</title>
+<style>
+:root {
+  --bg: #f1eedf;
+  --ink: #2a2622;
+  --muted: #6b6459;
+  --panel: #e8e4d2;
+  --workspace: #d6d2c0;
+  --line: #c4bfab;
+  --accent: #3f6fa8;
+  --playhead: #c4403a;
+  --panel-width: 300px;
+  --timeline-height: 176px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--workspace);
+  color: var(--ink);
+  font: 13px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+}
+
+.app {
+  display: grid;
+  grid-template-columns: var(--panel-width) minmax(0, 1fr);
+  height: 100%;
+}
+
+/* -- Left panel ----------------------------------------------------------- */
+
+.panel {
+  overflow-y: auto;
+  padding: 14px 16px 24px;
+  background: var(--panel);
+  border-right: 1px solid var(--line);
+}
+
+.panel-title {
+  margin: 0 0 14px;
+  font-size: 15px;
+  font-weight: 650;
+}
+
+.group {
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+}
+
+.group h2 {
+  margin: 0 0 8px;
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.hint {
+  margin: 0 0 8px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.hint:empty {
+  display: none;
+}
+
+.field {
+  display: grid;
+  grid-template-columns: 62px 1fr 38px;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.field-label {
+  color: var(--muted);
+}
+
+.field output {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.field input[type="number"],
+.field select {
+  grid-column: 2 / 4;
+}
+
+input[type="range"] {
+  min-width: 0;
+  accent-color: var(--accent);
+}
+
+input[type="number"],
+select {
+  font: inherit;
+  color: var(--ink);
+  padding: 3px 6px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #faf8ef;
+}
+
+.check {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.check-row {
+  display: flex;
+  gap: 16px;
+  margin: 8px 0;
+}
+
+button {
+  font: inherit;
+  color: var(--ink);
+  padding: 5px 10px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: #faf8ef;
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+  background: #fff;
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.subhead {
+  margin: 16px 0 4px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.button-row {
+  display: flex;
+  gap: 6px;
+  margin: 8px 0 0;
+}
+
+.button-row button {
+  flex: 1;
+}
+
+kbd {
+  margin-left: 4px;
+  font: inherit;
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.segmented {
+  display: flex;
+}
+
+.segmented button {
+  flex: 1;
+  border-radius: 0;
+  margin-left: -1px;
+}
+
+.segmented button:first-child {
+  border-radius: 5px 0 0 5px;
+  margin-left: 0;
+}
+
+.segmented button:last-child {
+  border-radius: 0 5px 5px 0;
+}
+
+.segmented button[aria-pressed="true"] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: #faf8ef;
+}
+
+.segmented button[aria-pressed="true"] kbd {
+  color: #bdb7a6;
+}
+
+.palette {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.swatch {
+  width: 100%;
+  aspect-ratio: 1;
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15);
+}
+
+.swatch[aria-pressed="true"] {
+  border-color: var(--ink);
+}
+
+/* -- Workspace: stage, transport, timeline ---------------------------------- */
+
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) auto var(--timeline-height);
+  min-width: 0;
+  min-height: 0;
+}
+
+/* Fills the workspace row; the stage inside is the largest 16:9 box that fits. */
+.stage-frame {
+  container-type: size;
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  min-height: 0;
+  margin: 14px 14px 0;
+}
+
+.stage {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  width: min(100cqw, 100cqh * 16 / 9);
+  aspect-ratio: 16 / 9;
+  background: var(--bg);
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.25);
+  touch-action: none;
+  cursor: crosshair;
+}
+
+.stage[data-tool="select"],
+.stage[data-tool="curve"] {
+  cursor: default;
+}
+
+.stage[data-tool="image"] {
+  cursor: grab;
+}
+
+.stage.dragging-over {
+  outline: 3px dashed var(--accent);
+  outline-offset: -3px;
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.paper-fallback {
+  background: var(--bg);
+}
+
+.paper-fallback-canvas {
+  transition: opacity 0.4s ease;
+}
+
+.paper-canvas {
+  background: transparent;
+}
+
+.brush-canvas {
+  z-index: 2;
+  mix-blend-mode: multiply;
+}
+
+.trace-image {
+  position: absolute;
+  max-width: none;
+  pointer-events: none;
+  user-select: none;
+  transform-origin: center;
+}
+
+.trace-below {
+  z-index: 1;
+}
+
+.trace-above {
+  z-index: 3;
+}
+
+.ui-canvas {
+  z-index: 4;
+}
+
+.stage-message {
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  padding: 6px 12px;
+  border-radius: 5px;
+  background: rgba(42, 38, 34, 0.88);
+  color: #faf8ef;
+  pointer-events: none;
+}
+
+.transport {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+}
+
+.transport button {
+  width: 34px;
+  padding: 4px 0;
+}
+
+.transport .play {
+  width: 42px;
+}
+
+.transport #add-cue {
+  width: auto;
+  padding: 4px 10px;
+  white-space: nowrap;
+}
+
+.transport #scrub {
+  flex: 1;
+}
+
+.time {
+  min-width: 108px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  margin: 0 14px 14px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--panel);
+}
+
+.tl-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 10px;
+  border-bottom: 1px solid var(--line);
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.tl-zoom-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.tl-zoom {
+  width: 120px;
+}
+
+.tl-scroll {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.tl-inner {
+  position: relative;
+  min-width: 100%;
+}
+
+.tl-ruler {
+  position: relative;
+  height: 24px;
+  border-bottom: 1px solid var(--line);
+  cursor: ew-resize;
+  user-select: none;
+  touch-action: none;
+}
+
+.tl-tick {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  padding-left: 4px;
+  border-left: 1px solid var(--line);
+  font-size: 10px;
+  line-height: 24px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+
+/* Slide cues sit over the ruler; only the flags take clicks, the ruler underneath still scrubs. */
+.tl-cues {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 24px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.tl-cue {
+  position: absolute;
+  top: 3px;
+  min-width: 14px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: 0 3px 3px 0;
+  border-left: 2px solid var(--accent);
+  background: var(--accent);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 650;
+  line-height: 17px;
+  cursor: pointer;
+  pointer-events: auto;
+  user-select: none;
+}
+
+.tl-lanes {
+  position: relative;
+}
+
+.tl-clip {
+  position: absolute;
+  height: 20px;
+  min-width: 8px;
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.25);
+  cursor: grab;
+  overflow: hidden;
+  touch-action: none;
+}
+
+.tl-clip.selected {
+  box-shadow: 0 0 0 2px var(--accent), inset 0 0 0 1px rgba(0, 0, 0, 0.25);
+  z-index: 1;
+}
+
+.tl-clip-label {
+  display: block;
+  padding: 0 6px;
+  font-size: 10px;
+  line-height: 20px;
+  color: #fff;
+  mix-blend-mode: difference;
+  pointer-events: none;
+}
+
+.tl-handle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 6px;
+  height: 100%;
+  cursor: ew-resize;
+  background: rgba(0, 0, 0, 0.22);
+}
+
+.tl-playhead {
+  position: absolute;
+  top: 0;
+  left: -1px;
+  width: 2px;
+  background: var(--playhead);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.tl-playhead::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -5px;
+  border: 6px solid transparent;
+  border-top-color: var(--playhead);
+  border-bottom: 0;
+}
+
+
+  /* Square drawing area: the largest square that fits. */
+  .stage {
+    width: min(100cqw, 100cqh);
+    aspect-ratio: 1 / 1;
+  }
+</style>
+</head>
+<body>
+  <div class="app">
+    <aside class="panel">
+      <section class="group">
+        <div class="palette" id="palette" role="group" aria-label="Pen color"></div>
+        <label class="field">
+          <span class="field-label">Size</span>
+          <input type="range" id="size-slider" min="0.1" max="3" step="0.05" value="0.5" />
+          <output id="size-output"></output>
+        </label>
+      </section>
+
+      <section class="group">
+        <div class="button-row">
+          <button type="button" id="undo">Undo</button>
+          <button type="button" id="redo">Redo</button>
+        </div>
+        <div class="button-row">
+          <button type="button" id="clear-all">Clear all</button>
+        </div>
+        <div class="button-row">
+          <button type="button" id="export-json">Export JSON</button>
+        </div>
+      </section>
+    </aside>
+
+    <main class="workspace">
+      <div class="stage-frame">
+        <div class="stage" id="stage" data-tool="draw">
+          <span id="fallback-layer" class="layer paper-fallback"></span>
+          <canvas id="fallback-canvas" class="layer paper-fallback-canvas" aria-hidden="true"></canvas>
+          <canvas id="paper-canvas" class="layer paper-canvas" aria-hidden="true"></canvas>
+          <canvas id="brush-canvas" class="layer brush-canvas" aria-hidden="true"></canvas>
+          <div class="stage-message" id="stage-message" hidden></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!--
+    Classic scripts, not ES modules: opening this file directly (file://)
+    blocks module imports via CORS, so everything is written to share one
+    global scope instead. Order matters -- each file after the first few
+    uses functions/values defined by the ones before it.
+  -->
+  <script>
+// Ported from the wtrclred source (ShellWatercolorRandom.ts).
+// Classic script (no ES modules) so the page works when opened directly
+// via file://, where modules are blocked by CORS. All these scripts share
+// one global scope, loaded in dependency order by index.html.
+
+/** Creates a deterministic random source for stable paper and brush textures. */
+function mulberry32(seed) {
+  let state = seed >>> 0;
+
+  return () => {
+    state += 0x6d2b79f5;
+    let next = Math.imul(state ^ (state >>> 15), state | 1);
+    next ^= next + Math.imul(next ^ (next >>> 7), next | 61);
+    return ((next ^ (next >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/** Builds the irregular blob path used by the paper wash and brush marks. */
+function createOrganicPatchPath(radiusX, radiusY, random, irregularity = 0.22) {
+  const path = new Path2D();
+  const points = [];
+  const steps = 24;
+  const phaseA = random() * Math.PI * 2;
+  const phaseB = random() * Math.PI * 2;
+  const phaseC = random() * Math.PI * 2;
+
+  for (let index = 0; index < steps; index += 1) {
+    const t = index / steps;
+    const angle = t * Math.PI * 2;
+    const ripple =
+      Math.sin(angle * 2 + phaseA) * irregularity * 0.54 +
+      Math.sin(angle * 3 + phaseB) * irregularity * 0.34 +
+      Math.sin(angle * 5 + phaseC) * irregularity * 0.18;
+    const jitter = (random() - 0.5) * irregularity * 0.28;
+    const scale = Math.max(0.58, 1 + ripple + jitter);
+    const x = Math.cos(angle) * radiusX * scale;
+    const y = Math.sin(angle) * radiusY * (1 + ripple * 0.72 + jitter * 0.34);
+    points.push({ x, y });
+  }
+
+  const first = points[0];
+  const last = points[points.length - 1];
+  if (!first || !last) return path;
+
+  path.moveTo((first.x + last.x) * 0.5, (first.y + last.y) * 0.5);
+
+  for (let index = 0; index < points.length; index += 1) {
+    const point = points[index];
+    const nextPoint = points[(index + 1) % points.length];
+    if (!point || !nextPoint) continue;
+    path.quadraticCurveTo(point.x, point.y, (point.x + nextPoint.x) * 0.5, (point.y + nextPoint.y) * 0.5);
+  }
+
+  path.closePath();
+  return path;
+}
+
+</script>
+  <script>
+// Ported from the wtrclred source (ShellViewport.ts), with one change: the
+// paper/brush layers can be pointed at an element (the editor's stage)
+// instead of the whole window, via setShellViewportElement().
+// Classic script (see random.js for why).
+
+let shellViewportElement = null;
+
+/** Sizes the paper and brush layers to this element instead of the window. */
+function setShellViewportElement(element) {
+  shellViewportElement = element;
+}
+
+/** Reads the visible viewport so mobile browser chrome changes resize the paper layer. */
+function getShellViewportSize() {
+  if (shellViewportElement) {
+    return {
+      height: Math.max(1, Math.round(shellViewportElement.clientHeight)),
+      width: Math.max(1, Math.round(shellViewportElement.clientWidth)),
+    };
+  }
+
+  const viewport = window.visualViewport;
+  const root = document.documentElement;
+
+  return {
+    height: Math.max(1, Math.round(viewport?.height ?? 0), Math.round(window.innerHeight), Math.round(root.clientHeight)),
+    width: Math.max(1, Math.round(viewport?.width ?? 0), Math.round(window.innerWidth), Math.round(root.clientWidth)),
+  };
+}
+
+/** Subscribes to both layout and visual viewport changes. */
+function addShellViewportListeners(listener) {
+  window.addEventListener("resize", listener, { passive: true });
+  window.addEventListener("orientationchange", listener);
+  window.visualViewport?.addEventListener("resize", listener, { passive: true });
+  window.visualViewport?.addEventListener("scroll", listener, { passive: true });
+
+  // Panels resizing the stage don't fire any window event.
+  const observer = shellViewportElement ? new ResizeObserver(() => listener()) : undefined;
+  if (observer && shellViewportElement) observer.observe(shellViewportElement);
+
+  return () => {
+    window.removeEventListener("resize", listener);
+    window.removeEventListener("orientationchange", listener);
+    window.visualViewport?.removeEventListener("resize", listener);
+    window.visualViewport?.removeEventListener("scroll", listener);
+    observer?.disconnect();
+  };
+}
+
+</script>
+  <script>
+// Ported from the wtrclred source (ShellWatercolorBrushPalette.ts).
+// Classic script (see random.js for why).
+
+const brushColors = [
+  { r: 180, g: 210, b: 245, a: 0.05 },
+  { r: 160, g: 195, b: 235, a: 0.05 },
+  { r: 135, g: 180, b: 220, a: 0.05 },
+  { r: 170, g: 200, b: 230, a: 0.05 },
+  { r: 150, g: 190, b: 240, a: 0.05 },
+  { r: 175, g: 215, b: 255, a: 0.045 },
+  { r: 245, g: 200, b: 215, a: 0.045 },
+  { r: 250, g: 210, b: 210, a: 0.045 },
+  { r: 255, g: 190, b: 200, a: 0.045 },
+  { r: 240, g: 180, b: 190, a: 0.045 },
+  { r: 255, g: 200, b: 190, a: 0.045 },
+  { r: 250, g: 195, b: 205, a: 0.045 },
+  { r: 250, g: 220, b: 190, a: 0.045 },
+  { r: 255, g: 210, b: 170, a: 0.045 },
+  { r: 255, g: 200, b: 160, a: 0.045 },
+  { r: 250, g: 225, b: 200, a: 0.045 },
+  { r: 255, g: 215, b: 180, a: 0.045 },
+  { r: 245, g: 205, b: 175, a: 0.045 },
+  { r: 255, g: 240, b: 200, a: 0.045 },
+  { r: 255, g: 235, b: 180, a: 0.045 },
+  { r: 250, g: 230, b: 170, a: 0.045 },
+  { r: 255, g: 225, b: 160, a: 0.045 },
+  { r: 245, g: 235, b: 190, a: 0.045 },
+  { r: 255, g: 245, b: 210, a: 0.04 },
+  { r: 200, g: 235, b: 215, a: 0.045 },
+  { r: 185, g: 225, b: 200, a: 0.045 },
+  { r: 190, g: 230, b: 190, a: 0.045 },
+  { r: 175, g: 220, b: 185, a: 0.045 },
+  { r: 195, g: 235, b: 205, a: 0.045 },
+  { r: 180, g: 215, b: 195, a: 0.045 },
+  { r: 220, g: 205, b: 240, a: 0.045 },
+  { r: 210, g: 195, b: 235, a: 0.045 },
+  { r: 200, g: 190, b: 225, a: 0.045 },
+  { r: 225, g: 210, b: 230, a: 0.045 },
+  { r: 230, g: 225, b: 220, a: 0.04 },
+  { r: 220, g: 225, b: 230, a: 0.04 },
+];
+
+const brushColorHoldDraws = 36;
+
+/** Keeps translucent pigment stable long enough to read as one watercolor stroke. */
+function brushColorForDraw(sequence) {
+  const colorIndex = Math.floor(sequence / brushColorHoldDraws) % brushColors.length;
+  return brushColors[colorIndex];
+}
+
+</script>
+  <script>
+// Color choices for freehand drawing. Distinct from brush-palette.js, which
+// is the ambient sweep's auto-cycling background palette -- this is a
+// deliberate, user-picked pigment for the pen tool.
+// The full Flexoki palette (https://github.com/kepano/flexoki): base grays plus
+// 8 hues, 13 shades each (50 to 950). Laid out as a grid, one row per shade and
+// one column per hue (gray first), then black and paper on a final row.
+// Classic script (see random.js for why).
+const flexokiShades = [50, 100, 150, 200, 300, 400, 500, 600, 700, 800, 850, 900, 950];
+
+const flexokiHues = [
+  ["Gray", "F2F0E5 E6E4D9 DAD8CE CECDC3 B7B5AC 9F9D96 878580 6F6E69 575653 403E3C 343331 282726 1C1B1A"],
+  ["Red", "FFE1D5 FFCABB FDB2A2 F89A8A E8705F D14D41 C03E35 AF3029 942822 6C201C 551B18 3E1715 261312"],
+  ["Orange", "FFE7CE FED3AF FCC192 F9AE77 EC8B49 DA702C CB6120 BC5215 9D4310 71320D 59290D 40200D 27180E"],
+  ["Yellow", "FAEEC6 F6E2A0 F1D67E ECCB60 DFB431 D0A215 BE9207 AD8301 8E6B01 664D01 503D02 3A2D04 241E08"],
+  ["Green", "EDEECF DDE2B2 CDD597 BEC97E A0AF54 879A39 768D21 66800B 536907 3D4C07 313D07 252D09 1A1E0C"],
+  ["Cyan", "DDF1E4 BFE8D9 A2DECE 87D3C3 5ABDAC 3AA99F 2F968D 24837B 1C6C66 164F4A 143F3C 122F2C 101F1D"],
+  ["Blue", "E1ECEB C6DDE8 ABCFE2 92BFDB 66A0C8 4385BE 3171B2 205EA6 1A4F8C 163B66 133051 12253B 101A24"],
+  ["Purple", "F0EAEC E2D9E9 D3CAE6 C4B9E0 A699D0 8B7EC8 735EB5 5E409D 4F3685 3C2A62 31234E 261C39 1A1623"],
+  ["Magenta", "FEE4E5 FCCFDA F9B9CF F4A4C2 E47DA8 CE5D97 B74583 A02F6F 87285E 641F46 4F1B39 39172B 24131D"],
+].map(([hue, hexes]) => [hue, hexes.split(" ")]);
+
+function flexokiColor(name, hex, a = 0.06) {
+  const value = parseInt(hex, 16);
+  return { name, r: (value >> 16) & 255, g: (value >> 8) & 255, b: value & 255, a };
+}
+
+const penColors = [
+  ...flexokiShades.flatMap((shade, row) =>
+    flexokiHues.map(([hue, hexes]) => flexokiColor(`${hue} ${shade}`, hexes[row])),
+  ),
+  flexokiColor("Black", "100F0F", 0.08),
+  flexokiColor("Paper", "FFFCF0"),
+];
+
+</script>
+  <script>
+// Ported from the wtrclred source (ShellWatercolorPaperFallback.ts).
+// Classic script (see random.js for why); uses createOrganicPatchPath and
+// mulberry32 from random.js and getShellViewportSize from viewport.js,
+// loaded earlier in index.html.
+
+let grainTileCache;
+
+/** Paints the old paper texture fallback into a 2D canvas. */
+function renderPaperFallback(canvas, maxDpr, size) {
+  if (!canvas) return;
+
+  const dpr = Math.min(window.devicePixelRatio || 1, maxDpr);
+  const { width, height } = size ?? getShellViewportSize();
+  const bufferWidth = Math.max(1, Math.round(width * dpr));
+  const bufferHeight = Math.max(1, Math.round(height * dpr));
+
+  if (canvas.width !== bufferWidth || canvas.height !== bufferHeight) {
+    canvas.width = bufferWidth;
+    canvas.height = bufferHeight;
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
+  }
+
+  const context = canvas.getContext("2d");
+  if (!context) return;
+
+  context.setTransform(1, 0, 0, 1, 0, 0);
+  context.clearRect(0, 0, bufferWidth, bufferHeight);
+  context.scale(dpr, dpr);
+  drawPaperFallback(context, width, height);
+}
+
+function drawPaperFallback(context, width, height) {
+  const areaScale = Math.max(0.82, Math.min(1.7, (width * height) / (1440 * 900)));
+  const random = mulberry32(84221);
+
+  context.save();
+  context.fillStyle = "#f1eedf";
+  context.fillRect(0, 0, width, height);
+  drawRadialWash(context, width, height);
+
+  context.globalCompositeOperation = "multiply";
+  drawPaperPatches(context, width, height, random, Math.round(820 * areaScale), "shadow");
+
+  context.globalCompositeOperation = "screen";
+  drawPaperPatches(context, width, height, random, Math.round(520 * areaScale), "highlight");
+
+  context.globalCompositeOperation = "source-over";
+  drawPaperFibers(context, width, height, random, Math.round(260 * areaScale));
+
+  const pattern = context.createPattern(getGrainTile(), "repeat");
+  if (pattern) {
+    context.globalCompositeOperation = "multiply";
+    context.fillStyle = pattern;
+    context.globalAlpha = 0.62;
+    context.fillRect(0, 0, width, height);
+    context.globalAlpha = 1;
+  }
+
+  context.restore();
+}
+
+function drawRadialWash(context, width, height) {
+  const warmth = context.createRadialGradient(width * 0.28, height * 0.16, 0, width * 0.28, height * 0.16, Math.max(width, height) * 0.8);
+  warmth.addColorStop(0, "rgba(255, 251, 234, 0.42)");
+  warmth.addColorStop(0.54, "rgba(255, 244, 212, 0.16)");
+  warmth.addColorStop(1, "rgba(255, 244, 212, 0)");
+  context.fillStyle = warmth;
+  context.fillRect(0, 0, width, height);
+
+  const cool = context.createRadialGradient(width * 0.78, height * 0.78, 0, width * 0.78, height * 0.78, Math.max(width, height) * 0.72);
+  cool.addColorStop(0, "rgba(225, 232, 225, 0.22)");
+  cool.addColorStop(1, "rgba(225, 232, 225, 0)");
+  context.fillStyle = cool;
+  context.fillRect(0, 0, width, height);
+}
+
+function drawPaperPatches(context, width, height, random, count, tone) {
+  for (let index = 0; index < count; index += 1) {
+    const x = random() * width;
+    const y = random() * height;
+    const radius = tone === "shadow" ? 2.4 + random() * 10.2 : 2 + random() * 7;
+    const path = createOrganicPatchPath(
+      radius,
+      radius * (tone === "shadow" ? 0.48 + random() * 0.94 : 0.5 + random()),
+      random,
+      tone === "shadow" ? 0.18 + random() * 0.12 : 0.2,
+    );
+
+    context.save();
+    context.translate(x, y);
+    context.rotate(random() * Math.PI);
+    context.fillStyle = tone === "shadow" ? `rgba(162, 156, 125, ${0.01 + random() * 0.018})` : `rgba(255, 250, 232, ${0.01 + random() * 0.018})`;
+    context.fill(path);
+    context.restore();
+  }
+}
+
+function drawPaperFibers(context, width, height, random, count) {
+  context.lineCap = "round";
+  for (let index = 0; index < count; index += 1) {
+    const x = random() * width;
+    const y = random() * height;
+    const angle = (random() * Math.PI * 2 - Math.PI) * 0.8;
+    const length = 8 + random() * 46;
+    const bend = (random() - 0.5) * length * 0.4;
+    const endX = x + Math.cos(angle) * length;
+    const endY = y + Math.sin(angle) * length;
+    const controlX = x + Math.cos(angle) * length * 0.5 - Math.sin(angle) * bend;
+    const controlY = y + Math.sin(angle) * length * 0.5 + Math.cos(angle) * bend;
+    context.strokeStyle = `rgba(169, 162, 132, ${0.012 + random() * 0.02})`;
+    context.lineWidth = 0.35 + random() * 1.2;
+    context.beginPath();
+    context.moveTo(x, y);
+    context.quadraticCurveTo(controlX, controlY, endX, endY);
+    context.stroke();
+  }
+}
+
+function getGrainTile() {
+  if (grainTileCache) return grainTileCache;
+
+  const canvas = document.createElement("canvas");
+  canvas.width = 384;
+  canvas.height = 384;
+  const context = canvas.getContext("2d");
+
+  if (!context) {
+    grainTileCache = canvas;
+    return canvas;
+  }
+
+  const imageData = context.createImageData(canvas.width, canvas.height);
+  const random = mulberry32(104729);
+
+  for (let index = 0; index < canvas.width * canvas.height; index += 1) {
+    const shade = 238 + Math.floor(random() * 10);
+    const alpha = Math.floor(2 + random() * 5);
+    const offset = index * 4;
+    imageData.data[offset] = shade;
+    imageData.data[offset + 1] = shade - 2;
+    imageData.data[offset + 2] = shade - 5;
+    imageData.data[offset + 3] = alpha;
+  }
+
+  context.putImageData(imageData, 0, 0);
+  grainTileCache = canvas;
+  return canvas;
+}
+
+</script>
+  <script>
+// Ported from the wtrclred source (ShellSitePaper.wgsl), inlined since plain
+// ES modules cannot use a bundler's `?raw` import. Classic script (see
+// random.js for why).
+const sitePaperShader = "struct Uniforms {\n  resolution: vec2f,\n  seed: f32,\n  embossDepth: f32,\n  grainScale: f32,\n  fiberDensity: f32,\n  fiberLength: f32,\n  pulpDensity: f32,\n  warmTint: f32,\n  coolTint: f32,\n  bloomStrength: f32,\n  shadowStrength: f32,\n  vignette: f32,\n  lightYaw: f32,\n  lightPitch: f32,\n  _padding: vec2f,\n};\n\n@group(0) @binding(0) var<uniform> uniforms: Uniforms;\n\nstruct VertexOutput {\n  @builtin(position) position: vec4f,\n  @location(0) uv: vec2f,\n};\n\n@vertex\nfn vertexMain(@builtin(vertex_index) vertexIndex: u32) -> VertexOutput {\n  var positions = array<vec2f, 3>(\n    vec2f(-1.0, -1.0),\n    vec2f(3.0, -1.0),\n    vec2f(-1.0, 3.0)\n  );\n\n  let position = positions[vertexIndex];\n\n  var output: VertexOutput;\n  output.position = vec4f(position, 0.0, 1.0);\n  output.uv = position * 0.5 + vec2f(0.5, 0.5);\n  return output;\n}\n\nfn saturate(value: f32) -> f32 {\n  return clamp(value, 0.0, 1.0);\n}\n\nfn rotate(point: vec2f, angle: f32) -> vec2f {\n  let sine = sin(angle);\n  let cosine = cos(angle);\n  return vec2f(\n    cosine * point.x - sine * point.y,\n    sine * point.x + cosine * point.y\n  );\n}\n\nfn perpendicular(direction: vec2f) -> vec2f {\n  return vec2f(-direction.y, direction.x);\n}\n\nfn hash21(point: vec2f) -> f32 {\n  var seed = fract(point * vec2f(123.34, 456.21));\n  seed = seed + dot(seed, seed + 45.32);\n  return fract(seed.x * seed.y);\n}\n\nfn hash22(point: vec2f) -> vec2f {\n  return vec2f(\n    hash21(point + vec2f(17.13, 3.71)),\n    hash21(point + vec2f(29.97, 11.53))\n  );\n}\n\nfn noise2(point: vec2f) -> f32 {\n  let base = floor(point);\n  let fraction = fract(point);\n  let blend = fraction * fraction * (3.0 - 2.0 * fraction);\n\n  let a = hash21(base);\n  let b = hash21(base + vec2f(1.0, 0.0));\n  let c = hash21(base + vec2f(0.0, 1.0));\n  let d = hash21(base + vec2f(1.0, 1.0));\n\n  return mix(mix(a, b, blend.x), mix(c, d, blend.x), blend.y);\n}\n\nfn fbm(seed: vec2f) -> f32 {\n  var value = 0.0;\n  var amplitude = 0.5;\n  var point = seed;\n\n  for (var index = 0; index < 4; index = index + 1) {\n    value = value + noise2(point) * amplitude;\n    point = point * 2.02 + vec2f(11.7, 5.9);\n    amplitude = amplitude * 0.5;\n  }\n\n  return value;\n}\n\nfn ridgedFbm(seed: vec2f) -> f32 {\n  var value = 0.0;\n  var amplitude = 0.55;\n  var point = seed;\n\n  for (var index = 0; index < 3; index = index + 1) {\n    let ridge = 1.0 - abs(noise2(point) * 2.0 - 1.0);\n    value = value + ridge * amplitude;\n    point = point * 2.08 + vec2f(7.3, 9.1);\n    amplitude = amplitude * 0.5;\n  }\n\n  return value;\n}\n\nfn embossField(point: vec2f, sharpness: f32) -> f32 {\n  let warp = vec2f(\n    fbm(rotate(point * 0.42 + vec2f(5.0, 11.0), 0.38)),\n    fbm(rotate(point * 0.47 + vec2f(17.0, 3.0), -0.52))\n  ) - vec2f(0.5);\n  let warped =\n    point * mix(0.68, 0.92, sharpness) + warp * (1.08 + sharpness * 0.78);\n  let broadA = ridgedFbm(rotate(warped * 0.44, 0.24) + vec2f(9.0, 4.0));\n  let broadB = ridgedFbm(rotate(warped * 0.52, -0.94) + vec2f(15.0, 2.0));\n  let medium = ridgedFbm(rotate(warped * 0.98, -0.36) + vec2f(3.0, 13.0));\n  let pits = 1.0 - abs(noise2(warped * 1.52 + vec2f(21.0, 8.0)) * 2.0 - 1.0);\n  let relief = broadA * 0.3 + broadB * 0.28 + medium * 0.26 + pits * 0.16;\n  return saturate(pow(relief, mix(0.9, 1.34, sharpness)));\n}\n\nfn microGrainField(point: vec2f, fineness: f32) -> f32 {\n  let frequency = 12.0 + fineness * 18.0;\n  let broad = noise2(point * frequency + vec2f(13.4, 7.8));\n  let fine = noise2(point * frequency * 2.3 + vec2f(5.2, 19.6));\n  let dust = smoothstep(\n    0.7,\n    0.98,\n    noise2(point * frequency * 3.8 + vec2f(21.0, 2.0))\n  );\n  return broad * 0.44 + fine * 0.4 + dust * 0.16;\n}\n\nfn fiberField(point: vec2f, density: f32, lengthScale: f32) -> f32 {\n  let flow = fbm(point * 0.45 + vec2f(7.0, 13.0));\n  let stretch = 1.4 + lengthScale * 4.2;\n  let baseFrequency = 16.0 + density * 30.0;\n  let axisA = rotate(\n    point * vec2f(baseFrequency, baseFrequency * 0.18 * stretch),\n    flow * 1.6\n  );\n  let axisB = rotate(\n    point * vec2f(baseFrequency * 0.72, baseFrequency * 0.14 * stretch),\n    flow * -1.1 + 0.4\n  );\n  let strandA =\n    1.0 - smoothstep(0.18, 0.42, abs(fract(axisA.x) - 0.5) * 2.0);\n  let strandB =\n    1.0 - smoothstep(0.14, 0.32, abs(fract(axisB.x) - 0.5) * 2.0);\n  let segmentA = smoothstep(\n    1.0,\n    0.12,\n    abs(fract(axisA.y * (1.8 + lengthScale * 3.4)) - 0.5) * 2.0\n  );\n  let segmentB = smoothstep(\n    1.0,\n    0.18,\n    abs(fract(axisB.y * (2.3 + lengthScale * 4.0)) - 0.5) * 2.0\n  );\n  return strandA * segmentA * 0.72 + strandB * segmentB * 0.28;\n}\n\nfn segmentDistance(point: vec2f, start: vec2f, end: vec2f) -> f32 {\n  let delta = end - start;\n  let projected = saturate(\n    dot(point - start, delta) / max(dot(delta, delta), 0.000001)\n  );\n  return distance(point, start + delta * projected);\n}\n\nfn fibrilDetailField(point: vec2f, density: f32, lengthScale: f32) -> f32 {\n  let scale = 18.0 + density * 52.0;\n  let sample = point * scale;\n  let cellBase = floor(sample);\n  let local = fract(sample);\n  let width = mix(0.075, 0.028, density);\n  var peak = 0.0;\n  var accumulation = 0.0;\n\n  for (var y = -1; y <= 1; y = y + 1) {\n    for (var x = -1; x <= 1; x = x + 1) {\n      let offset = vec2f(f32(x), f32(y));\n      let cell = cellBase + offset;\n      let seedA = hash22(cell + vec2f(2.3, 5.7));\n      let seedB = hash22(cell + vec2f(11.4, 1.9));\n      let center = offset + seedA;\n      let angle = seedB.x * 6.2831853 + (seedA.x - 0.5) * 0.9;\n      let direction = vec2f(cos(angle), sin(angle));\n      let halfLength = (0.18 + lengthScale * 0.48) * (0.45 + seedB.y * 0.55);\n      let start = center - direction * halfLength;\n      let end = center + direction * halfLength;\n      let distanceToFiber = segmentDistance(local, start, end);\n      let fiber = 1.0 - smoothstep(width, width + 0.055, distanceToFiber);\n      let breakup = 0.65 + 0.35 * noise2(sample * 0.8 + cell * 0.37);\n      peak = max(peak, fiber);\n      accumulation = accumulation + fiber * breakup;\n    }\n  }\n\n  return saturate(peak * 0.72 + accumulation * 0.18);\n}\n\nfn fiberMoteField(point: vec2f, density: f32) -> f32 {\n  let scale = 26.0 + density * 42.0;\n  let sample = point * scale;\n  let cell = floor(sample);\n  let local = fract(sample) - 0.5;\n  let jitter = hash22(cell + vec2f(19.4, 7.2)) - 0.5;\n  let radius = 0.05 + hash21(cell + vec2f(3.0, 14.0)) * 0.08;\n  let mote =\n    1.0 - smoothstep(radius, radius + 0.08, length(local - jitter * 0.34));\n  return mote * (0.5 + 0.5 * noise2(sample * 0.75 + cell * 0.53));\n}\n\nfn celluloseNetworkField(point: vec2f, density: f32) -> vec2f {\n  let scale = 16.0 + density * 34.0;\n  let sample = point * scale;\n  let cellBase = floor(sample);\n  let local = fract(sample);\n  var nearest = 10.0;\n  var second = 10.0;\n\n  for (var y = -1; y <= 1; y = y + 1) {\n    for (var x = -1; x <= 1; x = x + 1) {\n      let offset = vec2f(f32(x), f32(y));\n      let cell = cellBase + offset;\n      let feature = offset + hash22(cell + vec2f(31.2, 7.7));\n      let distanceToFeature = distance(local, feature);\n\n      if (distanceToFeature < nearest) {\n        second = nearest;\n        nearest = distanceToFeature;\n      } else if (distanceToFeature < second) {\n        second = distanceToFeature;\n      }\n    }\n  }\n\n  let pores = 1.0 - smoothstep(0.02, 0.18, nearest);\n  let ridges = 1.0 - smoothstep(0.035, 0.12, second - nearest);\n  return vec2f(pores, ridges);\n}\n\nfn pulpClusterField(point: vec2f, density: f32) -> f32 {\n  let scale = 5.0 + density * 10.0;\n  let scaled = point * scale;\n  let cell = floor(scaled);\n  let local = fract(scaled) - 0.5;\n  let jitter = hash22(cell) - 0.5;\n  let radius = 0.12 + hash21(cell + vec2f(4.0, 9.0)) * 0.2;\n  let distanceToCluster = length(local - jitter * 0.34);\n  let inclusion = 1.0 - smoothstep(radius, radius + 0.18, distanceToCluster);\n  let breakup = noise2(scaled * 1.6 + jitter * 5.0);\n  return inclusion * breakup;\n}\n\nfn coldPressToothField(point: vec2f, roughness: f32) -> vec2f {\n  let warp = vec2f(\n    fbm(rotate(point * 1.18 + vec2f(9.0, 3.0), 0.42)),\n    fbm(rotate(point * 1.26 + vec2f(4.0, 15.0), -0.33))\n  ) - vec2f(0.5);\n  let scale = 5.8 + roughness * 4.2;\n  let sample = point * scale + warp * (1.84 + roughness * 0.96);\n  let networkA = celluloseNetworkField(\n    sample * 0.92 + vec2f(13.0, 4.0),\n    0.58 + roughness * 0.34\n  );\n  let networkB = celluloseNetworkField(\n    rotate(sample, 0.84) * 1.34 + vec2f(5.0, 19.0),\n    0.46 + roughness * 0.28\n  );\n  let crumb = fbm(sample * 1.12 + vec2f(21.0, 7.0));\n  let pits = 1.0 - abs(noise2(sample * 2.36 + vec2f(3.0, 17.0)) * 2.0 - 1.0);\n  let crest = saturate(\n    pow(\n      networkA.y * 0.36\n        + networkB.y * 0.28\n        + crumb * 0.18\n        + pits * 0.18,\n      0.94\n    )\n  );\n  let cavity = saturate(\n    pow(\n      max(\n        0.0,\n        networkA.x * 0.44\n          + networkB.x * 0.26\n          + (1.0 - crumb) * 0.14\n          + pits * 0.12\n          - crest * 0.1\n      ),\n      1.04\n    )\n  );\n  return vec2f(cavity, crest);\n}\n\nfn crumpleWarp(point: vec2f) -> vec2f {\n  let amount =\n    0.06 + uniforms.shadowStrength * 0.18 + uniforms.embossDepth * 0.05;\n  let normalizedScale = saturate(\n    0.18 + uniforms.grainScale * 0.18 + uniforms.pulpDensity * 0.12\n  );\n  let warpPoint = point * mix(0.16, 0.58, normalizedScale);\n  let warp = vec2f(\n    fbm(rotate(warpPoint + vec2f(7.0, 13.0), 0.63)),\n    fbm(rotate(warpPoint + vec2f(21.0, 5.0), -0.71))\n  ) - vec2f(0.5, 0.5);\n  return warp * (0.34 + amount * 0.84);\n}\n\nfn crumpleField(point: vec2f) -> vec3f {\n  let amount =\n    0.05 + uniforms.shadowStrength * 0.16 + uniforms.embossDepth * 0.05;\n  let normalizedScale = saturate(\n    0.16 + uniforms.grainScale * 0.2 + uniforms.pulpDensity * 0.16\n  );\n  let sharpness = saturate(0.24 + uniforms.embossDepth * 0.34);\n  let fieldScale = mix(0.16, 0.54, normalizedScale);\n  let warpedPoint =\n    point * fieldScale + crumpleWarp(point * 0.34) * (0.44 + amount * 0.52);\n  let cellBase = floor(warpedPoint);\n  let local = fract(warpedPoint);\n  let coreWidth = mix(0.34, 0.1, sharpness) * mix(1.18, 0.82, normalizedScale);\n  var valley = 0.0;\n  var shoulder = 0.0;\n  var buckle = 0.0;\n\n  for (var y = -1; y <= 1; y = y + 1) {\n    for (var x = -1; x <= 1; x = x + 1) {\n      let offset = vec2f(f32(x), f32(y));\n      let cell = cellBase + offset;\n      let jitter = hash22(cell + vec2f(71.4, 19.3));\n      let seed = hash22(cell + vec2f(8.6, 47.1));\n      let branch = hash22(cell + vec2f(29.0, 11.0));\n      let center = offset + jitter;\n      let angle = seed.x * 6.2831853 + (noise2(cell * 0.19) - 0.5) * 1.2;\n      let direction = vec2f(cos(angle), sin(angle));\n      let normal2 = perpendicular(direction);\n      let halfLength = (0.38 + seed.y * 0.62) * mix(0.88, 1.18, amount);\n      let relative = local - center;\n      let along = dot(relative, direction);\n      let across = dot(relative, normal2);\n      let alongMask =\n        1.0 - smoothstep(halfLength, halfLength + 0.3, abs(along));\n      let microBend = (\n        noise2(\n          vec2f(\n            along * 0.86 + seed.x * 9.0,\n            dot(cell, vec2f(0.23, 0.47)) + branch.y * 6.0\n          )\n        ) - 0.5\n      ) * (0.16 + amount * 0.16);\n      let warpedAcross = across + microBend * alongMask;\n      let centerValley =\n        1.0 - smoothstep(coreWidth, coreWidth + 0.14, abs(warpedAcross));\n      let shoulderBand =\n        1.0 - smoothstep(coreWidth * 2.4, coreWidth * 2.4 + 0.22, abs(warpedAcross));\n      let liftSide = smoothstep(-coreWidth * 1.4, coreWidth * 0.2, warpedAcross)\n        * (1.0 - smoothstep(coreWidth * 0.2, coreWidth * 3.0, warpedAcross));\n      let sinkSide = smoothstep(coreWidth * -3.0, coreWidth * -0.2, warpedAcross)\n        * (1.0 - smoothstep(coreWidth * -0.2, coreWidth * 1.4, warpedAcross));\n      let pocket = (\n        1.0 - smoothstep(coreWidth * 1.6, coreWidth * 4.6, abs(warpedAcross))\n      ) * (1.0 - smoothstep(halfLength * 0.2, halfLength * 0.78, abs(along)));\n      valley = max(valley, centerValley * alongMask * (0.68 + 0.32 * branch.x));\n      shoulder = max(\n        shoulder,\n        max(shoulderBand - centerValley * 0.76, 0.0) * alongMask\n      );\n      buckle = buckle + (\n        (liftSide - sinkSide * 0.55) * 0.72 + (branch.x - 0.5) * pocket * 0.24\n      ) * alongMask * (0.6 + branch.y * 0.4);\n    }\n  }\n\n  return vec3f(valley, shoulder, clamp(buckle * 0.32, -1.0, 1.0)) * amount;\n}\n\nfn wrinkleLineField(point: vec2f) -> vec2f {\n  let amount =\n    0.04 + uniforms.embossDepth * 0.12 + uniforms.shadowStrength * 0.04;\n  let normalizedScale = saturate(\n    0.16 + uniforms.grainScale * 0.24 + uniforms.embossDepth * 0.12\n  );\n  let sharpness = saturate(0.22 + uniforms.embossDepth * 0.36);\n  let fieldScale = mix(0.56, 2.2, normalizedScale);\n  let warpedPoint = point + crumpleWarp(point * 0.9) * (0.1 + amount * 0.24);\n  let sample = rotate(warpedPoint * fieldScale, 0.35);\n  let cellBase = floor(sample);\n  let local = fract(sample);\n  let coreWidth = mix(0.2, 0.034, sharpness);\n  let shoulderWidth = coreWidth * mix(2.8, 1.6, sharpness);\n  var core = 0.0;\n  var shoulder = 0.0;\n\n  for (var y = -1; y <= 1; y = y + 1) {\n    for (var x = -1; x <= 1; x = x + 1) {\n      let offset = vec2f(f32(x), f32(y));\n      let cell = cellBase + offset;\n      let jitter = hash22(cell + vec2f(41.2, 5.7));\n      let seed = hash22(cell + vec2f(9.1, 27.4));\n      let center = offset + jitter;\n      let angle = seed.x * 6.2831853 + (noise2(cell * 0.31) - 0.5) * 0.82;\n      let direction = vec2f(cos(angle), sin(angle));\n      let normal2 = perpendicular(direction);\n      let halfLength = (0.34 + seed.y * 0.46) * mix(0.72, 1.18, normalizedScale);\n      let axis = dot(local - center, direction);\n      let bend = (\n        noise2(vec2f(axis * 1.4 + seed.x * 8.0, dot(cell, vec2f(0.37, 0.61))))\n        - 0.5\n      ) * mix(0.05, 0.14, normalizedScale);\n      let warpedLocal = local - normal2 * bend;\n      let start = center - direction * halfLength;\n      let end = center + direction * halfLength;\n      let distanceToWrinkle = segmentDistance(warpedLocal, start, end);\n      let valley =\n        1.0 - smoothstep(coreWidth, coreWidth + 0.06, distanceToWrinkle);\n      let ridge =\n        1.0 - smoothstep(shoulderWidth, shoulderWidth + 0.08, distanceToWrinkle);\n      core = max(core, valley);\n      shoulder = max(shoulder, max(ridge - valley * 0.82, 0.0));\n    }\n  }\n\n  return vec2f(core, shoulder) * amount;\n}\n\nfn macroSurfaceHeight(point: vec2f) -> f32 {\n  let broad = ridgedFbm(rotate(point * 0.22, 0.29) + vec2f(7.0, 11.0));\n  let secondary = fbm(rotate(point * 0.14, -0.52) + vec2f(13.0, 3.0));\n  let crumple = crumpleField(point * 0.92);\n  let wrinkleLines = wrinkleLineField(point * 0.78);\n  let pulp = fbm(rotate(point, 0.7) * (0.7 + uniforms.pulpDensity * 1.2) + 19.2);\n\n  return (broad - 0.5) * (0.012 + uniforms.shadowStrength * 0.006)\n    + (secondary - 0.5) * 0.008\n    - crumple.x * (0.018 + uniforms.shadowStrength * 0.02)\n    + crumple.y * (0.012 + uniforms.embossDepth * 0.018)\n    + crumple.z * (0.012 + uniforms.shadowStrength * 0.008)\n    - wrinkleLines.x * (0.008 + uniforms.embossDepth * 0.01)\n    + wrinkleLines.y * (0.004 + uniforms.shadowStrength * 0.006)\n    + pulp * (0.006 + uniforms.pulpDensity * 0.01);\n}\n\nfn paperDetailField(point: vec2f) -> vec2f {\n  let grain = microGrainField(point * 1.8, uniforms.grainScale);\n  let fiber = fiberField(point * 0.85, uniforms.fiberDensity, uniforms.fiberLength);\n  let fibrilsLong = fibrilDetailField(point * 0.92, uniforms.fiberDensity, uniforms.fiberLength);\n  let fibrilsShort = fibrilDetailField(\n    point * 1.95 + vec2f(23.0, 5.0),\n    saturate(uniforms.fiberDensity * 0.78 + 0.12),\n    uniforms.fiberLength * 0.42 + 0.08\n  );\n  let fibrilsMicro = fibrilDetailField(\n    point * 3.25 + vec2f(4.0, 31.0),\n    saturate(uniforms.fiberDensity * 0.65 + 0.18),\n    uniforms.fiberLength * 0.22 + 0.04\n  );\n  let motes = fiberMoteField(\n    point * 1.35 + vec2f(7.0, 29.0),\n    uniforms.shadowStrength + uniforms.pulpDensity\n  );\n  let cellulose = celluloseNetworkField(\n    point * 1.42 + vec2f(9.0, 13.0),\n    uniforms.fiberDensity + uniforms.pulpDensity * 0.4\n  );\n  let tooth = coldPressToothField(\n    rotate(point, 0.18) * 0.82 + vec2f(11.0, 7.0),\n    uniforms.embossDepth * 0.34 + uniforms.grainScale * 0.18\n  );\n  let pulp = pulpClusterField(\n    rotate(point, 0.35) * 0.9 + vec2f(17.0, 17.0),\n    uniforms.fiberDensity + uniforms.pulpDensity\n  );\n  let relief = (grain - 0.5) * 0.026\n    + (fiber - 0.35) * uniforms.fiberDensity * 0.012\n    + (fibrilsLong - 0.22) * (0.032 + uniforms.fiberDensity * 0.044)\n    + (fibrilsShort - 0.18) * (0.022 + uniforms.fiberDensity * 0.028)\n    + (fibrilsMicro - 0.14) * (0.018 + uniforms.fiberDensity * 0.024)\n    + (cellulose.y - 0.3) * 0.03\n    - (cellulose.x - 0.12) * 0.02\n    + (tooth.y - 0.18) * (0.126 + uniforms.embossDepth * 0.112)\n    - (tooth.x - 0.1) * (0.08 + uniforms.shadowStrength * 0.066)\n    + (motes - 0.14) * (0.014 + uniforms.shadowStrength * 0.02)\n    + (pulp - 0.3) * (0.014 + uniforms.pulpDensity * 0.024);\n  let tint = grain * 0.28\n    + fiber * 0.03\n    + fibrilsLong * 0.28\n    + fibrilsShort * 0.18\n    + fibrilsMicro * 0.11\n    + cellulose.y * 0.14\n    + cellulose.x * 0.04\n    + tooth.y * 0.28\n    + motes * 0.05\n    + pulp * 0.07;\n  return vec2f(relief, tint);\n}\n\nfn paperMicroHeight(point: vec2f) -> f32 {\n  let fibrilsA = fibrilDetailField(\n    point * 2.8 + vec2f(8.0, 21.0),\n    saturate(uniforms.fiberDensity * 0.82 + 0.14),\n    uniforms.fiberLength * 0.36 + 0.08\n  );\n  let fibrilsB = fibrilDetailField(\n    point * 4.6 + vec2f(33.0, 6.0),\n    saturate(uniforms.fiberDensity * 0.66 + 0.18),\n    uniforms.fiberLength * 0.18 + 0.05\n  );\n  let dust = microGrainField(point * 3.4 + vec2f(17.0, 29.0), uniforms.grainScale);\n  let pores = noise2(rotate(point, 0.42) * 8.4 + vec2f(12.0, 7.0));\n  let flyaway = fiberField(\n    point * 1.65 + vec2f(5.0, 13.0),\n    saturate(uniforms.fiberDensity * 0.34 + 0.16),\n    uniforms.fiberLength * 0.24 + 0.04\n  );\n\n  return (fibrilsA - 0.18) * (0.028 + uniforms.fiberDensity * 0.02)\n    + (fibrilsB - 0.14) * (0.018 + uniforms.fiberDensity * 0.016)\n    + (dust - 0.5) * 0.01\n    + (pores - 0.46) * (0.008 + uniforms.shadowStrength * 0.012)\n    + (flyaway - 0.16) * (0.005 + uniforms.fiberDensity * 0.008);\n}\n\nfn paperHeight(point: vec2f) -> f32 {\n  let macroRelief = macroSurfaceHeight(point * 0.92);\n  let detail = paperDetailField(point * 1.06);\n  let micro = paperMicroHeight(point * 1.16);\n  let emboss = embossField(point * 0.46, 0.84);\n  let tooth = coldPressToothField(\n    rotate(point, 0.16) * 0.86 + vec2f(11.0, 7.0),\n    uniforms.embossDepth * 0.34 + uniforms.grainScale * 0.18\n  );\n  let grain = microGrainField(point * 1.2, uniforms.grainScale);\n  let pulp = pulpClusterField(point * 0.94 + vec2f(13.0, 8.0), uniforms.pulpDensity);\n\n  return macroRelief * 0.34\n    + detail.x * 2.16\n    + micro * (0.76 + uniforms.fiberDensity * 0.16 + uniforms.grainScale * 0.1)\n    + (emboss - 0.18) * (0.18 + uniforms.embossDepth * 0.24)\n    + (tooth.y - 0.28) * (0.46 + uniforms.embossDepth * 0.34)\n    - (tooth.x - 0.18) * (0.34 + uniforms.shadowStrength * 0.22)\n    + (grain - 0.5) * 0.018\n    + (pulp - 0.3) * 0.018;\n}\n\nfn paperNormal(point: vec2f) -> vec3f {\n  let epsilon = 0.00076;\n  let center = paperHeight(point);\n  let dx = paperHeight(point + vec2f(epsilon, 0.0)) - center;\n  let dy = paperHeight(point + vec2f(0.0, epsilon)) - center;\n  let strength = 3.1 + uniforms.embossDepth * 2.2 + uniforms.grainScale * 1.1;\n  return normalize(vec3f(-dx * strength, -dy * strength, 1.0));\n}\n\nfn paperRelief(point: vec2f) -> f32 {\n  let detail = paperDetailField(point * 1.04);\n  let micro = paperMicroHeight(point * 1.12);\n  let emboss = embossField(point * 0.48, 0.86);\n  let crumple = crumpleField(point * 0.9);\n  let wrinkleLines = wrinkleLineField(point * 0.76);\n  let tooth = coldPressToothField(\n    rotate(point, 0.16) * 0.86 + vec2f(11.0, 7.0),\n    uniforms.embossDepth * 0.34 + uniforms.grainScale * 0.18\n  );\n  let grain = microGrainField(point * 1.16, uniforms.grainScale);\n  let fiber = fiberField(point * 0.86, uniforms.fiberDensity, uniforms.fiberLength);\n  let pulp = pulpClusterField(point * 0.9 + vec2f(17.0, 7.0), uniforms.pulpDensity);\n  let macroRelief = macroSurfaceHeight(point * 0.92);\n\n  return macroRelief * 1.28\n    + detail.x * 1.34\n    + micro * 0.72\n    + (emboss - 0.2) * (0.54 + uniforms.embossDepth * 0.36)\n    + (tooth.y - tooth.x) * (0.32 + uniforms.embossDepth * 0.18)\n    + (grain - 0.5) * 0.08\n    + fiber * 0.04\n    + pulp * 0.05\n    + crumple.y * 0.12\n    - crumple.x * 0.14\n    + wrinkleLines.y * 0.08\n    - wrinkleLines.x * 0.1;\n}\n\nfn lightDirection() -> vec3f {\n  let yaw = uniforms.lightYaw;\n  let pitch = uniforms.lightPitch;\n  let xy = cos(pitch);\n  return normalize(vec3f(cos(yaw) * xy, sin(yaw) * xy, sin(-pitch)));\n}\n\n@fragment\nfn fragmentMain(input: VertexOutput) -> @location(0) vec4f {\n  let aspect = uniforms.resolution.x / max(uniforms.resolution.y, 1.0);\n  let centered = (input.uv - 0.5) * vec2f(aspect * 1.72, 1.72);\n  let point =\n    rotate(centered * vec2f(1.0, 1.04), -0.06)\n    + vec2f(uniforms.seed * 6.4, uniforms.seed * 3.2);\n  let detail = paperDetailField(point * 1.04);\n  let micro = paperMicroHeight(point * 1.12);\n  let emboss = embossField(point * 0.48, 0.86);\n  let crumple = crumpleField(point * 0.9);\n  let wrinkleLines = wrinkleLineField(point * 0.76);\n  let tooth = coldPressToothField(\n    rotate(point, 0.16) * 0.86 + vec2f(11.0, 7.0),\n    uniforms.embossDepth * 0.34 + uniforms.grainScale * 0.18\n  );\n  let grain = microGrainField(point * 1.16, uniforms.grainScale);\n  let fiber = fiberField(point * 0.86, uniforms.fiberDensity, uniforms.fiberLength);\n  let motes = fiberMoteField(\n    point * 1.2 + vec2f(7.0, 27.0),\n    uniforms.shadowStrength + uniforms.pulpDensity\n  );\n  let pulp = pulpClusterField(point * 0.9 + vec2f(17.0, 7.0), uniforms.pulpDensity);\n  let normal = paperNormal(point);\n  let light = lightDirection();\n  let diffuse = dot(normal, light);\n  let height = paperHeight(point);\n  let localRelief = detail.x * 1.34\n    + micro * 0.84\n    + (tooth.y - tooth.x) * 0.82\n    + fiber * 0.02\n    + pulp * 0.04;\n  let cavityMask = saturate(\n    max(0.0, -localRelief * 1.84)\n      + tooth.x * 0.68\n      + (1.0 - normal.z) * 0.4\n      + max(0.0, -diffuse) * 0.16\n      + crumple.x * 0.08\n      + wrinkleLines.x * 0.05\n  );\n  let ridgeMask = saturate(\n    max(0.0, localRelief * 1.42)\n      + tooth.y * 0.62\n      + detail.y * 0.06\n      + max(0.0, diffuse) * 0.18\n      + crumple.y * 0.06\n      + wrinkleLines.y * 0.04\n  );\n  let embossLight = diffuse * (0.12 + uniforms.shadowStrength * 0.04);\n\n  var tone = vec3f(0.952, 0.947, 0.927);\n  tone = tone + vec3f(\n    detail.y * 0.036\n    + tooth.y * 0.028\n    + grain * 0.006\n    + fiber * 0.006\n    + motes * 0.008\n    + pulp * 0.01\n  );\n  tone = tone + vec3f(embossLight * 0.08 + max(height, 0.0) * 0.018);\n  tone = tone + vec3f(micro * 0.035 + max(localRelief, 0.0) * 0.026);\n  tone = tone + vec3f(\n    uniforms.warmTint * 0.0028,\n    uniforms.warmTint * 0.0023,\n    uniforms.warmTint * 0.0008\n  );\n  tone = mix(\n    tone,\n    vec3f(0.824, 0.813, 0.782),\n    cavityMask * (0.18 + uniforms.shadowStrength * 0.12)\n  );\n  tone = mix(\n    tone,\n    vec3f(0.975, 0.97, 0.949),\n    ridgeMask * (0.082 + uniforms.embossDepth * 0.06)\n  );\n  tone = tone * (0.992 + detail.y * 0.02 + tooth.y * 0.024);\n  tone = clamp(tone, vec3f(0.72), vec3f(1.0));\n\n  return vec4f(tone, 1.0);\n}\n";
+
+</script>
+  <script>
+// Ported from the wtrclred source (ShellWatercolorPaperGpu.ts).
+// Classic script (see random.js for why); uses sitePaperShader from
+// paper-shader.js and the viewport helpers, loaded earlier in index.html.
+
+/** Initializes the WebGPU paper shader and returns its cleanup hook. */
+async function initializePaperShader(target) {
+  const gpu = navigator.gpu;
+  if (!gpu) return undefined;
+
+  const adapter = await gpu.requestAdapter({ powerPreference: "low-power" });
+  if (!adapter) return undefined;
+
+  const device = await adapter.requestDevice();
+  const context = target.paperCanvas.getContext("webgpu");
+  if (!context) return undefined;
+  const gpuContext = context;
+
+  const format = gpu.getPreferredCanvasFormat();
+  const pipeline = device.createRenderPipeline({
+    layout: "auto",
+    vertex: {
+      module: device.createShaderModule({ code: sitePaperShader }),
+      entryPoint: "vertexMain",
+    },
+    fragment: {
+      module: device.createShaderModule({ code: sitePaperShader }),
+      entryPoint: "fragmentMain",
+      targets: [{ format }],
+    },
+    primitive: {
+      topology: "triangle-list",
+    },
+  });
+  const uniformBuffer = device.createBuffer({
+    size: 80,
+    usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+  });
+  const bindGroup = device.createBindGroup({
+    layout: pipeline.getBindGroupLayout(0),
+    entries: [{ binding: 0, resource: { buffer: uniformBuffer } }],
+  });
+
+  let configured = false;
+  let disposed = false;
+  let paperResizeFrame = 0;
+
+  function render() {
+    if (disposed) return;
+
+    const { cssHeight, cssWidth, height, width } = targetSize(target.maxDpr);
+    if (!configured || target.paperCanvas.width !== width || target.paperCanvas.height !== height) {
+      target.paperCanvas.width = width;
+      target.paperCanvas.height = height;
+      target.paperCanvas.style.width = `${cssWidth}px`;
+      target.paperCanvas.style.height = `${cssHeight}px`;
+      gpuContext.configure({ device, format, alphaMode: "premultiplied" });
+      configured = true;
+    }
+
+    device.queue.writeBuffer(uniformBuffer, 0, paperUniformValues(width, height).buffer);
+
+    const commandEncoder = device.createCommandEncoder();
+    const renderPass = commandEncoder.beginRenderPass({
+      colorAttachments: [
+        {
+          view: gpuContext.getCurrentTexture().createView(),
+          clearValue: { r: 0, g: 0, b: 0, a: 0 },
+          loadOp: "clear",
+          storeOp: "store",
+        },
+      ],
+    });
+
+    renderPass.setPipeline(pipeline);
+    renderPass.setBindGroup(0, bindGroup);
+    renderPass.draw(3);
+    renderPass.end();
+    device.queue.submit([commandEncoder.finish()]);
+    target.fallbackLayer?.style.setProperty("opacity", "0.1");
+    target.fallbackCanvas?.style.setProperty("opacity", "0.16");
+  }
+
+  function queuePaperResize() {
+    if (paperResizeFrame !== 0) return;
+    paperResizeFrame = requestAnimationFrame(() => {
+      paperResizeFrame = 0;
+      render();
+    });
+  }
+
+  const removeViewportListeners = addShellViewportListeners(queuePaperResize);
+  render();
+
+  return () => {
+    disposed = true;
+    if (paperResizeFrame !== 0) cancelAnimationFrame(paperResizeFrame);
+    removeViewportListeners();
+    gpuContext.unconfigure();
+  };
+}
+
+function targetSize(maxDpr) {
+  const dpr = Math.min(window.devicePixelRatio || 1, maxDpr);
+  const { width, height } = getShellViewportSize();
+
+  return {
+    cssHeight: height,
+    cssWidth: width,
+    width: Math.max(1, Math.round(width * dpr)),
+    height: Math.max(1, Math.round(height * dpr)),
+  };
+}
+
+function paperUniformValues(width, height) {
+  const seed = ((width + 29) * 0.61803398875 + (height + 17) * 0.41421356237) % 1 || 0.27182818284;
+
+  return new Float32Array([width, height, seed, 0.88, 0.32, 0.56, 0.24, 0.42, 0.06, 0, 0, 0.72, 0, -0.56, -0.26, 0, 0, 0, 0, 0]);
+}
+
+</script>
+  <script>
+// Ported from the wtrclred source (ShellWatercolorFluidBrush.ts), with
+// changes from the original:
+//   1. `draw()` takes a plain {x, y, pressure} point in device pixels
+//      instead of reading a PointerEvent, so the brush can be driven by
+//      anything -- a line sweeping left to right, a pre-programmed drawing,
+//      a recorded stroke -- instead of just the pointer.
+//   2. The original only stepped the simulation while splats were arriving
+//      (plus a short ~1.6s settle window after the last one), so drying
+//      would freeze indefinitely if input paused for longer than that.
+//      Here `draw()` only splats; the caller is expected to call
+//      `advance(dt)` every animation frame regardless of input, so wet
+//      pigment keeps drying against real elapsed time, not mouse movement.
+//   3. The original injected a velocity-field "jet" at every splat point,
+//      scaled up by drag speed, which (combined with vorticity) propelled
+//      wet pigment forward along the stroke for several frames afterward --
+//      it read as ink being shot from the cursor rather than a brush
+//      leaving paint behind it. Real brush/watercolor references (Curtis et
+//      al.'s shallow-water watercolor sim, bristle-level engines like
+//      WetBrush, dab-based engines like MyPaint) don't drive pigment
+//      transport from cursor drag speed at all. Here that forward force is
+//      drastically weakened (see `splat()`), and `draw()` deposits pigment
+//      at a lagging "contact point" that trails the raw input position
+//      (see `lagX`/`lagY` below) instead of depositing exactly at the tip,
+//      so the brush visibly drags paint behind it.
+// The engine, shaders, and every other constant are otherwise unchanged.
+// Classic script (see random.js for why); uses getShellViewportSize and
+// brushColorForDraw, loaded earlier in index.html.
+
+// Whole-painting look settings (see Project.settings): `maxPigment` caps how
+// strong pigment can get (lower = never gets dark), `dryFade` is how much
+// pigment is lost while wet (0 = none), `spread` scales how much wet pigment
+// flows outward (1 = the original behavior, 0 = stays where it was laid).
+const defaultLook = { maxPigment: 0.8, dryFade: 0, spread: 0.4 };
+const simulationBaseSize = 560;
+const pressureIterations = 8;
+
+function createFluidBrushLayer(options) {
+  let engine;
+  let triedEngine = false;
+  // Per-stroke brush state (last input point, lagging contact point), keyed
+  // by `point.strokeKey` so strokes that overlap in time (the editor lets
+  // you drag them around a timeline) don't share lag/throttle state.
+  const strokeStates = new Map();
+  let sequence = 0;
+  let look = { ...defaultLook };
+
+  function resize() {
+    const canvas = options.canvas();
+    if (!canvas) return;
+
+    const dpr = Math.min(window.devicePixelRatio || 1, options.maxDpr);
+    const { width, height } = options.size?.() ?? getShellViewportSize();
+    const bufferWidth = Math.max(1, Math.round(width * dpr));
+    const bufferHeight = Math.max(1, Math.round(height * dpr));
+
+    if (canvas.width !== bufferWidth || canvas.height !== bufferHeight) {
+      canvas.width = bufferWidth;
+      canvas.height = bufferHeight;
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+    }
+
+    const activeEngine = ensureEngine();
+    if (!activeEngine) return;
+
+    activeEngine.resize(bufferWidth, bufferHeight);
+    activeEngine.renderTo(canvas);
+  }
+
+  /**
+   * point: { x, y } in device pixels (canvas backing-store space),
+   * pressure in [0, 1], isTrusted mirrors the original's "step immediately"
+   * behavior for real input -- true here too, since the line moves every frame.
+   */
+  function draw(point) {
+    const canvas = options.canvas();
+    if (!canvas || !options.isDrawingEnabled()) return;
+
+    const activeEngine = ensureEngine();
+    if (!activeEngine) return;
+
+    // A non-move point starts a new stroke: forget the previous stroke's
+    // position so it neither smears across from where the last one ended nor
+    // inherits its lag.
+    const strokeKey = point.strokeKey ?? 0;
+    if (!point.isMove) strokeStates.delete(strokeKey);
+    let state = strokeStates.get(strokeKey);
+    if (!state) {
+      state = { lastX: Number.NaN, lastY: Number.NaN, lastTime: 0, lagX: Number.NaN, lagY: Number.NaN };
+      strokeStates.set(strokeKey, state);
+    }
+
+    const x = point.x;
+    const y = point.y;
+    const previousX = state.lastX;
+    const previousY = state.lastY;
+    const previousDrawTime = state.lastTime;
+    const pressure = point.pressure > 0 ? point.pressure : 0.58;
+    // `point.time` (ms) lets a caller supply a virtual clock, so replaying
+    // the same strokes always lays down the same pigment.
+    const now = point.time ?? performance.now();
+    const deltaX = Number.isFinite(previousX) ? x - previousX : 0;
+    const deltaY = Number.isFinite(previousY) ? y - previousY : 0;
+    const distance = Math.hypot(deltaX, deltaY);
+    const dpr = canvas.width / Math.max(1, canvas.clientWidth || canvas.width);
+
+    if (point.isMove && now - previousDrawTime < 14 && distance < 3 * dpr) {
+      return;
+    }
+
+    const elapsedMs = previousDrawTime > 0 ? now - previousDrawTime : 0;
+
+    state.lastX = x;
+    state.lastY = y;
+    state.lastTime = now;
+
+    // Pigment deposits at a lagging "contact point" that eases toward the
+    // raw input position over time, rather than exactly at it -- this is
+    // what makes the brush drag paint behind its tip instead of depositing
+    // right under it. A bigger brush drags more (bigger bristle contact
+    // patch); a fresh stroke (no prior lag position) starts with zero lag,
+    // same as a real brush touching down with no momentum yet.
+    const sizeScale = point.size > 0 ? point.size : 1;
+    const lagTauMs = 65 * sizeScale;
+    if (!Number.isFinite(state.lagX)) {
+      state.lagX = x;
+      state.lagY = y;
+    } else {
+      const smoothing = 1 - Math.exp(-Math.max(0, elapsedMs) / lagTauMs);
+      state.lagX += (x - state.lagX) * smoothing;
+      state.lagY += (y - state.lagY) * smoothing;
+    }
+
+    const color = point.color ?? brushColorForDraw(sequence);
+    if (!color) return;
+
+    if (!point.color) sequence += 1;
+    const fine = point.brush === "crispy";
+    const base = {
+      alpha: color.a,
+      blue: color.b / 255,
+      fine,
+      green: color.g / 255,
+      inkScale: point.inkScale > 0 ? point.inkScale : 1,
+      pressure,
+      red: color.r / 255,
+      size: sizeScale,
+    };
+
+    if (point.brush === "wash" || point.brush === "speedwash") {
+      // Round dabs along the path, sized only by what the brush has already
+      // done (distance travelled, and for "speedwash" how fast it's moving),
+      // never by where the stroke will end, so the live preview is exactly the
+      // finished stroke.
+      const startX = Number.isFinite(previousX) ? previousX : x;
+      const startY = Number.isFinite(previousY) ? previousY : y;
+      const arcStart = state.arc ?? 0;
+      const segment = Math.hypot(x - startX, y - startY);
+      state.arc = arcStart + segment;
+      const heightPx = canvas.height;
+
+      // Speed is measured in the stroke's own recorded time (point.t), so the
+      // Speed slider and scrubbing don't change the shape. It's smoothed so
+      // mouse timing noise doesn't make the width wobble.
+      let factorStart = 1;
+      let factorEnd = 1;
+      if (point.brush === "speedwash") {
+        const recorded = point.t ?? 0;
+        const dtSeconds = Math.max(0.001, (recorded - (state.recordedT ?? recorded)) / 1000);
+        state.recordedT = recorded;
+        const instant = segment / heightPx / dtSeconds;
+        const blend = 1 - Math.exp(-dtSeconds / 0.12);
+        state.speed = Number.isFinite(state.speed) ? state.speed + (instant - state.speed) * blend : 0.4;
+        factorStart = state.speedFactor ?? speedWidthFactor(state.speed);
+        factorEnd = speedWidthFactor(state.speed);
+        state.speedFactor = factorEnd;
+      }
+
+      const maxHalfWidthPx = washHalfWidth(0.3 * heightPx, 1, pressure, sizeScale, heightPx) * heightPx;
+      const stepPx = Math.max(1, maxHalfWidthPx * 0.12);
+      const dabs = Math.max(1, Math.ceil(segment / stepPx));
+      for (let index = 1; index <= dabs; index += 1) {
+        const t = index / dabs;
+        const arc = arcStart + segment * t;
+        activeEngine.splat({
+          ...base,
+          fade: 1 - 0.4 * Math.min(1, arc / (1.2 * heightPx)),
+          halfWidth: washHalfWidth(arc, factorStart + (factorEnd - factorStart) * t, pressure, sizeScale, heightPx),
+          wash: true,
+          x: (startX + (x - startX) * t) / Math.max(1, canvas.width),
+          y: 1 - (startY + (y - startY) * t) / Math.max(1, canvas.height),
+        });
+      }
+      return;
+    }
+
+    if (!fine) {
+      activeEngine.splat({
+        ...base,
+        deltaX: deltaX / Math.max(1, canvas.width),
+        deltaY: -deltaY / Math.max(1, canvas.height),
+        x: state.lagX / Math.max(1, canvas.width),
+        y: 1 - state.lagY / Math.max(1, canvas.height),
+      });
+      return;
+    }
+
+    // Fine brush: same simulation (so it shares the watercolor's paper, glaze
+    // and edge look), but it deposits at the raw tip with no lag, and fills
+    // the gap since the last point with small dabs so the line is continuous.
+    const radius = fineBrushRadius(pressure, sizeScale);
+    const stepPx = Math.max(1, Math.sqrt(radius) * canvas.height * 0.5);
+    const startX = Number.isFinite(previousX) ? previousX : x;
+    const startY = Number.isFinite(previousY) ? previousY : y;
+    const dabs = Math.max(1, Math.ceil(Math.hypot(x - startX, y - startY) / stepPx));
+    for (let index = 1; index <= dabs; index += 1) {
+      const t = index / dabs;
+      activeEngine.splat({
+        ...base,
+        deltaX: 0,
+        deltaY: 0,
+        x: (startX + (x - startX) * t) / Math.max(1, canvas.width),
+        y: 1 - (startY + (y - startY) * t) / Math.max(1, canvas.height),
+      });
+    }
+  }
+
+  /** Advances the simulation (advection, drying, pressure) by dt seconds and
+   * redraws, regardless of whether anything just splatted. Call this every
+   * animation frame so drying tracks real time. */
+  function advance(dt, render = true) {
+    const canvas = options.canvas();
+    if (!canvas || !engine) return;
+
+    engine.step(dt);
+    if (render) engine.renderTo(canvas);
+  }
+
+  /** Draws the current simulation state to the canvas (after a batch of advance(dt, false)). */
+  function present() {
+    const canvas = options.canvas();
+    if (canvas && engine) engine.renderTo(canvas);
+  }
+
+  function clear() {
+    strokeStates.clear();
+    const canvas = options.canvas();
+    if (engine && canvas) {
+      engine.clear();
+      canvas.getContext("2d")?.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  }
+
+  function ensureEngine() {
+    if (engine || triedEngine) return engine;
+    triedEngine = true;
+    engine = FluidBrushEngine.create();
+    if (engine) engine.look = look;
+    return engine;
+  }
+
+  /** Sets the whole-painting look (see defaultLook). Call before replaying, since dryFade changes the simulation. */
+  function configure(settings) {
+    look = { ...defaultLook, ...settings };
+    if (engine) engine.look = look;
+  }
+
+  /** Frees the WebGL context (browsers cap how many can be alive). The canvas keeps its last picture; a later resize() makes a fresh engine. */
+  function dispose() {
+    strokeStates.clear();
+    engine?.gl.getExtension("WEBGL_lose_context")?.loseContext();
+    engine = undefined;
+    triedEngine = false;
+  }
+
+  return { advance, clear, configure, dispose, draw, present, resize };
+}
+
+class FluidBrushEngine {
+  constructor(gl, programs) {
+    this.gl = gl;
+    this.look = { ...defaultLook };
+    this.canvas = gl.canvas;
+    this.programs = programs;
+    this.textureFilter = gl.getExtension("OES_texture_float_linear") ? gl.LINEAR : gl.NEAREST;
+    this.width = 1;
+    this.height = 1;
+    const vertexArray = gl.createVertexArray();
+    if (!vertexArray) throw new Error("WebGL vertex array creation failed.");
+    this.vertexArray = vertexArray;
+    gl.bindVertexArray(vertexArray);
+    this.velocity = this.createBuffer();
+    this.wet = this.createBuffer();
+    this.dry = this.createBuffer();
+    this.pressure = this.createBuffer();
+    const curlTarget = this.createTarget();
+    this.curl = curlTarget.framebuffer;
+    this.curlTexture = curlTarget.texture;
+    const divergenceTarget = this.createTarget();
+    this.divergence = divergenceTarget.framebuffer;
+    this.divergenceTexture = divergenceTarget.texture;
+    this.displayTexture = this.createTexture();
+  }
+
+  static create() {
+    const canvas = document.createElement("canvas");
+    const gl = canvas.getContext("webgl2", {
+      alpha: true,
+      antialias: false,
+      depth: false,
+      premultipliedAlpha: false,
+      preserveDrawingBuffer: true,
+      stencil: false,
+    });
+
+    if (!gl || !gl.getExtension("EXT_color_buffer_float")) return undefined;
+
+    try {
+      return new FluidBrushEngine(gl, buildPrograms(gl));
+    } catch (error) {
+      console.warn("Watercolor fluid brush disabled:", error);
+      return undefined;
+    }
+  }
+
+  resize(canvasWidth, canvasHeight) {
+    const aspect = canvasWidth / Math.max(1, canvasHeight);
+    const simWidth = Math.max(96, Math.round(simulationBaseSize * Math.min(1.35, Math.max(1, aspect))));
+    const simHeight = Math.max(96, Math.round(simWidth / Math.max(0.45, aspect)));
+
+    if (this.width === simWidth && this.height === simHeight) return;
+
+    this.width = simWidth;
+    this.height = simHeight;
+    this.canvas.width = simWidth;
+    this.canvas.height = simHeight;
+    this.resizeBuffer(this.velocity);
+    this.resizeBuffer(this.wet);
+    this.resizeBuffer(this.dry);
+    this.resizeBuffer(this.pressure);
+    this.resizeTarget(this.curlTexture, this.curl);
+    this.resizeTarget(this.divergenceTexture, this.divergence);
+    this.resizeTexture(this.displayTexture);
+    this.clear();
+  }
+
+  splat(stroke) {
+    if (stroke.wash) {
+      // Wash brush: one broad flat dab across the stroke direction, with a
+      // ragged edge from the shader's noise. No velocity, so it stays put.
+      const opacity = Math.min(0.5, 0.2 + stroke.alpha * 3.8) * (stroke.inkScale > 0 ? stroke.inkScale : 1) * 5 * stroke.fade;
+      // It goes straight into the dry layer: the wet layer's drying makes each
+      // frame's batch of dabs dry differently, which shows as stripes across a
+      // wide stroke.
+      this.splatBuffer(
+        this.dry,
+        stroke.x,
+        stroke.y,
+        (1 - stroke.red) * opacity,
+        (1 - stroke.green) * opacity,
+        (1 - stroke.blue) * opacity,
+        0,
+        0,
+        3,
+        0,
+        0,
+        stroke.halfWidth,
+      );
+      return;
+    }
+
+    if (stroke.fine) {
+      // Fine brush: one small flat-topped dab of pigment, and nothing else.
+      // No velocity jet and no bloom ring, so nothing pushes the pigment
+      // around and it stays where the tip put it.
+      const opacity = Math.min(0.5, 0.2 + stroke.alpha * 3.8 + stroke.pressure * 0.05) * (stroke.inkScale > 0 ? stroke.inkScale : 1) * 0.6;
+      this.splatBuffer(
+        this.wet,
+        stroke.x,
+        stroke.y,
+        (1 - stroke.red) * opacity,
+        (1 - stroke.green) * opacity,
+        (1 - stroke.blue) * opacity,
+        opacity,
+        fineBrushRadius(stroke.pressure, stroke.size),
+        2,
+        1,
+        0,
+      );
+      return;
+    }
+
+    const speed = Math.hypot(stroke.deltaX, stroke.deltaY);
+    const directionX = speed > 0.00001 ? stroke.deltaX / speed : 1;
+    const directionY = speed > 0.00001 ? stroke.deltaY / speed : 0;
+    const sizeScale = stroke.size > 0 ? stroke.size : 1;
+    const radius = (0.00018 + stroke.pressure * 0.00034) * sizeScale * sizeScale;
+    // Deliberately weak: this used to scale up to 46 with drag speed, which
+    // (via advection + vorticity below) kept shoving already-deposited wet
+    // pigment further along the stroke for several frames afterward -- it
+    // read as ink being shot forward from the cursor rather than a brush
+    // dragging paint behind it. A real brush doesn't work that way (see
+    // fluid.js header comment), so this is now just a faint nudge.
+    const spread = this.look.spread;
+    const force = Math.min(10, 2 + speed * 420) * spread;
+    // The 0.18 floor means every splat deposits fairly strong pigment
+    // regardless of color alpha, by design (so one mouse stroke reads
+    // clearly). inkScale is a separate multiplier for turning that down.
+    const inkScale = stroke.inkScale > 0 ? stroke.inkScale : 1;
+    const opacity = Math.min(0.42, 0.18 + stroke.alpha * 3.8 + stroke.pressure * 0.045) * inkScale;
+
+    this.splatBuffer(this.velocity, stroke.x, stroke.y, directionX * force, directionY * force, 0, 1, radius * 1.05, 0, directionX, directionY);
+    this.splatBuffer(
+      this.wet,
+      stroke.x,
+      stroke.y,
+      (1 - stroke.red) * opacity,
+      (1 - stroke.green) * opacity,
+      (1 - stroke.blue) * opacity,
+      opacity,
+      radius,
+      speed > 0.0009 ? 1 : 0,
+      directionX,
+      directionY,
+    );
+
+    for (let index = 0; index < 6; index += 1) {
+      const angle = (index / 6) * Math.PI * 2;
+      const offset = Math.sqrt(radius) * 0.42;
+      const bloomX = clamp01(stroke.x + Math.cos(angle) * offset);
+      const bloomY = clamp01(stroke.y + Math.sin(angle) * offset);
+      this.splatBuffer(this.velocity, bloomX, bloomY, Math.cos(angle) * 12 * spread, Math.sin(angle) * 12 * spread, 0, 1, radius * 0.62, 0, Math.cos(angle), Math.sin(angle));
+    }
+  }
+
+  step(dt) {
+    this.run("curl", this.curl, { uVelocity: this.velocity.readTexture });
+    this.run("vorticity", this.velocity.write, { dt, strength: 9 * this.look.spread, uCurl: this.curlTexture, uVelocity: this.velocity.readTexture });
+    this.swap(this.velocity);
+
+    this.run("advect", this.velocity.write, { dissipation: 1 - 0.014 * (2 - Math.min(1, this.look.spread)), dt, uSource: this.velocity.readTexture, uVelocity: this.velocity.readTexture });
+    this.swap(this.velocity);
+    this.applyBoundary(this.velocity, -1);
+
+    // Wet pigment used to lose 0.2% per step (about 11% per second), so a
+    // stroke could fade by half before it finished drying. `dryFade` (0..1)
+    // scales that loss; 0 keeps all the pigment.
+    this.run("advect", this.wet.write, { dissipation: 1 - 0.002 * this.look.dryFade, dt, uSource: this.wet.readTexture, uVelocity: this.velocity.readTexture });
+    this.swap(this.wet);
+    this.applyBoundary(this.wet, 0);
+
+    this.run("dryAccum", this.dry.write, { dryCap: 1.65, dryRate: 0.34, dt, thicknessK: 7, uDry: this.dry.readTexture, uWet: this.wet.readTexture });
+    this.swap(this.dry);
+    this.run("dryWet", this.wet.write, { dryRate: 0.34, dt, thicknessK: 7, uWet: this.wet.readTexture });
+    this.swap(this.wet);
+
+    this.run("divergence", this.divergence, { uVelocity: this.velocity.readTexture });
+    this.clearTarget(this.pressure.read);
+
+    for (let index = 0; index < pressureIterations; index += 1) {
+      this.run("pressure", this.pressure.write, { uDivergence: this.divergenceTexture, uPressure: this.pressure.readTexture });
+      this.swap(this.pressure);
+      this.applyBoundary(this.pressure, 1);
+    }
+
+    this.run("gradient", this.velocity.write, { uPressure: this.pressure.readTexture, uVelocity: this.velocity.readTexture });
+    this.swap(this.velocity);
+    this.applyBoundary(this.velocity, -1);
+  }
+
+  renderTo(canvas) {
+    const context = canvas.getContext("2d");
+    if (!context) return;
+
+    const gl = this.gl;
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    gl.viewport(0, 0, this.width, this.height);
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    this.use("display", { uDry: this.dry.readTexture, uMaxPigment: this.look.maxPigment, uWet: this.wet.readTexture });
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(this.canvas, 0, 0, canvas.width, canvas.height);
+  }
+
+  clear() {
+    this.clearBuffer(this.velocity);
+    this.clearBuffer(this.wet);
+    this.clearBuffer(this.dry);
+    this.clearBuffer(this.pressure);
+    this.clearTarget(this.curl);
+    this.clearTarget(this.divergence);
+    const gl = this.gl;
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    gl.viewport(0, 0, this.width, this.height);
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+  }
+
+  applyBoundary(buffer, scale) {
+    this.run("boundary", buffer.write, { scale, uTarget: buffer.readTexture });
+    this.swap(buffer);
+  }
+
+  clearBuffer(buffer) {
+    this.clearTarget(buffer.read);
+    this.clearTarget(buffer.write);
+  }
+
+  clearTarget(framebuffer) {
+    const gl = this.gl;
+    gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+    gl.viewport(0, 0, this.width, this.height);
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+  }
+
+  createBuffer() {
+    const read = this.createTarget();
+    const write = this.createTarget();
+    return { read: read.framebuffer, readTexture: read.texture, write: write.framebuffer, writeTexture: write.texture };
+  }
+
+  createTarget() {
+    const gl = this.gl;
+    const texture = this.createTexture();
+    const framebuffer = gl.createFramebuffer();
+    if (!framebuffer) throw new Error("WebGL framebuffer creation failed.");
+    gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
+    return { framebuffer, texture };
+  }
+
+  createTexture() {
+    const gl = this.gl;
+    const texture = gl.createTexture();
+    if (!texture) throw new Error("WebGL texture creation failed.");
+
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, this.textureFilter);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, this.textureFilter);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    return texture;
+  }
+
+  resizeBuffer(buffer) {
+    this.resizeTarget(buffer.readTexture, buffer.read);
+    this.resizeTarget(buffer.writeTexture, buffer.write);
+  }
+
+  resizeTarget(texture, framebuffer) {
+    this.resizeTexture(texture);
+    const gl = this.gl;
+    gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
+  }
+
+  resizeTexture(texture) {
+    const gl = this.gl;
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA16F, this.width, this.height, 0, gl.RGBA, gl.HALF_FLOAT, null);
+  }
+
+  run(programName, framebuffer, uniforms) {
+    const gl = this.gl;
+    gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+    gl.viewport(0, 0, this.width, this.height);
+    this.use(programName, uniforms);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+  }
+
+  splatBuffer(buffer, x, y, red, green, blue, alpha, radius, shape, directionX, directionY, width = 0) {
+    this.run("splat", buffer.write, {
+      uWidth: width,
+      uAspect: this.width / Math.max(1, this.height),
+      uColorA: alpha,
+      uColorB: blue,
+      uColorG: green,
+      uColorR: red,
+      uDirX: directionX,
+      uDirY: directionY,
+      uPointX: x,
+      uPointY: y,
+      uRadius: radius,
+      uShape: shape,
+      uTarget: buffer.readTexture,
+    });
+    this.swap(buffer);
+  }
+
+  swap(buffer) {
+    [buffer.read, buffer.write] = [buffer.write, buffer.read];
+    [buffer.readTexture, buffer.writeTexture] = [buffer.writeTexture, buffer.readTexture];
+  }
+
+  use(programName, uniforms) {
+    const gl = this.gl;
+    const program = this.programs[programName];
+    gl.useProgram(program);
+    gl.bindVertexArray(this.vertexArray);
+    gl.uniform2f(gl.getUniformLocation(program, "uTexelSize"), 1 / this.width, 1 / this.height);
+
+    let textureUnit = 0;
+    for (const [name, value] of Object.entries(uniforms)) {
+      const location = gl.getUniformLocation(program, name);
+      if (!location) continue;
+
+      if (typeof value === "number") {
+        gl.uniform1f(location, value);
+        continue;
+      }
+
+      gl.activeTexture(gl.TEXTURE0 + textureUnit);
+      gl.bindTexture(gl.TEXTURE_2D, value);
+      gl.uniform1i(location, textureUnit);
+      textureUnit += 1;
+    }
+  }
+}
+
+function buildPrograms(gl) {
+  const vertexShader = compileShader(gl, gl.VERTEX_SHADER, fluidVertexShader);
+  return {
+    advect: createProgram(gl, vertexShader, advectShader),
+    boundary: createProgram(gl, vertexShader, boundaryShader),
+    curl: createProgram(gl, vertexShader, curlShader),
+    display: createProgram(gl, vertexShader, displayShader),
+    divergence: createProgram(gl, vertexShader, divergenceShader),
+    dryAccum: createProgram(gl, vertexShader, dryAccumShader),
+    dryWet: createProgram(gl, vertexShader, dryWetShader),
+    gradient: createProgram(gl, vertexShader, gradientShader),
+    pressure: createProgram(gl, vertexShader, pressureShader),
+    splat: createProgram(gl, vertexShader, splatShader),
+    vorticity: createProgram(gl, vertexShader, vorticityShader),
+  };
+}
+
+function createProgram(gl, vertexShader, fragmentSource) {
+  const program = gl.createProgram();
+  if (!program) throw new Error("WebGL program creation failed.");
+
+  gl.attachShader(program, vertexShader);
+  gl.attachShader(program, compileShader(gl, gl.FRAGMENT_SHADER, fragmentSource));
+  gl.linkProgram(program);
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+    throw new Error(gl.getProgramInfoLog(program) ?? "WebGL program link failed.");
+  }
+
+  return program;
+}
+
+function compileShader(gl, type, source) {
+  const shader = gl.createShader(type);
+  if (!shader) throw new Error("WebGL shader creation failed.");
+
+  gl.shaderSource(shader, source);
+  gl.compileShader(shader);
+  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    throw new Error(gl.getShaderInfoLog(shader) ?? "WebGL shader compile failed.");
+  }
+
+  return shader;
+}
+
+/** Dab radius (same units as the watercolor `radius` in splat()) for the fine brush: roughly a tenth of the watercolor's area. */
+function fineBrushRadius(pressure, size) {
+  return (0.00002 + pressure * 0.00004) * size;
+}
+
+/**
+ * Half-width (in canvas-height fractions) of the wash brushes after `arc`
+ * pixels of travel. It rises from a point to full width over a fixed distance
+ * and thins slowly; `speedFactor` (1 for the plain wash) scales it.
+ */
+function washHalfWidth(arc, speedFactor, pressure, size, heightPx) {
+  const rise = Math.pow(Math.min(1, arc / (0.2 * heightPx)), 0.85);
+  const decay = 1 - 0.15 * Math.min(1, arc / (0.8 * heightPx));
+  return 0.07 * size * (0.8 + pressure * 0.35) * rise * decay * speedFactor;
+}
+
+/** Width multiplier for the speed wash: slow is wide, a fast flick thins toward a point. `speed` is in canvas heights per second. */
+function speedWidthFactor(speed) {
+  return Math.min(1.15, 1.3 / (1 + Math.pow(speed / 0.8, 1.8)));
+}
+
+function clamp01(value) {
+  return Math.max(0, Math.min(1, value));
+}
+
+const fluidVertexShader = `#version 300 es
+precision highp float;
+out vec2 vUv;
+void main() {
+  vec2 position = vec2((gl_VertexID << 1) & 2, gl_VertexID & 2);
+  vUv = position;
+  gl_Position = vec4(position * 2.0 - 1.0, 0.0, 1.0);
+}
+`;
+
+const fluidHeader = `#version 300 es
+precision highp float;
+in vec2 vUv;
+out vec4 outColor;
+uniform vec2 uTexelSize;
+vec4 sampleLeft(sampler2D tex) { return texture(tex, vUv - vec2(uTexelSize.x, 0.0)); }
+vec4 sampleRight(sampler2D tex) { return texture(tex, vUv + vec2(uTexelSize.x, 0.0)); }
+vec4 sampleBottom(sampler2D tex) { return texture(tex, vUv - vec2(0.0, uTexelSize.y)); }
+vec4 sampleTop(sampler2D tex) { return texture(tex, vUv + vec2(0.0, uTexelSize.y)); }
+`;
+
+const advectShader = `${fluidHeader}
+uniform sampler2D uVelocity;
+uniform sampler2D uSource;
+uniform float dt;
+uniform float dissipation;
+void main() {
+  vec2 vel = texture(uVelocity, vUv).xy;
+  vec2 coord = vUv - dt * vel * uTexelSize;
+  outColor = dissipation * texture(uSource, coord);
+}
+`;
+
+const divergenceShader = `${fluidHeader}
+uniform sampler2D uVelocity;
+void main() {
+  vec4 left = sampleLeft(uVelocity);
+  vec4 right = sampleRight(uVelocity);
+  vec4 bottom = sampleBottom(uVelocity);
+  vec4 top = sampleTop(uVelocity);
+  outColor = vec4(0.5 * (right.x - left.x + top.y - bottom.y), 0.0, 0.0, 1.0);
+}
+`;
+
+const pressureShader = `${fluidHeader}
+uniform sampler2D uPressure;
+uniform sampler2D uDivergence;
+void main() {
+  vec4 left = sampleLeft(uPressure);
+  vec4 right = sampleRight(uPressure);
+  vec4 bottom = sampleBottom(uPressure);
+  vec4 top = sampleTop(uPressure);
+  float div = texture(uDivergence, vUv).x;
+  outColor = vec4((left.x + right.x + bottom.x + top.x - div) * 0.25, 0.0, 0.0, 1.0);
+}
+`;
+
+const gradientShader = `${fluidHeader}
+uniform sampler2D uPressure;
+uniform sampler2D uVelocity;
+void main() {
+  vec4 left = sampleLeft(uPressure);
+  vec4 right = sampleRight(uPressure);
+  vec4 bottom = sampleBottom(uPressure);
+  vec4 top = sampleTop(uPressure);
+  vec2 vel = texture(uVelocity, vUv).xy;
+  outColor = vec4(vel - 0.5 * vec2(right.x - left.x, top.x - bottom.x), 0.0, 1.0);
+}
+`;
+
+const curlShader = `${fluidHeader}
+uniform sampler2D uVelocity;
+void main() {
+  vec4 left = sampleLeft(uVelocity);
+  vec4 right = sampleRight(uVelocity);
+  vec4 bottom = sampleBottom(uVelocity);
+  vec4 top = sampleTop(uVelocity);
+  outColor = vec4(0.5 * (right.y - left.y - (top.x - bottom.x)), 0.0, 0.0, 1.0);
+}
+`;
+
+const vorticityShader = `${fluidHeader}
+uniform sampler2D uVelocity;
+uniform sampler2D uCurl;
+uniform float dt;
+uniform float strength;
+void main() {
+  vec4 left = sampleLeft(uCurl);
+  vec4 right = sampleRight(uCurl);
+  vec4 bottom = sampleBottom(uCurl);
+  vec4 top = sampleTop(uCurl);
+  float center = texture(uCurl, vUv).x;
+  vec2 force = 0.5 * vec2(abs(top.x) - abs(bottom.x), abs(right.x) - abs(left.x));
+  force /= length(force) + 0.0001;
+  force *= strength * center * vec2(1.0, -1.0);
+  vec2 vel = texture(uVelocity, vUv).xy;
+  outColor = vec4(vel + force * dt, 0.0, 1.0);
+}
+`;
+
+const boundaryShader = `${fluidHeader}
+uniform sampler2D uTarget;
+uniform float scale;
+void main() {
+  vec2 uv = vUv;
+  vec4 data = texture(uTarget, uv);
+  if (uv.x < uTexelSize.x) data = scale * texture(uTarget, uv + vec2(uTexelSize.x, 0.0));
+  if (uv.x > 1.0 - uTexelSize.x) data = scale * texture(uTarget, uv - vec2(uTexelSize.x, 0.0));
+  if (uv.y < uTexelSize.y) data = scale * texture(uTarget, uv + vec2(0.0, uTexelSize.y));
+  if (uv.y > 1.0 - uTexelSize.y) data = scale * texture(uTarget, uv - vec2(0.0, uTexelSize.y));
+  outColor = data;
+}
+`;
+
+const splatShader = `${fluidHeader}
+uniform sampler2D uTarget;
+uniform float uAspect;
+uniform float uColorA;
+uniform float uColorB;
+uniform float uColorG;
+uniform float uColorR;
+uniform float uDirX;
+uniform float uDirY;
+uniform float uPointX;
+uniform float uPointY;
+uniform float uRadius;
+uniform float uShape;
+uniform float uWidth;
+float hash21(vec2 q) {
+  return fract(sin(dot(q, vec2(127.1, 311.7))) * 43758.5453);
+}
+float valueNoise(vec2 q) {
+  vec2 i = floor(q);
+  vec2 f = fract(q);
+  f = f * f * (3.0 - 2.0 * f);
+  return mix(mix(hash21(i), hash21(i + vec2(1.0, 0.0)), f.x), mix(hash21(i + vec2(0.0, 1.0)), hash21(i + vec2(1.0, 1.0)), f.x), f.y);
+}
+void main() {
+  vec2 p = vUv - vec2(uPointX, uPointY);
+  p.x *= uAspect;
+  if (uShape > 2.5) {
+    // Wash dab: a round disc of radius uWidth with a torn edge. Blended over
+    // the existing pigment rather than added, so overlapping dabs can't build
+    // up stripes.
+    float dist = length(p) / max(uWidth, 0.00001);
+    // Noise keyed to the pixel's place on the canvas, so overlapping dabs
+    // agree on where the torn edge is.
+    vec2 q = vUv * vec2(uAspect, 1.0);
+    float rough = valueNoise(q * 60.0) * 0.6 + valueNoise(q * 170.0) * 0.4 - 0.5;
+    float body = 1.0 - smoothstep(0.82, 1.0, dist + rough * 0.4);
+    // Soft mottling inside the wash, as pigment settles unevenly.
+    float mottle = 0.85 + 0.3 * valueNoise(q * 14.0 + 7.0);
+    // Newer paint replaces what is underneath (weighted by the dab's body), so
+    // a later, lighter dab covers an earlier, darker one instead of hiding
+    // under it. The mottle and edge noise are keyed to canvas position, so
+    // overlapping dabs of one stroke agree and don't build up stripes.
+    outColor = mix(texture(uTarget, vUv), mottle * vec4(uColorR, uColorG, uColorB, uColorA), body);
+    return;
+  }
+  if (uShape > 0.5 && uShape < 1.5) {
+    vec2 d = normalize(vec2(uDirX, uDirY) + vec2(0.0001));
+    vec2 perp = vec2(-d.y, d.x);
+    float along = dot(p, d);
+    float across = dot(p, perp);
+    p = vec2(along * 0.48, across * 1.42);
+  }
+  float m = exp(-dot(p, p) / uRadius);
+  // Shape 2 is the fine brush's flat-topped dab: full strength across most of
+  // its width, then a quick falloff, so lines have a defined edge.
+  if (uShape > 1.5) m = exp(-pow(dot(p, p) / uRadius, 2.0));
+  vec4 base = texture(uTarget, vUv);
+  outColor = base + m * vec4(uColorR, uColorG, uColorB, uColorA);
+}
+`;
+
+const dryWetShader = `${fluidHeader}
+uniform sampler2D uWet;
+uniform float dryRate;
+uniform float dt;
+uniform float thicknessK;
+void main() {
+  vec4 w = texture(uWet, vUv);
+  float wet0 = clamp(w.a, 0.0, 1.0);
+  float density = max(max(w.r, w.g), w.b);
+  float thicknessFactor = 1.0 / (1.0 + density * thicknessK);
+  float wet1 = max(wet0 - dryRate * thicknessFactor * dt, 0.0);
+  float keep = wet0 > 0.0001 ? wet1 / wet0 : 0.0;
+  outColor = vec4(w.rgb * keep, wet1);
+}
+`;
+
+const dryAccumShader = `${fluidHeader}
+uniform sampler2D uWet;
+uniform sampler2D uDry;
+uniform float dryRate;
+uniform float dt;
+uniform float thicknessK;
+uniform float dryCap;
+void main() {
+  vec4 w = texture(uWet, vUv);
+  vec4 d = texture(uDry, vUv);
+  float wet0 = clamp(w.a, 0.0, 1.0);
+  float density = max(max(w.r, w.g), w.b);
+  float thicknessFactor = 1.0 / (1.0 + density * thicknessK);
+  float dried = min(dryRate * thicknessFactor * dt, wet0);
+  float frac = wet0 > 0.0001 ? dried / wet0 : 0.0;
+  vec3 transfer = w.rgb * frac * 1.015;
+  float coverage = 1.0 - exp(-density * 1.8);
+  vec3 headroom = max(vec3(dryCap) - d.rgb, vec3(0.0));
+  vec3 added = d.rgb + min(transfer, headroom);
+  vec3 replaced = mix(d.rgb, w.rgb, frac);
+  outColor = vec4(mix(added, replaced, coverage), min(d.a + dried, 4.0));
+}
+`;
+
+const displayShader = `${fluidHeader}
+uniform sampler2D uWet;
+uniform sampler2D uDry;
+uniform float uMaxPigment;
+// Soft ceiling on the strongest channel's pigment density, applied to all
+// three channels by the same factor so the hue is kept. Without it, pigment
+// that piles up where the brush lingers darkens every channel toward black;
+// with it, it just stops getting stronger at a saturated version of the color.
+vec3 capPigment(vec3 d) {
+  float m = max(max(d.r, d.g), d.b);
+  if (m < 0.00001) return d;
+  float capped = m / pow(1.0 + pow(m / uMaxPigment, 4.0), 0.25);
+  return d * (capped / m);
+}
+void main() {
+  vec4 wet = texture(uWet, vUv);
+  vec4 dry = texture(uDry, vUv);
+  vec3 wetPigment = capPigment(wet.rgb);
+  vec3 dryPigment = capPigment(dry.rgb);
+  vec3 paper = vec3(0.96, 0.945, 0.92);
+  vec3 afterDry = paper * exp(-dryPigment * 2.2);
+  vec3 wetColor = paper * exp(-wetPigment * 2.2);
+  vec3 glazed = afterDry * exp(-wetPigment * 2.2);
+  float wetDensity = max(max(wet.r, wet.g), wet.b);
+  float dryDensity = max(max(dry.r, dry.g), dry.b);
+  float coverage = 1.0 - exp(-wetDensity * 1.8);
+  vec3 color = mix(glazed, wetColor, coverage);
+  float wetAmt = clamp(wet.a, 0.0, 1.0);
+  color *= mix(vec3(1.0), vec3(0.96, 0.98, 1.04), wetAmt);
+  float grain = fract(sin(dot(vUv * 800.0, vec2(12.9898, 78.233))) * 43758.5453);
+  float tooth = fract(sin(dot(vUv * 1150.0, vec2(29.171, 43.813))) * 24634.6345);
+  color *= 0.975 + 0.045 * grain;
+  float density = max(wetDensity, dryDensity);
+  float edge = smoothstep(0.002, 0.018, length(vec2(dFdx(density), dFdy(density))));
+  color *= 1.0 - edge * (0.1 + tooth * 0.09);
+  float luminance = dot(color, vec3(0.299, 0.587, 0.114));
+  color = clamp(mix(vec3(luminance), color, 1.36), vec3(0.0), vec3(1.0));
+  float alpha = clamp(density * 1.15 + wetAmt * 0.18 + edge * 0.12, 0.0, 0.62);
+  outColor = vec4(color, alpha);
+}
+`;
+
+</script>
+  <script>
+// The editor's document: a list of timed strokes, plus undo/redo.
+//
+// The canvas is never the source of truth. The fluid simulation can't be
+// edited in place, so every change goes through this model and the Player
+// (player.js) re-renders the canvas from it. A stroke looks like:
+//   {
+//     id: 3,
+//     start: 1200,          // ms on the timeline when the stroke begins
+//     speed: 1,             // playback rate of just this stroke (2 = twice as fast)
+//     color: { r, g, b, a, name? },
+//     brush: "watercolor",  // "crispy" (solid, sharp-edged liner), "wash" (broad, blunt-ended, ragged-edged), or "speedwash" (wash whose width follows cursor speed)
+//     size: 1,              // brush size multiplier
+//     inkScale: 0.4,        // ink flow
+//     points: [{ x, y, pressure, t }],  // x/y normalized to the stage (0..1),
+//                                       // t = ms since the stroke began at speed 1
+//   }
+// Classic script (see random.js for why).
+
+const DEFAULT_TAIL_MS = 6000;
+
+class Project {
+  constructor() {
+    this.strokes = [];
+    this.nextId = 1;
+    // Pause points for slides: [{ ms }], sorted. A Quarto revealjs fragment
+    // plays the animation up to the next one (see embed.js). They don't change
+    // the picture, so editing them never re-renders and isn't part of undo.
+    this.cues = [];
+    // Whole-painting look, saved with the project (see defaultLook in fluid.js).
+    // `tailMs` is how long the timeline runs after the last stroke ends.
+    this.settings = { ...defaultLook, tailMs: DEFAULT_TAIL_MS };
+    this.undoStack = [];
+    this.redoStack = [];
+    this.lastCheckpointKey = null;
+    this.lastCheckpointTime = 0;
+    this.listeners = new Set();
+  }
+
+  /** fn(kind): "edit" when strokes changed (canvas needs re-rendering), "layout" when only the timeline needs a redraw. */
+  subscribe(listener) {
+    this.listeners.add(listener);
+    return () => this.listeners.delete(listener);
+  }
+
+  emit(kind = "edit") {
+    for (const listener of this.listeners) listener(kind);
+  }
+
+  get(id) {
+    return this.strokes.find((stroke) => stroke.id === id);
+  }
+
+  static strokeEnd(stroke) {
+    const last = stroke.points[stroke.points.length - 1];
+    return stroke.start + (last ? last.t : 0) / stroke.speed;
+  }
+
+  get endMs() {
+    return this.strokes.reduce((end, stroke) => Math.max(end, Project.strokeEnd(stroke)), 0);
+  }
+
+  /**
+   * Saves an undo point. Repeated calls with the same key inside 800ms (a
+   * slider being dragged) share one point, so one drag is one undo step.
+   */
+  checkpoint(key) {
+    const now = performance.now();
+    if (key && key === this.lastCheckpointKey && now - this.lastCheckpointTime < 800) {
+      this.lastCheckpointTime = now;
+      return;
+    }
+    this.lastCheckpointKey = key ?? null;
+    this.lastCheckpointTime = now;
+    this.undoStack.push(structuredClone(this.strokes));
+    if (this.undoStack.length > 100) this.undoStack.shift();
+    this.redoStack.length = 0;
+  }
+
+  /** `silent` skips the event, for strokes still being drawn or dragged. `after` is the id of the stroke to insert behind (default: the end). */
+  add(stroke, { silent = false, after } = {}) {
+    stroke.id ??= this.nextId++;
+    const index = after === undefined ? -1 : this.strokes.findIndex((other) => other.id === after);
+    if (index === -1) this.strokes.push(stroke);
+    else this.strokes.splice(index + 1, 0, stroke);
+    if (!silent) this.emit("edit");
+    return stroke;
+  }
+
+  remove(id) {
+    this.strokes = this.strokes.filter((stroke) => stroke.id !== id);
+    this.emit("edit");
+  }
+
+  update(id, patch, { silent = false } = {}) {
+    const stroke = this.get(id);
+    if (!stroke) return;
+    Object.assign(stroke, patch);
+    if (!silent) this.emit("edit");
+  }
+
+  clear() {
+    this.strokes = [];
+    this.emit("edit");
+  }
+
+  /** Adds a cue at `ms` (ignored if one is already within 20ms). Returns whether it was added. */
+  addCue(ms) {
+    const at = Math.round(ms);
+    if (at <= 0 || this.cues.some((cue) => Math.abs(cue.ms - at) < 20)) return false;
+    this.cues.push({ ms: at });
+    this.cues.sort((a, b) => a.ms - b.ms);
+    this.emit("layout");
+    return true;
+  }
+
+  removeCue(cue) {
+    this.cues = this.cues.filter((other) => other !== cue);
+    this.emit("layout");
+  }
+
+  get canUndo() {
+    return this.undoStack.length > 0;
+  }
+
+  get canRedo() {
+    return this.redoStack.length > 0;
+  }
+
+  undo() {
+    if (!this.canUndo) return;
+    this.redoStack.push(structuredClone(this.strokes));
+    this.strokes = this.undoStack.pop();
+    this.lastCheckpointKey = null;
+    this.emit("edit");
+  }
+
+  redo() {
+    if (!this.canRedo) return;
+    this.undoStack.push(structuredClone(this.strokes));
+    this.strokes = this.redoStack.pop();
+    this.lastCheckpointKey = null;
+    this.emit("edit");
+  }
+
+  toJSON() {
+    return { version: 1, settings: this.settings, cues: this.cues, strokes: this.strokes };
+  }
+
+  /**
+   * Accepts a saved project, or the bare stroke array the old "Download
+   * recording" button produced (no start times: laid end to end).
+   */
+  load(data) {
+    const incoming = Array.isArray(data) ? data : data?.strokes;
+    if (!Array.isArray(incoming)) throw new Error("Not a watercolor project file.");
+
+    let cursor = 0;
+    const strokes = incoming
+      .filter((stroke) => Array.isArray(stroke?.points) && stroke.points.length > 0)
+      .map((stroke) => {
+        const loaded = {
+          id: undefined,
+          start: Number.isFinite(stroke.start) ? stroke.start : cursor,
+          speed: stroke.speed > 0 ? stroke.speed : 1,
+          color: stroke.color ?? penColors[0],
+          brush: ["crispy", "wash", "speedwash"].includes(stroke.brush) ? stroke.brush : "watercolor",
+          size: stroke.size > 0 ? stroke.size : 1,
+          inkScale: stroke.inkScale > 0 ? stroke.inkScale : 1,
+          points: stroke.points.map((point) => ({
+            x: point.x,
+            y: point.y,
+            pressure: point.pressure > 0 ? point.pressure : 0.58,
+            t: point.t ?? 0,
+          })),
+        };
+        cursor = Project.strokeEnd(loaded) + 300;
+        return loaded;
+      });
+
+    this.checkpoint();
+    if (!Array.isArray(data) && data.settings) this.settings = { ...defaultLook, tailMs: DEFAULT_TAIL_MS, ...data.settings };
+    this.cues = Array.isArray(data) || !Array.isArray(data.cues)
+      ? []
+      : data.cues.filter((cue) => cue?.ms > 0).map((cue) => ({ ms: cue.ms })).sort((a, b) => a.ms - b.ms);
+    this.strokes = [];
+    for (const stroke of strokes) this.add(stroke, { silent: true });
+    this.emit("edit");
+  }
+}
+
+</script>
+  <script>
+// Renders a Project onto the fluid brush layer, and moves through time.
+//
+// The simulation only runs forward, so "scrub to 3.2s" means: wipe it, then
+// replay every stroke from zero in fixed 1/60s steps up to that moment.
+// Playback uses the same fixed steps, and every dab is stamped with its own
+// scheduled time rather than the wall clock, so a given project always
+// produces the same picture whether it was played, scrubbed to, or just edited.
+// Classic script (see random.js for why).
+
+const SIM_STEP_MS = 1000 / 60;
+// If the page stalls, replay at most this many steps per frame and let
+// playback run slow rather than freezing while it catches up.
+const MAX_STEPS_PER_FRAME = 8;
+
+class Player {
+  constructor({ project, brushLayer, canvas }) {
+    this.project = project;
+    this.brushLayer = brushLayer;
+    this.canvas = canvas;
+    this.simMs = 0;
+    // Sub-step remainder, so the playhead can sit between two fixed steps.
+    this.carryMs = 0;
+    // Index of the next unplayed point, per stroke id.
+    this.cursors = new Map();
+    this.dirty = true;
+  }
+
+  /** Where the playhead is on the timeline, in ms. */
+  get nowMs() {
+    return this.simMs + this.carryMs;
+  }
+
+  /** The strokes changed (or the canvas was resized): the next advance/seek replays from zero. */
+  invalidate() {
+    this.dirty = true;
+  }
+
+  reset() {
+    this.brushLayer.configure(this.project.settings);
+    this.brushLayer.clear();
+    this.simMs = 0;
+    this.carryMs = 0;
+    this.cursors.clear();
+    this.dirty = false;
+  }
+
+  /** Jumps to `ms`. Going forward continues the simulation; going back (or after an edit) replays from zero. */
+  seek(ms) {
+    const target = Math.max(0, ms);
+    if (this.dirty || target < this.simMs) this.reset();
+    while (this.simMs + SIM_STEP_MS <= target) this.stepOnce();
+    this.carryMs = target - this.simMs;
+    this.brushLayer.present();
+  }
+
+  /** Plays forward by `dtMs` of timeline time. */
+  advance(dtMs) {
+    if (this.dirty) this.seek(this.nowMs);
+
+    this.carryMs += dtMs;
+    let steps = 0;
+    while (this.carryMs >= SIM_STEP_MS && steps < MAX_STEPS_PER_FRAME) {
+      this.carryMs -= SIM_STEP_MS;
+      this.stepOnce();
+      steps += 1;
+    }
+    this.carryMs = Math.min(this.carryMs, SIM_STEP_MS);
+    if (steps > 0) this.brushLayer.present();
+  }
+
+  stepOnce() {
+    this.simMs += SIM_STEP_MS;
+    this.emitDue();
+    this.brushLayer.advance(SIM_STEP_MS / 1000, false);
+  }
+
+  emitDue() {
+    const width = this.canvas.width;
+    const height = this.canvas.height;
+
+    for (const stroke of this.project.strokes) {
+      if (stroke.start > this.simMs) continue;
+
+      let index = this.cursors.get(stroke.id) ?? 0;
+      while (index < stroke.points.length) {
+        const point = stroke.points[index];
+        const time = stroke.start + point.t / stroke.speed;
+        if (time > this.simMs) break;
+
+        this.brushLayer.draw({
+          x: point.x * width,
+          y: point.y * height,
+          pressure: point.pressure,
+          size: stroke.size,
+          brush: stroke.brush,
+          color: stroke.color,
+          inkScale: stroke.inkScale,
+          isMove: index > 0,
+          t: point.t,
+          time,
+          strokeKey: stroke.id,
+        });
+        index += 1;
+      }
+      this.cursors.set(stroke.id, index);
+    }
+  }
+}
+
+</script>
+  <script>
+// The simplified editor: draw with the wash brush, pick a color and a size,
+// undo/redo/clear. No timeline, no stroke editing, no tracing image.
+// Classic script (see random.js for why): everything it uses comes from the
+// scripts loaded earlier in simple.html.
+
+const maxDpr = 1.25;
+
+const $ = (id) => document.getElementById(id);
+
+const stage = $("stage");
+const fallbackLayerElement = $("fallback-layer");
+const fallbackCanvasElement = $("fallback-canvas");
+const paperCanvasElement = $("paper-canvas");
+const brushCanvasElement = $("brush-canvas");
+const stageMessage = $("stage-message");
+
+// Layers size themselves to the stage, not the window.
+setShellViewportElement(stage);
+
+const project = new Project();
+const brushLayer = createFluidBrushLayer({
+  canvas: () => brushCanvasElement,
+  isDrawingEnabled: () => true,
+  maxDpr,
+});
+const player = new Player({ project, brushLayer, canvas: brushCanvasElement });
+
+// Always the wash brush; only the color and size change.
+const defaults = { color: { ...penColors.find((c) => c.name === "Red 400") }, brush: "wash", size: 0.5, inkScale: 0.4 };
+
+let drawing = false;
+let gesture = null;
+let pendingSeek = null;
+let lastFrameTime = 0;
+let messageTimer = 0;
+
+const clamp = (value, low, high) => Math.min(high, Math.max(low, value));
+
+function showMessage(text, duration = 2600) {
+  stageMessage.textContent = text;
+  stageMessage.hidden = false;
+  clearTimeout(messageTimer);
+  messageTimer = setTimeout(() => {
+    stageMessage.hidden = true;
+  }, duration);
+}
+
+// -- Panel -------------------------------------------------------------------
+
+const paletteElement = $("palette");
+const sizeSlider = $("size-slider");
+const sizeOutput = $("size-output");
+
+function sameColor(a, b) {
+  return a.r === b.r && a.g === b.g && a.b === b.b;
+}
+
+function syncPanel() {
+  for (const swatch of paletteElement.children) {
+    const color = penColors[Number(swatch.dataset.index)];
+    swatch.setAttribute("aria-pressed", String(sameColor(color, defaults.color)));
+  }
+  sizeSlider.value = String(defaults.size);
+  sizeOutput.textContent = defaults.size.toFixed(2);
+  $("undo").disabled = !project.canUndo;
+  $("redo").disabled = !project.canRedo;
+}
+
+penColors.forEach((color, index) => {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "swatch";
+  button.dataset.index = String(index);
+  button.style.background = `rgb(${color.r}, ${color.g}, ${color.b})`;
+  button.setAttribute("aria-label", color.name);
+  button.title = color.name;
+  button.addEventListener("click", () => {
+    defaults.color = { ...color };
+    syncPanel();
+  });
+  paletteElement.appendChild(button);
+});
+
+sizeSlider.addEventListener("input", () => {
+  defaults.size = Number(sizeSlider.value);
+  syncPanel();
+});
+
+// After undo, redo or clear the painting is re-rendered from the strokes, and
+// the playhead goes to the end of what is left so the next stroke starts there.
+project.subscribe((kind) => {
+  if (kind === "edit") {
+    player.invalidate();
+    pendingSeek = project.endMs;
+  }
+  syncPanel();
+});
+
+$("undo").addEventListener("click", () => project.undo());
+$("redo").addEventListener("click", () => project.redo());
+$("clear-all").addEventListener("click", () => {
+  if (project.strokes.length === 0) return;
+  project.checkpoint();
+  project.clear();
+});
+
+// -- Export ------------------------------------------------------------------
+
+// The same project file the full editor saves, so it opens there too.
+function exportJson() {
+  const blob = new Blob([JSON.stringify(project.toJSON())], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "watercolor-project.json";
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+$("export-json").addEventListener("click", exportJson);
+
+// -- Drawing -----------------------------------------------------------------
+
+function addPoints(stroke, event) {
+  const events = event.getCoalescedEvents?.();
+  const list = events && events.length > 0 ? events : [event];
+  const rect = stage.getBoundingClientRect();
+
+  for (const sample of list) {
+    // Coalesced samples arrive together, so spread them over the time they
+    // actually happened instead of stamping them all "now".
+    const ageMs = Math.max(0, performance.now() - sample.timeStamp);
+    const lastT = stroke.points[stroke.points.length - 1]?.t ?? 0;
+    const t = stroke.points.length === 0 ? 0 : Math.max(lastT, player.nowMs - ageMs - stroke.start);
+    stroke.points.push({
+      x: clamp((sample.clientX - rect.left) / rect.width, 0, 1),
+      y: clamp((sample.clientY - rect.top) / rect.height, 0, 1),
+      pressure: sample.pressure > 0 ? sample.pressure : 0.58,
+      t: Math.round(t * 10) / 10,
+    });
+  }
+}
+
+function beginDraw(event) {
+  const stroke = {
+    id: undefined,
+    start: player.nowMs,
+    speed: 1,
+    color: { ...defaults.color },
+    brush: defaults.brush,
+    size: defaults.size,
+    inkScale: defaults.inkScale,
+    points: [],
+  };
+  project.checkpoint();
+  // Silent: the stroke is still growing, and the live simulation already
+  // matches what a replay would produce, so no re-render is needed.
+  project.add(stroke, { silent: true });
+  drawing = true;
+  gesture = { stroke };
+  addPoints(stroke, event);
+  syncPanel();
+}
+
+stage.addEventListener("pointerdown", (event) => {
+  if (event.button !== 0 || gesture) return;
+  stage.setPointerCapture(event.pointerId);
+  beginDraw(event);
+});
+
+stage.addEventListener("pointermove", (event) => {
+  if (gesture) addPoints(gesture.stroke, event);
+});
+
+function endGesture() {
+  if (!gesture) return;
+  gesture = null;
+  drawing = false;
+  project.emit("layout");
+  syncPanel();
+}
+
+stage.addEventListener("pointerup", endGesture);
+stage.addEventListener("pointercancel", endGesture);
+
+// -- Keyboard ----------------------------------------------------------------
+
+// A mouse click leaves a button focused, and Space/Enter would then "press" it
+// again. Only mouse clicks are blurred, so keyboard users keep their focus.
+document.addEventListener("mouseup", (event) => {
+  event.target.closest?.("button")?.blur();
+});
+
+window.addEventListener("keydown", (event) => {
+  if (event.target instanceof HTMLInputElement && event.target.type !== "range") return;
+  if (!(event.metaKey || event.ctrlKey)) return;
+  const key = event.key.toLowerCase();
+  if (key === "z") {
+    event.preventDefault();
+    if (event.shiftKey) project.redo();
+    else project.undo();
+  } else if (key === "y") {
+    event.preventDefault();
+    project.redo();
+  }
+});
+
+// -- Frame loop --------------------------------------------------------------
+
+function frame(time) {
+  requestAnimationFrame(frame);
+  const dtMs = lastFrameTime ? Math.min(time - lastFrameTime, 100) : 1000 / 60;
+  lastFrameTime = time;
+
+  if (pendingSeek !== null && !drawing) {
+    player.seek(pendingSeek);
+    pendingSeek = null;
+  } else if (player.dirty && !drawing) {
+    player.seek(player.nowMs);
+  }
+
+  // Time only runs while drawing, so the paint flows as you paint.
+  if (drawing) player.advance(dtMs);
+}
+
+// -- Setup -------------------------------------------------------------------
+
+let resizeFrame = 0;
+function queueResize() {
+  if (resizeFrame !== 0) return;
+  resizeFrame = requestAnimationFrame(() => {
+    resizeFrame = 0;
+    renderPaperFallback(fallbackCanvasElement, maxDpr);
+    brushLayer.resize();
+    // Resizing wipes the simulation, so draw it again from the strokes.
+    player.invalidate();
+  });
+}
+
+function init() {
+  if (!document.createElement("canvas").getContext("webgl2")) {
+    showMessage("This browser has no WebGL2, so the watercolor brush can't run.", 10000);
+  }
+
+  renderPaperFallback(fallbackCanvasElement, maxDpr);
+  brushLayer.resize();
+  addShellViewportListeners(queueResize);
+
+  void initializePaperShader({
+    fallbackCanvas: fallbackCanvasElement,
+    fallbackLayer: fallbackLayerElement,
+    maxDpr,
+    paperCanvas: paperCanvasElement,
+  })
+    .then((cleanup) => {
+      window.addEventListener("beforeunload", () => cleanup?.());
+    })
+    .catch((error) => {
+      console.error("Site paper WebGPU init error:", error);
+    });
+
+  syncPanel();
+  requestAnimationFrame(frame);
+}
+
+init();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450">
+  <defs>
+    <filter id="wash" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="3" seed="7" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="16"/>
+      <feGaussianBlur stdDeviation="2.5"/>
+    </filter>
+    <filter id="paper" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" seed="3"/>
+      <feColorMatrix values="0 0 0 0 0.55  0 0 0 0 0.5  0 0 0 0 0.4  0 0 0 0.12 0"/>
+    </filter>
+  </defs>
+  <rect width="600" height="450" fill="#f5f1e1"/>
+  <rect width="600" height="450" filter="url(#paper)"/>
+  <g filter="url(#wash)" style="mix-blend-mode:multiply" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M70 300 C 150 120, 260 120, 330 230" stroke="#d65d4a" stroke-opacity=".75" stroke-width="64"/>
+    <path d="M230 330 C 300 200, 400 140, 520 190" stroke="#3a7fc1" stroke-opacity=".7" stroke-width="58"/>
+    <path d="M120 360 C 220 390, 330 380, 440 330" stroke="#e0b32e" stroke-opacity=".7" stroke-width="52"/>
+    <path d="M400 110 C 450 80, 520 90, 540 150" stroke="#4f9a8c" stroke-opacity=".7" stroke-width="40"/>
+  </g>
+</svg>
