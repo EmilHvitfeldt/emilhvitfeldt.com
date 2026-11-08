@@ -147,7 +147,8 @@ function createFluidBrushLayer(options) {
       size: sizeScale,
     };
 
-    if (point.brush === "wash" || point.brush === "speedwash") {
+    if (point.brush === "wash" || point.brush === "bluntwash" || point.brush === "speedwash") {
+      const blunt = point.brush === "bluntwash";
       // Round dabs along the path, sized only by what the brush has already
       // done (distance travelled, and for "speedwash" how fast it's moving),
       // never by where the stroke will end, so the live preview is exactly the
@@ -185,7 +186,7 @@ function createFluidBrushLayer(options) {
         activeEngine.splat({
           ...base,
           fade: 1 - 0.4 * Math.min(1, arc / (1.2 * heightPx)),
-          halfWidth: washHalfWidth(arc, factorStart + (factorEnd - factorStart) * t, pressure, sizeScale, heightPx),
+          halfWidth: washHalfWidth(arc, factorStart + (factorEnd - factorStart) * t, pressure, sizeScale, heightPx, blunt),
           wash: true,
           x: (startX + (x - startX) * t) / Math.max(1, canvas.width),
           y: 1 - (startY + (y - startY) * t) / Math.max(1, canvas.height),
@@ -674,8 +675,9 @@ function fineBrushRadius(pressure, size) {
  * pixels of travel. It rises from a point to full width over a fixed distance
  * and thins slowly; `speedFactor` (1 for the plain wash) scales it.
  */
-function washHalfWidth(arc, speedFactor, pressure, size, heightPx) {
-  const rise = Math.pow(Math.min(1, arc / (0.2 * heightPx)), 0.85);
+function washHalfWidth(arc, speedFactor, pressure, size, heightPx, blunt = false) {
+  // A blunt start skips the rise, so the stroke begins at full width.
+  const rise = blunt ? 1 : Math.pow(Math.min(1, arc / (0.2 * heightPx)), 0.85);
   const decay = 1 - 0.15 * Math.min(1, arc / (0.8 * heightPx));
   return 0.07 * size * (0.8 + pressure * 0.35) * rise * decay * speedFactor;
 }

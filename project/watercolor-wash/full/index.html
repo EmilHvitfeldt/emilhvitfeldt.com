@@ -28,6 +28,7 @@
           <button type="button" data-brush="watercolor" aria-pressed="false">Watercolor</button>
           <button type="button" data-brush="crispy" aria-pressed="false">Crispy liner</button>
           <button type="button" data-brush="wash" aria-pressed="true">Wash</button>
+          <button type="button" data-brush="bluntwash" aria-pressed="false">Blunt wash</button>
           <button type="button" data-brush="speedwash" aria-pressed="false">Speed wash</button>
         </div>
         <div class="palette" id="palette" role="group" aria-label="Pen color"></div>
@@ -213,6 +214,7 @@
         <input type="range" id="scrub" min="0" max="4000" step="1" value="0" aria-label="Playhead position" />
         <span class="time" id="time">0:00.0 / 0:04.0</span>
         <button type="button" id="add-cue" title="Add a slide cue at the playhead (K)">+ Cue <kbd>K</kbd></button>
+        <button type="button" id="focus-toggle" title="Hide the sidebar and timeline (F)" aria-pressed="false">Focus <kbd>F</kbd></button>
         <label class="check"><input type="checkbox" id="loop" /> Loop</label>
         <select id="rate" aria-label="Playback speed">
           <option value="0.25">0.25x</option>

@@ -8,7 +8,7 @@
 //     start: 1200,          // ms on the timeline when the stroke begins
 //     speed: 1,             // playback rate of just this stroke (2 = twice as fast)
 //     color: { r, g, b, a, name? },
-//     brush: "watercolor",  // "crispy" (solid, sharp-edged liner), "wash" (broad, blunt-ended, ragged-edged), or "speedwash" (wash whose width follows cursor speed)
+//     brush: "watercolor",  // "crispy" (solid, sharp-edged liner), "wash" (broad, blunt-ended, ragged-edged), "bluntwash" (wash with no tapered tip at the start), or "speedwash" (wash whose width follows cursor speed)
 //     size: 1,              // brush size multiplier
 //     inkScale: 0.4,        // ink flow
 //     points: [{ x, y, pressure, t }],  // x/y normalized to the stage (0..1),
@@ -163,7 +163,7 @@ class Project {
           start: Number.isFinite(stroke.start) ? stroke.start : cursor,
           speed: stroke.speed > 0 ? stroke.speed : 1,
           color: stroke.color ?? penColors[0],
-          brush: ["crispy", "wash", "speedwash"].includes(stroke.brush) ? stroke.brush : "watercolor",
+          brush: ["crispy", "wash", "bluntwash", "speedwash"].includes(stroke.brush) ? stroke.brush : "watercolor",
           size: stroke.size > 0 ? stroke.size : 1,
           inkScale: stroke.inkScale > 0 ? stroke.inkScale : 1,
           points: stroke.points.map((point) => ({

@@ -942,6 +942,14 @@ document.addEventListener("mouseup", (event) => {
   event.target.closest?.("button")?.blur();
 });
 
+const focusButton = document.getElementById("focus-toggle");
+
+function toggleFocus() {
+  const on = document.querySelector(".app").classList.toggle("focus");
+  focusButton.setAttribute("aria-pressed", String(on));
+}
+focusButton.addEventListener("click", toggleFocus);
+
 window.addEventListener("keydown", (event) => {
   const target = event.target;
   const typing = target instanceof HTMLInputElement && ["text", "number"].includes(target.type);
@@ -981,6 +989,8 @@ window.addEventListener("keydown", (event) => {
     splitSelected();
   } else if (key === "k") {
     addCue();
+  } else if (key === "f") {
+    toggleFocus();
   } else if (key === "d") {
     setTool("draw");
   } else if (key === "v") {

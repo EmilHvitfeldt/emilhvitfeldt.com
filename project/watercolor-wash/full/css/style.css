@@ -31,6 +31,20 @@ body {
   height: 100%;
 }
 
+/* Focus mode: only the stage and transport stay, so the drawing gets the room. */
+.app.focus {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.app.focus .panel,
+.app.focus .timeline {
+  display: none;
+}
+
+.app.focus .workspace {
+  grid-template-rows: minmax(0, 1fr) auto;
+}
+
 /* -- Left panel ----------------------------------------------------------- */
 
 .panel {
