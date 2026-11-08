@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Watercolor Editor</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="app">
+    <aside class="panel">
+      <h1 class="panel-title">Watercolor Editor</h1>
+
+      <section class="group">
+        <h2>Tool</h2>
+        <div class="segmented" id="tools" role="group" aria-label="Tool">
+          <button type="button" data-tool="draw" aria-pressed="true">Draw <kbd>D</kbd></button>
+          <button type="button" data-tool="select" aria-pressed="false">Select <kbd>V</kbd></button>
+          <button type="button" data-tool="curve" aria-pressed="false">Curve <kbd>C</kbd></button>
+          <button type="button" data-tool="image" aria-pressed="false" disabled>Image <kbd>M</kbd></button>
+        </div>
+      </section>
+
+      <section class="group">
+        <h2 id="brush-heading">Brush</h2>
+        <p class="hint" id="brush-hint"></p>
+        <div class="segmented" id="brush-types" role="group" aria-label="Brush type">
+          <button type="button" data-brush="watercolor" aria-pressed="false">Watercolor</button>
+          <button type="button" data-brush="crispy" aria-pressed="false">Crispy liner</button>
+          <button type="button" data-brush="wash" aria-pressed="true">Wash</button>
+          <button type="button" data-brush="speedwash" aria-pressed="false">Speed wash</button>
+        </div>
+        <div class="palette" id="palette" role="group" aria-label="Pen color"></div>
+        <label class="field">
+          <span class="field-label">Size</span>
+          <input type="range" id="size-slider" min="0.1" max="3" step="0.05" value="1" />
+          <output id="size-output"></output>
+        </label>
+        <label class="field">
+          <span class="field-label">Ink flow</span>
+          <input type="range" id="ink-slider" min="0.1" max="1" step="0.05" value="0.4" />
+          <output id="ink-output"></output>
+        </label>
+
+        <div id="stroke-extras" hidden>
+          <label class="field">
+            <span class="field-label">Start (s)</span>
+            <input type="number" id="start-input" min="0" step="0.1" />
+          </label>
+          <label class="field">
+            <span class="field-label">Speed</span>
+            <input type="range" id="speed-slider" min="0.1" max="4" step="0.05" value="1" />
+            <output id="speed-output"></output>
+          </label>
+          <div class="button-row">
+            <button type="button" id="duplicate-stroke">Duplicate</button>
+            <button type="button" id="delete-stroke">Delete</button>
+          </div>
+
+          <h3 class="subhead">Cut at playhead</h3>
+          <div class="button-row">
+            <button type="button" id="split-stroke" title="Split at playhead (S)">Split <kbd>S</kbd></button>
+            <button type="button" id="trim-start" title="Remove everything before the playhead">Trim start</button>
+            <button type="button" id="trim-end" title="Remove everything after the playhead">Trim end</button>
+          </div>
+
+          <h3 class="subhead">Path</h3>
+          <p class="hint">Curve tool: click a stroke, then drag its anchors (squares) and handles (circles) to change its trajectory. Handles keep the curve smooth; hold Alt to move one on its own. Double-click the path to add an anchor, double-click an anchor to remove it. Timing and pressure stay as recorded.</p>
+          <label class="check"><input type="checkbox" id="show-points" /> <span id="show-points-label">Show every point</span></label>
+          <div class="button-row">
+            <button type="button" id="smooth-stroke">Smooth</button>
+          </div>
+          <label class="field">
+            <span class="field-label">Simplify</span>
+            <input type="range" id="simplify-slider" min="0" max="12" step="0.25" value="0" />
+            <output id="simplify-output"></output>
+          </label>
+          <label class="field">
+            <span class="field-label">Scale</span>
+            <input type="range" id="scale-slider" min="0.25" max="2" step="0.01" value="1" />
+            <output id="scale-output"></output>
+          </label>
+          <label class="field">
+            <span class="field-label">Rotate</span>
+            <input type="range" id="rotate-slider" min="-180" max="180" step="1" value="0" />
+            <output id="rotate-output"></output>
+          </label>
+
+          <h3 class="subhead">Timing and pressure</h3>
+          <label class="field">
+            <span class="field-label">Easing</span>
+            <input type="range" id="ease-slider" min="-1" max="1" step="0.05" value="0" />
+            <output id="ease-output"></output>
+          </label>
+          <label class="field">
+            <span class="field-label">Pressure</span>
+            <input type="range" id="pressure-slider" min="0.4" max="1.6" step="0.02" value="1" />
+            <output id="pressure-output"></output>
+          </label>
+          <div class="button-row">
+            <button type="button" id="flatten-pressure">Flatten pressure</button>
+            <button type="button" id="bake-speed" title="Fold the speed into the recorded timing and reset speed to 1">Bake speed</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="group">
+        <h2>Paint</h2>
+        <p class="hint">Applies to the whole painting.</p>
+        <label class="field">
+          <span class="field-label">Max pigment</span>
+          <input type="range" id="max-pigment-slider" min="0.2" max="3" step="0.05" value="0.8" />
+          <output id="max-pigment-output"></output>
+        </label>
+        <label class="field">
+          <span class="field-label">Dry fade</span>
+          <input type="range" id="dry-fade-slider" min="0" max="1" step="0.05" value="0" />
+          <output id="dry-fade-output"></output>
+        </label>
+        <label class="field">
+          <span class="field-label">Spread</span>
+          <input type="range" id="spread-slider" min="0" max="1.5" step="0.05" value="0.4" />
+          <output id="spread-output"></output>
+        </label>
+        <label class="field">
+          <span class="field-label">End hold</span>
+          <input type="range" id="tail-slider" min="0" max="20" step="0.5" value="6" />
+          <output id="tail-output"></output>
+        </label>
+        <p class="hint">End hold is how many seconds the video keeps running after the last stroke, so it can finish drying. Lower max pigment keeps slow strokes saturated instead of dark. Dry fade is how much color is lost while drying.</p>
+      </section>
+
+      <section class="group">
+        <h2>Tracing image</h2>
+        <div class="button-row">
+          <button type="button" id="image-load">Choose image…</button>
+          <button type="button" id="image-remove" disabled>Remove</button>
+        </div>
+        <p class="hint" id="image-hint">Or drop or paste an image onto the canvas.</p>
+        <div id="image-controls" hidden>
+          <label class="check"><input type="checkbox" id="image-visible" checked /> Show</label>
+          <label class="field">
+            <span class="field-label">Opacity</span>
+            <input type="range" id="image-opacity" min="0.05" max="1" step="0.05" value="0.5" />
+            <output id="image-opacity-output"></output>
+          </label>
+          <label class="field">
+            <span class="field-label">Scale</span>
+            <input type="range" id="image-scale" min="0.1" max="4" step="0.01" value="1" />
+            <output id="image-scale-output"></output>
+          </label>
+          <label class="field">
+            <span class="field-label">Rotate</span>
+            <input type="range" id="image-rotation" min="-180" max="180" step="1" value="0" />
+            <output id="image-rotation-output"></output>
+          </label>
+          <label class="field">
+            <span class="field-label">Layer</span>
+            <select id="image-layer">
+              <option value="above">Over the painting</option>
+              <option value="below">Under the painting</option>
+            </select>
+          </label>
+          <div class="check-row">
+            <label class="check"><input type="checkbox" id="image-grayscale" /> Grayscale</label>
+            <label class="check"><input type="checkbox" id="image-invert" /> Invert</label>
+          </div>
+          <div class="button-row">
+            <button type="button" id="image-reset">Reset position</button>
+          </div>
+          <p class="hint">With the Image tool: drag to move, scroll to zoom.</p>
+        </div>
+        <input type="file" id="image-file" accept="image/*" hidden />
+      </section>
+
+      <section class="group">
+        <h2>Project</h2>
+        <div class="button-row">
+          <button type="button" id="undo">Undo</button>
+          <button type="button" id="redo">Redo</button>
+        </div>
+        <div class="button-row">
+          <button type="button" id="clear-all">Clear all</button>
+        </div>
+        <label class="field"><span class="field-label">Name</span>
+          <input type="text" id="project-name" value="watercolor-project" spellcheck="false" autocomplete="off" />
+        </label>
+        <div class="button-row">
+          <button type="button" id="save-project">Save</button>
+          <button type="button" id="open-project">Open…</button>
+        </div>
+        <input type="file" id="project-file" accept="application/json,.json" hidden />
+      </section>
+    </aside>
+
+    <main class="workspace">
+      <div class="stage-frame">
+        <div class="stage" id="stage">
+          <span id="fallback-layer" class="layer paper-fallback"></span>
+          <canvas id="fallback-canvas" class="layer paper-fallback-canvas" aria-hidden="true"></canvas>
+          <canvas id="paper-canvas" class="layer paper-canvas" aria-hidden="true"></canvas>
+          <canvas id="brush-canvas" class="layer brush-canvas" aria-hidden="true"></canvas>
+          <img id="trace-image" class="trace-image trace-above" alt="" draggable="false" hidden />
+          <canvas id="ui-canvas" class="layer ui-canvas" aria-hidden="true"></canvas>
+          <div class="stage-message" id="stage-message" hidden></div>
+        </div>
+      </div>
+
+      <div class="transport">
+        <button type="button" id="to-start" title="Go to start (Home)" aria-label="Go to start">&#9198;</button>
+        <button type="button" id="play" class="play" title="Play / pause (Space)" aria-label="Play">&#9654;</button>
+        <button type="button" id="to-end" title="Go to end (End)" aria-label="Go to end">&#9197;</button>
+        <input type="range" id="scrub" min="0" max="4000" step="1" value="0" aria-label="Playhead position" />
+        <span class="time" id="time">0:00.0 / 0:04.0</span>
+        <button type="button" id="add-cue" title="Add a slide cue at the playhead (K)">+ Cue <kbd>K</kbd></button>
+        <label class="check"><input type="checkbox" id="loop" /> Loop</label>
+        <select id="rate" aria-label="Playback speed">
+          <option value="0.25">0.25x</option>
+          <option value="0.5">0.5x</option>
+          <option value="1" selected>1x</option>
+          <option value="2">2x</option>
+        </select>
+      </div>
+
+      <div class="timeline" id="timeline">
+        <div class="tl-toolbar">
+          <span>Strokes</span>
+          <label class="tl-zoom-label">Zoom <input type="range" class="tl-zoom" min="20" max="400" step="5" /></label>
+        </div>
+        <div class="tl-scroll">
+          <div class="tl-inner">
+            <div class="tl-ruler"></div>
+            <div class="tl-cues"></div>
+            <div class="tl-lanes"></div>
+            <div class="tl-playhead"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!--
+    Classic scripts, not ES modules: opening this file directly (file://)
+    blocks module imports via CORS, so everything is written to share one
+    global scope instead. Order matters -- each file after the first few
+    uses functions/values defined by the ones before it.
+  -->
+  <script src="js/random.js"></script>
+  <script src="js/viewport.js"></script>
+  <script src="js/brush-palette.js"></script>
+  <script src="js/pen-palette.js"></script>
+  <script src="js/paper-fallback.js"></script>
+  <script src="js/paper-shader.js"></script>
+  <script src="js/paper-gpu.js"></script>
+  <script src="js/fluid.js"></script>
+  <script src="js/project.js"></script>
+  <script src="js/stroke-ops.js"></script>
+  <script src="js/curve.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/overlay.js"></script>
+  <script src="js/timeline.js"></script>
+  <script src="js/editor.js"></script>
+</body>
+</html>

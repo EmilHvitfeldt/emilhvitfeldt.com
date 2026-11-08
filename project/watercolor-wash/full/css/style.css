@@ -1,0 +1,525 @@
+:root {
+  --bg: #f1eedf;
+  --ink: #2a2622;
+  --muted: #6b6459;
+  --panel: #e8e4d2;
+  --workspace: #d6d2c0;
+  --line: #c4bfab;
+  --accent: #3f6fa8;
+  --playhead: #c4403a;
+  --panel-width: 300px;
+  --timeline-height: 176px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--workspace);
+  color: var(--ink);
+  font: 13px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+}
+
+.app {
+  display: grid;
+  grid-template-columns: var(--panel-width) minmax(0, 1fr);
+  height: 100%;
+}
+
+/* -- Left panel ----------------------------------------------------------- */
+
+.panel {
+  overflow-y: auto;
+  padding: 14px 16px 24px;
+  background: var(--panel);
+  border-right: 1px solid var(--line);
+}
+
+.panel-title {
+  margin: 0 0 14px;
+  font-size: 15px;
+  font-weight: 650;
+}
+
+.group {
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+}
+
+.group h2 {
+  margin: 0 0 8px;
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.hint {
+  margin: 0 0 8px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.hint:empty {
+  display: none;
+}
+
+.field {
+  display: grid;
+  grid-template-columns: 62px 1fr 38px;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.field-label {
+  color: var(--muted);
+}
+
+.field output {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.field input[type="number"],
+.field input[type="text"],
+.field select {
+  grid-column: 2 / 4;
+  min-width: 0;
+}
+
+input[type="range"] {
+  min-width: 0;
+  accent-color: var(--accent);
+}
+
+input[type="number"],
+input[type="text"],
+select {
+  font: inherit;
+  color: var(--ink);
+  padding: 3px 6px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #faf8ef;
+}
+
+.check {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.check-row {
+  display: flex;
+  gap: 16px;
+  margin: 8px 0;
+}
+
+button {
+  font: inherit;
+  color: var(--ink);
+  padding: 5px 10px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: #faf8ef;
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+  background: #fff;
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.subhead {
+  margin: 16px 0 4px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.button-row {
+  display: flex;
+  gap: 6px;
+  margin: 8px 0 0;
+}
+
+.button-row button {
+  flex: 1;
+}
+
+kbd {
+  margin-left: 4px;
+  font: inherit;
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.segmented {
+  display: flex;
+}
+
+.segmented button {
+  flex: 1;
+  border-radius: 0;
+  margin-left: -1px;
+}
+
+.segmented button:first-child {
+  border-radius: 5px 0 0 5px;
+  margin-left: 0;
+}
+
+.segmented button:last-child {
+  border-radius: 0 5px 5px 0;
+}
+
+.segmented button[aria-pressed="true"] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: #faf8ef;
+}
+
+.segmented button[aria-pressed="true"] kbd {
+  color: #bdb7a6;
+}
+
+.palette {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.swatch {
+  width: 100%;
+  aspect-ratio: 1;
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15);
+}
+
+/* The ring sits outside the swatch, behind a gap, so it reads on any color. */
+.swatch[aria-pressed="true"] {
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, 0.15),
+    0 0 0 2px var(--panel),
+    0 0 0 4px var(--ink);
+}
+
+/* -- Workspace: stage, transport, timeline ---------------------------------- */
+
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) auto var(--timeline-height);
+  min-width: 0;
+  min-height: 0;
+}
+
+/* Fills the workspace row; the stage inside is the largest 16:9 box that fits. */
+.stage-frame {
+  container-type: size;
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  min-height: 0;
+  margin: 14px 14px 0;
+}
+
+.stage {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  width: min(100cqw, 100cqh * 16 / 9);
+  aspect-ratio: 16 / 9;
+  background: var(--bg);
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.25);
+  touch-action: none;
+  cursor: crosshair;
+}
+
+.stage[data-tool="select"],
+.stage[data-tool="curve"] {
+  cursor: default;
+}
+
+.stage[data-tool="image"] {
+  cursor: grab;
+}
+
+.stage.dragging-over {
+  outline: 3px dashed var(--accent);
+  outline-offset: -3px;
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.paper-fallback {
+  background: var(--bg);
+}
+
+.paper-fallback-canvas {
+  transition: opacity 0.4s ease;
+}
+
+.paper-canvas {
+  background: transparent;
+}
+
+.brush-canvas {
+  z-index: 2;
+  mix-blend-mode: multiply;
+}
+
+.trace-image {
+  position: absolute;
+  max-width: none;
+  pointer-events: none;
+  user-select: none;
+  transform-origin: center;
+}
+
+.trace-below {
+  z-index: 1;
+}
+
+.trace-above {
+  z-index: 3;
+}
+
+.ui-canvas {
+  z-index: 4;
+}
+
+.stage-message {
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  padding: 6px 12px;
+  border-radius: 5px;
+  background: rgba(42, 38, 34, 0.88);
+  color: #faf8ef;
+  pointer-events: none;
+}
+
+.transport {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+}
+
+.transport button {
+  width: 34px;
+  padding: 4px 0;
+}
+
+.transport .play {
+  width: 42px;
+}
+
+.transport #add-cue {
+  width: auto;
+  padding: 4px 10px;
+  white-space: nowrap;
+}
+
+.transport #scrub {
+  flex: 1;
+}
+
+.time {
+  min-width: 108px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  margin: 0 14px 14px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--panel);
+}
+
+.tl-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 10px;
+  border-bottom: 1px solid var(--line);
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.tl-zoom-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.tl-zoom {
+  width: 120px;
+}
+
+.tl-scroll {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.tl-inner {
+  position: relative;
+  min-width: 100%;
+}
+
+.tl-ruler {
+  position: relative;
+  height: 24px;
+  border-bottom: 1px solid var(--line);
+  cursor: ew-resize;
+  user-select: none;
+  touch-action: none;
+}
+
+.tl-tick {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  padding-left: 4px;
+  border-left: 1px solid var(--line);
+  font-size: 10px;
+  line-height: 24px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+
+/* Slide cues sit over the ruler; only the flags take clicks, the ruler underneath still scrubs. */
+.tl-cues {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 24px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.tl-cue {
+  position: absolute;
+  top: 3px;
+  min-width: 14px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: 0 3px 3px 0;
+  border-left: 2px solid var(--accent);
+  background: var(--accent);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 650;
+  line-height: 17px;
+  cursor: pointer;
+  pointer-events: auto;
+  user-select: none;
+}
+
+.tl-lanes {
+  position: relative;
+}
+
+.tl-clip {
+  position: absolute;
+  height: 20px;
+  min-width: 8px;
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.25);
+  cursor: grab;
+  overflow: hidden;
+  touch-action: none;
+}
+
+.tl-clip.selected {
+  box-shadow: 0 0 0 2px var(--accent), inset 0 0 0 1px rgba(0, 0, 0, 0.25);
+  z-index: 1;
+}
+
+.tl-clip-label {
+  display: block;
+  padding: 0 6px;
+  font-size: 10px;
+  line-height: 20px;
+  color: #fff;
+  mix-blend-mode: difference;
+  pointer-events: none;
+}
+
+.tl-handle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 6px;
+  height: 100%;
+  cursor: ew-resize;
+  background: rgba(0, 0, 0, 0.22);
+}
+
+.tl-playhead {
+  position: absolute;
+  top: 0;
+  left: -1px;
+  width: 2px;
+  background: var(--playhead);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.tl-playhead::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -5px;
+  border: 6px solid transparent;
+  border-top-color: var(--playhead);
+  border-bottom: 0;
+}
