@@ -272,7 +272,19 @@ kbd {
   background: var(--bg);
   box-shadow: 0 1px 8px rgba(0, 0, 0, 0.25);
   touch-action: none;
+  /* Stop iPad Safari from selecting the drawing area like text on a swipe. */
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
   cursor: crosshair;
+}
+
+.stage canvas,
+.stage img {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 .stage[data-tool="select"],
