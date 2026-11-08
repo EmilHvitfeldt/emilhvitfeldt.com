@@ -2,6 +2,7 @@ project:
   type: website
   resources:
     - "my-name.m4a"
+    - "project/watercolor-wash/full/**"
     - "post/slidecraft-layout/_*.qmd"
     - "post/slidecraft-layout/_*.html"
     - "post/quarto-revealjs-magic-move-svg/_*.qmd"
