@@ -283,6 +283,11 @@ class FluidBrushEngine {
     this.look = { ...defaultLook };
     this.canvas = gl.canvas;
     this.programs = programs;
+    this.uniformLocations = new Map();
+    // True once anything that needs the fluid solver (velocity, wet pigment)
+    // has been splatted since the last clear. Wash dabs go straight to the dry
+    // layer, so until then step() has nothing to do.
+    this.hasFlow = false;
     this.textureFilter = gl.getExtension("OES_texture_float_linear") ? gl.LINEAR : gl.NEAREST;
     this.width = 1;
     this.height = 1;
@@ -353,22 +358,18 @@ class FluidBrushEngine {
       // It goes straight into the dry layer: the wet layer's drying makes each
       // frame's batch of dabs dry differently, which shows as stripes across a
       // wide stroke.
-      this.splatBuffer(
-        this.dry,
+      this.splatWash(
         stroke.x,
         stroke.y,
         (1 - stroke.red) * opacity,
         (1 - stroke.green) * opacity,
         (1 - stroke.blue) * opacity,
-        0,
-        0,
-        3,
-        0,
-        0,
         stroke.halfWidth,
       );
       return;
     }
+
+    this.hasFlow = true;
 
     if (stroke.fine) {
       // Fine brush: one small flat-topped dab of pigment, and nothing else.
@@ -435,6 +436,7 @@ class FluidBrushEngine {
   }
 
   step(dt) {
+    if (!this.hasFlow) return;
     this.run("curl", this.curl, { uVelocity: this.velocity.readTexture });
     this.run("vorticity", this.velocity.write, { dt, strength: 9 * this.look.spread, uCurl: this.curlTexture, uVelocity: this.velocity.readTexture });
     this.swap(this.velocity);
@@ -486,6 +488,7 @@ class FluidBrushEngine {
   }
 
   clear() {
+    this.hasFlow = false;
     this.clearBuffer(this.velocity);
     this.clearBuffer(this.wet);
     this.clearBuffer(this.dry);
@@ -591,9 +594,58 @@ class FluidBrushEngine {
     this.swap(buffer);
   }
 
+  /**
+   * Wash dab into the dry layer. The dab only touches a small disc, so the
+   * shader is scissored to its bounding box, then that box is copied back into
+   * the read side. The read side stays the full, current picture, so no swap.
+   */
+  splatWash(x, y, red, green, blue, halfWidth) {
+    const gl = this.gl;
+    // The torn edge reaches at most 1.2 radii out; radius is in canvas heights.
+    const reach = halfWidth * 1.25 * this.height + 2;
+    const x0 = Math.max(0, Math.floor(x * this.width - reach));
+    const y0 = Math.max(0, Math.floor(y * this.height - reach));
+    const x1 = Math.min(this.width, Math.ceil(x * this.width + reach));
+    const y1 = Math.min(this.height, Math.ceil(y * this.height + reach));
+    if (x1 <= x0 || y1 <= y0) return;
+
+    const buffer = this.dry;
+    gl.enable(gl.SCISSOR_TEST);
+    gl.scissor(x0, y0, x1 - x0, y1 - y0);
+    this.run("splat", buffer.write, {
+      uWidth: halfWidth,
+      uAspect: this.width / Math.max(1, this.height),
+      uColorA: 0,
+      uColorB: blue,
+      uColorG: green,
+      uColorR: red,
+      uDirX: 0,
+      uDirY: 0,
+      uPointX: x,
+      uPointY: y,
+      uRadius: 0,
+      uShape: 3,
+      uTarget: buffer.readTexture,
+    });
+    gl.bindFramebuffer(gl.READ_FRAMEBUFFER, buffer.write);
+    gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, buffer.read);
+    gl.blitFramebuffer(x0, y0, x1, y1, x0, y0, x1, y1, gl.COLOR_BUFFER_BIT, gl.NEAREST);
+    gl.disable(gl.SCISSOR_TEST);
+  }
+
   swap(buffer) {
     [buffer.read, buffer.write] = [buffer.write, buffer.read];
     [buffer.readTexture, buffer.writeTexture] = [buffer.writeTexture, buffer.readTexture];
+  }
+
+  uniformLocation(program, name) {
+    let cache = this.uniformLocations.get(program);
+    if (!cache) {
+      cache = new Map();
+      this.uniformLocations.set(program, cache);
+    }
+    if (!cache.has(name)) cache.set(name, this.gl.getUniformLocation(program, name));
+    return cache.get(name);
   }
 
   use(programName, uniforms) {
@@ -601,11 +653,12 @@ class FluidBrushEngine {
     const program = this.programs[programName];
     gl.useProgram(program);
     gl.bindVertexArray(this.vertexArray);
-    gl.uniform2f(gl.getUniformLocation(program, "uTexelSize"), 1 / this.width, 1 / this.height);
+    gl.uniform2f(this.uniformLocation(program, "uTexelSize"), 1 / this.width, 1 / this.height);
 
     let textureUnit = 0;
-    for (const [name, value] of Object.entries(uniforms)) {
-      const location = gl.getUniformLocation(program, name);
+    for (const name in uniforms) {
+      const value = uniforms[name];
+      const location = this.uniformLocation(program, name);
       if (!location) continue;
 
       if (typeof value === "number") {
