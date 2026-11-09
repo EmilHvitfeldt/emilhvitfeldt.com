@@ -858,8 +858,27 @@ function projectFilename() {
   return `${base || "watercolor-project"}.json`;
 }
 
-function saveProject() {
-  download(projectFilename(), JSON.stringify(project.toJSON()));
+// Asks where to save the file where the browser can (Chrome, Edge), and falls
+// back to a plain download in the others (Firefox, Safari).
+async function saveProject() {
+  const text = JSON.stringify(project.toJSON());
+  if (!window.showSaveFilePicker) {
+    download(projectFilename(), text);
+    return;
+  }
+  try {
+    const handle = await window.showSaveFilePicker({
+      suggestedName: projectFilename(),
+      types: [{ description: "Watercolor project", accept: { "application/json": [".json"] } }],
+    });
+    const writable = await handle.createWritable();
+    await writable.write(text);
+    await writable.close();
+    projectName.value = handle.name.replace(/\.json$/i, "");
+  } catch (error) {
+    if (error.name === "AbortError") return; // closed the dialog
+    showMessage(`Could not save the file: ${error.message}`);
+  }
 }
 
 $("save-project").addEventListener("click", saveProject);
