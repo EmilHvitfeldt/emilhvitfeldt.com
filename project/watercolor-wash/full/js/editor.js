@@ -227,10 +227,11 @@ sizeSlider.addEventListener("input", () => setBrush({ size: Number(sizeSlider.va
 inkSlider.addEventListener("input", () => setBrush({ inkScale: Number(inkSlider.value) }, "ink"));
 
 speedSlider.addEventListener("input", () => {
-  const stroke = selected();
-  if (!stroke) return;
+  const strokes = selectedStrokes();
+  if (strokes.length === 0) return;
   project.checkpoint("speed");
-  project.update(stroke.id, { speed: Number(speedSlider.value) });
+  for (const stroke of strokes) project.update(stroke.id, { speed: Number(speedSlider.value) }, { silent: true });
+  project.emit("edit");
 });
 
 startInput.addEventListener("change", () => {
