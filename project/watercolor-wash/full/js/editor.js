@@ -945,6 +945,10 @@ function projectFilename() {
   return `${base || "watercolor-project"}.json`;
 }
 
+// The file last saved to. Saving again writes straight to it, unless the
+// project name was changed (then the dialog opens, in the same folder).
+let lastHandle = null;
+
 // Asks where to save the file where the browser can (Chrome, Edge), and falls
 // back to a plain download in the others (Firefox, Safari).
 async function saveProject() {
@@ -954,11 +958,18 @@ async function saveProject() {
     return;
   }
   try {
-    const handle = await window.showSaveFilePicker({
-      suggestedName: projectFilename(),
-      types: [{ description: "Watercolor project", accept: { "application/json": [".json"] } }],
-    });
+    let handle = lastHandle;
+    if (!handle || handle.name !== projectFilename()) {
+      const options = {
+        id: "watercolor-project", // browser remembers the folder across sessions
+        suggestedName: projectFilename(),
+        types: [{ description: "Watercolor project", accept: { "application/json": [".json"] } }],
+      };
+      if (lastHandle) options.startIn = lastHandle;
+      handle = await window.showSaveFilePicker(options);
+    }
     const writable = await handle.createWritable();
+    lastHandle = handle;
     await writable.write(text);
     await writable.close();
     projectName.value = handle.name.replace(/\.json$/i, "");
