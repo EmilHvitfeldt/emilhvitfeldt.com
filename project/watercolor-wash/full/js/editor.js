@@ -605,13 +605,28 @@ function addPoints(stroke, event) {
   }
 }
 
+/** With "Randomize shade" on, picks the chosen color or its neighbor above or below in the palette grid. */
+function drawColor() {
+  const base = defaults.color;
+  if (!$("color-random").checked) return { ...base };
+  const columns = flexokiHues.length;
+  const gridSize = flexokiShades.length * columns;
+  const index = penColors.findIndex((c) => sameColor(c, base));
+  if (index < 0 || index >= gridSize) return { ...base };
+  const options = [index];
+  if (index - columns >= 0) options.push(index - columns);
+  if (index + columns < gridSize) options.push(index + columns);
+  const pick = penColors[options[Math.floor(Math.random() * options.length)]];
+  return { ...pick };
+}
+
 function beginDraw(event) {
   selectedId = null;
   const stroke = {
     id: undefined,
     start: player.nowMs,
     speed: 1,
-    color: { ...defaults.color },
+    color: drawColor(),
     brush: defaults.brush,
     size: defaults.size,
     inkScale: defaults.inkScale,
