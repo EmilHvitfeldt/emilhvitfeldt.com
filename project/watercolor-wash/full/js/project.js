@@ -118,6 +118,21 @@ class Project {
     this.emit("layout");
   }
 
+  /**
+   * Rewrites the timing of the whole project so it runs `factor` times as fast
+   * (2 = half the duration). Start times, recorded point times and cues all
+   * shrink; per-stroke speed is left alone. Callers checkpoint first.
+   */
+  scaleTime(factor) {
+    if (!(factor > 0) || factor === 1) return;
+    for (const stroke of this.strokes) {
+      stroke.start /= factor;
+      for (const point of stroke.points) point.t /= factor;
+    }
+    this.cues = this.cues.map((cue) => ({ ms: Math.max(1, Math.round(cue.ms / factor)) }));
+    this.emit("edit");
+  }
+
   get canUndo() {
     return this.undoStack.length > 0;
   }

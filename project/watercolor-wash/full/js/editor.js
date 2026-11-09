@@ -838,6 +838,17 @@ $("clear-all").addEventListener("click", () => {
   project.clear();
 });
 
+function applyTimeFactor(factor) {
+  if (!(factor > 0) || factor === 1 || project.strokes.length === 0) return;
+  project.checkpoint();
+  project.scaleTime(factor);
+}
+
+$("time-apply").addEventListener("click", () => applyTimeFactor(Number($("time-factor").value)));
+for (const button of document.querySelectorAll(".time-preset")) {
+  button.addEventListener("click", () => applyTimeFactor(Number(button.dataset.factor)));
+}
+
 function download(filename, text) {
   const blob = new Blob([text], { type: "application/json" });
   const url = URL.createObjectURL(blob);
