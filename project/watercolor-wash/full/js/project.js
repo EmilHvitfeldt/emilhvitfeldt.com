@@ -119,17 +119,21 @@ class Project {
   }
 
   /**
-   * Rewrites the timing of the whole project so it runs `factor` times as fast
-   * (2 = half the duration). Start times, recorded point times and cues all
-   * shrink; per-stroke speed is left alone. Callers checkpoint first.
+   * Rewrites timing so it runs `factor` times as fast (2 = half the duration).
+   * With no `strokes` it covers the whole project: start times, recorded point
+   * times and cues all shrink. With a subset, only those strokes change and the
+   * group keeps its earliest start where it is. Per-stroke speed is left alone.
+   * Callers checkpoint first.
    */
-  scaleTime(factor) {
+  scaleTime(factor, strokes = null) {
     if (!(factor > 0) || factor === 1) return;
-    for (const stroke of this.strokes) {
-      stroke.start /= factor;
+    const targets = strokes ?? this.strokes;
+    const pivot = strokes ? Math.min(...targets.map((stroke) => stroke.start)) : 0;
+    for (const stroke of targets) {
+      stroke.start = pivot + (stroke.start - pivot) / factor;
       for (const point of stroke.points) point.t /= factor;
     }
-    this.cues = this.cues.map((cue) => ({ ms: Math.max(1, Math.round(cue.ms / factor)) }));
+    if (!strokes) this.cues = this.cues.map((cue) => ({ ms: Math.max(1, Math.round(cue.ms / factor)) }));
     this.emit("edit");
   }
 

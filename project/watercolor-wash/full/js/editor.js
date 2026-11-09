@@ -100,6 +100,7 @@ function refreshAll() {
   if (selectedId !== null && !project.get(selectedId)) selectedId = null;
   syncInspector();
   timeline.render();
+  syncTimeScope();
   drawUi();
   $("undo").disabled = !project.canUndo;
   $("redo").disabled = !project.canRedo;
@@ -392,13 +393,10 @@ function drawUi(dragOffset = { x: 0, y: 0 }) {
 
   const strokes = selectedStrokes();
   if (strokes.length === 0) return;
-  const primary = selected();
-  const noOffset = { x: 0, y: 0 };
-
   context.lineJoin = "round";
   context.lineCap = "round";
   for (const stroke of strokes) {
-    const offset = stroke === primary ? dragOffset : noOffset;
+    const offset = dragOffset;
     const trace = () => {
       context.beginPath();
       stroke.points.forEach((point, index) => {
@@ -432,7 +430,7 @@ function drawUi(dragOffset = { x: 0, y: 0 }) {
   // Every recorded point, sized by pressure. Where they bunch up the hand moved slowly.
   if ($("show-points").checked) {
     for (const stroke of strokes) {
-      const offset = stroke === primary ? dragOffset : noOffset;
+      const offset = dragOffset;
       for (const point of stroke.points) {
         context.beginPath();
         context.arc(point.x * width + offset.x, point.y * height + offset.y, 1.5 + point.pressure * 2.5, 0, Math.PI * 2);
@@ -543,6 +541,44 @@ function hitTest(px, py) {
   return best;
 }
 
+/** Ids of the strokes (started by the playhead) with a point inside the box, in project order. Box corners are CSS px. */
+function strokesInBox(x1, y1, x2, y2) {
+  const width = stage.clientWidth;
+  const height = stage.clientHeight;
+  const left = Math.min(x1, x2);
+  const right = Math.max(x1, x2);
+  const top = Math.min(y1, y2);
+  const bottom = Math.max(y1, y2);
+  const now = player.nowMs;
+  return project.strokes
+    .filter((stroke) => stroke.start <= now)
+    .filter((stroke) =>
+      stroke.points.some((point) => {
+        const x = point.x * width;
+        const y = point.y * height;
+        return x >= left && x <= right && y >= top && y <= bottom;
+      }),
+    )
+    .map((stroke) => stroke.id);
+}
+
+/** Selects exactly these strokes (the first becomes the primary one). */
+function setSelection(ids) {
+  timeline.group = new Set(ids);
+  timeline.select(ids.length > 0 ? ids[0] : null);
+}
+
+function drawMarquee({ startX, startY, x, y }) {
+  const context = uiCanvas.getContext("2d");
+  context.setLineDash([4, 3]);
+  context.fillStyle = "rgba(63, 111, 168, 0.12)";
+  context.strokeStyle = "#3f6fa8";
+  context.lineWidth = 1;
+  context.fillRect(Math.min(startX, x), Math.min(startY, y), Math.abs(x - startX), Math.abs(y - startY));
+  context.strokeRect(Math.min(startX, x), Math.min(startY, y), Math.abs(x - startX), Math.abs(y - startY));
+  context.setLineDash([]);
+}
+
 function stageXY(event) {
   const rect = stage.getBoundingClientRect();
   return { px: event.clientX - rect.left, py: event.clientY - rect.top, width: rect.width, height: rect.height };
@@ -600,8 +636,20 @@ stage.addEventListener("pointerdown", (event) => {
     beginDraw(event);
   } else if (tool === "select") {
     const id = hitTest(px, py);
-    selectStroke(id);
-    if (id !== null) gesture = { type: "move-stroke", id, startX: px, startY: py, moved: false, dx: 0, dy: 0 };
+    const additive = event.shiftKey || event.metaKey || event.ctrlKey;
+    const current = selectedStrokes().map((stroke) => stroke.id);
+    if (id === null) {
+      // Empty space: drag a box to select, a plain click deselects.
+      gesture = { type: "marquee", startX: px, startY: py, x: px, y: py, moved: false, base: additive ? current : [], ids: current };
+      if (!additive) setSelection([]);
+    } else if (additive) {
+      // Shift/Ctrl/Cmd-click toggles one stroke in the selection.
+      setSelection(current.includes(id) ? current.filter((other) => other !== id) : [...current, id]);
+    } else {
+      // Grabbing a stroke that is already selected keeps the group, so the whole group moves.
+      if (!current.includes(id)) setSelection([id]);
+      gesture = { type: "move-stroke", ids: selectedStrokes().map((stroke) => stroke.id), startX: px, startY: py, moved: false, dx: 0, dy: 0 };
+    }
   } else if (tool === "curve") {
     const session = curveSession();
     const target = session ? CurveEdit.hit(session, px, py, stage.clientWidth, stage.clientHeight) : null;
@@ -627,6 +675,20 @@ stage.addEventListener("pointermove", (event) => {
     gesture.dy = py - gesture.startY;
     if (Math.hypot(gesture.dx, gesture.dy) > 3) gesture.moved = true;
     if (gesture.moved) drawUi({ x: gesture.dx, y: gesture.dy });
+  } else if (gesture.type === "marquee") {
+    const { px, py } = stageXY(event);
+    gesture.x = px;
+    gesture.y = py;
+    if (!gesture.moved && Math.hypot(px - gesture.startX, py - gesture.startY) < 3) return;
+    gesture.moved = true;
+    const hits = strokesInBox(gesture.startX, gesture.startY, px, py);
+    const ids = [...new Set([...gesture.base, ...hits])];
+    if (ids.length !== gesture.ids.length || ids.some((id, index) => id !== gesture.ids[index])) {
+      gesture.ids = ids;
+      setSelection(ids);
+    }
+    drawUi();
+    drawMarquee(gesture);
   } else if (gesture.type === "curve") {
     const { px, py } = stageXY(event);
     if (!gesture.moved && Math.hypot(px - gesture.startX, py - gesture.startY) < 3) return;
@@ -664,16 +726,23 @@ function endGesture() {
     if (finished.moved) project.emit("edit");
   } else if (finished.type === "move-stroke") {
     if (finished.moved) {
-      const stroke = project.get(finished.id);
       const dx = finished.dx / stage.clientWidth;
       const dy = finished.dy / stage.clientHeight;
       project.checkpoint();
-      project.update(finished.id, {
-        points: stroke.points.map((point) => ({ ...point, x: clamp(point.x + dx, 0, 1), y: clamp(point.y + dy, 0, 1) })),
-      });
+      for (const id of finished.ids) {
+        const stroke = project.get(id);
+        project.update(
+          id,
+          { points: stroke.points.map((point) => ({ ...point, x: clamp(point.x + dx, 0, 1), y: clamp(point.y + dy, 0, 1) })) },
+          { silent: true },
+        );
+      }
+      project.emit("edit");
     } else {
       drawUi();
     }
+  } else if (finished.type === "marquee") {
+    drawUi();
   }
 }
 
@@ -840,8 +909,14 @@ $("clear-all").addEventListener("click", () => {
 
 function applyTimeFactor(factor) {
   if (!(factor > 0) || factor === 1 || project.strokes.length === 0) return;
+  const strokes = selectedStrokes();
   project.checkpoint();
-  project.scaleTime(factor);
+  project.scaleTime(factor, strokes.length > 0 ? strokes : null);
+}
+
+function syncTimeScope() {
+  const count = selectedStrokes().length;
+  $("time-scope").textContent = count > 0 ? `Applies to the ${count} selected stroke${count === 1 ? "" : "s"}.` : "Nothing selected: applies to the whole animation.";
 }
 
 $("time-apply").addEventListener("click", () => applyTimeFactor(Number($("time-factor").value)));

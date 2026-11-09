@@ -132,8 +132,9 @@
       </section>
 
       <section class="group">
-        <h2>Whole-animation speed</h2>
-        <p class="hint">Rewrites the timing of every stroke and cue. 2 = twice as fast (half as long), 1.5 = 50% faster, 0.5 = twice as slow. Undo reverts it.</p>
+        <h2>Animation speed</h2>
+        <p class="hint" id="time-scope"></p>
+        <p class="hint">Rewrites the timing itself. 2 = twice as fast (half as long), 1.5 = 50% faster, 0.5 = twice as slow. Select strokes with the Select tool (drag a box, or Shift-click) to change only those.</p>
         <label class="field">
           <span class="field-label">Factor</span>
           <input type="number" id="time-factor" min="0.05" max="20" step="0.05" value="2" />
