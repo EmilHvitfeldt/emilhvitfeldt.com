@@ -494,6 +494,14 @@ kbd {
   position: relative;
 }
 
+.tl-marquee {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+  border: 1px solid var(--accent);
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+}
+
 .tl-clip {
   position: absolute;
   height: 20px;

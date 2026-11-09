@@ -50,7 +50,7 @@ class TimelineView {
 
     this.ruler.addEventListener("pointerdown", (event) => this.startScrub(event));
     this.lanes.addEventListener("pointerdown", (event) => {
-      if (event.target === this.lanes) this.select(null);
+      if (event.target === this.lanes && event.button === 0) this.startMarquee(event);
     });
     new ResizeObserver(() => this.render()).observe(this.scroll);
   }
@@ -101,6 +101,62 @@ class TimelineView {
     this.ruler.addEventListener("pointerup", up);
     this.ruler.addEventListener("pointercancel", up);
     move(event);
+  }
+
+  /** Drag on empty lane space to box-select clips. Shift/Ctrl/Cmd adds to the current selection; a plain click deselects. */
+  startMarquee(event) {
+    const additive = event.shiftKey || event.metaKey || event.ctrlKey;
+    const base = additive ? new Set(this.group) : new Set();
+    const origin = this.lanes.getBoundingClientRect();
+    const startX = event.clientX - origin.left;
+    const startY = event.clientY - origin.top;
+    let moved = false;
+    let hits = new Set(base);
+
+    const box = document.createElement("div");
+    box.className = "tl-marquee";
+    this.lanes.setPointerCapture(event.pointerId);
+
+    const move = (moveEvent) => {
+      const x = moveEvent.clientX - origin.left;
+      const y = moveEvent.clientY - origin.top;
+      if (!moved && Math.hypot(x - startX, y - startY) < 3) return;
+      if (!moved) {
+        moved = true;
+        this.lanes.appendChild(box);
+      }
+      const left = Math.min(x, startX);
+      const top = Math.min(y, startY);
+      const right = Math.max(x, startX);
+      const bottom = Math.max(y, startY);
+      box.style.left = `${left}px`;
+      box.style.top = `${top}px`;
+      box.style.width = `${right - left}px`;
+      box.style.height = `${bottom - top}px`;
+
+      hits = new Set(base);
+      for (const [id, clip] of this.clips) {
+        const l = clip.offsetLeft;
+        const t = clip.offsetTop;
+        if (l < right && l + clip.offsetWidth > left && t < bottom && t + clip.offsetHeight > top) hits.add(id);
+      }
+      for (const [id, clip] of this.clips) clip.classList.toggle("selected", hits.has(id));
+    };
+
+    const up = () => {
+      this.lanes.removeEventListener("pointermove", move);
+      this.lanes.removeEventListener("pointerup", up);
+      this.lanes.removeEventListener("pointercancel", up);
+      box.remove();
+      if (!moved && additive) return;
+      this.group = hits;
+      const primary = hits.values().next();
+      this.select(primary.done ? null : primary.value);
+      this.render();
+    };
+    this.lanes.addEventListener("pointermove", move);
+    this.lanes.addEventListener("pointerup", up);
+    this.lanes.addEventListener("pointercancel", up);
   }
 
   /** Greedy lane packing so overlapping strokes stack instead of hiding each other. */
