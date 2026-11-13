@@ -69,6 +69,12 @@ I use [Quarto](https://quarto.org/) to create slides using the [revealjs](https:
 :::
 
 ::: {.slidecraft-card}
+[![](pastel-window.webp){fig-alt="Pastel Window theme" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-pastel-window)
+
+**[Pastel Window](https://github.com/EmilHvitfeldt/quarto-revealjs-pastel-window)**
+:::
+
+::: {.slidecraft-card}
 [![](starter-template.webp){fig-alt="Starter template" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-template)
 
 **[Starter Template](https://github.com/EmilHvitfeldt/quarto-revealjs-template)**
