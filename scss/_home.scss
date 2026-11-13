@@ -65,6 +65,31 @@
   }
 }
 
+// Phones: smaller margins and type so the heading fits
+@media (max-width: 700px) {
+  .main {
+    margin: 2rem 1.5rem 3rem;
+
+    .left {
+      margin-bottom: 2rem;
+      font-size: 20px;
+
+      h1 {
+        font-size: clamp(3rem, 22vw, 140px);
+        letter-spacing: -0.03em;
+      }
+
+      h2 {
+        font-size: 1.4rem;
+      }
+    }
+
+    .right p img {
+      width: 100%;
+    }
+  }
+}
+
 .page-layout-custom {
   overflow: hidden;
 }
