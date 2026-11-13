@@ -273,6 +273,12 @@ I use [Quarto](https://quarto.org/) to create slides using the [revealjs](https:
 **[Cursor Fragments](https://github.com/EmilHvitfeldt/quarto-revealjs-cursor-fragments)**
 :::
 
+:::: {.slidecraft-card}
+[![](drawings.webp){fig-alt="Drawings extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-drawings)
+
+**[Drawings](https://github.com/EmilHvitfeldt/quarto-revealjs-drawings)**
+:::
+
 :::
 
 ## Book
