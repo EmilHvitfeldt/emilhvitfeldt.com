@@ -29,7 +29,7 @@ const orderedCategories = templateParams['category-order']
 <% if (item.categories && item.categories.includes(category)) { %>
 <div class="package-item" <%= metadataAttrs(item) %>>
 <a href="<%- item.path %>" class="package-image">
-<img src="<%- item.image %>" alt="<%= item.title %>">
+<img src="<%- item.image %>" alt="<%= item.title %>" width="866" height="1000">
 </a>
 <div class="package-content">
 <p><span class="package-title"><%= item.title %></span>, <%- lcFirst(item.description) %></p>
@@ -84,7 +84,7 @@ const orderedCategories = templateParams['category-order']
   hexIndex++;
 %>
 <a href="<%- item.path %>" class="hex-item<%= isOffset5 ? ' hex-offset-5' : '' %><%= isOffset4 ? ' hex-offset-4' : '' %><%= isOffset3 ? ' hex-offset-3' : '' %>" data-description="<%= item.title %> - <%= item.description.trim() %>" <%= metadataAttrs(item) %>>
-<img src="<%- item.image %>" alt="<%= item.title %>">
+<img src="<%- item.image %>" alt="<%= item.title %>" width="866" height="1000">
 </a>
 <% } %>
 <% } %>
