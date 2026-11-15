@@ -2,17 +2,43 @@
 pagetitle: Emil Hvitfeldt - Projects
 toc: false
 listing:
-  contents: project
-  sort: "date desc"
-  template: projects-gallery.ejs
-  template-params:
-    category-order:
-      - R Packages
-      - Books
-      - Data Sets
-      - Websites
-      - Miscellaneous
-    category-descriptions:
-      R Packages: "R packages I have authored or contributed to."
-      Data Sets: "Datasets packaged for easy use in R."
+  - id: packages
+    contents: project
+    sort: "date desc"
+    template: projects-gallery.ejs
+    include:
+      categories: "R Packages"
+    template-params:
+      category-order:
+        - R Packages
+      category-descriptions:
+        R Packages: "R packages I have authored or contributed to."
+  - id: rest
+    contents: project
+    sort: "date desc"
+    template: projects-gallery.ejs
+    exclude:
+      categories: "R Packages"
+    template-params:
+      category-order:
+        - Books
+        - Data Sets
+        - Websites
+        - Miscellaneous
+      category-descriptions:
+        Data Sets: "Datasets packaged for easy use in R."
 ---
+
+::: {#packages}
+:::
+
+<div class="projects-listing"><h2>Quarto Extensions</h2></div>
+
+{{< include project/slidecraft-101/_extensions.qmd >}}
+
+::: {.projects-listing}
+To see everything slidecrafting, look [here](project/slidecraft-101/index.qmd).
+:::
+
+::: {#rest}
+:::

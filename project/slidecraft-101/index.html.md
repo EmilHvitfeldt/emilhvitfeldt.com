@@ -88,198 +88,199 @@ I use [Quarto](https://quarto.org/) to create slides using the [revealjs](https:
 ::: {.slidecraft-grid}
 
 ::: {.slidecraft-card}
-[![](easycarousel.webp){fig-alt="Carousel extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-easycarousel)
+[![](/project/slidecraft-101/easycarousel.webp){fig-alt="Carousel extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-easycarousel)
 
 **[Carousel](https://github.com/EmilHvitfeldt/quarto-easycarousel)**
 :::
 
 ::: {.slidecraft-card}
-[![](claude-replay.webp){fig-alt="Claude Replay extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-claude-replay)
+[![](/project/slidecraft-101/claude-replay.webp){fig-alt="Claude Replay extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-claude-replay)
 
 **[Claude Replay](https://github.com/EmilHvitfeldt/quarto-claude-replay)**
 :::
 
 ::: {.slidecraft-card}
-[![](anime.webp){fig-alt="Anime extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-anime)
+[![](/project/slidecraft-101/anime.webp){fig-alt="Anime extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-anime)
 
 **[Anime](https://github.com/EmilHvitfeldt/quarto-revealjs-anime)**
 :::
 
 ::: {.slidecraft-card}
-[![](magic-move.webp){fig-alt="Magic Move extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-magic-move)
+[![](/project/slidecraft-101/magic-move.webp){fig-alt="Magic Move extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-magic-move)
 
 **[Magic Move](https://github.com/EmilHvitfeldt/quarto-revealjs-magic-move)**
 :::
 
 ::: {.slidecraft-card}
-[![](zoom-vp.webp){fig-alt="Zoom extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-zoom)
+[![](/project/slidecraft-101/zoom-vp.webp){fig-alt="Zoom extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-zoom)
 
 **[Zoom](https://github.com/EmilHvitfeldt/quarto-revealjs-zoom)**
 :::
 
 ::: {.slidecraft-card}
-[![](autoanimate-extra.gif){fig-alt="Auto-Animate Extra extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-autoanimate-extra)
+[![](/project/slidecraft-101/autoanimate-extra.gif){fig-alt="Auto-Animate Extra extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-autoanimate-extra)
 
 **[Auto-Animate Extra](https://github.com/EmilHvitfeldt/quarto-revealjs-autoanimate-extra)**
 :::
 
 ::: {.slidecraft-card}
-[![](shapes.webp){fig-alt="Shapes extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-shapes)
+[![](/project/slidecraft-101/shapes.webp){fig-alt="Shapes extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-shapes)
 
 **[Shapes](https://github.com/EmilHvitfeldt/quarto-shapes)**
 :::
 
 ::: {.slidecraft-card}
-[![](checklist.webp){fig-alt="Checklist Fragments extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-checklist-fragments)
+[![](/project/slidecraft-101/checklist.webp){fig-alt="Checklist Fragments extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-checklist-fragments)
 
 **[Checklist Fragments](https://github.com/EmilHvitfeldt/quarto-revealjs-checklist-fragments)**
 :::
 
 ::: {.slidecraft-card}
-[![](editable.webp){fig-alt="Editable extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-editable)
+[![](/project/slidecraft-101/editable.webp){fig-alt="Editable extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-editable)
 
 **[Editable](https://github.com/EmilHvitfeldt/quarto-revealjs-editable)**
 :::
 
 ::: {.slidecraft-card}
-[![](roughnotation.webp){fig-alt="Rough Notation extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-roughnotation)
+[![](/project/slidecraft-101/roughnotation.webp){fig-alt="Rough Notation extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-roughnotation)
 
 **[Rough Notation](https://github.com/EmilHvitfeldt/quarto-roughnotation)**
 :::
 
 ::: {.slidecraft-card}
-[![](timeline.webp){fig-alt="Timeline extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-timeline)
+[![](/project/slidecraft-101/timeline.webp){fig-alt="Timeline extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-timeline)
 
 **[Timeline](https://github.com/EmilHvitfeldt/quarto-timeline)**
 :::
 
 ::: {.slidecraft-card}
-[![](diagrams.webp){fig-alt="Diagrams extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-diagrams)
+[![](/project/slidecraft-101/diagrams.webp){fig-alt="Diagrams extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-diagrams)
 
 **[diagrams](https://github.com/EmilHvitfeldt/quarto-diagrams)**
 :::
 
 ::: {.slidecraft-card}
-[![](transitions.webp){fig-alt="Transitions extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-transitions)
+[![](/project/slidecraft-101/transitions.webp){fig-alt="Transitions extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-transitions)
 
 **[Transitions](https://github.com/EmilHvitfeldt/quarto-revealjs-transitions)**
 :::
 
 ::: {.slidecraft-card}
-[![](chat-bubbles.webp){fig-alt="Chat Bubbles extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-chat-bubbles)
+[![](/project/slidecraft-101/chat-bubbles.webp){fig-alt="Chat Bubbles extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-chat-bubbles)
 
 **[Chat Bubbles](https://github.com/EmilHvitfeldt/quarto-revealjs-chat-bubbles)**
 :::
 
 ::: {.slidecraft-card}
-[![](more-fragments.webp){fig-alt="More Fragments extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-more-fragments)
+[![](/project/slidecraft-101/more-fragments.webp){fig-alt="More Fragments extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-more-fragments)
 
 **[More Fragments](https://github.com/EmilHvitfeldt/quarto-revealjs-more-fragments)**
 :::
 
 ::: {.slidecraft-card}
-[![](codewindow.webp){fig-alt="Code Window extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-codewindow)
+[![](/project/slidecraft-101/codewindow.webp){fig-alt="Code Window extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-codewindow)
 
 **[Code Window](https://github.com/EmilHvitfeldt/quarto-revealjs-codewindow)**
 :::
 
 ::: {.slidecraft-card}
-[![](tegaki.gif){fig-alt="Tegaki extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-tegaki)
+[![](/project/slidecraft-101/tegaki.gif){fig-alt="Tegaki extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-tegaki)
 
 **[Tegaki](https://github.com/EmilHvitfeldt/quarto-tegaki)**
 :::
 
 ::: {.slidecraft-card}
-[![](redacted.webp){fig-alt="Redacted extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-redacted)
+[![](/project/slidecraft-101/redacted.webp){fig-alt="Redacted extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-redacted)
 
 **[Redacted](https://github.com/EmilHvitfeldt/quarto-redacted)**
 :::
 
 ::: {.slidecraft-card}
-[![](highlightword.webp){fig-alt="Highlight Word extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-highlightword)
+[![](/project/slidecraft-101/highlightword.webp){fig-alt="Highlight Word extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-highlightword)
 
 **[Highlight Word](https://github.com/EmilHvitfeldt/quarto-revealjs-highlightword)**
 :::
 
 ::: {.slidecraft-card}
-[![](color-classes.webp){fig-alt="Color Classes extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-color-classes)
+[![](/project/slidecraft-101/color-classes.webp){fig-alt="Color Classes extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-color-classes)
 
 **[Color Classes](https://github.com/EmilHvitfeldt/quarto-color-classes)**
 :::
 
 ::: {.slidecraft-card}
-[![](tldraw.webp){fig-alt="tldraw extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-tldraw)
+[![](/project/slidecraft-101/tldraw.webp){fig-alt="tldraw extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-tldraw)
 
 **[tldraw](https://github.com/EmilHvitfeldt/quarto-revealjs-tldraw)**
 :::
 
 ::: {.slidecraft-card}
-[![](spotlight.webp){fig-alt="Spotlight extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-spotlight)
+[![](/project/slidecraft-101/spotlight.webp){fig-alt="Spotlight extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-spotlight)
 
 **[Spotlight](https://github.com/EmilHvitfeldt/quarto-revealjs-spotlight)**
 :::
 
 ::: {.slidecraft-card}
-[![](designmode.webp){fig-alt="Design Mode extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-designmode)
+[![](/project/slidecraft-101/designmode.webp){fig-alt="Design Mode extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-designmode)
 
 **[Design Mode](https://github.com/EmilHvitfeldt/quarto-designmode)**
 :::
 
 ::: {.slidecraft-card}
-[![](sticky-notes.webp){fig-alt="Sticky Notes extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-sticky-notes)
+[![](/project/slidecraft-101/sticky-notes.webp){fig-alt="Sticky Notes extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-sticky-notes)
 
 **[Sticky Notes](https://github.com/EmilHvitfeldt/quarto-sticky-notes)**
 :::
 
 ::: {.slidecraft-card}
-[![](snow.webp){fig-alt="Snow extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-snow)
+[![](/project/slidecraft-101/snow.webp){fig-alt="Snow extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-snow)
 
 **[Snow](https://github.com/EmilHvitfeldt/quarto-snow)**
 :::
 
 ::: {.slidecraft-card}
-[![](loud.webp){fig-alt="Loud extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-loud)
+[![](/project/slidecraft-101/loud.webp){fig-alt="Loud extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-loud)
 
 **[Loud](https://github.com/EmilHvitfeldt/quarto-revealjs-loud)**
 :::
 
 ::: {.slidecraft-card}
-[![](rows.webp){fig-alt="Rows extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-rows)
+[![](/project/slidecraft-101/rows.webp){fig-alt="Rows extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-rows)
 
 **[Rows](https://github.com/EmilHvitfeldt/quarto-revealjs-rows)**
 :::
 
 ::: {.slidecraft-card}
-[![](plot-exit.webp){fig-alt="Plot Exit extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-plot-exit)
+[![](/project/slidecraft-101/plot-exit.webp){fig-alt="Plot Exit extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-plot-exit)
 
 **[Plot Exit](https://github.com/EmilHvitfeldt/quarto-revealjs-plot-exit)**
 :::
 
 ::: {.slidecraft-card}
-[![](video-fragments.webp){fig-alt="Video Fragments extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-video-fragments)
+[![](/project/slidecraft-101/video-fragments.webp){fig-alt="Video Fragments extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-video-fragments)
 
 **[Video Fragments](https://github.com/EmilHvitfeldt/quarto-revealjs-video-fragments)**
 :::
 
 ::: {.slidecraft-card}
-[![](timing-bar.webp){fig-alt="Timing Bar extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-timing-bar)
+[![](/project/slidecraft-101/timing-bar.webp){fig-alt="Timing Bar extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-timing-bar)
 
 **[Timing Bar](https://github.com/EmilHvitfeldt/quarto-revealjs-timing-bar)**
 :::
 
 ::: {.slidecraft-card}
-[![](cursor-fragments.webp){fig-alt="Cursor Fragments extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-cursor-fragments)
+[![](/project/slidecraft-101/cursor-fragments.webp){fig-alt="Cursor Fragments extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-cursor-fragments)
 
 **[Cursor Fragments](https://github.com/EmilHvitfeldt/quarto-revealjs-cursor-fragments)**
 :::
 
-:::: {.slidecraft-card}
-[![](drawings.webp){fig-alt="Drawings extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-drawings)
+::: {.slidecraft-card}
+[![](/project/slidecraft-101/drawings.webp){fig-alt="Drawings extension" loading="lazy"}](https://github.com/EmilHvitfeldt/quarto-revealjs-drawings)
 
 **[Drawings](https://github.com/EmilHvitfeldt/quarto-revealjs-drawings)**
 :::
 
 :::
+
 
 ## Book
 
