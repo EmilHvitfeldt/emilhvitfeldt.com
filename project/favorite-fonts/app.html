@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Favorite Fonts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Creepster&family=Happy+Monkey&family=Merienda&family=Monoton&family=Nunito&family=Oi&family=Permanent+Marker&family=Raleway+Dots&family=Rubik+Marker+Hatch&family=Rubik+Maze&family=Rubik:wght@400;600&family=Yatra+One&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#14121a; --panel:#1e1b26; --line:#332e40;
+    --ink:#ece9f2; --muted:#a49db8; --accent:#d76ba0;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font:16px/1.5 "Rubik",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  }
+  header{max-width:1000px; margin:0 auto; padding:40px 20px 16px}
+  header h1{font-size:28px; margin:0 0 6px}
+  header p{color:var(--muted); margin:0 0 20px}
+  .controls{display:flex; flex-wrap:wrap; gap:16px 24px; align-items:center}
+  .controls label{display:flex; gap:10px; align-items:center; font-size:13px; color:var(--muted)}
+  .controls input[type=text]{
+    width:min(380px,80vw); padding:9px 12px; border-radius:10px; border:1px solid var(--line);
+    background:var(--panel); color:var(--ink); font:inherit;
+  }
+  .controls input[type=range]{width:160px; accent-color:var(--accent)}
+  .controls select{
+    padding:8px 10px; border-radius:10px; border:1px solid var(--line);
+    background:var(--panel); color:var(--ink); font:inherit;
+  }
+  .card[hidden]{display:none}
+  main{max-width:1000px; margin:0 auto; padding:8px 20px 60px; display:grid; gap:18px}
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:22px 24px; overflow:hidden}
+  .meta{display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px; align-items:baseline; margin-bottom:14px}
+  .meta h2{font-size:13px; text-transform:uppercase; letter-spacing:1.4px; color:var(--muted); margin:0; font-weight:600}
+  .meta a{color:var(--accent); font-size:13px; text-decoration:none}
+  .meta a:hover{text-decoration:underline}
+  .note{color:var(--muted); font-size:13px; margin:12px 0 0}
+  .sample{
+    font-size:var(--size,64px); line-height:1.15; margin:0; color:var(--ink);
+    overflow-wrap:anywhere; outline:none;
+  }
+  .glyphs{margin-top:14px; font-size:calc(var(--size,64px) * .4); line-height:1.3; color:var(--muted); overflow-wrap:anywhere}
+  footer{max-width:1000px; margin:0 auto; padding:0 20px 40px; color:var(--muted); font-size:13px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Favorite Fonts</h1>
+  <p>A few Google Fonts I keep coming back to. Type your own text below, or click any sample to edit it.</p>
+  <div class="controls">
+    <label>Text <input type="text" id="text" value="Sphinx of black quartz, judge my vow" aria-label="Sample text"></label>
+    <label>Size <input type="range" id="size" min="20" max="140" value="64" aria-label="Font size"> <span id="sizeval">64px</span></label>
+    <label>Show
+      <select id="novelty" aria-label="Filter by novelty">
+        <option value="all">All fonts</option>
+        <option value="only">Novelty only</option>
+        <option value="exclude">No novelty</option>
+      </select>
+    </label>
+  </div>
+</header>
+
+<main id="list"></main>
+
+<footer>All fonts are open source and served by Google Fonts.</footer>
+
+<script>
+// To add a font: add an entry here and add its family to the stylesheet link above.
+// Set novelty: true for display fonts that are not meant for body text.
+const FONTS = [
+  { name: "Monoton", novelty: true, url: "https://fonts.google.com/specimen/Monoton",
+    note: "Neon-tube inline letters with an Art Deco feel. Great for headlines." },
+  { name: "Rubik Maze", novelty: true, url: "https://fonts.google.com/specimen/Rubik+Maze",
+    note: "Letters built out of maze walls. Best at large sizes." },
+  { name: "Rubik Marker Hatch", novelty: true, url: "https://fonts.google.com/specimen/Rubik+Marker+Hatch",
+    note: "Chunky marker strokes filled with hatching." },
+  { name: "Happy Monkey", novelty: false, url: "https://fonts.google.com/specimen/Happy+Monkey",
+    note: "Playful, slightly wonky and easy to read." },
+  { name: "Nunito", novelty: false, url: "https://fonts.google.com/specimen/Nunito",
+    note: "Friendly rounded sans-serif that works for body text and headings." },
+  { name: "Raleway Dots", novelty: true, url: "https://fonts.google.com/specimen/Raleway+Dots",
+    note: "Elegant Raleway letterforms drawn entirely with dots." },
+  { name: "Permanent Marker", novelty: true, url: "https://fonts.google.com/specimen/Permanent+Marker",
+    note: "Bold, hand-lettered marker strokes with a poster feel." },
+  { name: "Creepster", novelty: true, url: "https://fonts.google.com/specimen/Creepster",
+    note: "Dripping, spooky letters straight out of a horror movie poster." },
+  { name: "Merienda", novelty: false, url: "https://fonts.google.com/specimen/Merienda",
+    note: "Casual, warm brush-script that stays readable in longer text." },
+  { name: "Oi", novelty: true, url: "https://fonts.google.com/specimen/Oi",
+    note: "Ultra-heavy, tightly packed letters that shout from the page." },
+  { name: "Yatra One", novelty: true, url: "https://fonts.google.com/specimen/Yatra+One",
+    note: "Bold, decorative serif with a calligraphic, hand-cut feel." }
+];
+const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789";
+
+const list = document.getElementById("list");
+const textInput = document.getElementById("text");
+const sizeInput = document.getElementById("size");
+const sizeVal = document.getElementById("sizeval");
+
+for (const f of FONTS) {
+  const card = document.createElement("section");
+  card.className = "card";
+  card.dataset.novelty = f.novelty ? "1" : "0";
+
+  const meta = document.createElement("div");
+  meta.className = "meta";
+  const h2 = document.createElement("h2");
+  h2.textContent = f.name;
+  const a = document.createElement("a");
+  a.href = f.url; a.target = "_blank"; a.rel = "noopener";
+  a.textContent = "Google Fonts ↗";
+  meta.append(h2, a);
+
+  const sample = document.createElement("p");
+  sample.className = "sample";
+  sample.contentEditable = "true";
+  sample.spellcheck = false;
+  sample.style.fontFamily = `"${f.name}", sans-serif`;
+  sample.textContent = textInput.value;
+
+  const glyphs = document.createElement("p");
+  glyphs.className = "glyphs";
+  glyphs.style.fontFamily = `"${f.name}", sans-serif`;
+  glyphs.textContent = ALPHABET;
+
+  const note = document.createElement("p");
+  note.className = "note";
+  note.textContent = f.note;
+
+  card.append(meta, sample, glyphs, note);
+  list.append(card);
+}
+
+function setText() {
+  document.querySelectorAll(".sample").forEach(s => { s.textContent = textInput.value; });
+}
+function setSize() {
+  document.documentElement.style.setProperty("--size", sizeInput.value + "px");
+  sizeVal.textContent = sizeInput.value + "px";
+}
+const noveltyInput = document.getElementById("novelty");
+function setNovelty() {
+  document.querySelectorAll(".card").forEach(c => {
+    const isNovelty = c.dataset.novelty === "1";
+    const mode = noveltyInput.value;
+    c.hidden = (mode === "only" && !isNovelty) || (mode === "exclude" && isNovelty);
+  });
+}
+noveltyInput.addEventListener("change", setNovelty);
+textInput.addEventListener("input", setText);
+sizeInput.addEventListener("input", setSize);
+setSize();
+</script>
+</body>
+</html>
